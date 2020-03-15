@@ -1,5 +1,6 @@
 module.exports=function(router){
     const auth=require("./auth")
+    const data=require("./data")
     router.get('/',homepage)
     router.get('/comments',comments)
     router.get('/files',files)
@@ -32,7 +33,7 @@ module.exports=function(router){
 
     function books(req,res){
         if(auth.hasPermissions(req)){
-            res.end("User has permisions")
+            res.end(data.getBooks())
         }
         else{
             res.end("User doesn't have permissions")

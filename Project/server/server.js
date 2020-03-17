@@ -4,14 +4,16 @@ const
 DEFAULT_PORT = 8082,
 express = require('express'),
 bodyParser = require('body-parser'),
-session = require('express-session'),   // Do we need this?
+session = require('express-session'),
 passport = require('passport'),
+path = require("path"),
 app = express(),
 api = require("./web-api")(app)
 
-var cookie_secret = 'justasecretstring' // should change after a while if it has some 
-                                        // security implication
+var cookie_secret = 'justasecretstring' // should change after a while if it has some security implication
 
+// Homepage leads to our web app, make sure web app has updated production build
+app.use('/', express.static(path.resolve(__dirname, '..', 'web-app', 'build'))) 
 app.use(bodyParser.json())  // Makes it easier to manage the request's body
 app.use(session({
     resave: false,
@@ -25,7 +27,7 @@ app.use(express.json());
 app.use(passport.initialize())
 app.use(passport.session())
 
-passport.serializeUser(api.userToRef());      // userToRef endpoint missing
-passport.deserializeUser(api.refToUser());    // refToUser endpoint missing
+//passport.serializeUser(api.userToRef());      // userToRef endpoint missing
+//passport.deserializeUser(api.refToUser());    // refToUser endpoint missing
 
 app.listen(DEFAULT_PORT, () => console.log(`Listening on Port:${DEFAULT_PORT} `))

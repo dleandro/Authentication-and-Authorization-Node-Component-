@@ -1,11 +1,11 @@
 'use strict'
 
 const auth = require("./auth"),
-data = require("./server/data")
+data = require("./data")
 
 
 module.exports = function(router) {
-    router.get('/', homepage)
+    //router.get('/', homepage)
     router.get('/comments', comments)
     router.get('/files', files)
     router.get('/books', books)

@@ -14,15 +14,15 @@ class AuthenticationProtocol extends Component {
 
     render() {
         return (
-            <div>
-                <ToggleButtonGroup type="radio" name="options" onChange={this.changeSelectedProtocol}>
-                    <ToggleButton value={"SAML"}> SAML </ToggleButton>
-                    <ToggleButton value={"OpenId"}> OpenId </ToggleButton>
-                    <ToggleButton value={"Kerberos"}> Kerberos </ToggleButton>
-                </ToggleButtonGroup>
-            </div>
-            )
-        }
+
+            <ToggleButtonGroup type="radio" name="options" onChange={this.changeSelectedProtocol}>
+                <ToggleButton value={"SAML"}> SAML </ToggleButton>
+                <ToggleButton value={"OpenId"}> OpenId </ToggleButton>
+                <ToggleButton value={"Kerberos"}> Kerberos </ToggleButton>
+            </ToggleButtonGroup>
+        )
+
+    }
     }
     
     export default AuthenticationProtocol

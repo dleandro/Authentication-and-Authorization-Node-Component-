@@ -1,18 +1,28 @@
-/* const mariadb = require('mariadb');
-const pool = mariadb.createPool({
-     host: 'localhost:3306', 
-     user:'root', 
-     password: 'mariadb',
-     connectionLimit: 5
-});*/
+'use strict'
 
-module.exports ={
-connect:async function connect() {
-    let conn;
+const mariadb = require('mariadb');
+const pool = mariadb.createPool({
+  host: '127.0.0.1', 
+  user:'root', 
+  password: 'admin',
+  connectionLimit: 5
+});
+
+module.exports = {
+  
+  connect: async function connect() {
+    
     try {
-      return conn = await pool.getConnection();
+      
+      return await pool.getConnection();
+      
     } catch (err) {
+      
+      console.log('unable to connect')
+      
       throw err;
     }
+    
   }
+  
 }

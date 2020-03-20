@@ -7,8 +7,10 @@ bodyParser = require('body-parser'),
 session = require('express-session'),
 passport = require('passport'),
 path = require("path"),
+data = require('./dal/data'),
+service = require('./service')(data),
 app = express(),
-api = require("./web-api")(app)
+api = require("./web-api")(app, service)
 
 var cookie_secret = 'justasecretstring' // should change after a while if it has some security implication
 

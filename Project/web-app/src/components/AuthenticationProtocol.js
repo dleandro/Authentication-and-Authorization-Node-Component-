@@ -1,31 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ToggleButton from 'react-bootstrap/ToggleButton'
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 
-class AuthenticationProtocol extends Component {
+const AuthenticationProtocol = ({selectedListener})=>
+    <ToggleButtonGroup type="radio" name="options" onChange={selectedListener}>
+        <ToggleButton value={"SAML"}> SAML </ToggleButton>
+        <ToggleButton value={"OpenId"}> OpenId </ToggleButton>
+        <ToggleButton value={"Kerberos"}> Kerberos </ToggleButton>
+    </ToggleButtonGroup>
 
-    state = {
-        selectedProtocol: ""    
-    }
-
-    changeSelectedProtocol = protocol => {
-        this.setState({selectedProtocol: protocol})
-    }
-
-    render() {
-        return (
-
-            <ToggleButtonGroup type="radio" name="options" onChange={this.changeSelectedProtocol}>
-                <ToggleButton value={"SAML"}> SAML </ToggleButton>
-                <ToggleButton value={"OpenId"}> OpenId </ToggleButton>
-                <ToggleButton value={"Kerberos"}> Kerberos </ToggleButton>
-            </ToggleButtonGroup>
-        )
-
-    }
-    }
-    
-    export default AuthenticationProtocol
+export default AuthenticationProtocol
     
 
    

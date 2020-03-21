@@ -5,7 +5,7 @@ DEFAULT_PORT = 8082,
 express = require('express'),
 session = require('express-session'),
 passport = require('passport'),
-OpenIDStrategy = require('passport-openid').Strategy
+OpenIDStrategy = require('passport-openid').Strategy,
 path = require("path"),
 data = require('./dal/data'),
 service = require('./service')(data),
@@ -33,15 +33,11 @@ passport.serializeUser(function(user, done) {
     done(null, user.identifier);
 });
 
-passport.deserializeUser(function(identifier, done) {
+passport.deserializeUser(async function(identifier, done) {
 
-    var user = await fetch('/get-user', {
-        method: 'GET',
-        headers = {
-            'Content-type': 'application/json'
-        },
-        userId: identifier
-    })
+    var user = await fetch('/get-user',
+        {method: 'GET',headers : { 'Content-type': 'application/json'}, userId: identifier}
+        );
 
     done(null, { user: user });
 });

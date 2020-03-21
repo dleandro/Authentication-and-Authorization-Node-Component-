@@ -13,7 +13,7 @@ module.exports = function(data) {
 
                 res = await fetch('/exec-login', {
                     method: 'POST', 
-                    headers = {
+                    headers : {
                         'Content-type': 'application/json'
                     },
                     username: username,

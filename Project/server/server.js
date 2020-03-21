@@ -46,18 +46,22 @@ passport.use(new SamlStrategy(
 //   serialize users into and deserialize users out of the session.  Typically,
 //   this will be as simple as storing the user ID when serializing, and finding
 //   the user by ID when deserializing. 
-passport.serializeUser(function(user, done) {
-    done(null, user.identifier);
-});
+function userToRef(user, done) {
+  done(null, user.id);
+}
 
-passport.deserializeUser(async function(identifier, done) {
+function refToUser(userRef, done) {
+  service.getUser(userRef).then(user => {
+      if (user) {
+          done(null, user);
+      } else {
+          done('User unknown');
+      }
+  })
+}
 
-    var user = await fetch('/get-user',
-        {method: 'GET',headers : { 'Content-type': 'application/json'}, userId: identifier}
-        );
-
-    done(null, { user: user });
-});
+passport.serializeUser(userToRef);
+passport.deserializeUser(refToUser);
 
 // app configurations
 app.use(express.json()) // Makes it easier to manage the request's body

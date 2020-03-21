@@ -1,21 +1,22 @@
 'use strict'
 
-const auth = require("./dal/auth"),
-kerberos = require('kerberos')
+const auth = require("./dal/auth")
 
 
 module.exports = function(router, service, passport) {
     
+    router.get('/homepage',homepage)
     router.get('/comments', comments)
     router.get('/files', files)
     router.get('/books', books)
     router.get('permission', hasPermission)
+    router.get('/get-user',getUser)
     router.post('/login', login)
     router.post('/exec-login', executeLogin)
     router.post('/kerberos-login', kerberosLogin)
-    router.post('/saml-login', samlLogin)
     router.post('/openid-login', openIdLogin)
     router.post('/register', register)
+    router.post('/saml-login',passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),samlLogin)
     router.delete('/delete', deleteUser)
     router.put('/change-user-status', changeStatus)
     
@@ -48,20 +49,15 @@ module.exports = function(router, service, passport) {
     
     // Simple username password login
     function login(req, res) {
-        service.login(req.body.username, req.body.password, req)
-        .then(answer => setResponse(res, answer, 200))
-        .catch(err => setResponse(res, err, 400))
+        service.loginUser(req,res)
     }
     
     // Request service to authenticate using kerberos single sign on
     function kerberosLogin(req, res) {
-        kerberos.KerberosClient()
+    
     }
     
-    
-    function samlLogin(req, res) {
-        // redirect to ask for an idp to give authentication
-    }
+
     
     
     function openIdLogin(req, res) {
@@ -69,7 +65,7 @@ module.exports = function(router, service, passport) {
     }
     
     function register(req, res) {
-        service.register(req.body.username, req.body.password)
+        service.register(req.body.id,req.body.username, req.body.password)
         .then(answer => setResponse(res, answer, 200))
         .catch(err => setResponse(res, err, 400))
     }
@@ -114,5 +110,13 @@ module.exports = function(router, service, passport) {
         else{
             res.end("User doesn't have permissions")
         }
+    }
+
+    function getUser(req,res){
+
+    }
+
+    function samlLogin(req,res){
+        res.redirect('/homepage')
     }
 }

@@ -2,33 +2,29 @@
 
 module.exports = function(data) {
 
+    const fetch=require('node-fetch')
     return {
 
         // Checks if the user is in the database, if so it requests a login to occur
-        login: async function login(username, password, req) {
-            var res = await data.executeQuery(`SELECT * FROM Users WHERE username='${username}' AND password='${password}'`,
+        loginUser: async function LoginUser(req,res) {
+            var rows = await data.executeQuery(`SELECT * FROM Users WHERE username='${req.body.username}' AND password='${req.body.password}'`,
              'ps_db')
 
-             if (res.length == 1) {
-
-                res = await fetch('/exec-login', {
-                    method: 'POST', 
-                    headers : {
-                        'Content-type': 'application/json'
-                    },
-                    username: username,
-                    password: password
-                })
+             if (rows.length == 1) {
+                req.login({
+                    username: req.body.username,
+                    password: req.body.password
+                  }, (err, result) => {
+                    // TO DO : handle unexpected error
+                    res.redirect('/homepage');
+                  });
                  
-                return res
              }
-
-             return "User doesn't exist in the database"
         },
 
         // Creates a new entry on the database with given user parameters
-        register: async function register(username, password) {
-            const query = `INSERT INTO Users VALUES ('${username}', '${password}');`
+        register: async function register(id,username, password) {
+            const query = `INSERT INTO Users VALUES ( '${id}','${username}', '${password}');`
             return await data.executeQuery(query, "ps_db")
         }
     }

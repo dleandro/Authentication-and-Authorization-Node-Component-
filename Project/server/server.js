@@ -6,6 +6,7 @@ express = require('express'),
 session = require('express-session'),
 passport = require('passport'),
 OpenIDStrategy = require('passport-openid').Strategy,
+SamlStrategy = require('passport-saml').Strategy,
 path = require("path"),
 data = require('./dal/data'),
 service = require('./service')(data),
@@ -23,6 +24,22 @@ passport.use(new OpenIDStrategy({
     });
   }
 ));
+
+passport.use(new SamlStrategy(
+  {
+    path: '/login/callback',  //redirect after sucessfull login
+    entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
+    issuer: 'passport-saml'
+  },
+  function(profile, done) {
+    findByEmail(profile.email, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+      return done(null, user);
+    });
+  })
+);
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to

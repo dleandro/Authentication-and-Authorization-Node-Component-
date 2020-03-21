@@ -4,15 +4,14 @@ const auth = require("./dal/auth"),
 kerberos = require('kerberos')
 
 
-module.exports = function(router, service) {
+module.exports = function(router, service, passport) {
     
-    //router.get('/', homepage)
     router.get('/comments', comments)
     router.get('/files', files)
     router.get('/books', books)
-    
     router.get('permission', hasPermission)
     router.post('/login', login)
+    router.post('/exec-login', executeLogin)
     router.post('/kerberos-login', kerberosLogin)
     router.post('/saml-login', samlLogin)
     router.post('/openid-login', openIdLogin)
@@ -21,14 +20,14 @@ module.exports = function(router, service) {
     router.put('/change-user-status', changeStatus)
     
     // set a basic response if request was executed succesfully
-	function setResponse(res, answer, statusCode) {
-		res.status = statusCode
-		res.statusMessage = 'OK'
-		res.headers = {
-			'Content-type': 'application/json'
-		}
-		res.end(answer.toString())
-	}
+    function setResponse(res, answer, statusCode) {
+        res.status = statusCode
+        res.statusMessage = 'OK'
+        res.headers = {
+            'Content-type': 'application/json'
+        }
+        res.end(answer.toString())
+    }
     
     function hasPermission(req, res) {
         if(req.user.isAuthenticated()) {
@@ -36,11 +35,22 @@ module.exports = function(router, service) {
         }
     }
     
+    function executeLogin(req, res) {
+        req.login({
+            username: username,
+            password: password
+        }, (err, result) => {
+            
+            // handle this error better
+            res.redirect('/')
+        })
+    }
+    
     // Simple username password login
     function login(req, res) {
         service.login(req.body.username, req.body.password, req)
-        .then(answer => sendResponse(res, answer, 200))
-        .catch(err => sendResponse(res, err, 400))
+        .then(answer => setResponse(res, answer, 200))
+        .catch(err => setResponse(res, err, 400))
     }
     
     // Request service to authenticate using kerberos single sign on
@@ -55,11 +65,13 @@ module.exports = function(router, service) {
     
     
     function openIdLogin(req, res) {
-        
+        passport.authenticate('openid')
     }
     
     function register(req, res) {
         service.register(req.body.username, req.body.password)
+        .then(answer => setResponse(res, answer, 200))
+        .catch(err => setResponse(res, err, 400))
     }
     
     function deleteUser(req, res) {

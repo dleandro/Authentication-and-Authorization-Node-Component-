@@ -1,6 +1,7 @@
 'use strict'
 
 const
+PORT = process.env.PORT || 8082,
 express = require('express'),
 session = require('express-session'),
 passport = require('passport'),
@@ -84,4 +85,4 @@ passport.serializeUser(userToRef);
 passport.deserializeUser(refToUser);
 
 
-app.listen(process.env.PORT || 8082, () => console.log(`Listening `))
+app.listen(PORT, () => console.log(`Listening on Port: ${PORT}`))

@@ -9,7 +9,7 @@ module.exports = function(data) {
             var rows = await data.executeQuery(
                 "SELECT * FROM Users WHERE username='?' AND password='?'",
                 [req.body.username, req.body.password],
-                'ps_db')
+                'r15dtqer5c72jvex')
                 
                 if (rows.length == 1) {
                     req.login({
@@ -27,12 +27,12 @@ module.exports = function(data) {
             // Creates a new entry on the database with given user parameters
             register: async function register(id, username, password) {
                 const query = "INSERT INTO Users VALUES ( '?', '?', '?' );"
-                return await data.executeQuery(query, [id, username, password], "ps_db")
+                return await data.executeQuery(query, [id, username, password], "r15dtqer5c72jvex")
             },
             
             getUser: async function getUser(id){
                 const query='Select * from Users where id= ?'
-                return await data.executeQuery(query, [id], "ps_db")
+                return await data.executeQuery(query, [id], "r15dtqer5c72jvex")
             }
         }
     }

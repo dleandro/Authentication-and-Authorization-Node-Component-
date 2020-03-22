@@ -54,7 +54,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(express.json()) // Makes it easier to manage the request's body
 // Homepage leads to our web app, make sure web app has updated production build
-app.use('/', express.static(path.resolve(__dirname, 'web-app', 'build'))) 
+app.use('/', express.static(path.resolve(__dirname, '..', 'web-app', 'build'))) 
 app.use(session({
     resave: false,
     //saveUninitialized to false to only create a session if a UA(User agent) made a login

@@ -9,14 +9,17 @@ module.exports = function(router, service, passport) {
     router.get('/comments', comments)
     router.get('/files', files)
     router.get('/books', books)
-    router.get('permission', hasPermission)
+    //router.get('permission', hasPermission)
     router.get('/get-user',getUser)
+    router.get('/backoffice',showBackoffice)
     router.post('/login', login)
+    router.post('/logout',logout)
     router.post('/exec-login', executeLogin)
     router.post('/kerberos-login', kerberosLogin)
     router.post('/openid-login', openIdLogin)
     router.post('/register', register)
     router.post('/saml-login',passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),samlLogin)
+    router.post('/backoffice',changeUserRole)
     router.delete('/delete', deleteUser)
     router.put('/change-user-status', changeStatus)
     
@@ -30,11 +33,6 @@ module.exports = function(router, service, passport) {
         res.end(answer.toString())
     }
     
-    function hasPermission(req, res) {
-        if(req.user.isAuthenticated()) {
-            //req.user.role.permissions...
-        }
-    }
     
     function executeLogin(req, res) {
         req.login({
@@ -65,7 +63,7 @@ module.exports = function(router, service, passport) {
     }
     
     function register(req, res) {
-        service.register(req.body.id,req.body.username, req.body.password)
+        service.register(req.body.username, req.body.password)
         .then(answer => setResponse(res, answer, 200))
         .catch(err => setResponse(res, err, 400))
     }
@@ -105,7 +103,7 @@ module.exports = function(router, service, passport) {
     
     function books(req,res){
         if(auth.hasPermissions(req)){
-            res.end(data.getBooks())
+            res.end("User has permisions")
         }
         else{
             res.end("User doesn't have permissions")
@@ -118,5 +116,28 @@ module.exports = function(router, service, passport) {
 
     function samlLogin(req,res){
         res.redirect('/homepage')
+    }
+
+    function logout(req,res){
+        req.logout()
+        res.redirect('/homepage')
+    }
+
+    function showBackoffice(req,res){
+        if(auth.hasAdminPermissions(req)){
+            res.end("User has permisions")
+        }
+        else{
+            res.end("User doesn't have permissions")
+        }
+    }
+
+    function changeUserRole(req,res){
+        if(auth.hasAdminPermissions(req)){
+            service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole)
+        }
+        else{
+            res.end("User doesn't have permissions")
+        }
     }
 }

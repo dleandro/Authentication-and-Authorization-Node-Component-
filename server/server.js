@@ -78,10 +78,12 @@ function refToUser(userRef, done) {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: 'same-origin',
     body :{
       "userId" :userRef
     } 
-  }).then(user => {
+  }).then(response=>response.json())
+  .then(user => {
     if (user) {
         done(null, user);
     } else {

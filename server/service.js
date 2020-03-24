@@ -23,8 +23,9 @@ module.exports = function(data) {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'same-origin',
                 body: JSON.stringify(user)
-            })
+            }).then(result=>result.text())
         },
         
         // Creates a new entry on the database with given user parameters

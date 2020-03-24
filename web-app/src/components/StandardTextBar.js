@@ -14,10 +14,13 @@ export default function LoginForm({id , app}) {
     function myFunction(){
         alert('alert' + app.state.email)
         var myInit = { method: 'POST',
-               body: {
+        headers: {
+            "Content-Type": "application/json"
+        },     
+         body: JSON.stringify({
                    "username": app.state.email,
-                   "passowrd": app.state.passowrd
-               }};
+                   "password": app.state.password
+               })};
         fetch('/login',myInit)
         .then(response=>response.json())
         .then(data=>console.log(data))

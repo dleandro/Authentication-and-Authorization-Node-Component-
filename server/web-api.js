@@ -1,6 +1,6 @@
 'use strict'
 
-const auth = require("../dal/auth")
+const auth = require("./data/auth")
 
 
 module.exports = function(router, service, passport) {
@@ -9,16 +9,18 @@ module.exports = function(router, service, passport) {
     router.get('/comments', comments)
     router.get('/files', files)
     router.get('/books', books)
+    
+    // endpoints
     //router.get('permission', hasPermission)
-    router.get('/get-user',getUser)
-    router.get('/backoffice',showBackoffice)
+    router.get('/user', getUser)
+    router.get('/backoffice', showBackoffice)
     router.post('/login', login)
     router.post('/logout',logout)
-    router.post('/exec-login', executeLogin)
+    router.post('/login-user', executeLogin)
     router.post('/kerberos-login', kerberosLogin)
     router.post('/openid-login', openIdLogin)
     router.post('/register', register)
-    router.post('/saml-login',passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),samlLogin)
+    router.post('/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),samlLogin)
     router.post('/backoffice',changeUserRole)
     router.delete('/delete', deleteUser)
     router.put('/change-user-status', changeStatus)
@@ -36,27 +38,29 @@ module.exports = function(router, service, passport) {
     
     function executeLogin(req, res) {
         req.login({
-            username: username,
-            password: password
+            id: req.body.user.id,
+            username: req.body.user.username,
+            password: req.body.user.password,
+            role: req.body.user.role
+            
         }, (err, result) => {
             
             // handle this error better
-            res.redirect('/')
+            res.redirect('/homepage')
         })
     }
     
     // Simple username password login
     function login(req, res) {
         service.loginUser(req,res)
+        .then(answer => setResponse(res, answer, 200))
+        .catch(err => setResponse(res, err, 400))
     }
     
     // Request service to authenticate using kerberos single sign on
     function kerberosLogin(req, res) {
-    
+        
     }
-    
-
-    
     
     function openIdLogin(req, res) {
         passport.authenticate('openid')
@@ -109,20 +113,22 @@ module.exports = function(router, service, passport) {
             res.end("User doesn't have permissions")
         }
     }
-
-    function getUser(req,res){
-
+    
+    function getUser(req, res){
+        service.getUser(req.body.userId)
+        .then(answer => setResponse(res, answer, 200))
+        .catch(err => setResponse(res, err, 400))
     }
-
+    
     function samlLogin(req,res){
         res.redirect('/homepage')
     }
-
+    
     function logout(req,res){
         req.logout()
         res.redirect('/homepage')
     }
-
+    
     function showBackoffice(req,res){
         if(auth.hasAdminPermissions(req)){
             res.end("User has permisions")
@@ -131,7 +137,7 @@ module.exports = function(router, service, passport) {
             res.end("User doesn't have permissions")
         }
     }
-
+    
     function changeUserRole(req,res){
         if(auth.hasAdminPermissions(req)){
             service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole)

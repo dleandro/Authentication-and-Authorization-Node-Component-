@@ -2,13 +2,14 @@
 
 const
 PORT = process.env.PORT || 8082,
+fetch = require("node-fetch"),
 express = require('express'),
 session = require('express-session'),
 passport = require('passport'),
 SamlStrategy = require('passport-saml').Strategy,
 path = require("path"),
-data = require('../dal/data'),
-service = require('./service')(data),
+data = require('./data/dal'),
+service = require("./service")(data),
 bodyParser = require('body-parser'),
 cookieParser = require('cookie-parser'),
 app = express()
@@ -72,12 +73,18 @@ function userToRef(user, done) {
 }
 
 function refToUser(userRef, done) {
-  service.getUser(userRef).then(user => {
-      if (user) {
-          done(null, user);
-      } else {
-          done('User unknown');
-      }
+  fetch("/user", {
+    method: "GET", 
+    headers: {
+      "Content-Type": "application/json"
+    },
+    userId: userRef
+  }).then(user => {
+    if (user) {
+        done(null, user);
+    } else {
+        done('User unknown');
+    }
   })
 }
 

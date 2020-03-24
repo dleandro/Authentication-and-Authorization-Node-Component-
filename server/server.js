@@ -73,12 +73,14 @@ function userToRef(user, done) {
 }
 
 function refToUser(userRef, done) {
-  fetch("/user", {
+  fetch("http://localhost:8082/user", {
     method: "GET", 
     headers: {
       "Content-Type": "application/json"
     },
-    userId: userRef
+    body :{
+      "userId" :userRef
+    } 
   }).then(user => {
     if (user) {
         done(null, user);

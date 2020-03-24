@@ -10,15 +10,24 @@ export function StandardTextBar({ onChange, placeholder, inputType }) {
 
 export default function LoginForm({id , app}) {
 
-    let getLink= ()=> `/login email=${app.state.email}&pass=${app.state.password}&auth=${app.state.selectedProtocol}`
+
+    function myFunction(){
+        alert('alert' + app.state.email)
+        var myInit = { method: 'POST',
+               body: {
+                   "username": app.state.email,
+                   "passowrd": app.state.passowrd
+               }};
+        fetch('/login',myInit)
+        .then(response=>response.json())
+        .then(data=>console.log(data))
+    }
 
     return (
         <div className="col-12 form-input" id={id}>
-            <form action={getLink()} method="POST">
                 <StandardTextBar onChange={app.changeEmail} placeholder={"Enter email"}  inputType={"email"}/>
                 <StandardTextBar onChange={app.changePass} placeholder={"Password"}  inputType={"password"}/>
-                <button type="submit" className="btn btn-success" >Login</button>
-            </form>
+                <button  onClick={myFunction} className="btn btn-success" >Login</button>
        </div>
     )
 }

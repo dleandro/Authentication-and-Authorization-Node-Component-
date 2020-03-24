@@ -18,12 +18,12 @@ module.exports = function(data) {
                 throw error
             }
             
-            return await fetch("/login-user", {
+            return await fetch("http://localhost:8082/login-user", {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json"
                 },
-                user: user
+                body: JSON.stringify(user)
             })
         },
         

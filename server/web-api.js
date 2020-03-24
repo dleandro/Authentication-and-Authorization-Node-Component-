@@ -38,13 +38,13 @@ module.exports = function(router, service, passport) {
     
     function executeLogin(req, res) {
         req.login({
-            id: req.body.user.id,
-            username: req.body.user.username,
-            password: req.body.user.password,
-            role: req.body.user.role
+            id: req.body.id,
+            username: req.body.username,
+            password: req.body.password,
+            role: req.body.role
             
         }, (err, result) => {
-            
+            if(err)console.log(err)
             // handle this error better
             res.redirect('/homepage')
         })
@@ -52,7 +52,7 @@ module.exports = function(router, service, passport) {
     
     // Simple username password login
     function login(req, res) {
-        service.loginUser(req,res)
+        service.loginUser(req.body.username,req.body.password)
         .then(answer => setResponse(res, answer, 200))
         .catch(err => setResponse(res, err, 400))
     }

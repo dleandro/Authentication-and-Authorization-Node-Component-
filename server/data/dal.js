@@ -41,7 +41,7 @@ module.exports = {
     returns the first user found with such parameters
     */
     getUser: async function getUser(queryParams) {
-        const result = await executeQuery('SELECT FROM Users WHERE username=? AND password=? ', queryParams)
+        const result = await executeQuery('SELECT * FROM Users WHERE username=? AND password=? ', queryParams)
         
         if (result.length == 1) {
             

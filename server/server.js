@@ -1,7 +1,7 @@
 'use strict'
 
 const
-PORT = process.env.PORT || 8082,
+PORT = /*process.env.PORT ||*/ 8082,
 fetch = require("node-fetch"),
 express = require('express'),
 session = require('express-session'),
@@ -35,6 +35,9 @@ passport.use(new SamlStrategy(
     issuer: 'passport-saml'
   },
   function(profile, done) {
+      console.log("saml strategy")
+     // var user = service.getUserByEmail(profile.email)
+      //return user===null|| user===undefined ? done(err)
     findByEmail(profile.email, function(err, user) {
       if (err) {
         return done(err);
@@ -83,13 +86,7 @@ function refToUser(userRef, done) {
       "userId" :userRef
     } 
   }).then(response=>response.json())
-  .then(user => {
-    if (user) {
-        done(null, user);
-    } else {
-        done('User unknown');
-    }
-  })
+  .then(user => (user) ? done(null, user):done('User unknown'))
 }
 
 passport.serializeUser(userToRef);

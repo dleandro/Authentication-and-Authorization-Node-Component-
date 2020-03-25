@@ -6,7 +6,7 @@ import UserLogin from './UserLogin'
 import './stylesheets/App.css';
 
 class App extends Component {
-    state = {password:"", email:""};
+    state = { selectedProtocol: "login", password:"", email:""};
 
     changePass = inputPass => { this.setState({password: inputPass})}
     changeEmail = inputEmail => { this.setState({email: inputEmail})}

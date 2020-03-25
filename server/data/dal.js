@@ -4,6 +4,7 @@ const db = require('./db'),
 ConnectionError = require('../errors/db-connection-error'),
 QueryError = require('../errors/query-error'),
 moment = require('moment')
+const SELECT_ALL= "'SELECT * FROM Users'";
 
 // TODO: Do we need to have some error cathing is result returns empty??
 module.exports = {
@@ -12,17 +13,9 @@ module.exports = {
     Requests the database to return all users
     returns an array containing the user's info
     */
-    getUsers: async function getUsers(queryParams) {
-        const result = await executeQuery('SELECT * FROM Users', queryParams)
-        return result.map(row => {
-            user = {
-                id: row.id,
-                username: row.username,
-                password: row.password,
-                role: row.role
-            }
-        })
-    },
+    getUsers: async (queryParams) => (await executeQuery(SELECT_ALL, queryParams))
+        .map(row => JSON.parse({user : {id: row.id, username: row.username,password: row.password,role: row.role}})),
+    
     
     /* Requests the database for a user with given id */
     getUserById: async function getUserById(queryParams) {
@@ -35,14 +28,22 @@ module.exports = {
             role: result[0].role
         }
     },
-    
+    getUserByEmail: async (queryParams) =>  {
+        const {id,username,password,role} = (await executeQuery(SELECT_ALL +' where username= ?', queryParams))[0]
+        return {
+            id: id,
+            username: username,
+            password: password,
+            role: role
+        }
+    },
     /* 
     Requests the database to return user's that match username and password parameters
     returns the first user found with such parameters
     */
-    getUser: async function getUser(queryParams) {
-        const result = await executeQuery('SELECT * FROM Users WHERE username=? AND password=? ', queryParams)
-        
+	getUser: async (queryParams)=> {
+        const result = await executeQuery(SELECT_ALL+' WHERE username=? AND password=? ', queryParams)
+
         if (result.length == 1) {
             
             return {
@@ -60,42 +61,38 @@ module.exports = {
         throw new Error('There are more than one user with this username and password, could not login')
     },
     
-    /* 
+   /* 
     Requests the database for a new entry in the table users
     Should throw error if there already exists a user with the same parameters    <- TODO
     */
-    insertUser: async function insertUser(queryParams) {
-        const result = await executeQuery(`INSERT INTO Users(username, password, creation_date) VALUES (?, ?,'${moment().format('YYYY-MM-DD HH:MM:SS')}' );`,
-        queryParams)
-        
-        return result
-    },
+    insertUser: async (queryParams) => await executeQuery(`INSERT INTO Users(username, password, creation_date) VALUES (?, ?,'${moment().format('YYYY-MM-DD HH:MM:SS')}' );`,
+        queryParams),
     
-    updateUser: async function updateUser(queryParams) {
+    updateUser: async (queryParams)=> {
         
     },
     
-    deleteUser: async function deleteUser(queryParams) {
+    deleteUser: async (queryParams)=> {
         
     },
     
-    getRecords: async function getRecords(queryParams) {
+    getRecords: async (queryParams)=> {
         
     },
     
-    getRecord: async function getRecord(queryParams) {
+    getRecord: async (queryParams)=>{
         
     },
     
-    insertRecord: async function insertRecords(queryParams) {
+    insertRecord: async (queryParams)=> {
         
     },
     
-    updateRecord: async function updateRecord(queryParams) {
+    updateRecord: async (queryParams)=> {
         
     },
     
-    deleteRecord: async function deleteRecord(queryParams) {
+    deleteRecord: async (queryParams)=> {
         
     },
     
@@ -112,7 +109,6 @@ async function executeQuery(query, queryParams) {
     try {
         try {
             connection = await db.connect()
-            
         } catch (error) {
             console.log(error)
             throw new ConnectionError('An error occurred while establishing the connection to the database')

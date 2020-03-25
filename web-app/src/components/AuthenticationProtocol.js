@@ -4,9 +4,9 @@ import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 
 const AuthenticationProtocol = ({selectedListener})=>
     <ToggleButtonGroup type="radio" name="options" onChange={selectedListener}>
-        <ToggleButton value={"SAML"}> SAML </ToggleButton>
-        <ToggleButton value={"OpenId"}> OpenId </ToggleButton>
-        <ToggleButton value={"Kerberos"}> Kerberos </ToggleButton>
+        <ToggleButton value={"saml-login"}> SAML </ToggleButton>
+        <ToggleButton value={"openid-login"}> OpenId </ToggleButton>
+        <ToggleButton value={"kerberos-login"}> Kerberos </ToggleButton>
     </ToggleButtonGroup>
 
 export default AuthenticationProtocol

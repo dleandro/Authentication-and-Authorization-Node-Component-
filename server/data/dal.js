@@ -4,7 +4,7 @@ const db = require('./db'),
 ConnectionError = require('../errors/db-connection-error'),
 QueryError = require('../errors/query-error'),
 moment = require('moment')
-const SELECT_ALL= "'SELECT * FROM Users'";
+const SELECT_ALL= "SELECT * FROM Users";
 
 // TODO: Do we need to have some error cathing is result returns empty??
 module.exports = {

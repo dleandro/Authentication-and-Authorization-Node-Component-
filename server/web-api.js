@@ -1,18 +1,18 @@
 'use strict'
 
-const auth = require("./data/auth")
+const auth = require("./data/auth"),
+passport = require('passport')
 
-
-module.exports = function(router, service, passport) {
+module.exports = function(router, service) {
     
-     //router.get('permission', hasPermission)
+    //router.get('permission', hasPermission)
     new Map([
         ['/homepage',(req,res) => {
-        res.write('<a href="/comments">Comments</a> \n')
-        res.write('<a href="/files">Files</a> \n')
-        res.write('<a href="/books">Books</a>')
-        res.end()
-    }],
+            res.write('<a href="/comments">Comments</a> \n')
+            res.write('<a href="/files">Files</a> \n')
+            res.write('<a href="/books">Books</a>')
+            res.end()
+        }],
         ['/comments', (req,res)=>{
             (auth.hasPermissions(req))? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
@@ -23,51 +23,66 @@ module.exports = function(router, service, passport) {
             auth.hasPermissions(req)? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
         ['/user', (req, res)=>{
-            service.getUser(req.body.userId)
-                .then(answer => setResponse(res, answer, 200))
-                .catch(err => setResponse(res, err, 400))
+            service.getUser(req.query.userId)
+            .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, err, 400))
         }],
+
+        ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
+            res.end(JSON.stringify(req.user))
+        }],
+
         ['/backoffice', (req,res)=>{
             (auth.hasAdminPermissions(req))?res.end("User has permisions"):res.end("User doesn't have permissions")
         }]
-    ]).forEach((handler,path)=>router.get(path,handler))
-
+    ]).forEach((handler,path)=>router.get(path, handler))
+    
     // POST endpoints
     new Map([
+        
         ['/login', (req, res)=> {
-            service.loginUser(req,res)
-                .then(answer => setResponse(res, answer, 200))
-                .catch(err => setResponse(res, err, 400))
+            service.loginUser(req.body.username, req.body.password)
+            .then(answer => {
+                
+                req.login({
+                    id: answer.id,
+                    username: answer.username,
+                    password: answer.password,
+                    role: answer.role
+                    
+                }, (err, result) => {
+                    if (err) {
+                        setResponse(res, err, 400)
+                    }
+                    // handle this error better
+                    res.redirect('/homepage')
+                })
+                setResponse(res, answer, 200)
+            })
+            .catch(err => setResponse(res, err, 400))
         }],
+        
         ['/logout',(req,res)=>{
             req.logout()
             res.redirect('/homepage')
         }],
-        ['/login-user', (req, res)=> {
-            req.login({
-                id: req.body.user.id,
-                username: req.body.user.username,
-                password: req.body.user.password,
-                role: req.body.user.role
-
-            }, (err, result) => {
-
-                // handle this error better
-                res.redirect('/homepage')
-            })
-        }],
+        
         ['/kerberos-login', (req,res)=>{}],
-        ['/openid-login', (req, res) =>{
-            passport.authenticate('openid')
+        
+        ['/openid-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
+            res.end(JSON.stringify(req.user))
         }],
+        
         ['/register', (req, res) => service.register(req.body.username, req.body.password)
-            .then(answer => setResponse(res, answer, 200))
-            .catch(err => setResponse(res, err, 400))],
+        .then(answer => setResponse(res, answer, 200))
+        .catch(err => setResponse(res, err, 400))],
+        
         ['/backoffice',(req,res)=>{
             (auth.hasAdminPermissions(req))? service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole): res.end("User doesn't have permissions")
         }]
+        
     ]).forEach((handler,path)=>router.post(path,handler))
-
+        
     router.post('/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),(req,res)=>res.redirect('/homepage'))
     router.delete('/delete', (req, res) =>{})
     router.put('/change-user-status', (req, res) =>{})
@@ -81,5 +96,5 @@ module.exports = function(router, service, passport) {
         }
         res.end(answer.toString())
     }
-
+    
 }

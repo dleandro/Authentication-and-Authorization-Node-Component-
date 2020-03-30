@@ -23,7 +23,7 @@ module.exports = function(router, service) {
             auth.hasPermissions(req)? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
         ['/user', (req, res)=>{
-            service.getUser(req.query.userId)
+            service.getUserById(req.query.userId)
             .then(answer => setResponse(res, answer, 200))
             .catch(err => setResponse(res, err, 400))
         }],
@@ -35,7 +35,7 @@ module.exports = function(router, service) {
         ['/backoffice', (req,res)=>{
             (auth.hasAdminPermissions(req))?res.end("User has permisions"):res.end("User doesn't have permissions")
         }]
-    ]).forEach((handler,path)=>router.get(path, handler))
+    ]).forEach((handler,path)=>router.get(path, handler)) 
     
     // POST endpoints
     new Map([
@@ -69,7 +69,7 @@ module.exports = function(router, service) {
         
         ['/kerberos-login', (req,res)=>{}],
         
-        ['/openid-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
+        ['/openid-login', (req, res) =>{
             res.end(JSON.stringify(req.user))
         }],
         
@@ -81,7 +81,7 @@ module.exports = function(router, service) {
             (auth.hasAdminPermissions(req))? service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole): res.end("User doesn't have permissions")
         }]
         
-    ]).forEach((handler,path)=>router.post(path,handler))
+    ]).forEach((handler, path)=>router.post(path,handler))
         
     router.post('/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),(req,res)=>res.redirect('/homepage'))
     router.delete('/delete', (req, res) =>{})

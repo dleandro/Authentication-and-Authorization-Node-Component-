@@ -10,13 +10,14 @@ module.exports = function(data) {
         loginUser: async (username, password)=> data.getUser([username, password]),
         
         // Creates a new entry on the database with given user parameters
-        register: (username, password) => data.insertUser([username, password]),
+        register: async (username, password) => data.insertUser([username, password]),
         
         // Get user with specific id
-        getUser: (id)=> data.getUserById([id]),
-        getUserByEmail: (email)=> data.getUserByEmail([email]),
+        getUserById: async (id)=> data.getUserById([id]),
+
+        getUserByEmail: async (email)=> data.getUserByEmail([email]),
         
-        changeUserRole: (updater, id, newRole)=>{
+        changeUserRole: async (updater, id, newRole)=>{
         }
     }
 }

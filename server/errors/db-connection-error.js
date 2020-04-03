@@ -1,6 +1,6 @@
 class ConnectionError extends Error {  
-  constructor (args) {
-    super(args)
+  constructor ([args]) {
+    super([args])
 
     this.name = this.constructor.name
   }

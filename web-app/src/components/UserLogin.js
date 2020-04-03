@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import LoginForm from "./StandardTextBar";
+import React from 'react'
+import LoginForm from "./LoginForm";
 
 const UserLogin = ({app})=>
     <div className="modal-dialog text-center">

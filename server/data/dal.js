@@ -119,7 +119,7 @@ module.exports = {
         try {
             // if there weren't any users found return with an exception
             throwErrorIfNecessary(
-                () => users.length < 1,
+                () => result.length < 1,
                 errors.noUsersFound)
 
         } catch (error) {
@@ -215,14 +215,14 @@ async function executeQuery(query, queryParams) {
             connection = await db.connect()
         } catch (error) {
             console.log(error)
-            throw new ConnectionError('An error occurred while establishing the connection to the database')
+            throw errors.dbConnection
         }
         const rows = await connection.query(query, queryParams);
         console.log(rows);
         return rows
     } catch (error) {
         console.log(error)
-        throw new QueryError('An error occurred while trying to execute the query')
+        throw error.errorExecutingQuery
     } finally {
         connection.end();
     }
@@ -233,12 +233,12 @@ function throwErrorIfNecessary(predicate, error) {
     
     try {
         
-        if (predicate()) {
+        if (predicate.call()) {
             throw error
         }
         
-    } catch (error) {
-        throw error
+    } catch (err) {
+        throw err
     }
     
 }
@@ -256,4 +256,8 @@ function areThereAnyUsersWithTheseParams(username) {
         return false
     }
 
+}
+
+function toSiren(resource) {
+    return true
 }

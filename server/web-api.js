@@ -25,7 +25,7 @@ module.exports = function(router, service) {
         ['/user', (req, res)=>{
             service.getUserById(req.query.userId)
             .then(answer => setResponse(res, answer, 200))
-            .catch(err => setResponse(res, err, 400))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
         }],
 
         ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
@@ -59,7 +59,7 @@ module.exports = function(router, service) {
                 })
                 setResponse(res, answer, 200)
             })
-            .catch(err => setResponse(res, err, 400))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
         }],
         
         ['/logout',(req,res)=>{
@@ -67,15 +67,20 @@ module.exports = function(router, service) {
             res.redirect('/homepage')
         }],
         
-        ['/kerberos-login', (req,res)=>{}],
+        ['/kerberos-login', (req,res)=>{
+
+        }],
         
-        ['/openid-login', (req, res) =>{
+        ['/openid-login', (req, res) => {
             res.end(JSON.stringify(req.user))
         }],
         
-        ['/register', (req, res) => service.register(req.body.username, req.body.password)
-        .then(answer => setResponse(res, answer, 200))
-        .catch(err => setResponse(res, err, 400))],
+        ['/register', (req, res) => 
+        
+            service.register(req.body.username, req.body.password)
+            .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        ],
         
         ['/backoffice',(req,res)=>{
             (auth.hasAdminPermissions(req))? service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole): res.end("User doesn't have permissions")

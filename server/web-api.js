@@ -32,9 +32,9 @@ module.exports = function(router, service) {
             res.end(JSON.stringify(req.user))
         }],
 
-        ['/backoffice', (req,res)=>{
+        /*['/backoffice', (req,res)=>{
             (auth.hasAdminPermissions(req))?res.end("User has permisions"):res.end("User doesn't have permissions")
-        }]
+        }]*/
     ]).forEach((handler,path)=>router.get(path, handler)) 
     
     // POST endpoints
@@ -55,7 +55,7 @@ module.exports = function(router, service) {
                         setResponse(res, err, 400)
                     }
                     // handle this error better
-                    res.redirect('/homepage')
+
                 })
                 setResponse(res, answer, 200)
             })
@@ -82,9 +82,9 @@ module.exports = function(router, service) {
             .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
         ],
         
-        ['/backoffice',(req,res)=>{
+        /*['/backoffice',(req,res)=>{
             (auth.hasAdminPermissions(req))? service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole): res.end("User doesn't have permissions")
-        }]
+        }]*/
         
     ]).forEach((handler, path)=>router.post(path,handler))
         

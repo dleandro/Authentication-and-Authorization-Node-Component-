@@ -19,7 +19,7 @@ module.exports = function(data) {
         }
     }
     
-
+    
     async function executeRequest(functionToExecute) {
         try {
 

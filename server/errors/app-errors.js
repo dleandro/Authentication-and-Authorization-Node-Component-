@@ -8,8 +8,8 @@ module.exports = {
     errorExecutingQuery: new ConnectionError(JSON.stringify({
         type: "/db/problems/query-not-executed",
         title: "Problem executing Query",
-        detail: "There was a problem executing the query, this is probably a server problem",
-        status: 500 
+        detail: "There was a problem executing the query, check if all the data was inserted correctly",
+        status: 400 
     })),
     
     duplicateUser: new QueryError(JSON.stringify({

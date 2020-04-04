@@ -25,7 +25,7 @@ module.exports = function(router, service) {
         ['/user', (req, res)=>{
             service.getUserById(req.query.userId)
             .then(answer => setResponse(res, answer, 200))
-            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+            .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
         }],
 
         ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
@@ -59,7 +59,7 @@ module.exports = function(router, service) {
                 })
                 setResponse(res, answer, 200)
             })
-            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+            .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
         }],
         
         ['/logout',(req,res)=>{
@@ -79,7 +79,7 @@ module.exports = function(router, service) {
         
             service.register(req.body.username, req.body.password)
             .then(answer => setResponse(res, answer, 200))
-            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+            .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
         ],
         
         ['/backoffice',(req,res)=>{

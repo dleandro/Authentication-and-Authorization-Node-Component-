@@ -85,6 +85,12 @@ module.exports = function(router, service) {
         
     router.post('/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),(req,res)=>res.redirect('/homepage'))
     router.delete('/delete', (req, res) =>{})
+    router.delete('/role',deleteRole)
+    router.delete('/list',deleteList)
+    router.delete('/permission',deletePermission)
+    router.post('/role',addRole)
+    router.post('/list',addList)
+    router.post('/permission',addPermission)
     router.put('/change-user-status', (req, res) =>{})
     
     // set a basic response if request was executed succesfully
@@ -95,6 +101,42 @@ module.exports = function(router, service) {
             'Content-type': 'application/json'
         }
         res.end(answer.toString())
+    }
+
+    function addRole(req,res){
+        service.addRole(req.body.role)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
+    function addList(req,res){
+        service.addList(req.body.user,req.body.list,req.body.start_date,req.body.end_date,req.body.updater)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
+    function addPermission(req,res){
+        service.addPermission(req.body.method,req.body.path,req.body.description)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
+    function deleteRole(req,res){
+        service.deleteRole(req.body.role)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
+    function deleteList(req,res){
+        service.deleteList(req.body.user,req.body.list,req.body.start_date,req.body.end_date,req.body.updater)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
+    function deletePermission(req,res){
+        service.deletePermission(req.body.method,req.body.path,req.body.description)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
     }
     
 }

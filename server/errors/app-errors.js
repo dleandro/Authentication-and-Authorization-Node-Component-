@@ -11,10 +11,10 @@ module.exports = {
         status: 400 
     })),
     
-    duplicateUser: new CustomError(JSON.stringify({
-        type: "/db/problems/duplicate-user",
-        title: "Duplicate User",
-        detail: "Your username is taken, choose another one",
+    duplicateValues: new CustomError(JSON.stringify({
+        type: "/db/problems/duplicate-values",
+        title: "Duplicate Values",
+        detail: "Value already inserted,Please choose another one",
         status: 403 
     })),
 

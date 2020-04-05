@@ -5,7 +5,7 @@ PORT = /*process.env.PORT ||*/ 8082,
 express = require('express'),
 session = require('express-session'),
 path = require("path"),
-data = require('./data/dal'),
+data = require('./data/dal/dal-utils'),
 service = require("./service")(data),
 passport = require('./passport')(service),
 bodyParser = require('body-parser'),
@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(express.json()) // Makes it easier to manage the request's body
 // Homepage leads to our web app, make sure web app has updated production build
-app.use('/', express.static(path.resolve(process.cwd(), 'web-app', 'build')))
+app.use('/', express.static(path.resolve(__dirname, '..', 'web-app', 'build')))
 
 app.use(session({
   resave: true, // to keep session active instead of letting it change to the idle state

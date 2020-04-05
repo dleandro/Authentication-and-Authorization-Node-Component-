@@ -1,9 +1,9 @@
-class ConnectionError extends Error {  
+class CustomError extends Error {  
   constructor (args) {
     super(args)
-
+    
     this.name = this.constructor.name
   }
 }
 
-module.exports = ConnectionError  
+module.exports = CustomError  

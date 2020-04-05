@@ -13,12 +13,15 @@ module.exports = function(router, service) {
             res.write('<a href="/books">Books</a>')
             res.end()
         }],
+
         ['/comments', (req,res)=>{
             (auth.hasPermissions(req))? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
+
         ['/files', (req,res)=>{
             (auth.hasPermissions(req))? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
+        
         ['/books', (req,res)=>{
             auth.hasPermissions(req)? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
@@ -30,11 +33,8 @@ module.exports = function(router, service) {
 
         ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
             res.end(JSON.stringify(req.user))
-        }],
+        }]
 
-        /*['/backoffice', (req,res)=>{
-            (auth.hasAdminPermissions(req))?res.end("User has permisions"):res.end("User doesn't have permissions")
-        }]*/
     ]).forEach((handler,path)=>router.get(path, handler)) 
     
     // POST endpoints
@@ -54,16 +54,15 @@ module.exports = function(router, service) {
                     if (err) {
                         setResponse(res, err, 400)
                     }
-                    // handle this error better
-
+                    setResponse(res, answer, 200)
                 })
-                setResponse(res, answer, 200)
             })
             .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
         }],
         
         ['/logout',(req,res)=>{
             req.logout()
+            setResponse(res, "Logout succesfull", 200)
             res.redirect('/homepage')
         }],
         
@@ -78,13 +77,9 @@ module.exports = function(router, service) {
         ['/register', (req, res) => 
         
             service.register(req.body.username, req.body.password)
-            .then(answer => setResponse(res, answer, 200))
+            .then(answer => setResponse(res, answer, 201))
             .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
-        ],
-        
-        /*['/backoffice',(req,res)=>{
-            (auth.hasAdminPermissions(req))? service.changeUserRole(req.user[0].id,req.body.user_id,req.body.newRole): res.end("User doesn't have permissions")
-        }]*/
+        ]
         
     ]).forEach((handler, path)=>router.post(path,handler))
         

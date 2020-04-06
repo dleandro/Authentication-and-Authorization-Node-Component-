@@ -91,6 +91,8 @@ module.exports = function(router, service) {
     router.post('/role',addRole)
     router.post('/list',addList)
     router.post('/permission',addPermission)
+    router.post('/roles-permission',addRolesPermission)
+    router.post('/users-roles',addUsersRoles)
     router.put('/change-user-status', (req, res) =>{})
     
     // set a basic response if request was executed succesfully
@@ -138,5 +140,18 @@ module.exports = function(router, service) {
         .then(answer => setResponse(res, answer, 200))
             .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
     }
+
+    function addRolesPermission(req,res){
+        service.addPermission(req.body.role,req.body.permission)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
+    function addUsersRoles(req,res){
+        service.addPermission(req.body.user,req.body.role)
+        .then(answer => setResponse(res, answer, 200))
+            .catch(err => setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+    }
+
     
 }

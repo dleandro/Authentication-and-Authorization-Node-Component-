@@ -176,6 +176,8 @@ module.exports = {
         
     },
     
+    // TODO: insert in history the changes made
+    // update specific user's username 
     updateUsername: async (queryParams)=> {
 
         try {
@@ -189,7 +191,25 @@ module.exports = {
         }
         
     },
+
+    // TODO: insert in history the changes made
+    // update specific user's password 
+    updatePassword: async (queryParams)=> {
+
+        try {
+   
+            return await dalUtils.executeQuery('UPDATE Users SET password = ? WHERE id = ?', queryParams)
+   
+        } catch (err) {
+   
+            throw err
+        
+        }
     
+    },
+    
+    // TODO: RGPD user deleted must insert some reference to it on the user's history
+    // delete user in the database with given id
     deleteUser: async (queryParams)=> {
         
         try {

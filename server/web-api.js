@@ -25,6 +25,7 @@ module.exports = function(router, service) {
         ['/books', (req,res)=>{
             auth.hasPermissions(req)? res.end("User has permisions"):res.end("User doesn't have permissions")
         }],
+
         ['/user', (req, res)=>{
             service.getUserById(req.query.userId)
             .then(answer => setResponse(res, answer, 200))
@@ -35,7 +36,7 @@ module.exports = function(router, service) {
             res.end(JSON.stringify(req.user))
         }]
 
-    ]).forEach((handler,path)=>router.get(path, handler)) 
+    ]).forEach((handler,path) => router.get(path, handler)) 
     
     // POST endpoints
     new Map([

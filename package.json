@@ -18,7 +18,8 @@
     "passport-saml": "^1.3.3"
   },
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.1",
+    "supertest": "^4.0.2"
   },
   "engines": {
     "node": "10.16.3",

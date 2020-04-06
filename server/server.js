@@ -11,7 +11,6 @@ passport = require('./passport')(service),
 bodyParser = require('body-parser'),
 cookieParser = require('cookie-parser'),
 app = express(),
-fs = require('fs'),
 https = require('https'),
 cookie_secret = 'justasecretstring' // should change after a while if it has some security implication  openssl rand -hex 32 on the cmd
   
@@ -39,3 +38,5 @@ app.use(passport.session())
 const api = require("./web-api")(app, service)
 
 app.listen(PORT, () => console.log(`Listening on Port: ${PORT}`))
+
+module.exports = app

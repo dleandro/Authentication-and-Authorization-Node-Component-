@@ -44,6 +44,20 @@ module.exports = {
             throw err
         }
         
+    },
+
+    duplicateValues: (fun,params) => {
+        
+        try {
+            
+            fun([params])
+            return true
+            
+            // if it fails and throws an error it means that no user with given parameters was found so we should be good to go
+        } catch (error) {
+            return false
+        }
+        
     }
 
 }

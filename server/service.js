@@ -18,6 +18,8 @@ module.exports = function(data) {
         addRole : async (role)=>executeRequest(()=>data.role.addRole(role)),
         addList: async (user,list,start_date,end_date,updater)=>executeRequest(()=>data.list.addList(user,list,start_date,end_date,updater)),
         addPermission : async (method,path,description)=>executeRequest(()=>data.permission.addPermission(method,path,description)),
+        addUsersRoles : async (user,role)=>executeRequest(()=>data.userRole.addUsersRoles(user,role)),
+        addRolesPermission : async (role,permission)=>executeRequest(()=>data.rolePermission.addRolesPermission(role,permission)),
         deleteRole : async (role)=>executeRequest(()=>data.role.deleteRole(role)),
         deleteList: async (user)=>executeRequest(()=>data.list.deleteList(user,list,start_date,end_date,updater)),
         deletePermission : async (method,path)=>executeRequest(()=>data.permission.deletePermission(method,path))

@@ -5,8 +5,8 @@ PORT = /*process.env.PORT ||*/ 8082,
 express = require('express'),
 session = require('express-session'),
 path = require("path"),
-data = require('./data/dal/paths'),
-service = require("./service")(data),
+data = require('./data/dal/dal-paths'),
+service = require("./api/service")(data),
 passport = require('./passport')(service),
 bodyParser = require('body-parser'),
 cookieParser = require('cookie-parser'),
@@ -18,9 +18,8 @@ cookie_secret = 'justasecretstring' // should change after a while if it has som
   // google client-secret vs0R8tvgMv2w2rhuHtRPT9nK
 
 // app configurations
-app.use(bodyParser.json())
+app.use(bodyParser.json()) // Makes it easier to manage the request's body
 app.use(cookieParser())
-app.use(express.json()) // Makes it easier to manage the request's body
 // Homepage leads to our web app, make sure web app has updated production build
 app.use('/', express.static(path.resolve(__dirname, '..', 'web-app', 'build')))
 
@@ -35,7 +34,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // routes and their behaviour
-const api = require("./web-api")(app, service)
+const api = require("./api/web-api")(app, service)
 
 app.listen(PORT, () => console.log(`Listening on Port: ${PORT}`))
 

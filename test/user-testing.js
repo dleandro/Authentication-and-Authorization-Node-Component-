@@ -8,12 +8,12 @@ assert = require('assert');
 // adminUser should be an admin with full permissions on the test database
 // TODO: create test database before deployment to be able to use these users with no harm
 const adminUser = {
-    username: 'test@test.pt',
-    password: '123'
+    username: 'diogo',
+    password: 'diogo'
 }
 
 const user = {
-    username: 'test2@test.pt',
+    username: 'test@test.pt',
     password: '1234'
 }
 
@@ -29,16 +29,25 @@ const createUser = (cb) => {
     })
 }
 
-const deleteUser = (cb) => {
+const deleteUser = (id, cb) => {
     
     request(app)
-    .delete('/user')
-    .send(user)
+    .delete(`/user/${id}`)
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
     .end( (err, resp) => { cb(err, resp) })
     
+}
+
+const getUser = (id, cb) => {
+    
+    request(app)
+    .get(`/user?userId=${id}`)
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end( (err, resp) => { cb(err, resp )})
 }
 
 describe('[USER CRUD TESTING]', function() {
@@ -59,23 +68,17 @@ describe('[USER CRUD TESTING]', function() {
         createUser( (err, resp) => {
             
             // get created resource
-            request(app)
-            .get('/user?userId=1')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end( (err, resp) => {
+            getUser(1, (err, resp) => {
                 assert.equal(user.username, resp.body.user.username);
-                
-                // maintain state of the table by deleting created resource
-                deleteUser( (err, resp) => done())
-                
             })
             
+            // maintain state of the table by deleting created resource
+            deleteUser(1, (err, resp) => done())
+            
         })
+        
     })
     
-    // check what posts return 
     it('should create test user', function(done) {
         
         createUser( (err, resp) => {
@@ -85,11 +88,16 @@ describe('[USER CRUD TESTING]', function() {
         })
     })
     
-    // check what deletes return 
     it('should delete test user', function(done) {
-        deleteUser( (err, resp) => {
-            assert.equal(user.username, resp.body.user.username);
-            done()            
+        
+        // should make a get request to confirm the created user doesn't exist anymore
+        deleteUser(1, (err, resp) => {
+            
+            getUser(1, (err, resp) => {
+
+                assert.notEqual(err, null)
+                done()            
+            })
         })
     })
     
@@ -106,11 +114,11 @@ describe('[USER CRUD TESTING]', function() {
         })
     })
     
-
-
+    
+    
     it('should update test user´s password', function(done) {
         request(app)
-        .put('/user/{1}/username')
+        .put('/user/{1}/password')
         .send(user)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)

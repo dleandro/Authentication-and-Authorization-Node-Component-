@@ -1,20 +1,27 @@
 'use strict'
 
 const auth = require("../data/auth"),
-passport = require('passport')
+passport = require('passport'),
+apiUtils = require('../util/api-utils')
+
 
 module.exports = function(app, service) {
     
     const
-    userRouter = require('./routes/user-router') (service),
-    permissionRouter = require('./routes/permission-router') (service),
-    roleRouter = require('./routes/role-router') (service),
-    listRouter = require('./routes/list-router') (service)
+    userRouter = require('./routes/user-router') (apiUtils, service),
+    permissionRouter = require('./routes/permission-router') (apiUtils, service),
+    roleRouter = require('./routes/role-router') (apiUtils, service),
+    listRouter = require('./routes/list-router') (apiUtils, service),
+    rolesPermissionRouter = require('./routes/roles-permission-router') (apiUtils, service),
+    usersRolesRouter = require('./routes/users-roles-router') (apiUtils, service)
     
     app.use('/user', userRouter)
     app.use('/permission', permissionRouter)
     app.use('/role', roleRouter)
     app.use('/list', listRouter)
+    app.use('/roles-permission', rolesPermissionRouter)
+    app.use('/users-roles', usersRolesRouter)
+
     
     //GET endpoints
     new Map([
@@ -40,17 +47,17 @@ module.exports = function(app, service) {
                     
                 }, (err, result) => {
                     if (err) {
-                        setResponse(res, err, 400)
+                        apiUtils.setResponse(res, err, 400)
                     }
-                    setResponse(res, answer, 200)
+                    apiUtils.setResponse(res, answer, 200)
                 })
             })
-            .catch(err => setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
         }],
         
-        ['/logout',(req,res)=>{
+        ['/logout', (req,res)=>{
             req.logout()
-            setResponse(res, "Logout succesfull", 200)
+            apiUtils.setResponse(res, "Logout succesfull", 200)
             res.redirect('/homepage')
         }],
         

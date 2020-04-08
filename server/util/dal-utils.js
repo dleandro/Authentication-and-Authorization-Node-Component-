@@ -1,7 +1,7 @@
 'use strict'
 
-const db = require('../db'),
-errors = require('../../errors/app-errors')
+const db = require('../data/db'),
+errors = require('../errors/app-errors')
 
 module.exports = {
     
@@ -46,16 +46,18 @@ module.exports = {
         
     },
 
-    duplicateValues: (fun,params) => {
+    // Util function that checks for duplicates on the database
+    // if it returns true it means that there are no duplicates and the query can proceed
+    duplicateValues: (fun, params) => {
         
         try {
             
-            fun([params])
-            return true
+            fun.call([params])
+            return false
             
             // if it fails and throws an error it means that no user with given parameters was found so we should be good to go
         } catch (error) {
-            return false
+            return true
         }
         
     }

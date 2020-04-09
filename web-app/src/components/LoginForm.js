@@ -5,13 +5,15 @@ import Button from 'react-bootstrap/Button'
 const fetch = require('node-fetch');
 
 
-export default function LoginForm({id , app: state,props: setRedirect}) {
+export default function LoginForm({id , app: state, setRedirect}) {
 
     var user, pass ="";
 
 
     function submitLoginRequest() {
-        fetch("http://localhost:8082/login"+ state.selectedProtocol, {
+        const url = "http://localhost:8082/login"+ state.selectedProtocol
+        console.log(`fetching ${url} ... with ${user} ${pass}`)
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -21,17 +23,17 @@ export default function LoginForm({id , app: state,props: setRedirect}) {
                 password: pass
             })
         })
-
-          .then(resp=>{setRedirect()})
-           // .then(json=>console.log(json))
-
-        //return <Redirect to="/backofice"/>
+            .then(rsp=> {
+                console.log(rsp);
+                return {user:rsp.text(),status:rsp.status}
+            })
+            .then(json=>{console.log(json);json.status===200?setRedirect('/backoffice'):alert('Unable to login')})
     }
 
-    function submitGoogleLoginRequest() {
+    /*function submitGoogleLoginRequest() {
 
         fetch("http://localhost:8082/google-login")
-    }
+    }*/
 
     const handlePassword = event => {
         pass= event.target.value

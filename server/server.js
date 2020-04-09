@@ -10,6 +10,8 @@ service = require("./api/service")(data)
 // Setup app's middleware
 require('./middleware/app-middleware')(app)
 
+app.use(require('cors')())
+
 // Homepage leads to our web app, make sure web app has updated production build
 app.use('/', express.static(path.resolve(__dirname, '..', 'web-app', 'build')))
 

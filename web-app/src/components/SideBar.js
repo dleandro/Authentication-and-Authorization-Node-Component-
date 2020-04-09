@@ -1,14 +1,22 @@
 import React from 'react'
 
-import SideNav, { Toggle, Nav, NavItem } from '@trendmicro/react-sidenav';
-import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import SideNav, { NavItem} from '@trendmicro/react-sidenav';
 import {Link} from 'react-router-dom';
 
-export default function Sidebar() {
+export default function Sidebar({navWidthCollapsed , navWidthExpanded}) {
+
+
+    var expanded = false
+
+    function toggleListener() {
+        expanded= !expanded
+        document.getElementById('sidebar').style.width= expanded ? navWidthExpanded : navWidthCollapsed
+        document.getElementById('main').style.marginLeft= expanded ? navWidthExpanded : navWidthCollapsed
+    }
 
 
     return (
-        <SideNav  style={{'background-color': '#282c34'}}>
+        <SideNav id={"sidebar"} style={{'backgroundColor': '#282c34',width: navWidthCollapsed}} onToggle={(selected) => toggleListener()}>
             <SideNav.Toggle />
             <SideNav.Nav defaultSelected="home">
                 <NavItem eventKey="home">
@@ -25,6 +33,7 @@ export default function Sidebar() {
                 </NavItem>
             </SideNav.Nav>
         </SideNav>
+
     )
 }
 

@@ -27,6 +27,16 @@ module.exports = function(dalUtils, errors) {
             } catch (error) {
                 throw errors.errorExecutingQuery
             }
-        }
+        },
+        getPermissions :async () => {
+
+
+try {
+    return await dalUtils.executeQuery(`Select * from Permission`)             
+
+} catch (error) {
+    throw errors.errorExecutingQuery
+}
+},
     }
 }

@@ -64,7 +64,19 @@ module.exports =  function(dalUtils, errors) {
             
             try {
         
-                return await dalUtils.executeQuery('DELETE FROM Role WHERE id = ?', queryParams)
+                return await dalUtils.executeQuery('DELETE FROM Roles WHERE id = ?', queryParams)
+        
+            } catch (err) {
+           
+                throw err
+           
+            }
+        },
+        getRoles:async (queryParams)=> {
+            
+            try {
+        
+                return await dalUtils.executeQuery('Select * from Roles')
         
             } catch (err) {
            

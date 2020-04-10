@@ -46,10 +46,11 @@ module.exports = function(app, service) {
                     role: answer.role
                     
                 }, (err, result) => {
+
                     if (err) {
-                        apiUtils.setResponse(res, err, 400)
+                        apiUtils.setResponse(res, err.message, 400)
                     }
-                    apiUtils.setResponse(res, answer, 200)
+                    apiUtils.setResponse(res, JSON.stringify(answer), 200)
                 })
             })
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))

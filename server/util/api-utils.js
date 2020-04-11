@@ -21,7 +21,7 @@ module.exports = {
         res.headers = {
             'Content-type': 'application/json'
         }
-        res.end(answer.toString())
+        res.end(JSON.stringify(answer).toString())
     }
 
 }

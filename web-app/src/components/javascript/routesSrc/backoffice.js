@@ -2,6 +2,7 @@ import React from 'react'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
+import TableRow from "../html-elements-utils/TableRow";
 import Table from 'react-bootstrap/Table'
 
 const fetch = require('node-fetch');
@@ -42,12 +43,8 @@ class BackOffice extends React.Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.users.map(user => {
-                    return <tr>
-                        <td>{user.id}</td>
-                        <td>{user.username}</td>
-                    </tr>
-                })}
+                {this.state.users.map(user =>  <TableRow setRedirect={this.props.setRedirect} col1={user.id} col2={user.username} />)}
+                <TableRow setRedirect={this.props.setRedirect} col1={undefined} col2={undefined} />
                 </tbody>
             </Table>
         )

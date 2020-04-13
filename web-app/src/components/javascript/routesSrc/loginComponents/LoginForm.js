@@ -11,7 +11,7 @@ export default function LoginForm({id , app: state, setRedirect}) {
 
 
     function submitLoginRequest() {
-        const url = "http://localhost:8082/login"+ state.selectedProtocol
+        const url = "http://localhost:8082/login"//+ state.selectedProtocol
         console.log(`fetching ${url} ... with ${user} ${pass}`)
         fetch(url, {
             method: "POST",

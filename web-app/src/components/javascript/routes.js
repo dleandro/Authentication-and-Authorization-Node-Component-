@@ -31,7 +31,7 @@ class Routes extends Component{
                     <Route path={'/'} exact component={Homepage} />
                     <Route path={'/login'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>} />
                     <Route path={'/loginAdmin'} exact component={()=><AuthenticationProtocol selectedListener={this.props.changeProtocol}/>}/>
-                    <Route path={'/backoffice'} exact component={()=><BackOffice />}/>
+                    <Route path={'/backoffice'} exact component={()=><BackOffice setRedirect={this.setRedirect}/>}/>
                 </div>
             </Switch>
         );

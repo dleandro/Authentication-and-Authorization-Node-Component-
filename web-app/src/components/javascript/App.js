@@ -10,7 +10,7 @@ const sidebarExtendedSize = "250px";
 
 class App extends Component {
 
-    state = { selectedProtocol: "", redirect:{should:false, link:"/"}};
+    state = { selectedProtocol: "/", redirect:{should:false, link:"/"}};
 
     changeProtocol = inputProto => {
         this.setState({selectedProtocol: inputProto})

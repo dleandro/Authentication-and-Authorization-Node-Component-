@@ -6,10 +6,9 @@ request = require('supertest'),
 assert = require('assert');
 
 // adminUser should be an admin with full permissions on the test database
-// TODO: create test database before deployment to be able to use these users with no harm
 const adminUser = {
-    username: 'diogo',
-    password: 'diogo'
+    username: 'admin',
+    password: '1234'
 }
 
 const user = {
@@ -17,73 +16,96 @@ const user = {
     password: '1234'
 }
 
-const createUser = (cb) => {
-    request(app)
-    .post('/user')
-    .send(user)
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(201)
-    .end( (err, resp) => {
-        cb(err, resp)
-    })
-}
-
-const deleteUser = (id, cb) => {
-    
-    request(app)
-    .delete(`/user/${id}`)
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-    .end( (err, resp) => { cb(err, resp) })
-    
-}
-
 const getUser = (id, cb) => {
     
     request(app)
-    .get(`/user?userId=${id}`)
+    .get(`/user/${id}`)
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
     .end( (err, resp) => { cb(err, resp )})
 }
 
+var userId
+
 describe('[USER CRUD TESTING]', function() {
-    
-    // ensure that user is authenticated to make sure the next tests won't fail due to lack of authentication
-    before(function() {
+
+    it('should create test user', function(done) {
+        
         request(app)
-        .post('/login')
-        .send(adminUser)
+        .post('/user')
+        .send(user)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => {  })
-    }) 
-    
-    it('should get test user', function(done) {
-        // create a user to show some results on get
-        createUser( (err, resp) => {
+        .expect(201)
+        .end( (err, resp) => {
+            userId = resp.body.id
+            assert.equal(resp.body.username, user.username)                
             
-            // get created resource
-            getUser(1, (err, resp) => {
-                assert.equal(user.username, resp.body.user.username);
-            })
-            
-            // maintain state of the table by deleting created resource
-            deleteUser(1, (err, resp) => done())
-            
+            done()
         })
         
     })
     
-    it('should create test user', function(done) {
+    it('should get all users', function(done) {
         
-        createUser( (err, resp) => {
+        request(app)
+        .get('/user')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { 
             
-            assert.equal(user.username, resp.body.user.username);
+            assert.equal(resp.body.length > 0, true)                
+            
+            done()
+        })
+        
+    })
+    
+    it('should get test user', function(done) {
+        
+        // get created resource
+        getUser(userId, (err, resp) => {
+            assert.equal(user.username, resp.body.username);
+            done()
+        })       
+    })
+    
+    
+    it('should update test user´s username', function(done) {
+        const user = {
+            username: 'newUsername'
+        }
+        
+        request(app)
+        .put(`/user/${userId}/username`)
+        .send(user)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { 
+            assert.equal(user.username, resp.body.username);
+            done()
+        })
+        
+    })
+    
+    
+    
+    it('should update test user´s password', function(done) {
+        const user = {
+            password: 'newPassword'
+        }
+
+        request(app)
+        .put(`/user/${userId}/password`)
+        .send(user)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { 
+            assert.equal(user.password, resp.body.password);
             done()
         })
     })
@@ -91,41 +113,18 @@ describe('[USER CRUD TESTING]', function() {
     it('should delete test user', function(done) {
         
         // should make a get request to confirm the created user doesn't exist anymore
-        deleteUser(1, (err, resp) => {
-            
-            getUser(1, (err, resp) => {
-
+        request(app)
+        .delete(`/user/${userId}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { 
+            getUser(userId, (err, resp) => {
                 assert.notEqual(err, null)
                 done()            
-            })
+            }) 
         })
+        
     })
     
-    it('should update test user´s username', function(done) {
-        request(app)
-        .put('/user/{1}/username')
-        .send(user)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { 
-            assert.equal(user.username, resp.body.user.username);
-            done()
-        })
-    })
-    
-    
-    
-    it('should update test user´s password', function(done) {
-        request(app)
-        .put('/user/{1}/password')
-        .send(user)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { 
-            assert.equal(user.username, resp.body.user.username);
-            done()
-        })
-    })
 })

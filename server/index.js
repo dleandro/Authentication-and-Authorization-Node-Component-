@@ -6,7 +6,7 @@
 */
 
 const
-config = require('./config/config'),
+config = require('./common/config/config'),
 app = require('./server')
 
 app.listen(config.port, () => console.log(`Listening on Port: ${config.port}`))

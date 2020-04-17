@@ -3,27 +3,26 @@
 const
 data = require('../util/dal-paths'),
 passport = require('passport'),
-SamlStrategy = require('passport-saml').Strategy,
 OpenIDStrategy = require('passport-openid').Strategy,
-GoogleStrategy = require('passport-google-oauth20').Strategy
+GoogleStrategy = require('passport-google-oauth20').Strategy,
+fs=require('fs')
+   const SamlStrategy=new (require('passport-saml').Strategy)({ 
+    
+      callbackUrl: 'http://localhost:8082/login/callback',  //redirect after sucessfull login
+      entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
+      issuer: 'passport-saml',
+      decryptionPvk:fs.readFileSync('./privkey.pem')
+    },function(profile, done) {
+      findByEmail(profile.email, function(err, user) {
+        if (err) {
+          return done(err);
+        }
+        return done(null, user);
+      });
+    })
 
-/* LocalStrategy = require('passport-local').Strategy;
-
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
-  }
-  ));
-  */
+ const certificate=fs.readFileSync('./cacert.pem','utf-8')
+  console.log(SamlStrategy.generateServiceProviderMetadata(certificate))
   
   passport.use(new GoogleStrategy({
     clientID: '523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com',
@@ -48,24 +47,7 @@ passport.use(new LocalStrategy(
   }
   ))
   
-  passport.use(new SamlStrategy(
-    {
-      path: '/login/callback',  //redirect after sucessfull login
-      entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
-      issuer: 'passport-saml'
-    },
-    function(profile, done) {
-      console.log("saml strategy")
-      // var user = service.getUserByEmail(profile.email)
-      //return user===null|| user===undefined ? done(err)
-      findByEmail(profile.email, function(err, user) {
-        if (err) {
-          return done(err);
-        }
-        return done(null, user);
-      });
-    })
-    );
+  passport.use(SamlStrategy)
     
     function refToUser(userRef, done) {
       findUser(userRef)

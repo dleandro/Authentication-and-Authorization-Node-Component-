@@ -16,6 +16,7 @@ module.exports = function(app) {
     rolesPermissionRouter = require('./roles-permission/roles-permission-router') (apiUtils, data.rolesPermission),
     usersRolesRouter = require('./users-roles/users-roles-router') (apiUtils, data.usersRoles)
     
+
     app.use('/user', userRouter)
     app.use('/permission', permissionRouter)
     app.use('/role', roleRouter)
@@ -28,6 +29,10 @@ module.exports = function(app) {
     new Map([
         
         ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
+            res.end(JSON.stringify(req.user))
+        }],
+
+        ['/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }), (req, res) =>{
             res.end(JSON.stringify(req.user))
         }]
         

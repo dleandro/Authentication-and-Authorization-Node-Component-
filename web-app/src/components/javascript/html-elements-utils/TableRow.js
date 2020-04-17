@@ -13,7 +13,7 @@ class TableRow extends React.Component {
     addOrEditRequest = _ => (this.props.cols[0] === undefined && this.props.cols[1]===undefined)? this.addUserRequest():this.editUserRequest();
 
     addUserRequest= _=> {
-        console.log(`fetching ${USER_URL} ... with ${this.state.cols}`)
+        console.log(`fetching ${USER_URL} ... with ${this.state.cols}`);
         fetch(USER_URL, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -55,6 +55,7 @@ class TableRow extends React.Component {
     }
 
     handleChange = (e,index) => this.setState({cols: this.changeColNum(index,e.target.value)})
+    deleteListener= ()=>console.log('apaga-me');
 
 
     render() {
@@ -67,7 +68,13 @@ class TableRow extends React.Component {
                         </td>
                     )
                 }
-                <td><Button onClick={this.submitListener}>Submit</Button></td>
+                <td>
+                    <Button onClick={this.submitListener}>Submit</Button>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    <Button onClick={this.deleteListener}>Delete</Button>
+                </td>
             </tr>
         )
     }

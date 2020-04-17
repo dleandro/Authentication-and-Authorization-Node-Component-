@@ -14,7 +14,7 @@ export class BackofficeRole extends Component {
         this.state = { roles: [] }
     }
 
-    requestRoles = () => fetch(ROLE_URL).then(rsp=> rsp.text()).then(data=>JSON.parse(data));
+    requestRoles = () => fetch(ROLE_URL).then(rsp=> rsp.json())
 
 
     componentDidMount() {

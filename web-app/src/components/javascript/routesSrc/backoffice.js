@@ -15,10 +15,10 @@ class BackOffice extends React.Component {
     }
 
 
-    requestUsers = () => fetch(USER_URL).then(rsp=> rsp.text())
+    requestUsers = () => fetch(USER_URL).then(rsp=> rsp.json())
 
     componentDidMount() {
-        this.requestUsers().then(data =>this.setState({ users: JSON.parse(data) }))
+        this.requestUsers().then(data =>this.setState({ users: data }))
 
     }
 

@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import UperBar from "./html-elements-utils/UperBar";
-import AuthenticationProtocol from './routesSrc/AuthenticationProtocol'
-import {Switch,Route} from 'react-router-dom'
-import UserLogin from './routesSrc/loginComponents/UserLogin'
-import Homepage from "./routesSrc/Homepage";
-import { Redirect } from 'react-router-dom';
 import '../stylesheets/App.css';
+import React, { Component } from 'react'
+import {Switch,Route} from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
 import BackOffice from "./routesSrc/backoffice";
+import Homepage from "./routesSrc/Homepage";
+import UserLogin from './routesSrc/loginComponents/UserLogin'
+import AuthenticationProtocol from './routesSrc/AuthenticationProtocol'
+import UperBar from "./html-elements-utils/UperBar";
+import {BackofficeRole} from "./routesSrc/BackofficeRole";
 
 
 class Routes extends Component{
@@ -32,6 +33,9 @@ class Routes extends Component{
                     <Route path={'/login'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>} />
                     <Route path={'/loginAdmin'} exact component={()=><AuthenticationProtocol selectedListener={this.props.changeProtocol}/>}/>
                     <Route path={'/backoffice'} exact component={()=><BackOffice setRedirect={this.setRedirect}/>}/>
+                    <Route path={'/backoffice/lists'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>}/>
+                    <Route path={'/backoffice/permissions'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>}/>
+                    <Route path={'/backoffice/roles'} exact component={()=><BackofficeRole />}/>
                 </div>
             </Switch>
         );

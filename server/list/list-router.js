@@ -29,7 +29,7 @@ module.exports = function(apiUtils, service) {
     function getLists(req,res){
         service.getLists()
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
     
     function getActiveLists(req,res){

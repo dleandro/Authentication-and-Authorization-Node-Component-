@@ -9,6 +9,7 @@ import UserLogin from './routesSrc/loginComponents/UserLogin'
 import AuthenticationProtocol from './routesSrc/AuthenticationProtocol'
 import UperBar from "./html-elements-utils/UperBar";
 import {BackofficeRole} from "./routesSrc/BackofficeRole";
+import {BackofficeList} from "./routesSrc/BackofficeList";
 
 
 class Routes extends Component{
@@ -33,7 +34,7 @@ class Routes extends Component{
                     <Route path={'/login'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>} />
                     <Route path={'/loginAdmin'} exact component={()=><AuthenticationProtocol selectedListener={this.props.changeProtocol}/>}/>
                     <Route path={'/backoffice'} exact component={()=><BackOffice setRedirect={this.setRedirect}/>}/>
-                    <Route path={'/backoffice/lists'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>}/>
+                    <Route path={'/backoffice/lists'} exact component={()=><BackofficeList />}/>
                     <Route path={'/backoffice/permissions'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>}/>
                     <Route path={'/backoffice/roles'} exact component={()=><BackofficeRole />}/>
                 </div>

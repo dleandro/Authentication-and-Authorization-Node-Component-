@@ -14,8 +14,8 @@
     "mariadb": "^2.2.0",
     "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
+    "passport-azure-ad-oauth2": "0.0.4",
     "passport-google-oauth20": "^2.0.0",
-    "passport-negotiate": "^0.1.4",
     "passport-openid": "^0.4.0",
     "passport-saml": "^1.3.3"
   },

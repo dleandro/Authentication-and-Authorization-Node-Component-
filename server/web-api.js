@@ -31,7 +31,11 @@ module.exports = function(app) {
         ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
             res.end(JSON.stringify(req.user))
         }],
-
+        ['/azureAD-login', passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
+        function (req, res) {
+          // Successful authentication, redirect home.
+          res.redirect('/');
+        }],
         ['/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }), (req, res) =>{
             res.end(JSON.stringify(req.user))
         }]

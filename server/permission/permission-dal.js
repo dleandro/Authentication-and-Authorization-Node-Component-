@@ -4,39 +4,56 @@ module.exports = function(dalUtils, errors) {
     
     return {
         
-        addPermission: async (queryParams) => {
+        addPermission: async (method, path, description) => {
             
-            
-            // not gonna work the duplicate function
+            const query = {
+                statement: `INSERT INTO Permission(method,path,description) VALUES (?,?,?);`,
+                description: "adding permission",
+                params: [method, path, description]
+            }
             
             try {
-                // if there already exists users with these given parameters than we have to throw an error
-                // our app doesn't support duplicate users
-                dalUtils.throwErrorIfNecessary(
-                    () => dalUtils.duplicateValues(method,path),
-                    errors.duplicateValues)
-                    
-                } catch(error) {
-                    throw error
-                }
+                return await dalUtils.executeQuery(query)             
                 
-                try {
-                    return await dalUtils.executeQuery(`INSERT INTO Permission(method,path,description) VALUES (?,?,?);`,
-                    queryParams)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
-            },
-            getPermissions :async () => {
+            } catch (error) {
+                throw error
+            }
+        },
+        
+        deletePermission: async (permissionId) => {
+            
+            const query = {
+                statement: `DELETE FROM Permission WHERE id = ?`,
+                description: "deleting permission",
+                params: [permissionId]
+            }
+
+            try {
                 
+                return await dalUtils.executeQuery(query)          
                 
-                try {
-                    return await dalUtils.executeQuery(`Select * from Permission`)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
-            },
-        }
+            } catch (error) {
+                throw error
+            }
+            
+        },
+        
+        getPermissions :async () => {
+            
+            const query = {
+                statement: `Select * from Permission`,
+                description: "getting all permissions",
+                params: []
+            }
+            
+            try {
+                return await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
+        },
+        
+        
     }
+}

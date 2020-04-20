@@ -4,27 +4,37 @@ module.exports =  function(dalUtils, errors) {
     
     return {
 
-        addRolePermission: async (queryParams) => {
+        addRolePermission: async (role, permission) => {
             
+            const query = {
+                statement: `INSERT INTO Roles_Permission(role,permission) VALUES (?,?);`,
+                description: "adding role_permission",
+                params: [role, permission]
+            }
+
             try {
-                return await dalUtils.executeQuery(`INSERT INTO Roles_Permission(role,permission) VALUES (?,?);`,
-                queryParams)             
+                return await dalUtils.executeQuery(query)             
     
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
             
             
         },
 
-        deleteRolePermission: async (queryParams) => {
+        deleteRolePermission: async (role, permission) => {
             
+            const query = {
+                statement: `DELETE FROM Roles_Permission Where role=? AND permission=?`,
+                description: "deleting role_permission",
+                params: [role, permission]
+            }
+
             try {
-                return await dalUtils.executeQuery(`DELETE FROM Roles_Permission Where role=? AND permission=?`,
-                queryParams)             
+                return await dalUtils.executeQuery(query)          
     
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
             
             

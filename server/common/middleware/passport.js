@@ -59,7 +59,7 @@ fs=require('fs')
     }
     
     async function findUser(userId) {
-      return data.user.getUserById([userId])
+      return data.user.getUserById(userId)
     }
     
     /*
@@ -73,7 +73,7 @@ fs=require('fs')
         cb(null, user)
       }
       
-      data.user.insertUser([userToFindOrCreate.username, userToFindOrCreate.password])
+      data.user.insertUser(userToFindOrCreate.username, userToFindOrCreate.password)
       .then(user => cb(null, user))
       .catch(err => cb(err, null))
       

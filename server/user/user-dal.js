@@ -13,15 +13,21 @@ module.exports = function(dalUtils, errors) {
     return {
 
         /* Requests the database for a user with given id */
-        getUserById: async function getUserById(queryParams) {
+        getUserById: async function getUserById(id) {
             var result 
+
+            const query = {
+                statement: `${SELECT_ALL} where id= ?`,
+                description: "get user by id",
+                params: [id]
+            }
     
             try {
     
-                result = await dalUtils.executeQuery(`${SELECT_ALL} where id= ?`, queryParams)
+                result = await dalUtils.executeQuery(query)
     
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
     
             try {
@@ -42,16 +48,22 @@ module.exports = function(dalUtils, errors) {
             }
         },
     
-        getUserByEmail: async (queryParams) =>  {
+        getUserByEmail: async function getUserByEmail (username) {
     
             var result
+
+            const query = {
+                statement: `${SELECT_ALL} + where username= ?`,
+                description: "get user by email",
+                params: [username]
+            }
     
             try {
                 
-                result = await dalUtils.executeQuery(`${SELECT_ALL} + where username= ?`, queryParams)
+                result = await dalUtils.executeQuery(query)
     
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
     
     
@@ -72,17 +84,24 @@ module.exports = function(dalUtils, errors) {
                 password: result[0].password,
             }
         },
+
         /* 
         Requests the database to return user's that match username and password parameters
         returns the first user found with such parameters
         */
-        getUser: async (queryParams)=> {
+        getUser: async (username, password)=> {
             var result 
+
+            const query = {
+                statement: `${SELECT_ALL} WHERE username=? AND password=?`,
+                description: "get user matching username and password",
+                params: [username, password]
+            }
     
             try {
-                result = await dalUtils.executeQuery(`${SELECT_ALL} WHERE username=? AND password=?`, queryParams)
+                result = await dalUtils.executeQuery(query)
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
     
             try {
@@ -111,12 +130,18 @@ module.exports = function(dalUtils, errors) {
 
             var result
 
+            const query = {
+                statement: "SELECT * FROM Users",
+                description: "get all users on the database",
+                params: []
+            }
+
             try {
 
-                result = await dalUtils.executeQuery("SELECT * FROM Users")
+                result = await dalUtils.executeQuery(query)
 
             } catch (error) {
-                throw error.errorExecutingQuery
+                throw error
             }
 
             try {
@@ -140,87 +165,144 @@ module.exports = function(dalUtils, errors) {
         
         /* 
         Requests the database for a new entry in the table users
-        Should throw error if there already exists a user with the same parameters    <- TODO
+        Should throw error if there already exists a user with the same parameters   
         */
-        insertUser: async (queryParams) => {
+        insertUser: async (username, password) => {
+
+            var result
+
+            const query = {
+                statement: `INSERT INTO Users(username, password) VALUES (?, ?);`,
+                description: 'user creation',
+                params: [username, password]
+            }
     
-            try {
-                // if there already exists users with these given parameters then we have to throw an error
-                // our app doesn't support duplicate users
-                // if getUserByEmail returns without an error it means that there is already a user with these parameters
-                getUserByEmail(queryParams)
-                
-            } catch(error) {
-                // getUserByEmail didn't find any duplicate user so it threw an error, this means we can proceed with the insertion
-                
                 try {
                     
-                    return await dalUtils.executeQuery(`INSERT INTO Users(username, password) VALUES (?, ?);`,
-                    queryParams)             
+                    result = await dalUtils.executeQuery(query)             
                     
+
                 } catch (error) {
-                    throw errors.errorExecutingQuery
+
+                    throw error
                 }
                 
+                try {
+                
+                    //make sure user creation is registered on the user's history
+                    await dalUtils.registerUserHistory(result.insertId, moment().format(), "User creation")
+    
+                    return result
+    
+                } catch (error) {
+                    throw error
+                }
+            
+        },
+        
+        // update specific user's username 
+        updateUsername: async (username, id)=> {
+
+            var result
+
+            const query = {
+                statement: 'UPDATE Users SET username = ? WHERE id = ?',
+                description: "user's username update",
+                params: [username, id]
+            }
+    
+            try {
+           
+                result = await dalUtils.executeQuery(query)
+           
+            } catch (err) {
+           
+                throw err
+           
             }
 
-            // if we got here it means that getUserByEmail found a duplicate user and we should throw an error to let the user know what went wrong
-            throw errors.duplicateValues
-            
-        },
-        
-        // TODO: insert in history the changes made
-        // update specific user's username 
-        updateUsername: async (queryParams)=> {
-    
             try {
-           
-                return await dalUtils.executeQuery('UPDATE Users SET username = ? WHERE id = ?', queryParams)
-           
-            } catch (err) {
-           
-                throw err
-           
+             
+                //make sure username update is registered on the user's history
+                await dalUtils.registerUserHistory(id, moment().format(), "Username update")
+
+                return result
+            } catch (error) {
+                throw error
             }
             
         },
     
-        // TODO: insert in history the changes made
         // update specific user's password 
-        updatePassword: async (queryParams)=> {
-    
+        updatePassword: async (password, id)=> {
+
+            var result
+
+            const query = {
+                statement: 'UPDATE Users SET password = ? WHERE id = ?',
+                description: "user's password update",
+                params: [password, id]
+            }
+            
             try {
        
-                return await dalUtils.executeQuery('UPDATE Users SET password = ? WHERE id = ?', queryParams)
+                result = await dalUtils.executeQuery(query)
        
             } catch (err) {
        
                 throw err
             
             }
+
+            try {
+                
+                //make sure password update is registered on the user's history
+                await dalUtils.registerUserHistory(id, moment().format(), "Password update")
+
+                return result
+
+            } catch (error) {
+                throw error
+            }
         
         },
         
-        // TODO: RGPD user deleted must insert some reference to it on the user's history
         // delete user in the database with given id
-        deleteUser: async (queryParams) => {
+        deleteUser: async (userId) => {
+
+            var result
+
+            const query = {
+                statement: 'DELETE FROM Users WHERE id = ?',
+                description: "user delete",
+                params: [userId]
+            }
             
             try {
     
-                var res = await dalUtils.executeQuery('DELETE FROM Users WHERE id = ?', queryParams)
+                result = await dalUtils.executeQuery(query)
     
-                if (res.affectedRows == 0) {
+                if (result.affectedRows == 0) {
                     throw errors.noUsersFound
                 }
 
-                return res
-
             } catch (err) {
            
                 throw err
            
+            }
+
+            try {
+             
+                //make sure username update is registered on the user's history
+                await dalUtils.registerUserHistory(userId, moment().format(), "User deleted")
+
+                return result
+            } catch (error) {
+                throw error
             }
         }
 
     }
+        
 }

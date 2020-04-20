@@ -13,8 +13,8 @@ module.exports = function(apiUtils, data) {
     usersRolesRouter.get('/active/user/:id', getUserActiveList)
     usersRolesRouter.get('/active/user', getUserRolesById)    
     
-    function addUsersRoles(req,res){
-        data.addUserRole([req.body.user,req.body.role])
+    function addUsersRoles(req, res){
+        data.addUserRole(req.body.user, req.body.role)
         .then(answer => apiUtils.setResponse(res, answer, 201))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
     }
@@ -32,14 +32,14 @@ module.exports = function(apiUtils, data) {
     }
 
     function getUserActiveList(req,res){
-        data.getUserActiveList([req.params.id])
+        data.getUserActiveList(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
     }
     
     
     function getUserRolesById(req,res){
-        data.getUserRolesById([req.params.id])
+        data.getUserRolesById(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
     }

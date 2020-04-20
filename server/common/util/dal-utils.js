@@ -1,7 +1,8 @@
 'use strict'
 
 const db = require('../data/db'),
-errors = require('../errors/app-errors')
+errors = require('../errors/app-errors'),
+userHistoryDal = require('../../user-history/user-history-dal')
 
 module.exports = {
     
@@ -10,22 +11,19 @@ module.exports = {
     passed via parameter.
     If a connection or query error occurs it catches them printing the given error and throwing the error 
     */
-    executeQuery: async (query, queryParams) => {
+    executeQuery: async (query) => {
         var connection
         
         try {
             try {
                 connection = await db.connect()
             } catch (error) {
-                console.log(error)
                 throw errors.dbConnection
             }
-            const rows = await connection.query(query, queryParams);
-            console.log(rows);
+            const rows = await connection.query(query.statement, query.params);
             return rows
         } catch (error) {
-            console.log(error)
-            throw error.errorExecutingQuery
+            throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`)
         } finally {
             connection.end();
         }
@@ -45,21 +43,16 @@ module.exports = {
         }
         
     },
-
-    // Util function that checks for duplicates on the database
-    // if it returns true it means that there are no duplicates and the query can proceed
-    duplicateValues: (fun, params) => {
-        
+    
+    // request userHistoryDal to insert the in the user s history the latest action executed
+    registerUserHistory: async (userId, date, description) => {
         try {
             
-            fun.call([params])
-            return false
+            userHistoryDal.addUserHistory(userId, date, description)
             
-            // if it fails and throws an error it means that no user with given parameters was found so we should be good to go
         } catch (error) {
-            return true
+            throw error                
         }
-        
     }
-
+    
 }

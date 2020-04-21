@@ -4,81 +4,108 @@ module.exports = function(dalUtils, errors) {
     
     return {
         
-        addUserRole: async (queryParams) => {
+        // database should return duplicate error to throw
+        addUserRole: async (user, role) => {
             
-            
-            // not gonna work the duplicate function
+            var result
+
+            const query = {
+                statement: 'INSERT INTO Users_Roles(user,role) VALUES (?,?);',
+                description: "adding user_role",
+                params: [user, role]
+            }
             
             try {
-                // if there already exists users with these given parameters than we have to throw an error
-                // our app doesn't support duplicate users
-                dalUtils.throwErrorIfNecessary(
-                    () => dalUtils.duplicateValues(role),
-                    errors.duplicateValues)
-                    
-                } catch(error) {
-                    throw error
-                }
+                result = await dalUtils.executeQuery(query)             
                 
-                try {
-                    return await dalUtils.executeQuery(`INSERT INTO Users_Roles(user,role) VALUES (?,?);`,
-                    queryParams)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
+            } catch (error) {
+                throw error
+            }
+            
+            try {
                 
+                //make sure user creation is registered on the user's history
+                await dalUtils.registerUserHistory(result.insertId, moment().format(), "adding user role")
                 
-            },
-            getActiveRoles: async () => {
+                return result
                 
+            } catch (error) {
+                throw error
+            }
+            
+        },
+        
+        getActiveRoles: async () => {
+            
+            const query = {
+                statement: `Select * from User_Roles where active=1 AND end_date<${moment().format()}`,
+                description: "getting active roles",
+                params: []
+            }
+            
+            try {
+                return await dalUtils.executeQuery(query)             
                 
-                try {
-                    return await dalUtils.executeQuery(`Select * from User_Roles where active=1 AND end_date<${moment().format()}`)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
+            } catch (error) {
+                throw error
+            }
+            
+            
+        },
+        
+        getUserActiveList: async (id) => {
+            
+            const query = {
+                statement: `Select * from User_Roles where user_id=? AND active=1 AND end_date<${moment().format()}`,
+                description: "getting user's active roles",
+                params: [id]
+            }
+
+            try {
+                return await dalUtils.executeQuery(query)            
                 
+            } catch (error) {
+                throw error
+            }
+            
+            
+        },
+        
+        getUserRoles: async () => {
+            
+            const query = {
+                statement: `Select * from User_Roles`,
+                description: "getting all user roles",
+                params: []
+            }
+            
+            try {
+                return await dalUtils.executeQuery(query)             
                 
-            },
-            getUserActiveList: async (queryParams) => {
+            } catch (error) {
+                throw error
+            }
+            
+        },
+
+        getUserRolesById: async (id) => {
+            
+            const query = {
+                statement: 'Select * from User_Roles where user_id=?',
+                description: "getting all user's roles",
+                params: [id]
+            }
+            
+            try {
+                return await dalUtils.executeQuery(query)             
                 
-                
-                try {
-                    return await dalUtils.executeQuery(`Select * from User_Roles where user_id=? AND active=1 AND end_date<${moment().format()}`, queryParams)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
-                
-                
-            },
-            getUserRoles: async () => {
-                
-                
-                try {
-                    return await dalUtils.executeQuery(`Select * from User_Roles`)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
-                
-                
-            },
-            getUserRolesById: async (queryParams) => {
-                
-                
-                try {
-                    return await dalUtils.executeQuery(`Select * from User_Roles where user_id=?`, queryParams)             
-                    
-                } catch (error) {
-                    throw errors.errorExecutingQuery
-                }
-                
-                
+            } catch (error) {
+                throw error
             }
             
             
         }
+        
+        
     }
+}

@@ -4,59 +4,122 @@ const moment = require('moment')
 
 
 module.exports = function(dalUtils, errors) {
-
+    
     return {
-
-        addList: async (queryParams) => {
-
+        
+        // TODO: add userhistory
+        addList: async (user, list, start_date, end_date, updater) => {
             
-            try {
-                return await dalUtils.executeQuery(`INSERT INTO Lists(user_id,list,start_date,end_date,updater) VALUES (?,?,?,?,?);`,
-                queryParams)             
-
-            } catch (error) {
-                throw errors.errorExecutingQuery
+            var result 
+            
+            const query = {
+                statement: `INSERT INTO Lists(user_id,list,start_date,end_date,updater) VALUES (?,?,?,?,?);`,
+                description: "adding list",
+                params: [user, list, start_date, end_date, updater]
             }
             
-        
+            try {
+                
+                result = await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
+            
+            try {
+                
+                dalUtils.registerUserHistory(user, moment().format(), "user added to a list")
+                
+            } catch (error) {
+                throw error
+            }
+            
+            return result
+            
         },
-        getLists: async () => {
+        
+        // TODO: add userhistory
+        deleteList: async (listId) => {
+            
+            const query = {
+                statement: `DELETE FROM Users WHERE id = ?`,
+                description: "deleting list",
+                params: [listId]
+            }
 
+            var result 
             
             try {
-                return await dalUtils.executeQuery(`Select * from List`,
-                [user,list,start_date,end_date,updater])             
-
+                
+                result = await dalUtils.executeQuery(query)             
+                
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
             
+            try {
+                
+                dalUtils.registerUserHistory(user, moment().format(), "user added to a list")
+                
+            } catch (error) {
+                throw error
+            }
+
+            return result
+            
+        },
         
+        getLists: async () => {
+            
+            const query = {
+                statement: `Select * from List`,
+                description: "getting all lists",
+                params: [user,list,start_date,end_date,updater]
+            }
+            
+            try {
+                return await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
+            
+            
         },
         getActiveLists: async () => {
-
             
-            try {
-                return await dalUtils.executeQuery(`Select * from List where active=1 AND end_date<${moment().format()}`)             
-
-            } catch (error) {
-                throw errors.errorExecutingQuery
+            const query = {
+                statement: `Select * from List where active=1 AND end_date<${moment().format()}`,
+                description: "getting active lists",
+                params: []
             }
             
-        
+            try {
+                return await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
+            
+            
         },
-        getUserActiveList: async (queryParams) => {
-
+        getUserActiveList: async (listId) => {
             
-            try {
-                return await dalUtils.executeQuery(`Select * from List where user_id=? AND active=1 AND end_date<${moment().format()}`, queryParams)             
-
-            } catch (error) {
-                throw errors.errorExecutingQuery
+            const query = {
+                statement: `Select * from List where user_id=? AND active=1 AND end_date<${moment().format()}`,
+                description: "getting user's active lists",
+                params: [listId]
             }
             
-        
+            try {
+                return await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
+            
+            
         }
     }
-
+    
 }

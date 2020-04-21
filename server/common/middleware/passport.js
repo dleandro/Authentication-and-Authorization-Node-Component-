@@ -79,7 +79,7 @@ SamlStrategy=new (require('passport-saml').Strategy)({
     }
     
     async function findUser(userId) {
-      return data.user.getUserById([userId])
+      return data.user.getUserById(userId)
     }
     
     /*
@@ -93,7 +93,7 @@ SamlStrategy=new (require('passport-saml').Strategy)({
         cb(null, user)
       }
       
-      data.user.insertUser([userToFindOrCreate.username, userToFindOrCreate.password])
+      data.user.insertUser(userToFindOrCreate.username, userToFindOrCreate.password)
       .then(user => cb(null, user))
       .catch(err => cb(err, null))
       

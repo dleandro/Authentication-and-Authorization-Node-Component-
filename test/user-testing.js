@@ -5,12 +5,6 @@ app = require('../server/server'),
 request = require('supertest'),
 assert = require('assert');
 
-// adminUser should be an admin with full permissions on the test database
-const adminUser = {
-    username: 'admin',
-    password: '1234'
-}
-
 const user = {
     username: 'test@test.pt',
     password: '1234'

@@ -1,7 +1,6 @@
 'use strict'
 
-const auth = require("./common/data/auth"),
-passport = require('passport'),
+const 
 apiUtils = require('./common/util/api-utils'), 
 data = require('./common/util/dal-paths'),
 fs=require('fs')
@@ -15,7 +14,9 @@ module.exports = function(app) {
     roleRouter = require('./role/role-router') (apiUtils, data.role),
     listRouter = require('./list/list-router') (apiUtils, data.list),
     rolesPermissionRouter = require('./roles-permission/roles-permission-router') (apiUtils, data.rolesPermission),
-    usersRolesRouter = require('./users-roles/users-roles-router') (apiUtils, data.usersRoles)
+    usersRolesRouter = require('./users-roles/users-roles-router') (apiUtils, data.usersRoles),
+    userHistoryRouter = require('./user-history/user-history-router') (apiUtils, data.userHistory),
+    authenticationRouter = require('./user/authentication-router') (apiUtils, data.user)
     
 
     app.use('/user', userRouter)
@@ -92,5 +93,7 @@ module.exports = function(app) {
       console.log(config)
         res.end()
     })
+    app.use('/user-history', userHistoryRouter)
+    app.use('/authentication', authenticationRouter)
     
 }

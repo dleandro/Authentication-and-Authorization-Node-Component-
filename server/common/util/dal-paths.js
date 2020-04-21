@@ -9,7 +9,7 @@ module.exports = {
 
     rolesPermission: require('../../roles-permission/role-permission-dal')(dalUtils, errors),
 
-    usersHistory: require('../../user/user-history-dal')(dalUtils, errors),
+    usersHistory: require('../../user-history/user-history-dal')(dalUtils, errors),
 
     role: require('../../role/role-dal')(dalUtils, errors),
     
@@ -17,6 +17,8 @@ module.exports = {
     
     permission: require('../../permission/permission-dal')(dalUtils, errors),
     
-    userRole: require('../../users-roles/user-role-dal')(dalUtils, errors)
+    userRole: require('../../users-roles/user-role-dal')(dalUtils, errors),
+
+    userHistory: require('../../user-history/user-history-dal') (dalUtils, errors)
 
 }

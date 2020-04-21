@@ -1,32 +1,42 @@
 'use strict'
-const moment=require('moment')
+
 module.exports =  function(dalUtils, errors) {
     
     return {
         
-        addRole: async (queryParams) => {
+        addRole: async (role) => {
             
+            const query = {
+                statement: `INSERT INTO Roles(role) VALUES (?);`,
+                description: "adding role",
+                params: [role]
+            }
+
             try {
-                return await dalUtils.executeQuery(`INSERT INTO Roles(role) VALUES (?);`,
-                queryParams)             
+                return await dalUtils.executeQuery(query))             
         
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
             
             
         },
 
-        getRoleById: async function getRoleById(queryParams) {
+        getRoleById: async function getRoleById(roleId) {
             var result 
+
+            const query = {
+                statement: `Select * from Roles where id= ?`,
+                description: "getting role by id",
+                params: [roleId]
+            }
         
             try {
         
-                result = await dalUtils.executeQuery('Select * from Roles where id= ?', queryParams)
-                
+                result = await dalUtils.executeQuery(query)
         
             } catch (error) {
-                throw errors.errorExecutingQuery
+                throw error
             }
         
             try {
@@ -36,7 +46,7 @@ module.exports =  function(dalUtils, errors) {
                     () => result.length == 0,
                     errors.noUsersFound)
         
-            } catch(error) {
+            } catch (error) {
                 throw error
             }
         
@@ -48,11 +58,17 @@ module.exports =  function(dalUtils, errors) {
             }
         },
         
-        deleteRole: async (queryParams)=> {
+        deleteRole: async (roleId)=> {
             
+            const query = {
+                statement: `DELETE FROM Roles WHERE id = ?`,
+                description: "deleting role",
+                params: [roleId]
+            }
+
             try {
         
-                return await dalUtils.executeQuery('DELETE FROM Roles WHERE id = ?', queryParams)
+                return await dalUtils.executeQuery(query)
         
             } catch (err) {
            
@@ -60,11 +76,17 @@ module.exports =  function(dalUtils, errors) {
            
             }
         },
-        getRoles:async () => {
+        getRoles: async () => {
+
+            const query = {
+                statement: `Select * from Roles`,
+                description: "getting all roles",
+                params: []
+            }
             
             try {
         
-                return await dalUtils.executeQuery('Select * from Roles')
+                return await dalUtils.executeQuery(query)
         
             } catch (err) {
            

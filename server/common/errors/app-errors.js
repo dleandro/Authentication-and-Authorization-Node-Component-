@@ -4,10 +4,10 @@ const CustomError = require('./custom-error')
 
 module.exports = {
     
-    errorExecutingQuery: new CustomError(JSON.stringify({
+    errorExecutingQuery: (failedQuery) => new CustomError(JSON.stringify({
         type: "/db/problems/query-not-executed",
         title: "Problem executing Query",
-        detail: "There was a problem executing the query, check if all the data was inserted correctly",
+        detail: `There was a problem executing the query, check if all the data was inserted correctly. The failed Query was the following ${failedQuery}`,
         status: 400 
     })),
     

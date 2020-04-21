@@ -37,11 +37,10 @@ SamlStrategy=new (require('passport-saml').Strategy)({
   ))
 
   passport.use(new AzureAdOAuth2Strategy({
-    clientID: '39d62b3c-b736-4e13-b71e-37926569e5dc',
-    clientSecret: '9A5A5C36932AB8F12562DE879A875',
-    callbackURL: 'http://localhost:8082/',
-    resource: '00000002-0000-0000-c000-000000000000',
-    tenant: 'bb367ab9-9da9-455e-b938-fd65cd29f5ae'
+    clientID: config.azureAD.azure_client_id,
+    clientSecret: config.azureAD.azure_client_secret,
+    callbackURL: config.azureAD.callbackURL,
+    tenant: config.azureAD.tenant
   },
   function (accessToken, refresh_token, params, profile, done) {
     // currently we can't find a way to exchange access token by user info (see userProfile implementation), so

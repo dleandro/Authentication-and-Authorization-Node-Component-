@@ -13,7 +13,7 @@ module.exports =  function(dalUtils, errors) {
             }
 
             try {
-                return await dalUtils.executeQuery(query))             
+                return await dalUtils.executeQuery(query)             
         
             } catch (error) {
                 throw error

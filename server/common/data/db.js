@@ -11,7 +11,6 @@ module.exports = {
   connect: async function connect() {
     
     try {
-      
       return await pool.getConnection();
       
     } catch (err) {

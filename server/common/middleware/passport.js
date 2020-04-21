@@ -6,8 +6,9 @@ passport = require('passport'),
 OpenIDStrategy = require('passport-openid').Strategy,
 GoogleStrategy = require('passport-google-oauth20').Strategy,
 AzureAdOAuth2Strategy=require('passport-azure-ad-oauth2').Strategy,
-fs=require('fs')
-   const SamlStrategy=new (require('passport-saml').Strategy)({ 
+config = require("../config/config"),
+fs=require('fs'),
+SamlStrategy=new (require('passport-saml').Strategy)({ 
     
       callbackUrl: 'http://localhost:8082/login/callback',  //redirect after sucessfull login
       entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
@@ -23,12 +24,12 @@ fs=require('fs')
     })
 
  const certificate=fs.readFileSync('./cacert.pem','utf-8')
-  console.log(SamlStrategy.generateServiceProviderMetadata(certificate))
+  //console.log(SamlStrategy.generateServiceProviderMetadata(certificate))
   
   passport.use(new GoogleStrategy({
-    clientID: '523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com',
-    clientSecret: 'vs0R8tvgMv2w2rhuHtRPT9nK',
-    callbackURL: "http://localhost:8082/homepage"
+    clientID: config.google.google_client_id,
+    clientSecret: config.google.google_client_secret,
+    callbackURL: config.google.callbackURL
   },
   function(accessToken, refreshToken, profile, cb) {
     findOrCreateUser({ username: profile.username, id: profile.id, password: 'blank' }, cb)
@@ -36,11 +37,10 @@ fs=require('fs')
   ))
 
   passport.use(new AzureAdOAuth2Strategy({
-    clientID: 'a36799d8-41a6-4d9e-a2f1-9c3c4ebf501a',
-    clientSecret: '9A5A5C36932AB8F12562DE879A875',
-    callbackURL: 'https://www.example.net/auth/azureadoauth2/callback',
-    resource: '00000002-0000-0000-c000-000000000000',
-    tenant: '8d5221b3-8bb0-4836-b9db-10d44210b270'
+    clientID: config.azureAD.azure_client_id,
+    clientSecret: config.azureAD.azure_client_secret,
+    callbackURL: config.azureAD.callbackURL,
+    tenant: config.azureAD.tenant
   },
   function (accessToken, refresh_token, params, profile, done) {
     // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
@@ -54,7 +54,7 @@ fs=require('fs')
   }));
   
   passport.use(new OpenIDStrategy({
-    returnURL: 'http://localhost:8082/homepage',
+    returnURL: 'http://localhost:8082',
     realm: 'http://localhost:8082',
     clientID: '523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com',
     clientSecret: 'vs0R8tvgMv2w2rhuHtRPT9nK'

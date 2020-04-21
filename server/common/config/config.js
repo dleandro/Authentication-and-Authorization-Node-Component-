@@ -10,7 +10,7 @@ var config = {
 }
 
 // check if node_env was set, if not, set it to dev
-process.env.NODE_ENV = process.env.NODE_ENV || config.dev
+process.env.NODE_ENV = process.env.NODE_ENV || config.prod
 
 // envconfig will require the file that corresponds to the config file that represents the app's state
 // if it fails to do so then we equal it to an empty object

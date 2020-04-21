@@ -3,7 +3,8 @@
 const auth = require("./common/data/auth"),
 passport = require('passport'),
 apiUtils = require('./common/util/api-utils'), 
-data = require('./common/util/dal-paths')
+data = require('./common/util/dal-paths'),
+fs=require('fs')
 
 
 module.exports = function(app) {
@@ -31,11 +32,7 @@ module.exports = function(app) {
         ['/google-login', passport.authenticate('google', {scope: ['profile']}), (req, res) =>{
             res.end(JSON.stringify(req.user))
         }],
-        ['/azureAD-login', passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
-        function (req, res) {
-          // Successful authentication, redirect home.
-          res.redirect('/');
-        }],
+        ['/azureAD-login',passport.authenticate('azure_ad_oauth2')],
         ['/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }), (req, res) =>{
             res.end(JSON.stringify(req.user))
         }]
@@ -85,6 +82,15 @@ module.exports = function(app) {
     app.post('/saml-login', passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),(req,res)=>res.redirect('/homepage'))
     app.put('/change-user-status', (req, res) => {
         
+    })
+
+    app.post('/config/database',(req,res)=>{
+      let obj=req.body
+      let config=JSON.parse(fs.readFileSync(__dirname+'/common/config/production.json','utf-8'))
+      console.log(config)
+      config.database_opts=obj
+      console.log(config)
+        res.end()
     })
     
 }

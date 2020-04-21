@@ -23,26 +23,7 @@ module.exports = function(apiUtils, data) {
 
     authenticationRouter.post(
         '/login', 
-        (req, res)=> {
-            data.getUser(req.body.username, req.body.password)
-            .then(answer => {
-                
-                req.login({
-                    id: answer.id,
-                    username: answer.username,
-                    password: answer.password,
-                    role: answer.role
-                    
-                }, (err, result) => {
-    
-                    if (err) {
-                        apiUtils.setResponse(res, err.message, 400)
-                    }
-                    apiUtils.setResponse(res, answer, 200)
-                })
-            })
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
-        }
+        passport.authenticate('local', { successRedirect: '/', failureRedirect: '/authentication/login' })
     )
 
     authenticationRouter.post(

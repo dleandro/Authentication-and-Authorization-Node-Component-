@@ -1,8 +1,7 @@
 'use strict'
 
 const db = require('../data/db'),
-errors = require('../errors/app-errors'),
-userHistoryDal = require('../../user-history/user-history-dal')
+errors = require('../errors/app-errors')
 
 module.exports = {
     
@@ -42,17 +41,6 @@ module.exports = {
             throw err
         }
         
-    },
-    
-    // request userHistoryDal to insert the in the user s history the latest action executed
-    registerUserHistory: async (userId, date, description) => {
-        try {
-            
-            userHistoryDal.addUserHistory(userId, date, description)
-            
-        } catch (error) {
-            throw error                
-        }
     }
     
 }

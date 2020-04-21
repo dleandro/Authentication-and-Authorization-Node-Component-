@@ -10,6 +10,8 @@ This module handles database user objects
 
 module.exports = function(dalUtils, errors) {
     
+    const userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors)
+    
     return {
 
         /* Requests the database for a user with given id */
@@ -190,7 +192,7 @@ module.exports = function(dalUtils, errors) {
                 try {
                 
                     //make sure user creation is registered on the user's history
-                    await dalUtils.registerUserHistory(result.insertId, moment().format(), "User creation")
+                    await registerUserHistory(result.insertId, moment().format(), "User creation")
     
                     return result
     
@@ -224,7 +226,7 @@ module.exports = function(dalUtils, errors) {
             try {
              
                 //make sure username update is registered on the user's history
-                await dalUtils.registerUserHistory(id, moment().format(), "Username update")
+                await registerUserHistory(id, moment().format(), "Username update")
 
                 return result
             } catch (error) {
@@ -257,7 +259,7 @@ module.exports = function(dalUtils, errors) {
             try {
                 
                 //make sure password update is registered on the user's history
-                await dalUtils.registerUserHistory(id, moment().format(), "Password update")
+                await registerUserHistory(id, moment().format(), "Password update")
 
                 return result
 
@@ -295,7 +297,7 @@ module.exports = function(dalUtils, errors) {
             try {
              
                 //make sure username update is registered on the user's history
-                await dalUtils.registerUserHistory(userId, moment().format(), "User deleted")
+                await registerUserHistory(userId, moment().format(), "User deleted")
 
                 return result
             } catch (error) {
@@ -304,5 +306,17 @@ module.exports = function(dalUtils, errors) {
         }
 
     }
+
+        // request userHistoryDal to insert the in the user s history the latest action executed
+        async function registerUserHistory (userId, date, description) {
+            try {
+                
+                userHistoryDal.addUserHistory(userId, date, description)
+                
+            } catch (error) {
+                throw error                
+            }
+        }
+    
         
 }

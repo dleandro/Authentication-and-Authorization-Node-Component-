@@ -8,7 +8,7 @@ module.exports =  function(dalUtils, errors) {
         addUserHistory: async (userId, date, description) => {
 
             const query = {
-                statement: 'INSERT INTO User_History(user_id,date,description) VALUES (?,?,?);',
+                statement: 'INSERT INTO Users_History(user_id,date,description) VALUES (?,?,?);',
                 description: "user history registration",
                 params: [userId, date, description]
             }

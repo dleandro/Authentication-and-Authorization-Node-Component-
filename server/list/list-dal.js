@@ -103,12 +103,12 @@ module.exports = function(dalUtils, errors) {
             
             
         },
-        getUserActiveList: async (listId) => {
+        getUserActiveList: async (userId) => {
             
             const query = {
                 statement: `Select * from List where user_id=? AND active=1 AND end_date<${moment().format()}`,
                 description: "getting user's active lists",
-                params: [listId]
+                params: [userId]
             }
             
             try {

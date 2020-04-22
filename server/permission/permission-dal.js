@@ -20,12 +20,12 @@ module.exports = function(dalUtils, errors) {
             }
         },
         
-        deletePermission: async (permissionId) => {
+        deletePermission: async (method, path) => {
             
             const query = {
-                statement: `DELETE FROM Permission WHERE id = ?`,
+                statement: `DELETE FROM Permission WHERE method = ? AND path = ?`,
                 description: "deleting permission",
-                params: [permissionId]
+                params: [method, path]
             }
 
             try {

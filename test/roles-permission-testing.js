@@ -5,71 +5,80 @@ app = require('../server/server'),
 request = require('supertest'),
 assert = require('assert');
 
-const list = {
+var 
+roleId,
+permissionId,
 
+const
+role = {
+    role: 'admin',
+    parent_role: ''
+},
+roles_permission = {
+    role: roleId,
+    permission: permissionId
+},
+permission = {
+    method: "GET",
+    path: "/user/1/username"
 }
 
-var id
 
-describe('[LIST CRUD TESTING]', function() { 
-    
-    it('should create a new list', function() {
-        
+describe('[ROLES PERMISSION CRUD TESTING]', function() { 
+
+    // create a role and a permission so we can associate them in a role_permission
+    before(function () {
+
         request(app)
-        .post('/list/')
-        .send(list)
+        .post('/role/')
+        .send(role)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
         .end( (err, resp) => { 
-            id = resp.body.id
+            roleId = resp.body.id
+        })
+           
+        request(app)
+        .post('/permission/')
+        .send(permission)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .end( (err, resp) => { 
+            permissionId = resp.body.id
+        })
+    })
+    
+    it('should create a new roles permission', function(done) {
+        
+        request(app)
+        .post('/roles-permission/')
+        .send(roles_permission)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .end( (err, resp) => { 
+            assert.equal(resp.body.permission, permissionId)
+
+            done()
         })
         
     })
     
-    it('should delete a list', function() {
+    it('should delete a list', function(done) {
         
         request(app)
-        .delete(`/list/${id}`)
+        .delete(`/roles-permission`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
-    
-    it('should get a list', function() {
-        
-        request(app)
-        .get('/list/')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
+        .end( (err, resp) => { 
 
-    it('should get active lists', function() {
-        
-        request(app)
-        .get('/list/active')
-        .send(list)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
+            assert(err == null, true)
 
-    it('should user´s active lists', function() {
-        
-        request(app)
-        .get(`/list/active/user/${id}`)
-        .send(list)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
+            done()
+        })
         
     })
     

@@ -8,8 +8,7 @@ module.exports = function(apiUtils, data) {
     permissionRouter.route('/')
     .get(getPermissions)
     .post(addPermission)
-    
-    permissionRouter.delete('/:id', deletePermission)
+    .delete(deletePermission)
 
     function getPermissions(req, res){
         data.getPermissions()
@@ -18,7 +17,7 @@ module.exports = function(apiUtils, data) {
     }
 
     function addPermission(req,res){
-        data.addPermission(req.body.method, req.body.path, req.body.description)
+        data.addPermission(req.body.method, req.body.path)
         .then(answer => {
             req.body.id = answer.insertId
             apiUtils.setResponse(res, req.body, 201)
@@ -27,7 +26,7 @@ module.exports = function(apiUtils, data) {
     }
     
     function deletePermission(req, res){
-        data.deletePermission(req.params.id)
+        data.deletePermission(req.body.method, req.body.path)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
     }

@@ -5,71 +5,75 @@ app = require('../server/server'),
 request = require('supertest'),
 assert = require('assert');
 
-const list = {
-
+const permission = {
+    method: "GET",
+    path: "/user/1/username"
 }
 
 var id
 
-describe('[LIST CRUD TESTING]', function() { 
-    
-    it('should create a new list', function() {
-        
-        request(app)
-        .post('/list/')
-        .send(list)
+const getAllPermissions = (cb) => {
+    request(app)
+        .get('/permission/')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
         .end( (err, resp) => { 
+
+            cb(err, resp)
+
+        })
+}
+
+describe('[PERMISSIONS CRUD TESTING]', function() { 
+    
+    it('should create a new permission', function(done) {
+        
+        request(app)
+        .post('/permission/')
+        .send(permission)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .end( (err, resp) => { 
             id = resp.body.id
+
+            assert.equal(resp.body.path, permission.path)
+
+            done()
         })
         
     })
     
-    it('should delete a list', function() {
+    it('should get all permissions', function(done) {
         
-        request(app)
-        .delete(`/list/${id}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
+        getAllPermissions((err, resp) => {
+            assert.equal(resp.body.length > 0, true)
+
+            done()
+        })
         
     })
     
-    it('should get a list', function() {
+    it('should delete a permission', function(done) {
         
         request(app)
-        .get('/list/')
+        .delete(`/permission/`)
+        .send(permission)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
+        .end( (err, resp) => {
 
-    it('should get active lists', function() {
-        
-        request(app)
-        .get('/list/active')
-        .send(list)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
+            getAllPermissions((err, resp) => {
 
-    it('should user´s active lists', function() {
+                assert.equal(resp.body.filter(list => list.id == listId).length == 0, true)
+
+            })
+
+            done()
         
-        request(app)
-        .get(`/list/active/user/${id}`)
-        .send(list)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
+        })
         
     })
     

@@ -5,72 +5,88 @@ app = require('../server/server'),
 request = require('supertest'),
 assert = require('assert');
 
-const list = {
-
+const role = {
+    role: 'admin',
+    parent_role: ''
 }
 
 var id
 
-describe('[LIST CRUD TESTING]', function() { 
+const getRole = (cb) => {
+
+    request(app)
+    .get(`/role/${id}`)
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end( (err, resp) => { 
+       cb(err, resp)
+    })
+
+}
+
+describe('[ROLE CRUD TESTING]', function() { 
     
-    it('should create a new list', function() {
+    it('should create a new role', function(done) {
         
         request(app)
-        .post('/list/')
-        .send(list)
+        .post('/role/')
+        .send(role)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
         .end( (err, resp) => { 
             id = resp.body.id
+
+            assert.equal(resp.body.role, role.role)
+
+            done()
         })
         
     })
     
-    it('should delete a list', function() {
+    it('should get all roles', function(done) {
         
         request(app)
-        .delete(`/list/${id}`)
+        .get('/role/')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
+        .end( (err, resp) => { 
+            assert.equal(resp.body.length > 0, true)
+
+            done()
+        })
         
     })
     
-    it('should get a list', function() {
+    it('should get the created role', function(done) {
         
-        request(app)
-        .get('/list/')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
-
-    it('should get active lists', function() {
-        
-        request(app)
-        .get('/list/active')
-        .send(list)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
-        
-    })
-
-    it('should user´s active lists', function() {
-        
-        request(app)
-        .get(`/list/active/user/${id}`)
-        .send(list)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end( (err, resp) => { cb(err, resp )})
+        getRole((err, resp) => {
+            
+            assert.equal(resp.body.role, role.role)
+    
+            done()
+            
+        })
         
     })
     
+    it('should delete a role', function(done) {
+        
+        request(app)
+        .delete(`/role/${id}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { 
+
+            getRole((err, resp) => {
+                assert.equal(err != null, true)
+            })
+
+            done()
+        })
+        
+    })
 })

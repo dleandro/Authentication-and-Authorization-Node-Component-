@@ -2,7 +2,8 @@
 
 module.exports = function(dalUtils, errors) {
     
-    const userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors)
+    const userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors),
+    moment = require('moment')
 
     return {
         
@@ -40,7 +41,7 @@ module.exports = function(dalUtils, errors) {
         getActiveRoles: async () => {
             
             const query = {
-                statement: `Select * from User_Roles where active=1 AND end_date<${moment().format()}`,
+                statement: `Select * from User_Roles where active=1 AND end_date>'${moment().format()}'`,
                 description: "getting active roles",
                 params: []
             }
@@ -56,9 +57,8 @@ module.exports = function(dalUtils, errors) {
         },
         
         getUserActiveList: async (id) => {
-            
             const query = {
-                statement: `Select * from User_Roles where user_id=? AND active=1 AND end_date<${moment().format()}`,
+                statement: `Select * from Users_Roles where user_id=? AND active=1 AND (end_date>'${moment().format('YYYY-MM-DD HH:MM:SS')}' || end_date IS NULL)`,
                 description: "getting user's active roles",
                 params: [id]
             }

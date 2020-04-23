@@ -3,13 +3,14 @@
 const 
 apiUtils = require('./common/util/api-utils'), 
 data = require('./common/util/dal-paths'),
-fs=require('fs')
+fs=require('fs'),
+auth=require('./common/data/auth')
 
 
 module.exports = function(app) {
     
     const
-    userRouter = require('./user/user-router') (apiUtils, data.user),
+    userRouter = require('./user/user-router') (auth,apiUtils, data.user),
     permissionRouter = require('./permission/permission-router') (apiUtils, data.permission),
     roleRouter = require('./role/role-router') (apiUtils, data.role),
     listRouter = require('./list/list-router') (apiUtils, data.list),

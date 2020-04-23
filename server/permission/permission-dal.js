@@ -53,6 +53,21 @@ module.exports = function(dalUtils, errors) {
                 throw error
             }
         },
+        getPermissionID :async (method,path) => {
+            
+            const query = {
+                statement: `Select id from Permission where method=? and path=?`,
+                description: "get permission by id",
+                params: [method,path]
+            }
+            
+            try {
+                return await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
+        },
         
         
     }

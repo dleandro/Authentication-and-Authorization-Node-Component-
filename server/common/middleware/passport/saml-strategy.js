@@ -1,4 +1,4 @@
-'use strict'
+/*'use strict'
 
 const
 fs = require('fs'),
@@ -18,4 +18,6 @@ SamlStrategy = new (require('passport-saml').Strategy)({
   })
 
 const certificate=fs.readFileSync('./cacert.pem','utf-8')
-module.exports = SamlStrategy
+//console.log(SamlStrategy.generateServiceProviderMetadata(certificate))
+
+module.exports = SamlStrategy */

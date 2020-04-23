@@ -10,6 +10,6 @@ CREATE TABLE Roles_Permission(role INT ,permission INT,PRIMARY KEY(role,permissi
 CREATE TABLE Users_Roles(id INT AUTO_INCREMENT,user_id INT,role_id INT,start_date DATETIME,end_date DATETIME,updater INT,active BIT(1),PRIMARY KEY (id));
 CREATE TABLE Lists(id INT AUTO_INCREMENT,user_id INT ,LIST VARCHAR(20),start_date Datetime,end_date DATETIME ,updater INT,active BIT(1),PRIMARY KEY(id));
 CREATE TABLE Users_History (user_id INT,DATE DATETIME,description VARCHAR(30));
-CREATE TABLE Permission(method VARCHAR(10),path VARCHAR(50));
+CREATE TABLE Permission(id int AUTO_INCREMENT ,method VARCHAR(10),path VARCHAR(50),PRIMARY KEY(id));
 CREATE TABLE Roles(id INT AUTO_INCREMENT,role VARCHAR(20) UNIQUE,parent_role INT,PRIMARY KEY(id));
 CREATE TABLE Users(id int AUTO_INCREMENT,username VARCHAR(30) UNIQUE,PASSWORD VARCHAR(20),PRIMARY KEY(id));

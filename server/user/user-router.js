@@ -1,7 +1,7 @@
 'use strict'
 
 // this module contains all user related endpoints
-module.exports = function(apiUtils, data) {
+module.exports = function(auth,apiUtils, data) {
     
     const userRouter = require('express').Router()
     
@@ -21,12 +21,12 @@ module.exports = function(apiUtils, data) {
     })
 
     userRouter.route('/:id')
-    .get((req, res) => {
+    .get(auth.hasPermissions,(req, res) => {
         data.getUserById(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     })
-    .delete(apiUtils.ensureAuthenticated, (req, res) => {
+    .delete(auth.hasPermissions, (req, res) => {
         data.deleteUser(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))

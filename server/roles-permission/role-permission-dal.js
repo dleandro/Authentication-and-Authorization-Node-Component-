@@ -38,6 +38,23 @@ module.exports =  function(dalUtils, errors) {
             }
             
             
+        },
+        getRolesByPermission: async (permission) => {
+            
+            const query = {
+                statement: `Select * from Roles_Permission where permission=?`,
+                description: "get roles by permission",
+                params: [permission]
+            }
+
+            try {
+                return await dalUtils.executeQuery(query)          
+    
+            } catch (error) {
+                throw error
+            }
+            
+            
         }
         
     }

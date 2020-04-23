@@ -11,10 +11,13 @@ const strategy = new GoogleStrategy({
     clientSecret: config.google.google_client_secret,
     callbackURL: config.google.callbackURL
 },
-function(accessToken, refreshToken, profile, cb) {
-    passportUtils.findOrCreateUser({ username: profile.username, id: profile.id, password: 'blank' })
-    .then(user => cb(null, user))
-    .catch(err => cb(err, null))
+async function(accessToken, refreshToken, profile, done) {
+    console.log(profile)
+    let user=await passportUtils.findUserByIdp(profile.id)
+    if(!user){
+        user=await passportUtils.CreateUser(profile.id,'google',profile.displayName,null)
+        console.log(user)
+    }
 }
 )
 

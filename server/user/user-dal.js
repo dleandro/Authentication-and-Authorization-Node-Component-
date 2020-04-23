@@ -190,9 +190,8 @@ module.exports = function(dalUtils, errors) {
                 }
                 
                 try {
-                
                     //make sure user creation is registered on the user's history
-                    await registerUserHistory(result.insertId, moment().format(), "User creation")
+                    await registerUserHistory(result.insertId, moment().format("YYYY-MM-DD HH:mm:ss"), "User creation")
     
                     return result
     
@@ -200,6 +199,22 @@ module.exports = function(dalUtils, errors) {
                     throw error
                 }
             
+        },
+        insertIDP:async(idp_id,idpname,user_id)=>{
+            const query = {
+                statement: 'Insert into IDP(user_id,idp_id,idpname) values (?,?,?)',
+                description: "user's username update",
+                params: [user_id,idp_id,idpname]
+            }
+            try {
+                    
+                return await dalUtils.executeQuery(query)             
+                
+
+            } catch (error) {
+
+                throw error
+            }
         },
         
         // update specific user's username 

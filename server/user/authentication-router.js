@@ -9,10 +9,8 @@ module.exports = function(apiUtils, data) {
     
     authenticationRouter.get(
         '/login/google',
-        passport.authenticate('google', {scope: ['profile']}),
-        (req, res) =>{
-        res.end(JSON.stringify(req.user))
-    })
+        passport.authenticate('google', {scope: ['profile']})
+    )
 
     authenticationRouter.get(
         '/login/saml',
@@ -43,6 +41,12 @@ module.exports = function(apiUtils, data) {
             res.redirect('/');
           }
     )
+
+    authenticationRouter.get( '/google/callback', 
+    passport.authenticate( 'google', { 
+        successRedirect: 'google/success',
+        failureRedirect: 'google/failure'
+}));
     
     return authenticationRouter
 }

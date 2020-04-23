@@ -6,7 +6,11 @@ data = require('./dal-paths')
 module.exports = {
     
     findUser: async (userId) => {
+        console.log(userId)
         return data.user.getUserById(userId)
+    },
+    findUserByIdp: async (userId) => {
+       return null
     },
 
     findCorrespondingUser: async (username, password) => {
@@ -17,10 +21,11 @@ module.exports = {
     When Using identity providers you need this method to create an entry on the database for the user using the identity provider 
     If there is an entry for the user who is trying to authenticate we simply search its id on our database and return the specific user
     */
-    findOrCreateUser: async (userToFindOrCreate) => {
-        var user = await findUser(userToFindOrCreate)
+   CreateUser: async (idp_id,idpname,username,password) => {
         
-        return user ? user : data.user.insertUser(userToFindOrCreate.username, userToFindOrCreate.password)     
+        let result=await data.user.insertUser(username,password) 
+        console.log(result.insertId) 
+        result=await data.user.insertIDP(idp_id,idpname,result.insertId)
     }
     
     

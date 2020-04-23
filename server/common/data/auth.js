@@ -7,6 +7,7 @@ module.exports={
             resp.redirect("/authentication/login")
             resp.end()
     }
+    console.log(req.user)
         let userRoles=await dal.userRole.getUserActiveList(req.user.id)
         userRoles=userRoles.map(element=>element.role_id)
         let obj=await dal.permission.getPermissionID(req.method,req.baseUrl)

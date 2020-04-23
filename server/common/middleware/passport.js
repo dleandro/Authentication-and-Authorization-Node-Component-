@@ -7,8 +7,8 @@ OpenIDStrategy = require('passport-openid').Strategy,
 GoogleStrategy = require('passport-google-oauth20').Strategy,
 AzureAdOAuth2Strategy=require('passport-azure-ad-oauth2').Strategy,
 config = require("../config/config"),
-fs=require('fs'),
-SamlStrategy=new (require('passport-saml').Strategy)({ 
+fs=require('fs')
+/*SamlStrategy=new (require('passport-saml').Strategy)({ 
     
       callbackUrl: 'http://localhost:8082/login/callback',  //redirect after sucessfull login
       entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
@@ -22,8 +22,8 @@ SamlStrategy=new (require('passport-saml').Strategy)({
         return done(null, user);
       });
     })
-
- const certificate=fs.readFileSync('./cacert.pem','utf-8')
+*/
+ //const certificate=fs.readFileSync('./cacert.pem','utf-8')
   //console.log(SamlStrategy.generateServiceProviderMetadata(certificate))
   
   passport.use(new GoogleStrategy({

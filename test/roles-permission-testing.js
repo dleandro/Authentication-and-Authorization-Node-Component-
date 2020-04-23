@@ -7,10 +7,9 @@ assert = require('assert');
 
 var 
 roleId,
-permissionId,
+permissionId
 
-const
-role = {
+const role = {
     role: 'admin',
     parent_role: ''
 },

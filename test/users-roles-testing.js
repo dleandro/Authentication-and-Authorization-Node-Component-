@@ -3,7 +3,7 @@
 const 
 app = require('../server/server'),
 request = require('supertest'),
-moment = require('moment')
+moment = require('moment'),
 assert = require('assert');
 
 const user = {
@@ -60,7 +60,7 @@ describe('[USERS ROLES CRUD TESTING]', function() {
         
         request(app)
         .post('/users-roles/')
-        .send(list)
+        .send(user_roles)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)

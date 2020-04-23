@@ -3,7 +3,7 @@
 const 
 app = require('../server/server'),
 request = require('supertest'),
-moment = require('moment')
+moment = require('moment'),
 assert = require('assert');
 
 const user = {

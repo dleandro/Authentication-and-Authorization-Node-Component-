@@ -16,9 +16,9 @@ const strategy = new AzureAdOAuth2Strategy({
     var waadProfile = profile || jwt.decode(params.id_token);
   
     // this is just an example: here you would provide a model *User* with the function *findOrCreate*
-    User.findOrCreate({ id: waadProfile.upn }, function (err, user) {
-      done(err, user);
-    });
+    passportUtils.findOrCreateUser({ username: profile.username, id: profile.id, password: 'blank' })
+    .then(user => cb(null, user))
+    .catch(err => cb(err, null))
   })
 
   module.exports = strategy

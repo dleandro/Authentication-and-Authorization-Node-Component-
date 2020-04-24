@@ -33,20 +33,20 @@ module.exports = function(apiUtils, data) {
         }
     )
 
-    authenticationRouter.get(
-        '/login/azureAD', 
-        passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
-        (req, res) => {
-            // Successful authentication, redirect home.
-            res.redirect('/');
-          }
-    )
+    authenticationRouter.get('/login/azureAD', passport.authenticate('azure_ad_oauth2'));
 
     authenticationRouter.get( '/google/callback', 
     passport.authenticate( 'google', { 
         successRedirect: 'google/success',
         failureRedirect: 'google/failure'
 }));
+
+authenticationRouter.get('/azureAD/callback', 
+  passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
     
     return authenticationRouter
 }

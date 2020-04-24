@@ -11,6 +11,7 @@ module.exports = {
     },
     findUserByIdp: async (idp) => {
        let user=await data.user.getUserbyIDP(idp)
+       if(!user)return null
        console.log(user)
        return{
         id:user.id,

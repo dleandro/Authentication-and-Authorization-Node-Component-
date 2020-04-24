@@ -21,6 +21,7 @@ module.exports = function(dalUtils, errors) {
             }
 
             let result=await dalUtils.executeQuery(query)
+            if(result[0]==null)return null
             console.log(result)
             return await this.getUserById(result[0].user_id)
         },

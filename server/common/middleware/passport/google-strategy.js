@@ -12,12 +12,12 @@ const strategy = new GoogleStrategy({
     callbackURL: config.google.callbackURL
 },
 async function(accessToken, refreshToken, profile, done) {
-    console.log(profile)
     let user=await passportUtils.findUserByIdp(profile.id)
     if(!user){
         user=await passportUtils.CreateUser(profile.id,'google',profile.displayName,null)
         console.log(user)
     }
+    done(null,user)
 }
 )
 

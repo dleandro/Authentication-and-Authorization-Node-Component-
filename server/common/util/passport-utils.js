@@ -9,8 +9,14 @@ module.exports = {
         console.log(userId)
         return data.user.getUserById(userId)
     },
-    findUserByIdp: async (userId) => {
-       return null
+    findUserByIdp: async (idp) => {
+       let user=await data.user.getUserbyIDP(idp)
+       console.log(user)
+       return{
+        id:user.id,
+        idp:idp,
+        username:user.username
+    }
     },
 
     findCorrespondingUser: async (username, password) => {
@@ -24,8 +30,15 @@ module.exports = {
    CreateUser: async (idp_id,idpname,username,password) => {
         
         let result=await data.user.insertUser(username,password) 
-        console.log(result.insertId) 
+        console.log(result)
+        let user_id=result.insertId 
         result=await data.user.insertIDP(idp_id,idpname,result.insertId)
+        console.log(result)
+        return{
+            id:user_id,
+            idp:idp_id,
+            username:username
+        }
     }
     
     

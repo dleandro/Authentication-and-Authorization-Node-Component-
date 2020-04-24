@@ -13,6 +13,17 @@ module.exports = function(dalUtils, errors) {
     const userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors)
     
     return {
+        getUserbyIDP:async function getUserbyIDP(idp){
+            const query = {
+                statement: `Select * from IDP where idp_id= ?`,
+                description: "get user by id",
+                params: [idp]
+            }
+
+            let result=await dalUtils.executeQuery(query)
+            console.log(result)
+            return await this.getUserById(result[0].user_id)
+        },
 
         /* Requests the database for a user with given id */
         getUserById: async function getUserById(id) {

@@ -21,15 +21,35 @@ module.exports = function(apiUtils, data) {
 
     authenticationRouter.post(
         '/login', 
-        passport.authenticate('local', { successRedirect: '/', failureRedirect: '/authentication/login' })
+        passport.authenticate('local', { failWithError: true }),
+        (req, res, next) => {
+
+            apiUtils.setResponse(res, "Login successful", 200)
+
+        },
+        (err, req, res, next) => {
+
+            apiUtils.setResponse(res, err.message, 401)
+
+        }
     )
 
     authenticationRouter.post(
         '/logout', 
+        (req,res) => {
+            req.logout()
+
+            req.session = null
+
+            apiUtils.setResponse(res, "Logout successful", 200)                    
+        }
+    )
+
+    authenticationRouter.get(
+        '/logout', 
         (req,res)=>{
             req.logout()
-            apiUtils.setResponse(res, "Logout succesfull", 200)
-            res.redirect('/homepage')
+            res.end()
         }
     )
 
@@ -37,15 +57,14 @@ module.exports = function(apiUtils, data) {
 
     authenticationRouter.get( '/google/callback', 
     passport.authenticate( 'google', { 
-        successRedirect: 'google/success',
-        failureRedirect: 'google/failure'
+        successRedirect: '/google/success',
+        failureRedirect: '/google/failure'
 }));
 
 authenticationRouter.get('/azureAD/callback', 
   passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
   function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
+    // Successful authentication
   });
     
     return authenticationRouter

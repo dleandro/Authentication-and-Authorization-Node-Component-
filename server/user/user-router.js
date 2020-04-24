@@ -28,7 +28,7 @@ module.exports = function(auth,apiUtils, data) {
     })
     .delete(auth.hasPermissions, (req, res) => {
         data.deleteUser(req.params.id)
-        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .then(answer => apiUtils.setResponse(res, "User deleted", 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     })
     

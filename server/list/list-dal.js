@@ -4,7 +4,9 @@ const moment = require('moment')
 
 
 module.exports = function(dalUtils, errors) {
-    
+
+    const userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors)
+
     return {
         
         // TODO: add userhistory
@@ -26,14 +28,6 @@ module.exports = function(dalUtils, errors) {
                 throw error
             }
             
-            try {
-                
-                dalUtils.registerUserHistory(user, moment().format(), "user added to a list")
-                
-            } catch (error) {
-                throw error
-            }
-            
             return result
             
         },
@@ -42,7 +36,7 @@ module.exports = function(dalUtils, errors) {
         deleteList: async (listId) => {
             
             const query = {
-                statement: `DELETE FROM Users WHERE id = ?`,
+                statement: `DELETE FROM Lists WHERE id=?`,
                 description: "deleting list",
                 params: [listId]
             }
@@ -52,14 +46,6 @@ module.exports = function(dalUtils, errors) {
             try {
                 
                 result = await dalUtils.executeQuery(query)             
-                
-            } catch (error) {
-                throw error
-            }
-            
-            try {
-                
-                dalUtils.registerUserHistory(user, moment().format(), "user added to a list")
                 
             } catch (error) {
                 throw error

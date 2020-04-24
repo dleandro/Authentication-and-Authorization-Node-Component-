@@ -21,13 +21,13 @@ module.exports = function(apiUtils, data) {
             req.body.id = answer.insertId
             apiUtils.setResponse(res, req.body, 201)
         }) 
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
     
     function deleteList(req,res){
         data.deleteList(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
 
     function getLists(req,res){
@@ -39,13 +39,13 @@ module.exports = function(apiUtils, data) {
     function getActiveLists(req,res){
         data.getActiveLists()
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
 
     function getUserActiveList(req, res){
         data.getUserActiveList(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
 
     

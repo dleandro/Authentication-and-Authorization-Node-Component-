@@ -203,7 +203,7 @@ module.exports = function(dalUtils, errors) {
                 
                 try {
                     //make sure user creation is registered on the user's history
-                    await registerUserHistory(result.insertId, moment().format("YYYY-MM-DD HH:mm:ss"), "User creation")
+                    await userHistoryDal.addUserHistory(result.insertId, moment().format("YYYY-MM-DD HH:mm:ss"), "User creation")
     
                     return result
     
@@ -253,7 +253,7 @@ module.exports = function(dalUtils, errors) {
             try {
              
                 //make sure username update is registered on the user's history
-                await registerUserHistory(id, moment().format(), "Username update")
+                await userHistoryDal.addUserHistory(id, moment().format("YYYY-MM-DD HH:mm:ss"), "Username update")
 
                 return result
             } catch (error) {
@@ -286,7 +286,7 @@ module.exports = function(dalUtils, errors) {
             try {
                 
                 //make sure password update is registered on the user's history
-                await registerUserHistory(id, moment().format(), "Password update")
+                await userHistoryDal.addUserHistory(id, moment().format("YYYY-MM-DD HH:mm:ss"), "Password update")
 
                 return result
 
@@ -324,7 +324,7 @@ module.exports = function(dalUtils, errors) {
             try {
              
                 //make sure username update is registered on the user's history
-                await registerUserHistory(userId, moment().format(), "User deleted")
+                await userHistoryDal.addUserHistory(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "User deleted")
 
                 return result
             } catch (error) {
@@ -333,17 +333,5 @@ module.exports = function(dalUtils, errors) {
         }
 
     }
-
-        // request userHistoryDal to insert the in the user s history the latest action executed
-        async function registerUserHistory (userId, date, description) {
-            try {
-                
-                userHistoryDal.addUserHistory(userId, date, description)
-                
-            } catch (error) {
-                throw error                
-            }
-        }
-    
         
 }

@@ -11,7 +11,7 @@ module.exports = {
     //   login page.
     ensureAuthenticated: (req, res, next) => {
         if (req.isAuthenticated() || config.env === config.test) { return next(); }
-        res.redirect('/login')
+        res.send({response: 'Requires Authentication'})
     },
     
     // TODO: probably should have a function that calls auth module and checks if user is authenticated and that it had permissions

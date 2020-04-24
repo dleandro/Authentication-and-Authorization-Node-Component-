@@ -13,7 +13,7 @@ module.exports = function(apiUtils, data) {
     function getPermissions(req, res){
         data.getPermissions()
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
 
     function addPermission(req,res){
@@ -22,13 +22,13 @@ module.exports = function(apiUtils, data) {
             req.body.id = answer.insertId
             apiUtils.setResponse(res, req.body, 201)
         })
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
     
     function deletePermission(req, res){
         data.deletePermission(req.body.method, req.body.path)
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err).detail, JSON.parse(err).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
     }
     
     return permissionRouter

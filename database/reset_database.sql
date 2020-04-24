@@ -67,7 +67,7 @@ description VARCHAR(30)
 );
 CREATE TABLE IDP(
 user_id INT,
-idp_id VARCHAR(40),
+idp_id VARCHAR(1000),
 idpname VARCHAR(20),
 PRIMARY KEY(user_id),
 FOREIGN KEY(user_id) REFERENCES Users(id)

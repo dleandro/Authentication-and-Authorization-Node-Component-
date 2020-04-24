@@ -1,7 +1,7 @@
 'use strict'
 
 const 
-app = require('../server/server'),
+app = require('../server'),
 request = require('supertest'),
 moment = require('moment'),
 assert = require('assert');
@@ -133,5 +133,14 @@ describe('[LIST CRUD TESTING]', function() {
 
         })
         
+    })
+
+    after(function() {
+        request(app)
+        .delete(`/user/${userId}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { })
     })
 })

@@ -1,7 +1,7 @@
 'use strict'
 
 const 
-app = require('../server/server'),
+app = require('../server'),
 request = require('supertest'),
 assert = require('assert');
 
@@ -10,8 +10,24 @@ const user = {
     password: '123'
 }
 
+var userId
+
 describe('[USER AUTHENTICATION TESTING]', function() { 
     
+    before(function() {
+
+        request(app)
+        .post('/user')
+        .send(user)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .end( (err, resp) => { 
+            userId = resp.body.id
+        })
+
+    })
+
     it('should login using local strategy', function(done) {
         
         request(app)
@@ -24,5 +40,14 @@ describe('[USER AUTHENTICATION TESTING]', function() {
             assert.equal(err, null)
             done()
         })        
+    })
+
+    after(function() {
+        request(app)
+        .delete(`/user/${userId}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end( (err, resp) => { })
     })
 })

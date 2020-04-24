@@ -1,7 +1,7 @@
 'use strict'
 
 const 
-app = require('../server/server'),
+app = require('../server'),
 request = require('supertest'),
 assert = require('assert');
 

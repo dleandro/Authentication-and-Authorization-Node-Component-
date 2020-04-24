@@ -2,7 +2,8 @@
 
 module.exports = function(dalUtils, errors) {
     
-    const userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors),
+    const
+    userHistoryDal = require('../user-history/user-history-dal') (dalUtils, errors),
     moment = require('moment')
 
     return {
@@ -20,17 +21,6 @@ module.exports = function(dalUtils, errors) {
             
             try {
                 result = await dalUtils.executeQuery(query)             
-                
-            } catch (error) {
-                throw error
-            }
-            
-            try {
-                
-                //make sure user creation is registered on the user's history
-                await registerUserHistory(result.insertId, moment().format(), "adding user role")
-                
-                return result
                 
             } catch (error) {
                 throw error
@@ -109,16 +99,5 @@ module.exports = function(dalUtils, errors) {
         }
         
         
-    }
-
-     // request userHistoryDal to insert the in the user s history the latest action executed
-    async function registerUserHistory (userId, date, description) {
-        try {
-            
-            userHistoryDal.addUserHistory(userId, date, description)
-            
-        } catch (error) {
-            throw error                
-        }
     }
 }

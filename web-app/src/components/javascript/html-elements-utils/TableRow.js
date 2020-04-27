@@ -7,55 +7,32 @@ const USER_URL = 'http://localhost:8082/user';
 
 class TableRow extends React.Component {
     state = { cols:this.props.cols};
+    stateWasChanged = false;
+    isEmptyRow = true;
 
-    submitListener = _ => this.props.cols[0]===this.state.cols[0] && this.props.cols[1]===this.state.cols[1]? alert(MISS_CLICK_ALERT) : this.addOrEditRequest()
+    //checks if any change was submited
+    submitListener = _ => this.stateWasChanged? this.addOrEditRequest():alert(MISS_CLICK_ALERT) 
 
-    addOrEditRequest = _ => (this.props.cols[0] === undefined && this.props.cols[1]===undefined)? this.addUserRequest():this.editUserRequest();
-
-    addUserRequest= _=> {
-        console.log(`fetching ${USER_URL} ... with ${this.state.cols}`);
-        fetch(USER_URL, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                username: this.state.cols[1],
-                password: '1234'
-            })
-        })
-            .then(rsp=> {
-                console.log(rsp);
-                this.props.setRedirect('/backoffice')
-                //return {user:rsp.text(),status:rsp.status}
-            })
-            //.then(json=>{console.log(json);json.status===200?setRedirect('/backoffice'):alert('Unable to login')})
-    }
-
-    editUserRequest= _=> {
-        const editurl = `${USER_URL}/${this.state.cols[0]}/username`
-        console.log(`fetching ${editurl} ... with ${this.state.cols}`)
-        fetch(editurl, {
-            method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                username: this.state.cols[1],
-            })
-        })
-            .then(rsp=> {
-                console.log(rsp);
-                alert('Dont forget to refresh to see changes!')
-                //return {user:rsp.text(),status:rsp.status}
-            })
-        //.then(json=>{console.log(json);json.status===200?setRedirect('/backoffice'):alert('Unable to login')})
-    }
+    //checks if collumns values were initiated undefined so it knows if is an edit row or an add row
+    addOrEditRequest = _ => (this.isEmptyRow)? this.props.addRequest(this.state.cols):this.props.editRequest(this.state.cols);
 
     changeColNum = (i,value)=> {
         var ret = this.state.cols
         ret[i] = value;
         return ret
     }
+    deleteListener= ()=>console.log('apaga-me');
 
     handleChange = (e,index) => this.setState({cols: this.changeColNum(index,e.target.value)})
-    deleteListener= ()=>console.log('apaga-me');
+
+    //called after updated state
+    componentDidUpdate( prevProps,  prevState){
+        this.stateWasChanged=true
+    }
+    //called when creating component
+    componentDidMount() {
+        this.isEmptyRow= this.props.cols[0] === undefined
+    }
 
 
     render() {
@@ -64,7 +41,7 @@ class TableRow extends React.Component {
                 {
                     this.state.cols.map((col,index)=>
                         <td>
-                            <input className="form-control border-0 text-white bg-transparent" type="text" value={this.state.cols[index]} onChange={e=>this.handleChange(e,index)}/>
+                            <input className="form-control border-0 text-white bg-transparent" type="text" value={this.props.cols[index]} onChange={e=>this.handleChange(e,index)}/>
                         </td>
                     )
                 }

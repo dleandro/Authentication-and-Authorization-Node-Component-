@@ -14,6 +14,35 @@ class BackOffice extends React.Component {
         this.state = { users: [] }
     }
 
+    addUser(arr) {
+        fetch(USER_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: arr[1],
+                password: 1234
+            })
+        })
+            .then(rsp=> {
+                console.log(rsp);
+                return {user:rsp.text(),status:rsp.status}
+            })
+
+    }
+    editUsername(arr) {
+        fetch(`${USER_URL}/${arr[0]}/username`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: arr[1]
+            })
+        })
+            .then(rsp=> {
+                console.log(rsp);
+                return {user:rsp.text(),status:rsp.status}
+            })
+
+    }
 
     requestUsers = () => fetch(USER_URL).then(rsp=> rsp.json())
 
@@ -33,8 +62,8 @@ class BackOffice extends React.Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.users.map(user =>  <TableRow setRedirect={this.props.setRedirect} cols={[user.id,user.username]} />)}
-                <TableRow setRedirect={this.props.setRedirect} cols={[undefined,undefined]} />
+                {this.state.users.map(user =>  <TableRow setRedirect={this.props.setRedirect} editRequest={this.editUsername} cols={[user.id,user.username]} />)}
+                <TableRow setRedirect={this.props.setRedirect} addRequest={this.addUser} cols={[undefined,undefined]} />
                 </tbody>
             </Table>
         )

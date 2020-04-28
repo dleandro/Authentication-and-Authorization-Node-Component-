@@ -21,7 +21,8 @@
     "passport-local": "^1.0.0",
     "passport-office365-oauth2": "0.0.3",
     "passport-openid": "^0.4.0",
-    "passport-saml": "^1.3.3"
+    "passport-saml": "^1.3.3",
+    "samlp": "^3.4.1"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

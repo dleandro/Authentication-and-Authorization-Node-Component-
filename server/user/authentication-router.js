@@ -1,6 +1,8 @@
 'use strict'
 
-const passport = require('passport')
+const passport = require('passport'),
+samlp=require('samlp'),
+fs=require('fs')
 
 // this module contains all user authentication related endpoints
 module.exports = function(apiUtils, data) {
@@ -49,7 +51,9 @@ module.exports = function(apiUtils, data) {
         '/logout', 
         (req,res)=>{
             req.logout()
-            res.end()
+            req.session = null
+
+            apiUtils.setResponse(res, "Logout successful", 200)   
         }
     )
 
@@ -60,6 +64,23 @@ module.exports = function(apiUtils, data) {
         successRedirect: '/google/success',
         failureRedirect: '/google/failure'
 }));
+
+authenticationRouter.get('/login/saml',
+  passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+  function(req, res) {
+    res.redirect('/');
+  }
+);
+
+const bodyParser = require('body-parser');
+
+authenticationRouter.post('/login/saml/callback',
+  bodyParser.urlencoded({ extended: false }),
+  passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+  function(req, res) {
+    res.redirect('/');
+  }
+);
 
 authenticationRouter.get('/azureAD/callback', 
   passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),

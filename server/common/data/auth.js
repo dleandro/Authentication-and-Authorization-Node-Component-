@@ -1,5 +1,6 @@
 'use strict'
 const dal=require('../util/dal-paths')
+const config=require('../config/config')
 module.exports={
 
     hasPermissions:async (req,resp,next)=>{

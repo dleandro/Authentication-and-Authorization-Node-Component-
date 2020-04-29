@@ -16,14 +16,12 @@ const strategy = new AzureAdOAuth2Strategy({
     // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
     // you will need a jwt-package like https://github.com/auth0/node-jsonwebtoken to decode id_token and get waad profile
     var waadProfile =jwt.decode(params.id_token);
-    console.log(params)
     console.log(profile)
-    console.log(jwt.decode(params.id_token))
-    let user=await passportUtils.findUserByIdp(params.id_token)
+    let user=await passportUtils.findCorrespondingUser(waadProfile.email)
     if(!user){
         user=await passportUtils.CreateUser(params.id_token,'azureAD',waadProfile.email,null)
-        console.log(user)
     }
+    console.log(user)
     done(null,user)
   })
 

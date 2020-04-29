@@ -21,8 +21,8 @@ module.exports = function(dalUtils, errors) {
             }
 
             let result=await dalUtils.executeQuery(query)
-            if(result[0]==null)return null
             console.log(result)
+            if(result[0]==null)return null
             return await this.getUserById(result[0].user_id)
         },
 
@@ -67,7 +67,7 @@ module.exports = function(dalUtils, errors) {
             var result
 
             const query = {
-                statement: `${SELECT_ALL} + where username= ?`,
+                statement: `${SELECT_ALL} where username= ?`,
                 description: "get user by email",
                 params: [username]
             }
@@ -85,7 +85,7 @@ module.exports = function(dalUtils, errors) {
                 
                 // if there weren't any users found return with an exception
                 dalUtils.throwErrorIfNecessary(
-                    () => users.length < 1,
+                    () => result.length < 1,
                     errors.noUsersFound)
     
             } catch(error) {

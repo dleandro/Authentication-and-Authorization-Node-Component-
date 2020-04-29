@@ -85,7 +85,7 @@ authenticationRouter.post('/login/saml/callback',
 authenticationRouter.get('/azureAD/callback', 
   passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
   function (req, res) {
-    // Successful authentication
+    res.redirect('/users/1');
   });
     
     return authenticationRouter

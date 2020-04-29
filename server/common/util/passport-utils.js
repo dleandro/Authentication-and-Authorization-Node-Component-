@@ -6,13 +6,11 @@ data = require('./dal-paths')
 module.exports = {
     
     findUser: async (userId) => {
-        console.log(userId)
         return data.user.getUserById(userId)
     },
     findUserByIdp: async (idp) => {
        let user=await data.user.getUserbyIDP(idp)
        if(!user)return null
-       console.log(user)
        return{
         id:user.id,
         idp:idp,
@@ -20,8 +18,13 @@ module.exports = {
     }
     },
 
-    findCorrespondingUser: async (username, password) => {
-        return data.user.getUser(username, password)
+    findCorrespondingUser: async (username) => {
+        try{
+        let user=await data.user.getUserByEmail(username)
+        return user
+        }catch(error){
+            return null
+        }
     },
     
     /*

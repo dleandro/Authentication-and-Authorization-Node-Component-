@@ -5,7 +5,7 @@ module.exports = function(apiUtils, data) {
     
     const userHistoryRouter = require('express').Router()
 
-    
+    // GET ENDPOINTS MISSING
     return userHistoryRouter
     
 }

@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 
 const fetch = require('node-fetch');
 const MISS_CLICK_ALERT = 'HEY! Please change values before submiting, did you click wrong submit?'
-const USER_URL = 'http://localhost:8082/user';
+const USER_URL = 'http://localhost:8082/api/user';
 
 class TableRow extends React.Component {
     state = { cols:this.props.cols};

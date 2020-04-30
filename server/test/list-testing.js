@@ -68,6 +68,8 @@ describe('[LIST CRUD TESTING]', function() {
         })
         
     })
+
+    //TODO: changeListStatus
     
     it('should get lists', function(done) {
         

@@ -4,7 +4,7 @@ export default function Uperbar({setRedirect}) {
 
     /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
     function openNav() {
-        const url = "http://localhost:8082/logout"
+        const url = "http://localhost:8082/api/authentication/logout"
         console.log(`fetching ${url} ... `)
         fetch(url, {
             method: "POST",

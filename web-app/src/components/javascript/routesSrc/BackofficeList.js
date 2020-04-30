@@ -6,7 +6,7 @@ import TableRow from "../html-elements-utils/TableRow";
 import Table from 'react-bootstrap/Table'
 
 const fetch = require('node-fetch');
-const LIST_URL = 'http://localhost:8082/list';
+const LIST_URL = 'http://localhost:8082/api/list';
 
 export class BackofficeList extends Component {
     constructor() {

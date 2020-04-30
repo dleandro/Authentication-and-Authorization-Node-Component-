@@ -9,7 +9,7 @@ module.exports = function(auth,apiUtils, data) {
     .get((req, res) => {
         data.getAllUsers()
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     })
     .post((req, res) => {
         data.insertUser(req.body.username, req.body.password)
@@ -17,31 +17,31 @@ module.exports = function(auth,apiUtils, data) {
             req.body.id = answer.insertId
             apiUtils.setResponse(res, req.body, 201)
         })
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     })
 
     userRouter.route('/:id')
     .get(auth.hasPermissions,(req, res) => {
         data.getUserById(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     })
     .delete(auth.hasPermissions, (req, res) => {
         data.deleteUser(req.params.id)
         .then(answer => apiUtils.setResponse(res, "User deleted", 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     })
     
     userRouter.put('/:id/username', apiUtils.ensureAuthenticated, (req, res) => {
         data.updateUsername(req.body.username, req.params.id)
         .then(answer => apiUtils.setResponse(res, req.body, 201))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     })
     
     userRouter.put('/:id/password', apiUtils.ensureAuthenticated, (req, res) => {
         data.updatePassword(req.body.password, req.params.id)
         .then(answer => apiUtils.setResponse(res, req.body, 201))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message).detail, JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     })
     
     return userRouter

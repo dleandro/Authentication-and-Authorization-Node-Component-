@@ -6,7 +6,7 @@ import TableRow from "../html-elements-utils/TableRow";
 import Table from 'react-bootstrap/Table'
 
 const fetch = require('node-fetch');
-const USER_URL = 'http://localhost:8082/user';
+const USER_URL = 'http://localhost:8082/api/user';
 
 class BackOffice extends React.Component {
     constructor() {
@@ -32,6 +32,7 @@ class BackOffice extends React.Component {
     editUsername(arr) {
         fetch(`${USER_URL}/${arr[0]}/username`, {
             method: "PUT",
+            credentials: "same-origin",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 username: arr[1]

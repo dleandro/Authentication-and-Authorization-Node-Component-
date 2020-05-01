@@ -24,7 +24,6 @@ module.exports = function(apiUtils, data) {
         '/login', 
         passport.authenticate('local', { failWithError: true }),
         (req, res, next) => {
-
           apiUtils.setResponse(res, "Login successful", 200)
     
         },

@@ -21,7 +21,6 @@ class App extends Component {
         return (
             <Router>
                     <SideBar navWidthCollapsed={sidebarCollapsedSize} navWidthExpanded={sidebarExtendedSize} />
-
                     <Routes sidebarCollapsedSize={sidebarCollapsedSize} changeProtocol={this.changeProtocol}> </Routes>
 
             </Router>

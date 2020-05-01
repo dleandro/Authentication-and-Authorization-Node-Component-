@@ -11,6 +11,7 @@ module.exports = {
     //   login page.
     ensureAuthenticated: (req, res, next) => {
         if (req.isAuthenticated() || config.env === config.test) { return next(); }
+        console.log('not authenticated')
         res.send({response: 'Requires Authentication'})
     },
     

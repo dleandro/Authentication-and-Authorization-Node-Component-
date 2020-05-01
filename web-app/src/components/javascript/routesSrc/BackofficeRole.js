@@ -6,7 +6,7 @@ import TableRow from "../html-elements-utils/TableRow";
 import Table from 'react-bootstrap/Table'
 
 const fetch = require('node-fetch');
-const ROLE_URL = 'http://localhost:8082/role';
+const ROLE_URL = 'http://localhost:8082/api/role';
 
 export class BackofficeRole extends Component {
     constructor() {

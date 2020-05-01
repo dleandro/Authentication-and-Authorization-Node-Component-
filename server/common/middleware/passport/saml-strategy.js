@@ -2,14 +2,16 @@
 
 const
 fs = require('fs'),
+path = require('path'),
 passportUtils = require('../../util/passport-utils'),
 SamlStrategy = new (require('passport-saml').Strategy)({ 
-    
+
     callbackUrl: 'http://localhost:8082/authentication/login/saml/callback',  //redirect after sucessfull login
     entryPoint: 'https://authentication-node.eu.auth0.com/samlp/gkngnFEKD5tU9H6gaWR0UR7eqolioXaX',
     issuer: 'aa-node-component',
-    cert:fs.readFileSync('../authentication-node.pem','utf-8'),
-    privateCert: fs.readFileSync('../privateKey.pem', 'utf-8')
+    cert:fs.readFileSync(path.join(__dirname, '../../../../authentication-node.pem'),'utf-8'),
+    privateCert: fs.readFileSync(path.join(__dirname, '../../../../privateKey.pem'), 'utf-8')
+
   },async function(profile, done) {
     let user=await passportUtils.findUserByIdp(profile.nameID)
     if(!user){

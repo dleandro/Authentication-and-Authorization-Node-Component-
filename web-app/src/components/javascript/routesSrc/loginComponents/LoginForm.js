@@ -11,7 +11,7 @@ export default function LoginForm({id , app: state, setRedirect}) {
 
 
     function submitLoginRequest() {
-        const url = "http://localhost:8082/login"//+ state.selectedProtocol
+        const url = "http://localhost:8082/api/authentication/login"//+ state.selectedProtocol
         console.log(`fetching ${url} ... with ${user} ${pass}`)
         fetch(url, {
             method: "POST",
@@ -69,7 +69,7 @@ export default function LoginForm({id , app: state, setRedirect}) {
                 {'Login'}
             </Button>
 
-            <a href="http://localhost:8082/google-login"> Login With Google </a>
+            <a href="http://localhost:8082/api/authentication/login/google"> Login With Google </a>
         </div>
     )
 }

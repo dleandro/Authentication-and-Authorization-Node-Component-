@@ -1,8 +1,6 @@
 'use strict'
 
-const passport = require('passport'),
-samlp=require('samlp'),
-fs=require('fs')
+const passport = require('passport')
 
 // this module contains all user authentication related endpoints
 module.exports = function(apiUtils, data) {
@@ -26,12 +24,12 @@ module.exports = function(apiUtils, data) {
         passport.authenticate('local', { failWithError: true }),
         (req, res, next) => {
 
-            apiUtils.setResponse(res, "Login successful", 200)
-
+          apiUtils.setResponse(res, "Login successful", 200)
+    
         },
         (err, req, res, next) => {
 
-            apiUtils.setResponse(res, err.message, 401)
+            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
 
         }
     )
@@ -39,11 +37,13 @@ module.exports = function(apiUtils, data) {
     authenticationRouter.post(
         '/logout', 
         (req,res) => {
-            req.logout()
+          
+          req.session.destroy(function(err) {  })
 
-            req.session = null
+          req.logout()
 
-            apiUtils.setResponse(res, "Logout successful", 200)                    
+          apiUtils.setResponse(res, "Logout successful", 200)                    
+
         }
     )
 

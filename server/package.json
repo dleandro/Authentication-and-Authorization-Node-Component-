@@ -14,6 +14,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mariadb": "^2.2.0",
+    "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
     "passport-azure-ad-oauth2": "0.0.4",

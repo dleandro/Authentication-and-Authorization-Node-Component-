@@ -3,14 +3,15 @@
 // this module contains all role related endpoints
 module.exports = function(apiUtils, data) {
     
-    const roleRouter = require('express').Router()
+    const roleRouter = require('express').Router(),
+    auth=require('../common/data/auth')
     
     roleRouter.route('/')
     .post(addRole)
     .get(getRoles)
+    .delete(deleteRole)
     
     roleRouter.route('/:id')
-    .delete(deleteRole)
     .get(getRoleById)
     
     function addRole(req, res){
@@ -23,7 +24,7 @@ module.exports = function(apiUtils, data) {
     }
     
     function deleteRole(req, res){
-        data.deleteRole(req.params.id)
+        data.deleteRole(req.body.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

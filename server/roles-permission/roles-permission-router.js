@@ -3,7 +3,8 @@
 // this module contains all role's permissions related endpoints
 module.exports = function(apiUtils, data) {
     
-    const rolesPermissionRouter = require('express').Router()
+    const rolesPermissionRouter = require('express').Router(),
+    auth=require('../common/data/auth')
     
     rolesPermissionRouter.route('/')
     .post(addRolesPermission)

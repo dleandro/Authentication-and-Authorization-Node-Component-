@@ -23,7 +23,7 @@ module.exports = function(dalUtils, errors) {
         deletePermission: async (method, path) => {
             
             const query = {
-                statement: `DELETE FROM Permission WHERE method = ? AND path = ?`,
+                statement: `DELETE FROM Permission WHERE id=?`,
                 description: "deleting permission",
                 params: [method, path]
             }
@@ -53,10 +53,10 @@ module.exports = function(dalUtils, errors) {
                 throw error
             }
         },
-        getPermissionID :async (method,path) => {
+        getPermissionById :async (method,path) => {
             
             const query = {
-                statement: `Select id from Permission where method=? and path=?`,
+                statement: `Select * from Permission where id=?`,
                 description: "get permission by id",
                 params: [method,path]
             }

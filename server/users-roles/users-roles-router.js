@@ -3,7 +3,8 @@
 // this module contains all user's roles related endpoints
 module.exports = function(apiUtils, data) {
     
-    const usersRolesRouter = require('express').Router()
+    const usersRolesRouter = require('express').Router(),
+    auth=require('../common/data/auth')
     
     usersRolesRouter.route('/')
     .post(addUsersRoles)
@@ -14,7 +15,7 @@ module.exports = function(apiUtils, data) {
     usersRolesRouter.get('/active/user', getUserRolesById)    
     
     function addUsersRoles(req, res){
-        data.addUserRole(req.body.user, req.body.role)
+        data.addUserRole(req.body.user, req.body.role,req.body.start_date,req.body.end_date,req.body.updater,req.body.active)
         .then(answer => apiUtils.setResponse(res, answer, 201))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

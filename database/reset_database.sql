@@ -12,6 +12,7 @@ CREATE TABLE Permission(
 id int AUTO_INCREMENT ,
 method VARCHAR(10),
 path VARCHAR(50),
+description Varchar(100),
 PRIMARY KEY(id)
 );
 

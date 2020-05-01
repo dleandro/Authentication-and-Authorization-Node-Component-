@@ -48,6 +48,14 @@ module.exports = {
             idp:idp_id,
             username:username
         }
+    },
+
+    isBlackListed:async(user_id)=>{
+        let result=await data.list.isBlackListed(user_id)
+        if(result.length>=1){
+            return true
+        }
+        return false
     }
     
     

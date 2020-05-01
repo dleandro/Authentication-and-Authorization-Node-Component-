@@ -5,7 +5,8 @@ const passport = require('passport')
 // this module contains all user authentication related endpoints
 module.exports = function(apiUtils, data) {
     
-    const authenticationRouter = require('express').Router()
+    const authenticationRouter = require('express').Router(),
+    auth=require('../common/data/auth')
     
     authenticationRouter.get(
         '/login/google',

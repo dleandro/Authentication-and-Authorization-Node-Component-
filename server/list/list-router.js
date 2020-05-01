@@ -3,13 +3,14 @@
 // this module contains all list related endpoints
 module.exports = function(apiUtils, data) {
     
-    const listRouter = require('express').Router()
+    const listRouter = require('express').Router(),
+    auth=require('../common/data/auth')
     
     listRouter.route('/')
     .get(getLists)
     .post(addList)
+    .delete(deleteList)
 
-    listRouter.delete('/:id', deleteList)
 
     listRouter.get('/active', getActiveLists)
 
@@ -27,7 +28,7 @@ module.exports = function(apiUtils, data) {
     }
     
     function deleteList(req,res){
-        data.deleteList(req.params.id)
+        data.deleteList(req.body.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

@@ -5,10 +5,14 @@ LocalStrategy = require('passport-local').Strategy,
 passportUtils = require('../../util/passport-utils')
 
 const strategy = new LocalStrategy(
-    function(username, password, done) {
-        passportUtils.findCorrespondingUser(username, password)
-        .then(user => done(null, user))
-        .catch(err => done(err))
+    async function(username, password, done) {
+        let user=await passportUtils.findCorrespondingUser(username, password)
+            console.log("checkingBlacklisted")
+            let isBlackListed=await passportUtils.isBlackListed(user.id)
+            if(isBlackListed){
+                return done(null,false,{message:'User is BlackListed'})
+            }
+            return done(null, user)
     }
     )
     

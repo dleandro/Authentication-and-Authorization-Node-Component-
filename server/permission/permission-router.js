@@ -3,12 +3,16 @@
 // this module contains all permissions related endpoints
 module.exports = function(apiUtils, data) {
     
-    const permissionRouter = require('express').Router()
+    const permissionRouter = require('express').Router(),
+    auth=require('../common/data/auth')
     
     permissionRouter.route('/')
     .get(getPermissions)
-    .post(addPermission)
+    .post(auth.hasPermissions,addPermission)
     .delete(deletePermission)
+
+    permissionRouter.route('/:id')
+    .get(getPermissionById)
 
     function getPermissions(req, res){
         data.getPermissions()
@@ -17,7 +21,7 @@ module.exports = function(apiUtils, data) {
     }
 
     function addPermission(req,res){
-        data.addPermission(req.body.method, req.body.path)
+        data.addPermission(req.body.method, req.body.path,req.body.description)
         .then(answer => {
             req.body.id = answer.insertId
             apiUtils.setResponse(res, req.body, 201)
@@ -26,7 +30,13 @@ module.exports = function(apiUtils, data) {
     }
     
     function deletePermission(req, res){
-        data.deletePermission(req.body.method, req.body.path)
+        data.deletePermission(req.body.id)
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+    }
+
+    function getPermissionById(req, res){
+        data.getPermissionById(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

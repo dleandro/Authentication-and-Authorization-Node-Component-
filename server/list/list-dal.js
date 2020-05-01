@@ -6,6 +6,24 @@ const moment = require('moment')
 // This module is the data access layer for the list entity, it provides every operation involving Lists
 module.exports = function(dalUtils, errors) {
 
+    async function getUserActiveList(userId){
+            
+        const query = {
+            statement: `Select * from Lists where user_id=? AND active=1 AND end_date>'${moment().format()}'`,
+            description: "getting user's active lists",
+            params: [userId]
+        }
+        
+        try {
+            return await dalUtils.executeQuery(query)             
+            
+        } catch (error) {
+            throw error
+        }
+        
+        
+    }
+
     return {
         
         // Creates a list entry with a user_id associated and a type of list
@@ -132,6 +150,20 @@ module.exports = function(dalUtils, errors) {
                 throw error
             }
             
+            
+        },
+        isBlackListed:async(userId)=>{
+            const query={
+                statement:`Select * from Lists where user_id=? AND active=1 AND LIST='BLACK'`,
+                description: "checking if user is blacklisted",
+                params: [userId]
+            }
+            try {
+                return await dalUtils.executeQuery(query)             
+                
+            } catch (error) {
+                throw error
+            }
             
         }
     }

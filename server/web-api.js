@@ -13,7 +13,7 @@ permissionRouter = require('./permission/permission-router') (apiUtils, data.per
 roleRouter = require('./role/role-router') (apiUtils, data.role),
 listRouter = require('./list/list-router') (apiUtils, data.list),
 rolesPermissionRouter = require('./roles-permission/roles-permission-router') (apiUtils, data.rolesPermission),
-usersRolesRouter = require('./users-roles/users-roles-router') (apiUtils, data.usersRoles),
+usersRolesRouter = require('./users-roles/users-roles-router') (apiUtils, data.userRole),
 userHistoryRouter = require('./user-history/user-history-router') (apiUtils, data.userHistory),
 authenticationRouter = require('./user/authentication-router') (apiUtils, data.user)
 
@@ -21,9 +21,9 @@ router.use('/user', userRouter)
 router.use('/permission', permissionRouter)
 router.use('/role', roleRouter)
 router.use('/list', listRouter)
-router.use('/roles-permission', rolesPermissionRouter)
-router.use('/users-roles', usersRolesRouter)
-router.use('/user-history', userHistoryRouter)
+router.use('/roles_permission', rolesPermissionRouter)
+router.use('/users_roles', usersRolesRouter)
+router.use('/user_history', userHistoryRouter)
 router.use('/authentication', authenticationRouter)
 
 router.post('/config/database',(req,res)=>{

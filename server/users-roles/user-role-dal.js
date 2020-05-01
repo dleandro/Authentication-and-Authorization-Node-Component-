@@ -9,14 +9,14 @@ module.exports = function(dalUtils, errors) {
     return {
         
         // database should return duplicate error to throw
-        addUserRole: async (user, role) => {
+        addUserRole: async (user, role,start_date,end_date,updater,active) => {
             
             var result
 
             const query = {
-                statement: 'INSERT INTO Users_Roles(user,role) VALUES (?,?);',
+                statement: 'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);',
                 description: "adding user_role",
-                params: [user, role]
+                params: [user, role,start_date,end_date,updater,active]
             }
             
             try {

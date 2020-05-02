@@ -9,10 +9,10 @@ module.exports = function(apiUtils, data) {
     permissionRouter.route('/')
     .get(getPermissions)
     .post(auth.hasPermissions,addPermission)
-    .delete(deletePermission)
-
+    
     permissionRouter.route('/:id')
     .get(getPermissionById)
+    .delete(deletePermission)
 
     function getPermissions(req, res){
         data.getPermissions()

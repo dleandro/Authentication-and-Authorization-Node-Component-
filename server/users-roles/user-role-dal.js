@@ -27,6 +27,24 @@ module.exports = function(dalUtils, errors) {
             }
             
         },
+
+        deactivateUserRole: async (id) => {
+
+            const query = {
+                statement: 'UPDATE Users_Roles SET active = 0 WHERE id = ?',
+                description: 'deactivate user_role´s status',
+                params: [id]
+            }
+
+            try {
+                
+                return await dalUtils.executeQuery(query)
+
+            } catch (error) {
+                throw error
+            }
+
+        },
         
         getActiveRoles: async () => {
             
@@ -46,7 +64,7 @@ module.exports = function(dalUtils, errors) {
             
         },
         
-        getUserActiveList: async (id) => {
+        getUserActiveRoles: async (id) => {
             const query = {
                 statement: `Select * from Users_Roles where user_id=? AND active=1 AND (end_date>'${moment().format('YYYY-MM-DD HH:MM:SS')}' || end_date IS NULL)`,
                 description: "getting user's active roles",

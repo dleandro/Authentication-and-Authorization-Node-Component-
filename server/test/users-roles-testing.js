@@ -74,6 +74,8 @@ describe('[USERS ROLES CRUD TESTING]', function() {
         })
         
     })
+
+    // TODO: SHOULD DEACTIVATE USER ROLE
     
     it('should get all users roles', function(done) {
         

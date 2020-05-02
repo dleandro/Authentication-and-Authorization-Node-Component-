@@ -4,6 +4,7 @@ const
 app = require('../server'),
 request = require('supertest'),
 moment = require('moment'),
+links = require('../../links'),
 assert = require('assert');
 
 const user = {
@@ -26,7 +27,7 @@ const list = {
 
 const getUsersActiveLists = (cb) => {
     request(app)
-    .get(`/list/active/user/${userId}`)
+    .get(links.lists.USERS_ACTIVE_LISTS_PATH(userId))
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
@@ -37,10 +38,10 @@ const getUsersActiveLists = (cb) => {
 
 describe('[LIST CRUD TESTING]', function() { 
 
-    // create a user to associate with the list that will be testes
+    // create a user to associate with the list that will be tested
     before(function () {
         request(app)
-        .post('/user/')
+        .post(links.users.USER_PATH)
         .send(user)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
@@ -54,7 +55,7 @@ describe('[LIST CRUD TESTING]', function() {
     it('should create a new list', function(done) {
         
         request(app)
-        .post('/list/')
+        .post(links.lists.LIST_PATH)
         .send(list)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
@@ -70,6 +71,9 @@ describe('[LIST CRUD TESTING]', function() {
     })
 
     //TODO: changeListStatus
+    it('should deactivate created list', function(done) {
+        
+    })
     
     it('should get lists', function(done) {
         

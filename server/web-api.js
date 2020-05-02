@@ -1,57 +1,33 @@
 'use strict'
 
+
+// This file defines all routers and passes them the needed parameters
+
 const 
 apiUtils = require('./common/util/api-utils'), 
 data = require('./common/util/dal-paths'),
-fs=require('fs'),
 auth=require('./common/data/auth'),
 router = require('express').Router()
 
 const
-userRouter = require('./user/user-router') (auth,apiUtils, data.user),
+userRouter = require('./user/user-router') (auth, apiUtils, data.user),
 permissionRouter = require('./permission/permission-router') (apiUtils, data.permission),
 roleRouter = require('./role/role-router') (apiUtils, data.role),
 listRouter = require('./list/list-router') (apiUtils, data.list),
 rolesPermissionRouter = require('./roles-permission/roles-permission-router') (apiUtils, data.rolesPermission),
 usersRolesRouter = require('./users-roles/users-roles-router') (apiUtils, data.userRole),
 userHistoryRouter = require('./user-history/user-history-router') (apiUtils, data.userHistory),
-authenticationRouter = require('./user/authentication-router') (apiUtils, data.user)
+authenticationRouter = require('./user/authentication-router') (apiUtils, data.user),
+configRouter = require('./common/config/config-router') 
 
-router.use('/user', userRouter)
-router.use('/permission', permissionRouter)
-router.use('/role', roleRouter)
-router.use('/list', listRouter)
-router.use('/roles_permission', rolesPermissionRouter)
+router.use('/users', userRouter)
+router.use('/permissions', permissionRouter)
+router.use('/roles', roleRouter)
+router.use('/lists', listRouter)
+router.use('/roles_permissions', rolesPermissionRouter)
 router.use('/users_roles', usersRolesRouter)
-router.use('/user_history', userHistoryRouter)
-router.use('/authentication', authenticationRouter)
-
-router.post('/config/database',(req,res)=>{
-  let obj=req.body
-  let config=JSON.parse(fs.readFileSync(__dirname+'/common/config/production.json','utf-8'))
-  console.log(config)
-  config.database_opts=obj
-  console.log(config)
-  res.end()
-})
-
-router.post('/config/google',(req,res)=>{
-  let obj=req.body
-  let config=JSON.parse(fs.readFileSync(__dirname+'/common/config/production.json','utf-8'))
-  console.log(config)
-  config.google=obj
-  console.log(config)
-  res.end()
-})
-
-router.post('/config/azureAD',(req,res)=>{
-  let obj=req.body
-  let config=JSON.parse(fs.readFileSync(__dirname+'/common/config/production.json','utf-8'))
-  console.log(config)
-  config.azureAD=obj
-  console.log(config)
-  res.end()
-})
-
+router.use('/users_history', userHistoryRouter)
+router.use('/authentications', authenticationRouter)
+router.use('/configs', configRouter)
 
 module.exports = router

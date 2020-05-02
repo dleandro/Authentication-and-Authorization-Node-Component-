@@ -3,6 +3,7 @@
 const 
 app = require('../server'),
 request = require('supertest'),
+links = require('../../links'),
 assert = require('assert');
 
 const user = {
@@ -17,7 +18,7 @@ describe('[USER AUTHENTICATION TESTING]', function() {
     before(function() {
 
         request(app)
-        .post('/user')
+        .post(links.users.USER_PATH)
         .send(user)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
@@ -31,7 +32,7 @@ describe('[USER AUTHENTICATION TESTING]', function() {
     it('should login using local strategy', function(done) {
         
         request(app)
-        .post('/authentication/login')
+        .post(links.users.LOCAL_LOGIN_PATH)
         .send(user)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
@@ -44,7 +45,7 @@ describe('[USER AUTHENTICATION TESTING]', function() {
 
     after(function() {
         request(app)
-        .delete(`/user/${userId}`)
+        .delete(links.users.SPECIFIC_USER_PATH(userId))
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)

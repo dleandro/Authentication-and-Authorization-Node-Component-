@@ -9,10 +9,10 @@ module.exports = function(apiUtils, data) {
     roleRouter.route('/')
     .post(addRole)
     .get(getRoles)
-    .delete(deleteRole)
     
     roleRouter.route('/:id')
     .get(getRoleById)
+    .delete(deleteRole)
     
     function addRole(req, res){
         data.addRole(req.body.role)
@@ -24,7 +24,7 @@ module.exports = function(apiUtils, data) {
     }
     
     function deleteRole(req, res){
-        data.deleteRole(req.body.id)
+        data.deleteRole(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

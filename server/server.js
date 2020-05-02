@@ -1,5 +1,7 @@
 'use strict'
 
+// Sets up the whole server with needed middleware and available endpoints
+
 const
 express = require('express'),
 path = require('path'),

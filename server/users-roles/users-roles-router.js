@@ -11,9 +11,10 @@ module.exports = function(apiUtils, data) {
     .get(getUsersRoles)
 
     usersRolesRouter.get('/active', getActiveRoles)
-    usersRolesRouter.get('/active/user/:id', getUserActiveList)
+    usersRolesRouter.get('/active/user/:id', getUserActiveRoles)
     usersRolesRouter.get('/active/user', getUserRolesById)    
-    
+    usersRolesRouter.put('/deactivate/:userRoleId', deactivateUserRole)
+  
     function addUsersRoles(req, res){
         data.addUserRole(req.body.user, req.body.role,req.body.start_date,req.body.end_date,req.body.updater,req.body.active)
         .then(answer => apiUtils.setResponse(res, answer, 201))
@@ -32,15 +33,21 @@ module.exports = function(apiUtils, data) {
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
 
-    function getUserActiveList(req,res){
-        data.getUserActiveList(req.params.id)
+    function getUserActiveRoles(req,res){
+        data.getUserActiveRoles(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
     
     
-    function getUserRolesById(req,res){
+    function getUserRolesById(req, res){
         data.getUserRolesById(req.params.id)
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+    }
+
+    function deactivateUserRole(req, res) {
+        data.deactivateUserRole(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

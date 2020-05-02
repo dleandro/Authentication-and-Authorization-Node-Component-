@@ -60,7 +60,7 @@ module.exports = function(dalUtils, errors) {
 
             const query = {
                 statement: 'UPDATE Lists SET active = 0 WHERE id = ?',
-                description: "changing list's status",
+                description: "deactivate list's status",
                 params: [listId]
             }
 

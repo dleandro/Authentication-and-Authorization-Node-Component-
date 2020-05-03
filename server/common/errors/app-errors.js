@@ -32,5 +32,17 @@ module.exports = {
         title: "User duplicate active list",
         detail: "User already has an active list, change active list status first before adding the user to a new list",
         status: 403
+    })),
+
+    noListFound: new CustomError(JSON.stringify({
+        title: "No List found",
+        detail: "query didn't go through because there were no lists found with this id",
+        status: 404
+    })),
+
+    userNotAuthenticated: new CustomError(JSON.stringify({
+        title: "User is not authenticated",
+        detail: "User tried to access a resource that requires authentication and he doesn't meet those requirements",
+        status: 401
     }))
 }

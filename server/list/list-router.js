@@ -16,10 +16,10 @@ module.exports = function(apiUtils, data) {
 
     listRouter.get('/active/user/:id', getUserActiveList)
 
-    listRouter.put('/deactivate', deactivateList)
+    listRouter.put('/deactivate/:id', deactivateList)
     
     function addList(req, res){
-        data.addList(req.body.user, req.body.list, req.body.start_date, req.body.end_date,  req.body.updater)
+        data.addList(req.body.user, req.body.list, req.body.start_date, req.body.end_date, req.body.updater, req.body.active)
         .then(answer => {
             req.body.id = answer.insertId
             apiUtils.setResponse(res, req.body, 201)

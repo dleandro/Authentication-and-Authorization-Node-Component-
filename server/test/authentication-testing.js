@@ -38,7 +38,7 @@ describe('[USER AUTHENTICATION TESTING]', function() {
         .expect('Content-Type', /json/)
         .expect(200)
         .end( (err, resp) => { 
-            assert.equal(err, null)
+            assert.equal(resp.body.success != undefined, true)
             done()
         })        
     })

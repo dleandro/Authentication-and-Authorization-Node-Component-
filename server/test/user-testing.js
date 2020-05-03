@@ -22,6 +22,7 @@ const getUser = (id, cb) => {
 
 var userId
 
+// TODO: IDP endpoints missing
 describe('[USER CRUD TESTING]', function() {
 
     it('should create test user', function(done) {

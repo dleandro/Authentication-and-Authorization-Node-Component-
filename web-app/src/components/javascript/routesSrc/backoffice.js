@@ -1,8 +1,8 @@
 import React from 'react'
-import TableRow from "../html-elements-utils/TableRow";
-import Table from 'react-bootstrap/Table'
-import { userService} from '../service'
+import { userService } from '../service'
+import CustomTable from "../html-elements-utils/Table/CustomTable";
 
+const labels = ["Id","Username","Password"]
 class BackOffice extends React.Component {
     constructor() {
         super()
@@ -10,8 +10,9 @@ class BackOffice extends React.Component {
     }
     service= userService()
 
-    addUser= (arr) =>this.service.addUser(arr)
+    addUser = (arr) => this.service.addUser(arr)
     editUsername =(arr)=> this.service.editUsername(arr)
+    deleteUser=(arr)=> {}//TODO: this.service.deleteUser(arr)
     requestUsers = () => this.service.getUsers()
 
     componentDidMount() {
@@ -20,19 +21,7 @@ class BackOffice extends React.Component {
 
     render() {
         return (
-            <Table striped bordered hover variant="dark">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.users.map(user =>  <TableRow setRedirect={this.props.setRedirect} editRequest={this.editUsername} cols={[user.id,user.username,'****']} />)}
-                    <TableRow setRedirect={this.props.setRedirect} addRequest={this.addUser} cols={[undefined,undefined,undefined]} />
-                </tbody>
-            </Table>
+            <CustomTable addRequest={this.addUser} editRequest={this.editUsername} deleteRequest={this.deleteUser} labels={labels} rows={this.state.users.map(user=>[user.id,user.username,'****'])} />
         )
     }
 }

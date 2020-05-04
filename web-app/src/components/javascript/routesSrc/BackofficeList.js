@@ -1,42 +1,29 @@
 import React, { Component } from 'react'
-import InputGroup from 'react-bootstrap/InputGroup'
-import FormControl from 'react-bootstrap/FormControl'
-import Button from 'react-bootstrap/Button'
-import TableRow from "../html-elements-utils/TableRow";
-import Table from 'react-bootstrap/Table'
+import {listService} from '../service'
+import CustomTable from "../html-elements-utils/Table/CustomTable";
 
-const fetch = require('node-fetch');
-const LIST_URL = 'http://localhost:8082/api/list';
+const service= listService()
+const labels = ["Id","Role","Parent Role"]
 
+/**
+ *
+ */
 export class BackofficeList extends Component {
     constructor() {
         super();
         this.state = { lists: [] }
     }
 
-    requestRoles = () => fetch(LIST_URL).then(rsp=>{console.log(rsp);return rsp}).then(rsp=> rsp.text()).then(data=>{console.log(data);return data})
-
-
     componentDidMount() {
-        this.requestRoles().then(data => {
-            this.setState({ lists: data })
-        })
+        service.getLists().then( data => this.setState({ lists: data }))
     }
 
     render() {
+        //addRequest={this.addUser} editRequest={this.editUsername} deleteRequest={this.deleteUser}
         return (
-            <Table striped bordered hover variant="dark">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Role</th>
-                    <th>Parent Role</th>
-                </tr>
-                </thead>
-                <tbody>
+            <button onClick={event => console.log(this.state.lists)}/>
+            //<CustomTable  labels={labels} rows={this.state.lists} />
 
-                </tbody>
-            </Table>
         )
     }
 }

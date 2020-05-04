@@ -1,26 +1,31 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
 
+
 const MISS_CLICK_ALERT = 'HEY! Please change values before submiting, did you click wrong submit?'
 
+/**
+ * This represents a table row can either be
+ *  - a regular row with data and 2 buttons on last column (edit data and delete data)
+ *  - or
+ *  - a empty row used to submit a new row, has empty fields to fill and a submit button on last column
+ * @param {function} editRequest
+ * @param {function} deleteRequest
+ * @param {Array} cols
+ */
 class TableRow extends React.Component {
     state = { cols:this.props.cols};
     stateWasChanged = false;
     isEmptyRow = true;
 
     //checks if any change was submited
-    submitListener = _ => this.stateWasChanged? this.addOrEditRequest():alert(MISS_CLICK_ALERT) 
-
-    //checks if collumns values were initiated undefined so it knows if is an edit row or an add row
-    addOrEditRequest = _ => (this.isEmptyRow)? this.props.addRequest(this.state.cols):this.props.editRequest(this.state.cols);
+    submitListener = _ => this.stateWasChanged? this.props.editRequest(this.state.cols):alert(MISS_CLICK_ALERT)
 
     changeColNum = (i,value)=> {
         var ret = this.state.cols
         ret[i] = value;
         return ret
     }
-
-    deleteListener= ()=>console.log('apaga-me');
 
     handleChange = (e,index) => this.setState({cols: this.changeColNum(index,e.target.value)})
 
@@ -49,7 +54,7 @@ class TableRow extends React.Component {
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                    <Button onClick={this.deleteListener}>Delete</Button>
+                    {(!this.isEmptyRow)?undefined: <Button onClick={this.props.deleteRequest}>Delete</Button>}
                 </td>
             </tr>
         )

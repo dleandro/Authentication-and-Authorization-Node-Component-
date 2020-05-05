@@ -2,12 +2,11 @@ var {users,roles,permissions,users_history,users_roles,lists,roles_permissions,c
 
 const HOMEPAGE = "http://localhost:8082";
 
-const fetch = require('node-fetch');
 let handleResponse = (resp) => resp.headers.get("content-type").includes("application/json")?resp.json():resp.text()
-let getRequest = async (url) => await fetch(HOMEPAGE+url)
+let getRequest = async (url) => await fetch(HOMEPAGE+url,{credentials:"include"})
     .then(resp=> handleResponse(resp))
-let makeRequest = async (url,body,method) => await fetch(HOMEPAGE+url, {method: method, headers: { "Content-Type": "application/json"}, body: JSON.stringify(body)})
-    .then(resp=> handleResponse(resp))
+let makeRequest =  (url,body,met) => fetch(HOMEPAGE+url, {credentials:"include",method: met, headers: { "Content-Type": "application/json"}, body: JSON.stringify(body),json:true})
+    .then(resp=>handleResponse(resp))
 
 /**
  * Function used to make login logout
@@ -26,7 +25,9 @@ export function userService() {
     return {
         getUsers: async () =>await getRequest(users.USER_PATH),
         addUser: async (arr) => await makeRequest(users.USER_PATH,{username: arr[1], password: arr[2]},'POST'),
-        editUsername: async (arr)=> makeRequest(users.USERNAME_UPDATE_PATH(arr[0]),{username: arr[1]},'PUT')
+        editUsername: async (arr)=> makeRequest(users.USERNAME_UPDATE_PATH(arr[0]),{username: arr[1]},'PUT'),
+        deleteUser:async(arr)=>{
+            makeRequest(users.SPECIFIC_USER_PATH(arr[0]),'','DELETE')}
     }
 }
 

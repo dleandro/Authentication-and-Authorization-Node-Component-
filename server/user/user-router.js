@@ -9,7 +9,7 @@ module.exports = function(auth,apiUtils, data) {
     .get((req, res) => {
         data.getAllUsers()
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err).message, JSON.parse(err.message).status))
     })
     .post((req, res) => {
         data.insertUser(req.body.username, req.body.password)

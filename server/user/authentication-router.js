@@ -25,12 +25,12 @@ module.exports = function(apiUtils, data) {
         '/login', 
         passport.authenticate('local', { failWithError: true }),
         (req, res, next) => {
-          apiUtils.setResponse(res, { success: "Login successful" }, 200)
+          apiUtils.setResponse(res, "Success", 200)
     
         },
         (err, req, res, next) => {
 
-            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
+            apiUtils.setResponse(res, err.message,err.status)
 
         }
     )
@@ -38,12 +38,12 @@ module.exports = function(apiUtils, data) {
     authenticationRouter.post(
         '/logout', 
         (req,res) => {
-          
-          req.session.destroy()
+        
 
           req.logout()
+          req.session.destroy()
 
-          apiUtils.setResponse(res, { success: "Logout successful" }, 200)                    
+          apiUtils.setResponse(res, "success : Logout successful" , 200)                    
 
         }
     )
@@ -56,7 +56,7 @@ module.exports = function(apiUtils, data) {
 
           req.logout()
 
-          apiUtils.setResponse(res, { success: "Logout successful" }, 200)                    
+          apiUtils.setResponse(res, "success :Logout successful" , 200)                    
 
         }
     )

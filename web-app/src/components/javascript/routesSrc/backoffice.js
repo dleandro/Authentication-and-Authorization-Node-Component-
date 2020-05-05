@@ -12,11 +12,13 @@ class BackOffice extends React.Component {
 
     addUser = (arr) => this.service.addUser(arr)
     editUsername =(arr)=> this.service.editUsername(arr)
-    deleteUser=(arr)=> {}//TODO: this.service.deleteUser(arr)
+    deleteUser=(arr)=> this.service.deleteUser(arr)
     requestUsers = () => this.service.getUsers()
 
     componentDidMount() {
-        this.requestUsers().then(data =>this.setState({ users: data }))
+        this.requestUsers().then(data =>{
+            alert(data)
+            this.setState({ users: data })})
     }
 
     render() {

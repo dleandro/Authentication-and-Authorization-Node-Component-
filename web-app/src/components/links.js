@@ -19,7 +19,7 @@ const links =
 {
     users: {
         USER_PATH,
-        USERNAME_UPDATE_PATH: userId => `${USER_PATH}/${userId}/useername`,
+        USERNAME_UPDATE_PATH: userId => `${USER_PATH}/${userId}/username`,
         PASSWORD_UPDATE_PATH: userId => `${USER_PATH}/${userId}/password`,
         SPECIFIC_USER_PATH: userId => `${USER_PATH}/${userId}`,
         GOOGLE_LOGIN_PATH: `${AUTHENTICATION_PATH}/login/google`,

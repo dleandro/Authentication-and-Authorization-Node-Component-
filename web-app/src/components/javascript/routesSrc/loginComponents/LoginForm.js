@@ -10,10 +10,9 @@ export default function LoginForm({id , app: state, setRedirect}) {
 
     var user, pass ="";
     var loginMe = ()=>{
-
+        alert("Loggin in with"+user +pass)
         authenticationService().login(user,pass)
-        setRedirect('/loginSuccessfully')
-
+         .then(setRedirect('/loginSuccessfully'))
     }
 
 

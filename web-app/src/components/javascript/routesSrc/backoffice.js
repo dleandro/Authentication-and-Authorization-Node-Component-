@@ -17,7 +17,6 @@ class BackOffice extends React.Component {
 
     componentDidMount() {
         this.requestUsers().then(data =>{
-            alert(data)
             this.setState({ users: data })})
     }
 

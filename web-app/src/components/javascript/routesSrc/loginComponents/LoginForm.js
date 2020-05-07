@@ -32,7 +32,9 @@ export default function LoginForm({id , app: state, setRedirect}) {
                 <FormControl placeholder="password" aria-label="Recipient's password" aria-describedby="basic-addon2" type="password" onChange={handlePassword}/>
             </InputGroup>
             <Button variant="primary" onClick={loginMe}>{'Login'}</Button>
-            <a href="http://localhost:8082/api/authentication/login/google"> Login With Google </a>
+            <p><a href="http://localhost:8082/api/authentications/login/google"> Login With Google </a></p>
+            <p><a href="http://localhost:8082/api/authentications/login/saml"> Login With Oauth0 </a></p>
+            <p><a href="http://localhost:8082/api/authentications/login/azureAD"> Login With Office 365 </a></p>
         </div>
     )
 }

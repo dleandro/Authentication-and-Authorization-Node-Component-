@@ -12,11 +12,14 @@ export default function Uperbar({setRedirect}) {
                 <span>LOGOUT</span>
             </button>
 
-            <div>
-                <input className="form-control mr-sm-2" name="searchBar" id="searcher" type="search" placeholder="Search" aria-label="Search"/>
-            </div>
-            <button className="btn btn-outline-primary my-2 my-sm-0 " id="searchbutton"> Search</button>
-
+            
+            <div-->
+                <input-- className="form-control mr-sm-2" name="searchBar" id="searcher" type="search" placeholder="Search" aria-label="Search"/>
+            </div-->
+            <button-- className="btn btn-outline-primary my-2 my-sm-0 " id="searchbutton"> Search</button-->
+            <button type="button" id="sidebarCollapse" onClick={()=>setRedirect('/login')} className="btn btn-info">
+                <span>Login</span>
+            </button>
         </nav>
     )
 }

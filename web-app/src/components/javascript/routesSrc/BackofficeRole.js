@@ -18,8 +18,6 @@ export class BackofficeRole extends Component {
     render() {
         return (
             <CustomTable  labels={labels} rows={this.state.roles.map(user=>[user.id,user.role,user.parent_role])} />
-
-        // <CustomTable  labels={labels} rows={this.state.lists} />
         )
     }
 }

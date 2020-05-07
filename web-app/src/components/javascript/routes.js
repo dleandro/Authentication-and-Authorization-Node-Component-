@@ -11,6 +11,7 @@ import UperBar from "./html-elements-utils/UperBar";
 import {BackofficeRole} from "./routesSrc/BackofficeRole";
 import {BackofficeList} from "./routesSrc/BackofficeList";
 import LoginSuccessfully from "./routesSrc/loginComponents/LoginSuccessfully"
+import {BackofficePermission} from "./routesSrc/BackofficePermission"
 
 
 class Routes extends Component{
@@ -38,7 +39,7 @@ class Routes extends Component{
 
                     <Route path={'/backoffice'} exact component={()=><BackOffice setRedirect={this.setRedirect}/>}/>
                     <Route path={'/backoffice/lists'} exact component={()=><BackofficeList />}/>
-                    <Route path={'/backoffice/permissions'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>}/>
+                    <Route path={'/backoffice/permissions'} exact component={()=><BackofficePermission />}/>
                     <Route path={'/backoffice/roles'} exact component={()=><BackofficeRole />}/>
                 </div>
             </Switch>

@@ -33,7 +33,8 @@ export function userService() {
 
 export function listService() {
     return {
-        getLists: async () =>await getRequest(lists.LIST_PATH)
+        getLists: async () =>await getRequest(lists.LIST_PATH),
+        getActiveLists:async()=>await getRequest(lists.ACTIVE_LISTS_PATH)
        //TODO: ,addList: async (arr) => await makeRequest(USER_ROUTER,{username: arr[1], password: arr[2]},'POST'),
         //TODO: editList: async (arr)=> makeRequest(UPDATE_USERNAME(arr[0]),{username: arr[1]},'PUT')
     }
@@ -46,4 +47,13 @@ export function rolesService() {
         //TODO: editList: async (arr)=> makeRequest(UPDATE_USERNAME(arr[0]),{username: arr[1]},'PUT')
     }
 }
+
+    export function permissionService() {
+        return {
+            getPermissions: async () =>await getRequest(permissions.PERMISSION_PATH)
+            //TODO: ,addList: async (arr) => await makeRequest(USER_ROUTER,{username: arr[1], password: arr[2]},'POST'),
+            //TODO: editList: async (arr)=> makeRequest(UPDATE_USERNAME(arr[0]),{username: arr[1]},'PUT')
+        }
+}
+
 

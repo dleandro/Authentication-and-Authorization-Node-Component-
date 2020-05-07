@@ -112,11 +112,12 @@ module.exports = function (dalUtils, errors) {
 
                 var result = await dalUtils
                     .executeQuery(query)
-                    .map(list => {
+                    
+                    return result.map(list => {
 
                         return {
-                            user: list.user,
-                            list: list.list,
+                            user: list.user_id,
+                            list: list.LIST,
                             start_date: list.start_date,
                             end_date: list.end_date,
                             updater: list.updater,
@@ -143,7 +144,7 @@ module.exports = function (dalUtils, errors) {
         getActiveLists: async () => {
 
             const query = {
-                statement: `Select * from Lists where active=1 AND end_date<'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
+                statement: `Select * from Lists where active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
                 description: "getting active lists",
                 params: []
             }
@@ -151,17 +152,18 @@ module.exports = function (dalUtils, errors) {
             try {
                 var result = await dalUtils
                     .executeQuery(query)
-                    .map(list => {
+                   return result.map(list=>{
                         return {
-                            user: list.user,
-                            list: list.list,
+                            user: list.user_id,
+                            list: list.LIST,
                             start_date: list.start_date,
                             end_date: list.end_date,
                             updater: list.updater,
                             active: list.active.data,
                             id: list.id
                         }
-                    })
+                   })
+                    
 
                 // if there weren't any lists found return with an exception
                 dalUtils.throwErrorIfNecessary(

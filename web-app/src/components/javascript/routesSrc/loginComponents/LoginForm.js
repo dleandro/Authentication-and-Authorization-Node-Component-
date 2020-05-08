@@ -3,14 +3,14 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import { authenticationService} from '../../service'
-const fetch = require('node-fetch');
 
+const IDP_BASE_URL = "http://localhost:8082/api/authentications/login";
 
 export default function LoginForm({id , app: state, setRedirect}) {
 
     var user, pass ="";
     var loginMe = ()=>{
-        alert("Loggin in with"+user +pass)
+        //alert("Loggin in with"+user +pass)
         authenticationService().login(user,pass)
          .then(setRedirect('/loginSuccessfully'))
     }
@@ -32,9 +32,9 @@ export default function LoginForm({id , app: state, setRedirect}) {
                 <FormControl placeholder="password" aria-label="Recipient's password" aria-describedby="basic-addon2" type="password" onChange={handlePassword}/>
             </InputGroup>
             <Button variant="primary" onClick={loginMe}>{'Login'}</Button>
-            <p><a href="http://localhost:8082/api/authentications/login/google"> Login With Google </a></p>
-            <p><a href="http://localhost:8082/api/authentications/login/saml"> Login With Oauth0 </a></p>
-            <p><a href="http://localhost:8082/api/authentications/login/azureAD"> Login With Office 365 </a></p>
+            <p><a href={IDP_BASE_URL+"/google"}> Login With Google </a></p>
+            <p><a href={IDP_BASE_URL+"/saml"}> Login With Oauth0 </a></p>
+            <p><a href={IDP_BASE_URL+"/azureAD"}> Login With Office 365 </a></p>
         </div>
     )
 }

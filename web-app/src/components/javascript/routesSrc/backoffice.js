@@ -3,6 +3,10 @@ import { userService } from '../service'
 import CustomTable from "../html-elements-utils/Table/CustomTable";
 
 const labels = ["Id","Username","Password"]
+
+/**
+ * Backoffice's initial page were the list of all registred users are displayed
+ */
 class BackOffice extends React.Component {
     constructor() {
         super()
@@ -17,12 +21,15 @@ class BackOffice extends React.Component {
 
     componentDidMount() {
         this.requestUsers().then(data =>{
-            this.setState({ users: data })})
+            console.log("Users:")
+            console.log(data)
+            this.setState({ users: data })
+        })
     }
 
     render() {
         return (
-        <CustomTable addRequest={this.addUser} editRequest={this.editUsername} deleteRequest={this.deleteUser} labels={labels} rows={this.state.users.map(user=>['<a href="/users/' +user.id + '">' + user.id+ "</a>",user.username,'******'])} />
+            <CustomTable addRequest={this.addUser} editRequest={this.editUsername} deleteRequest={this.deleteUser} labels={labels} rows={this.state.users.map(user=>[user.id,user.username,'****'])} />
         )
     }
 }

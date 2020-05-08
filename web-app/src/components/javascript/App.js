@@ -4,6 +4,7 @@ import SideBar from "./html-elements-utils/SideBar";
 import {BrowserRouter as Router} from 'react-router-dom'
 import Routes from "./routes";
 import '../stylesheets/App.css';
+//available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
 const sidebarCollapsedSize = "75px";
 const sidebarExtendedSize = "250px";

@@ -2,14 +2,21 @@ import React from 'react'
 
 import SideNav, { NavItem, NavText} from '@trendmicro/react-sidenav';
 import {Link} from 'react-router-dom';
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
 
-
+/**
+ * Receives the width of the sidebar when collapsed or expanded
+ * @param navWidthCollapsed
+ * @param navWidthExpanded
+ * @returns {*}
+ * @constructor
+ */
 export default function Sidebar({navWidthCollapsed , navWidthExpanded}) {
 
     const officeSubItems = [{link: '/backoffice/permissions',text:'Permissions'},{link: '/backoffice/roles',text:'Roles'},{link: '/backoffice/lists',text:'Lists'}]
-
+    /**
+     *
+     * @type {({link: string, text: string, key: string}|{link: string, text: string, key: string}|{link: string, text: string, key: string}|{subItems: [{link: string, text: string}, {link: string, text: string}, {link: string, text: string}], link: string, text: string, key: string})[]}
+     */
     var mainItems = [
         {key:'home',link:'/',text:'Homepage'},
         {key:'login',link:'/login',text:'Login'},
@@ -18,6 +25,9 @@ export default function Sidebar({navWidthCollapsed , navWidthExpanded}) {
 
     var expanded = false
 
+    /**
+     * Opens or closes the Side Bar
+     */
     function toggleListener() {
         expanded= !expanded
         document.getElementById('sidebar').style.width= expanded ? navWidthExpanded : navWidthCollapsed

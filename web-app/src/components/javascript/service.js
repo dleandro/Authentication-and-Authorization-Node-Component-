@@ -3,10 +3,10 @@ var {users,roles,permissions,users_history,users_roles,lists,roles_permissions,c
 const HOMEPAGE = "http://localhost:8082";
 
 let handleResponse = (resp) => resp.headers.get("content-type").includes("application/json")?resp.json():resp.text()
-let getRequest = async (url) => await fetch(HOMEPAGE+url,{credentials:"include"})
-    .then(resp=> handleResponse(resp))
+let getRequest = async (url) => await fetch(HOMEPAGE+url,{method:"GET",credentials:"include"})
+    .then(resp=> handleResponse(resp)).catch(err=>{console.log(`failed to fetch: GET ${url}`);return [err]})
 let makeRequest =  (url,body,met) => fetch(HOMEPAGE+url, {credentials:"include",method: met, headers: { "Content-Type": "application/json"}, body: JSON.stringify(body),json:true})
-    .then(resp=>handleResponse(resp))
+    .then(resp=>handleResponse(resp)).catch(err=>console.log(`failed to fetch: ${met} ${url}`))
 
 /**
  * Function used to make login logout
@@ -35,6 +35,9 @@ export function userService() {
 export function listService() {
     return {
         getLists: async () =>await getRequest(lists.LIST_PATH),
+		addList: async (arr)=>await makeRequest(lists.LIST_PATH,{user:arr[0], list:[2], start_date:arr[3], end_date:arr[4], updater:arr[5], active:arr[6]},'POST'),
+        deactivateList: async (id)=> await makeRequest(lists.LIST_DEACTIVATION_PATH(id),{},'PUT'),
+        deleteList: async (id) => await makeRequest(lists.SPECIFIC_LIST_PATH(id),{},'DELETE'),
         getActiveLists:async()=>await getRequest(lists.ACTIVE_LISTS_PATH)
        //TODO: ,addList: async (arr) => await makeRequest(USER_ROUTER,{username: arr[1], password: arr[2]},'POST'),
         //TODO: editList: async (arr)=> makeRequest(UPDATE_USERNAME(arr[0]),{username: arr[1]},'PUT')
@@ -49,12 +52,13 @@ export function rolesService() {
     }
 }
 
-    export function permissionService() {
-        return {
-            getPermissions: async () =>await getRequest(permissions.PERMISSION_PATH)
+export function permissionService() {
+	return {
+		getPermissions: async () =>await getRequest(permissions.PERMISSION_PATH)
             //TODO: ,addList: async (arr) => await makeRequest(USER_ROUTER,{username: arr[1], password: arr[2]},'POST'),
             //TODO: editList: async (arr)=> makeRequest(UPDATE_USERNAME(arr[0]),{username: arr[1]},'PUT')
-        }
+        
+	}
 }
 
 

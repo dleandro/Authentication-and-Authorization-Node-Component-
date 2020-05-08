@@ -21,7 +21,7 @@ module.exports = function(auth,apiUtils, data) {
     })
 
     userRouter.route('/:id')
-    .get(auth.hasPermissions,(req, res) => {
+    .get(apiUtils.ensureAuthenticated,(req, res) => {
         data.getUserById(req.params.id)
         .then(answer => apiUtils.setResponse(res, answer, 200))
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))

@@ -19,7 +19,7 @@ module.exports = {
         }
         
         console.log(req.user)
-        let userRoles=await dal.userRole.getUserActiveList(req.user.id)
+        let userRoles=await dal.userRole.getUserActiveRoles(req.user.id)
         userRoles=userRoles.map(element=>element.role_id)
         if(userRoles.length==0)resp.end("User does not have roles")
         let obj=await dal.permission.getPermissionID(req.method,req.baseUrl)

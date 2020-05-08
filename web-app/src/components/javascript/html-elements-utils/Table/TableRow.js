@@ -43,6 +43,7 @@ class TableRow extends React.Component {
         return (
             <tr>
                 {
+
                     this.state.cols.map((col,index)=>
                         <td>
                             <input className="form-control border-0 text-white bg-transparent" type="text" value={this.props.cols[index]} onChange={e=>this.handleChange(e,index)}/>

@@ -23,6 +23,7 @@ export function authenticationService() {
 
 export function userService() {
     return {
+        getUser: async(id) =>await getRequest(users.USER_PATH + id),
         getUsers: async () =>await getRequest(users.USER_PATH),
         addUser: async (arr) => await makeRequest(users.USER_PATH,{username: arr[1], password: arr[2]},'POST'),
         editUsername: async (arr)=> makeRequest(users.USERNAME_UPDATE_PATH(arr[0]),{username: arr[1]},'PUT'),

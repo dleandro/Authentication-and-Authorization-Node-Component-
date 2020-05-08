@@ -12,21 +12,18 @@ ROLE_PATH = "/api/roles",
 USERS_ROLES_PATH = "/api/users_roles",
 USER_HITORY_PATH = "/api/users_history",
 ROLES_PERMISSION_PATH = "/api/roles_permissions",
-AUTHENTICATION_PATH = "/api/authentications",
 CONFIG_PATH = "/api/configs"
 
 const links = 
 {
     users: {
         USER_PATH,
+        IDP_USER_PATH: `${USER_PATH}/idp`,
         USERNAME_UPDATE_PATH: userId => `${USER_PATH}/${userId}/useername`,
         PASSWORD_UPDATE_PATH: userId => `${USER_PATH}/${userId}/password`,
         SPECIFIC_USER_PATH: userId => `${USER_PATH}/${userId}`,
-        GOOGLE_LOGIN_PATH: `${AUTHENTICATION_PATH}/login/google`,
-        SAML_LOGIN_PATH: `${AUTHENTICATION_PATH}/login/saml`,
-        AZUREAD_LOGIN_PATH: `${AUTHENTICATION_PATH}/login/azureAD`,
-        LOCAL_LOGIN_PATH: `${AUTHENTICATION_PATH}/login`,
-        LOGOUT_PATH: `${AUTHENTICATION_PATH}/logout`,
+        SPECIFIC_IDP_USER_PATH: userId => `${USER_PATH}/idp/${userId}`,
+        SPECIFIC_USERNAME_PATH: username => `${USER_PATH}/${username}`
     },
 
     roles: {

@@ -1,0 +1,15 @@
+{
+  "name": "app-api",
+  "version": "1.0.0",
+  "description": "api destined for the web app's needs (e.g. app authentication)",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

@@ -7,7 +7,7 @@
     "lodash": "^4.17.15",
     "mariadb": "^2.2.0",
     "morgan": "^1.10.0"
-    },
+  },
   "devDependencies": {
     "mocha": "^7.1.1",
     "supertest": "^4.0.2",

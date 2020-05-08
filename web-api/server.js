@@ -10,8 +10,6 @@ app = express()
 // Setup app's middleware
 require('./common/middleware/app-middleware')(app)
 
-// using authization module to setup authentication and authorization middleware
-//require('../authization-module/middleware/setup-authization-middleware')(app)
 
 // Every endpoint that doesn't start with /api is redirected to our web app, make sure web app has updated production build
 app.use(express.static(path.resolve(__dirname, '..', 'web-app', 'build')))

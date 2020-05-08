@@ -1,9 +1,6 @@
 'use strict'
 
-const
-    fetch = require('node-fetch'),
-    links = require('../../../links'),
-    BASE_URL = require('../../common/config/config').BASE_URL
+const dal=require('./user-dal')
 
 // This file returns methods for users management 
 
@@ -11,64 +8,41 @@ module.exports = {
 
     // requests the api to add a new user 
     createUser: async (username, password) => {
-        return await fetch(`${BASE_URL}${links.users.USER_PATH}`, {
-
-            method: 'POST',
-            body: {
-                username,
-                password
-            },
-            headers: { 'Content-Type': 'application/json' },
-
-        })
+        return dal.insertUser(username,password)
     },
 
     // requests the api for all users 
     getAllUsers: async () => {
-        return await fetch(`${BASE_URL}${links.users.USER_PATH}`)
+       return dal.getAllUsers()
     },
 
     // requests the api for specific user with specified id
     getSpecificUser: async (userId) => {
-        return await fetch(`${BASE_URL}${links.users.SPECIFIC_USER_PATH(userId)}`)
+        return dal.getUserById(userId)
     },
 
     // requests the api to delete a user
     deleteUser: async (userId) => {
-        return await fetch(`${BASE_URL}${links.users.SPECIFIC_USER_PATH(userId)}`, {
-
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-
-        })
+        return dal.deleteUser(userId)
     },
 
     // requests the api to update a specific user's password 
     updatePassword: async (password, id) => {
-        return await fetch(`${BASE_URL}${links.users.PASSWORD_UPDATE_PATH(id)}`, {
-
-            method: 'PUT',
-            body: {
-                password,
-                id
-            },
-            headers: { 'Content-Type': 'application/json' },
-
-        })
+        return dal.updatePassword(password,id)
     },
 
     // requests the api to update a specific user's username
     updateUsername: async (username, id) => {
-        return await fetch(`${BASE_URL}${links.users.USERNAME_UPDATE_PATH(id)}`, {
-
-            method: 'PUT',
-            body: {
-                username,
-                id
-            },
-            headers: { 'Content-Type': 'application/json' },
-
-        })
+       return dal.updateUsername(username,id)
     },
+    getUserByUsername: async(username)=>{
+        return dal.getUserByUsername(username)
+    },
+    getUserByIDP: async(idp)=>{
+        return dal.getUserbyIDP(idp)
+    },
+    insertIDP: async(idp)=>{
+        return dal.insertIDP(idp)
+    }
 
 }

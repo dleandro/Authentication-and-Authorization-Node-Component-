@@ -1,8 +1,6 @@
 'use strict'
 
 const
-    fetch = require('node-fetch'),
-    links = require('../../../links'),
     userLayer = require('../../functionalities/user/manage-users'),
     listLayer = require('../../functionalities/list/manage-lists'),
     BASE_URL = require('../config/config').BASE_URL
@@ -15,7 +13,7 @@ module.exports = {
 
     findUserByIdp: async (idp) => {
         // needs endpoint
-        let user = await fetch(`${BASE_URL}${links.users.SPECIFIC_IDP_USER_PATH(idp)}`)
+        let user = userLayer.getUserByIdp(idp)
         if (!user) return null
         return {
             id: user.id,
@@ -26,7 +24,7 @@ module.exports = {
 
     findCorrespondingUser: async (username) => {
         try {
-            return await fetch(`${BASE_URL}${links.users.SPECIFIC_USERNAME_PATH(username)}`)
+            return userLayer.getUserByUsername(username)
         } catch (error) {
             return null
         }
@@ -42,17 +40,7 @@ module.exports = {
 
         let user_id = result.id
 
-        result = await fetch(`${BASE_URL}${links.users.IDP_USER_PATH}`, {
-
-            method: 'POST',
-            body: {
-                idpId, 
-                idpName,
-                idpId: result.insertId
-            },
-            headers: { 'Content-Type': 'application/json' },
-
-        })
+        result =userLayer.insertIDP(idp_id, idpName, user_id)
 
         return {
             id: user_id,

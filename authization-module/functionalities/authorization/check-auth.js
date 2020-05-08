@@ -4,9 +4,6 @@ const
     config = require('../../common/config/config'),
     errors = require('../../common/errors/app-errors'),
     apiUtils = require('../../common/util/api-utils'),
-    fetch = require('node-fetch'),
-    links = require('../../../links'),
-    BASE_URL = config.BASE_URL,
     listLayer = require('../../functionalities/list/manage-lists'),
     permissionLayer = require('../../functionalities/permission/manage-permissions')
 

@@ -11,6 +11,9 @@ const authenticationRouter = require('express').Router()
 authenticationRouter.get(
   '/google',
   authization.authenticate.usingGoogle,
+  function (req, res) {
+    (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
+  }
 )
 
 authenticationRouter.get(
@@ -21,7 +24,10 @@ authenticationRouter.get(
 
 authenticationRouter.get(
   '/saml',
-  authization.authenticate.usingSaml
+  authization.authenticate.usingSaml,
+  function (req, res) {
+    (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
+  }
 )
 
 authenticationRouter.post(
@@ -36,7 +42,7 @@ authenticationRouter.post(
   '/local',
   authization.authenticate.usingLocal,
   (req, res, next) => {
-    apiUtils.setResponse(res, "Success", 200)
+    apiUtils.setResponse(res, {success: "login successful" }, 200)
 
   },
   (err, req, res, next) => {
@@ -59,22 +65,24 @@ authenticationRouter.get(
 
     req.logout()
 
-    apiUtils.setResponse(res, "success :Logout successful", 200)
+  
+   apiUtils.setResponse(res, { success: "login successful" }, 200)
+  
 
   }
 )
 
-//authenticationRouter.get('/login/azureAD', passport.authenticate('azure_ad_oauth2'));
+authenticationRouter.get('/azureAD',authization.authenticate.usingOffice365);
 
 
-/*
+
 authenticationRouter.get(
   '/azureAD/callback',
-  passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
+  authization.authenticate.usingOffice365Callback,
   function (req, res) {
-    res.redirect('/users/1');
+    apiUtils.setResponse(res, { success: "login successful" }, 200)
   }
-)*/
+)
 
 return authenticationRouter
 

@@ -20,6 +20,7 @@ module.exports = {
       
       throw err;
     }finally{
+      connection.release();
       connection.end()
     }
     

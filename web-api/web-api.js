@@ -9,14 +9,14 @@ router = require('express').Router()
 
 const
 userRouter = require('./routers/user-router') (apiUtils),
+authenticationRouter=require('./routers/authentication-router')(apiUtils),
 permissionRouter = require('./routers/permission-router') (apiUtils),
 roleRouter = require('./routers/role-router') (apiUtils),
 listRouter = require('./routers/list-router') (apiUtils),
 rolesPermissionRouter = require('./routers/roles-permission-router') (apiUtils),
 usersRolesRouter = require('./routers/users-roles-router') (apiUtils),
 userHistoryRouter = require('./routers/user-history-router') (apiUtils),
-configRouter = require('./routers/config-router'),
-authenticationRouter=require('./routers/authentication-router')(apiUtils)
+configRouter = require('./routers/config-router')
 
 router.use('/users', userRouter)
 router.use('/permissions', permissionRouter)

@@ -4,7 +4,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import { authenticationService} from '../../service'
 
-const IDP_BASE_URL = "http://localhost:8082/api/authentications/login";
+const IDP_BASE_URL = "http://localhost:8082/api/authentications";
 
 export default function LoginForm({id , app: state, setRedirect}) {
 

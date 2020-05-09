@@ -13,12 +13,13 @@ module.exports = {
 
     usingGoogle: (req, res, next) => {
 
-        passport.authenticate('google', {scope: ['profile']})
-        next()
+     passport.authenticate('google', {scope: ['profile']})
+     next()
     },
 
-    usingGoogleCallback: () => {
+    usingGoogleCallback: (req,res,next) => {
         passport.authenticate('google')
+        next()
     },
 
     usingSaml: (req, res, next) => {

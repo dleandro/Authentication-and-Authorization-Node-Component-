@@ -43,7 +43,7 @@ module.exports = function(app) {
     }))
     
     //Interceptor that checks for authorization
-    app.use(checkAuth.hasPermissions)
+    //app.use(checkAuth.hasPermissions)
 
     app.use(passport.initialize())
     app.use(passport.session())

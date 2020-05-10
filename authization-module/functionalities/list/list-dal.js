@@ -78,7 +78,21 @@ module.exports = {
         .then(result=>result.map(list => parseList(list))),
 
     // asks the database for all list entries that are active and associated with a specific user
-    getUserActiveList,
+    getUserActiveList:(userId)=>dalUtils.executeQuery(
+        {
+            statement: `Select * from Lists where user_id=? AND active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
+            description: "getting user's active lists",
+            params: [userId]
+        })
+        .then(result=>{ return {
+            user: userId,
+            list: result[0].LIST,
+            start_date: result[0].start_date,
+            end_date: result[0].end_date,
+            updater: result[0].updater,
+            active: result[0].active[0],
+            id: result[0].id
+        }}),
 
     isBlackListed: (userId) => dalUtils.executeQuery(
         {

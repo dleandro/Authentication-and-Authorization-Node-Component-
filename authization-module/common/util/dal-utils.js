@@ -32,11 +32,9 @@ module.exports = {
     throwErrorIfNecessary: (predicate, error) => {
         
         try {
-            
             if (predicate.call()) {
                 throw error
             }
-            
         } catch (err) {
             throw err
         }

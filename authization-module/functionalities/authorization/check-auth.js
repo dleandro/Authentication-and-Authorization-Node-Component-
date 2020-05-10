@@ -11,51 +11,51 @@ module.exports = {
 
     hasPermissions: async (req, resp, next) => {
 
-        if (config.env == config.test) {
+        if (config.env === config.test) {
             return next()
         }
 
         if (!req.isAuthenticated()) {
-            const err = errors.userNotAuthenticated
-            apiUtils.setResponse(resp, JSON.parse(err.message), JSON.parse(err.message).status)
+            const err = JSON.parse( errors.userNotAuthenticated.message)
+            apiUtils.setResponse(resp, err, err.status)
         }
 
-        let userRoles = listLayer.getUserActiveList(req.user.id)
 
-        userRoles = userRoles.map(element => element.role_id)
+        let userRoles = listLayer.getUserActiveList(req.user.id).map(element => element.role_id)
 
-        if (userRoles.length == 0) {
-            const err = errors.userRoleNotFound
 
-            apiUtils.setResponse(resp, JSON.parse(err.message), JSON.parse(err.message).status)
-        } 
+        if (userRoles.length === 0) {
+            const err = JSON.parse(errors.userRoleNotFound.message)
+            apiUtils.setResponse(resp, err, err.status)
+        }
 
         let obj = permissionLayer.getPermissionById()
         await dal.permission.getPermissionID(req.method, req.baseUrl)
-        if(obj.length == 0) resp.end("Permissions were not defined to this endpoint")
-        let roles = await dal.rolesPermission.getRolesByPermission(JSON.parse(obj[0].id))
-        roles = roles.map(element => element.role)
-        if(roles.length == 0) resp.end("There isn't any role associated with the endpoint")
-        while(true) {
-        for (let i = 0; i < roles.length; i++) {
+        if(obj.length === 0) resp.end("Permissions were not defined to this endpoint")
+        let roles = await dal.rolesPermission.getRolesByPermission(JSON.parse(obj[0].id)).then(roles=>roles.map(element => element.role))
 
-            if (userRoles.includes(roles[i])) return next();
+        if(roles.length === 0) resp.end("There isn't any role associated with the endpoint")
+        while(true) {
+
+            if (roles.some(role=>userRoles.includes(role))) return next();
+            if (roles.every(element => element === null)) {
+                resp.end("Insufficient Permissions")
+            }
+            roles = await getParents(roles).then(roles=>roles.flat())
         }
-        if (roles.every(element => element === null)) {
-            resp.end("Insufficient Permissions")
-        }
-        roles = await getParents(roles)
-        roles = roles.flat()
     }
-}
 };
 
 async function getParents(roles) {
     let parentRoles = []
-    await Promise.all(roles.map(async (role) => {
-        let parentRole = await dal.role.getRoleById(role)
-        parentRole = parentRole.map(role => role.parent_role)
-        parentRoles.push(parentRole)
-    }))
+    await Promise.all(
+        roles.map((role) =>
+            dal
+                .role
+                .getRoleById(role)
+                .then(parentRole=>parentRole.map(role => role.parent_role))
+                .then(parentRole=>parentRoles.push(parentRole))
+        )
+    )
     return parentRoles
 }

@@ -7,12 +7,7 @@ const
 const strategy = new LocalStrategy(
     async function (username, password, done) {
         let user = await passportUtils.findCorrespondingUser(username, password)
-        console.log("checkingBlacklisted")
-        let isBlackListed = await passportUtils.isBlackListed(user.id)
-        if (isBlackListed) {
-            return done(null, false, { message: 'User is BlackListed' })
-        }
-        return done(null, user)
+        return await passportUtils.isBlackListed(user.id)? done(null, false, { message: 'User is BlackListed' }): done(null, user)
     }
 )
 

@@ -13,7 +13,12 @@ checkAuth=require('./functionalities/authorization/check-auth')
 
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = function(app) {
-    
+    app.use(require('cors')({
+        // how to change origins between clients
+        "origin": "http://localhost:3000",
+        "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+        "credentials": true
+    }))
     // app configurations
     
     // Makes it easier to manage the request's body
@@ -23,12 +28,7 @@ module.exports = function(app) {
     app.use(cookieParser())
 
     // Accept request's from different origins, necessary to use our web application
-    app.use(require('cors')({
-        // how to change origins between clients
-        "origin": "http://localhost:3000",
-        "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-        "credentials": true
-    }))
+
 
     app.use(session({
         // to keep session active instead of letting it change to the idle state

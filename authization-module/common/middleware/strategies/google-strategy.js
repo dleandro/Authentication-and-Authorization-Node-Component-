@@ -7,17 +7,13 @@ const
 
 
 const strategy = new GoogleStrategy({
-    clientID: config.google.google_client_id,
-    clientSecret: config.google.google_client_secret,
-    callbackURL: config.google.callbackURL
-},
+        clientID: config.google.google_client_id,
+        clientSecret: config.google.google_client_secret,
+        callbackURL: config.google.callbackURL
+    },
     async function (accessToken, refreshToken, profile, done) {
         let user = await passportUtils.findUserByIdp(profile.id)
-        if (!user) {
-            user = await passportUtils.createUser(profile.id, 'google', profile.displayName, null)
-            console.log(user)
-        }
-        done(null, user)
+        done(null, user?user:await passportUtils.createUser(profile.id, 'google', profile.displayName, null))
     }
 )
 

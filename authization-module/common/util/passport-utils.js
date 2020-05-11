@@ -13,6 +13,7 @@ module.exports = {
 
     findUserByIdp: async (idp) => {
         // needs endpoint
+<<<<<<< HEAD
         let user = userLayer.getUserByIDP(idp)
         if (!user) return null
         return {
@@ -20,6 +21,10 @@ module.exports = {
             idp: idp,
             username: user.username
         }
+=======
+        let user = userLayer.getUserByIdp(idp)
+        return user? {id: user.id,idp: idp,username: user.username}:null
+>>>>>>> 1ba1a3abcfb18f71b2139d0783c16b46e6cea740
     },
 
     findCorrespondingUser: async (username) => {
@@ -36,31 +41,14 @@ module.exports = {
     */
     createUser: async (idpId, idpName, username, password) => {
 
-        let result = userLayer.createUser(username, password)
-
-        let user_id = result.id
-
-        result =userLayer.insertIDP(idp_id, idpName, user_id)
-
+        let user_id = userLayer.createUser(username, password).id
+        userLayer.insertIDP(idp_id, idpName, user_id)
         return {
             id: user_id,
             idp: idpId,
             username: username
         }
-
     },
 
-    isBlackListed: async (userId) => {
-        let result = listLayer.getUserActiveList(userId)
-
-        if (result
-            .filter(list => list.LIST == 'BLACK')
-            .length >= 1) {
-            return true
-        }
-        return false
-    }
-
-
-
+    isBlackListed: async (userId) => listLayer.getUserActiveList(userId).filter(({LIST}) => LIST === 'BLACK').length >= 1
 }

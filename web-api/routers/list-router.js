@@ -3,7 +3,7 @@
 // this module contains all list related endpoints
 module.exports = function(apiUtils) {
     
-    const data=require('../../authization-module/authization')
+    const data=require('../../authization-module/authization').list
     const listRouter = require('express').Router()
         
     listRouter.route('/')

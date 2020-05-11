@@ -37,7 +37,7 @@ class Routes extends Component{
                     <Route path={'/login'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>} />
                     <Route path={'/loginAdmin'} exact component={()=><AuthenticationProtocol selectedListener={this.props.changeProtocol}/>}/>
                     <Route path={'/loginSuccessfully'} exact component={()=><LoginSuccessfully setRedirect={this.setRedirect}/>}/>
-                    <Route path={'/users/:id'}/><UserInfo/>
+                    <Route path={'/users/:id'} exact component={()=><UserInfo/>}/>
                     <Route path={'/backoffice'} exact component={()=><BackOffice setRedirect={this.setRedirect}/>}/>
                     <Route path={'/backoffice/lists'} exact component={()=><BackofficeList />}/>
                     <Route path={'/backoffice/permissions'} exact component={()=><BackofficePermission />}/>

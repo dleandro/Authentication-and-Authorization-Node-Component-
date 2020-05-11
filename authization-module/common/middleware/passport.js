@@ -1,8 +1,8 @@
 'use strict'
 
 const
-  passport = require('passport'),
-  passportUtils = require('../util/passport-utils')
+    passport = require('passport'),
+    passportUtils = require('../util/passport-utils')
 
 // Setup available authentication strategies
 passport.use('saml', require('./strategies/saml-strategy'))
@@ -13,7 +13,7 @@ passport.use('local', require('./strategies/local-strategy'))
 
 function refToUser(userRef, done) {
   passportUtils.findUser(userRef)
-    .then(user => (user) ? done(null, user) : done('User unknown'))
+      .then(user => (user) ? done(null, user) : done('User unknown'))
 }
 
 function userToRef(user, done) {

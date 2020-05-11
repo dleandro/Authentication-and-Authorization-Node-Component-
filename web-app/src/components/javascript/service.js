@@ -34,7 +34,7 @@ export function userService() {
 
 export function listService() {
     return {
-        getLists: async () =>await getRequest(lists.LIST_PATH),
+        getLists: async () =>await getRequest(lists.LIST_PATH).then(v=>{console.log(v);return v}),
 		addList: async (arr)=>await makeRequest(lists.LIST_PATH,{user:arr[0], list:[2], start_date:arr[3], end_date:arr[4], updater:arr[5], active:arr[6]},'POST'),
         deactivateList: async (id)=> await makeRequest(lists.LIST_DEACTIVATION_PATH(id),{},'PUT'),
         deleteList: async (id) => await makeRequest(lists.SPECIFIC_LIST_PATH(id),{},'DELETE'),

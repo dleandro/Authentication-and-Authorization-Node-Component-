@@ -7,11 +7,13 @@ express = require('express'),
 path = require('path'),
 app = express()
 
+// Setup app's middleware
+require('./common/middleware/app-middleware')(app)
 // api routes and their behaviour
 app.use('/api', require("./web-api"))
 
-// Setup app's middleware
-require('./common/middleware/app-middleware')(app)
+
+
 
 
 // Every endpoint that doesn't start with /api is redirected to our web app, make sure web app has updated production build

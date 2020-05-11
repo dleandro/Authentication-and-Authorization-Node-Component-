@@ -3,7 +3,7 @@
 // this module contains all user related endpoints
 module.exports = function (apiUtils) {
 
-    const data=require('../../authization-module/authization').user
+    const data = require('../../authization-module/authization').user
 
     const userRouter = require('express').Router()
 
@@ -14,7 +14,7 @@ module.exports = function (apiUtils) {
     }
 
     const createUser = (req, res) => {
-        data.insertUser(req.body.username, req.body.password)
+        data.createUser(req.body.username, req.body.password)
             .then(answer => {
                 req.body.id = answer.insertId
                 apiUtils.setResponse(res, req.body, 201)

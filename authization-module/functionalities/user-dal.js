@@ -3,27 +3,11 @@
 const
     moment = require('moment'),
     SELECT_ALL = "SELECT * FROM Users",
-    userHistoryDal = require('../users-history/user-history-dal'),
-    dalUtils = require('../../common/util/dal-utils'),
-    errors=require('../../common/errors/app-errors')
-module.exports = {
+    userHistoryDal = require('../functionalities/user-history-dal'),
+    dalUtils = require('../common/util/dal-utils'),
+    errors = require('../common/errors/app-errors'),
 
-
-    getUserbyIDP: async function getUserbyIDP(idp) {
-        const query = {
-            statement: `Select * from IDP where idp_id= ?`,
-            description: "get user by id",
-            params: [idp]
-        }
-
-        let result = await dalUtils.executeQuery(query)
-        console.log(result)
-        if (result[0] == null) return null
-        return await this.getUserById(result[0].user_id)
-    },
-
-    /* Requests the database for a user with given id */
-    getUserById: async function getUserById(id) {
+    getUserById = async (id) => {
         var result
 
         const query = {
@@ -56,9 +40,29 @@ module.exports = {
             username: result[0].username,
             password: result[0].password,
         }
+    }
+
+module.exports = {
+
+    /* Requests the database for a user with given id */
+    getUserById,
+
+    getUserbyIDP: async (idp) => {
+        const query = {
+            statement: `Select * from IDP where idp_id= ?`,
+            description: "get user by id",
+            params: [idp]
+        }
+
+        let result = await dalUtils.executeQuery(query)
+
+        if (result[0] == null) return null
+
+        return await getUserById(result[0].user_id)
     },
 
-    getUserByUsername: async function getUserByEmail(username) {
+
+    getUserByUsername: async (username) => {
 
         var result
 

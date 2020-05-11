@@ -1,7 +1,7 @@
 'use strict'
 
 const moment = require('moment'),
-    dalUtils = require('../../common/util/dal-utils')
+    dalUtils = require('../common/util/dal-utils')
 module.exports = {
 
 

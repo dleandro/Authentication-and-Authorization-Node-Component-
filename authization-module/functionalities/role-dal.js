@@ -1,7 +1,7 @@
 'use strict'
 
 
-const dalUtils = require('../../common/util/dal-utils')
+const dalUtils = require('../common/util/dal-utils')
 module.exports = {
         
         addRole: async (role) => {

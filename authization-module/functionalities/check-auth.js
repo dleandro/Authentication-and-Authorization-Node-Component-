@@ -1,11 +1,11 @@
 'use strict'
 
 const
-    config = require('../../common/config/config'),
-    errors = require('../../common/errors/app-errors'),
-    apiUtils = require('../../common/util/api-utils'),
-    listLayer = require('../../functionalities/list/manage-lists'),
-    permissionLayer = require('../../functionalities/permission/manage-permissions')
+    config = require('../common/config/config'),
+    errors = require('../common/errors/app-errors'),
+    apiUtils = require('../common/util/api-utils'),
+    listLayer = require('../functionalities/list-dal'),
+    permissionLayer = require('../functionalities/permission-dal')
 
 module.exports = {
 

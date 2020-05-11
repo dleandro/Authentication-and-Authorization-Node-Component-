@@ -3,6 +3,7 @@
 module.exports = function(apiUtils) {
 
 const authization = require('../../authization-module/authization')
+const bodyParser = require('body-parser');
 
 // this module contains all user authentication related endpoints
 
@@ -10,10 +11,8 @@ const authenticationRouter = require('express').Router()
 
 authenticationRouter.get(
   '/google',
-  authization.authenticate.usingGoogle,
-  function (req, res) {
-    (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
-  }
+  authization.authenticate.usingGoogle
+
 )
 
 authenticationRouter.get(
@@ -24,6 +23,7 @@ authenticationRouter.get(
 
 authenticationRouter.get(
   '/saml',
+  bodyParser.urlencoded({ extended: false }),
   authization.authenticate.usingSaml,
   function (req, res) {
     (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
@@ -32,6 +32,7 @@ authenticationRouter.get(
 
 authenticationRouter.post(
   '/saml/callback',
+  bodyParser.urlencoded({ extended: false }),
   authization.authenticate.usingSamlCallback,
   function (req, res) {
     (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
@@ -41,13 +42,8 @@ authenticationRouter.post(
 authenticationRouter.post(
   '/local',
   authization.authenticate.usingLocal,
-  (req, res, next) => {
+  (req, res) => {
     apiUtils.setResponse(res, {success: "login successful" }, 200)
-
-  },
-  (err, req, res, next) => {
-
-    apiUtils.setResponse(res, err.message, err.status)
 
   }
 )

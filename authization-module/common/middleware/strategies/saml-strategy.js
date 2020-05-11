@@ -6,7 +6,7 @@ path = require('path'),
 passportUtils = require('../../util/passport-utils'),
 SamlStrategy = new (require('passport-saml').Strategy)({ 
 
-    callbackUrl: 'http://localhost:8082/authentication/login/saml/callback',  //redirect after sucessfull login
+    callbackUrl: 'http://localhost:8082/api/authentications/saml/callback',  //redirect after sucessfull login
     entryPoint: 'https://authentication-node.eu.auth0.com/samlp/gkngnFEKD5tU9H6gaWR0UR7eqolioXaX',
     issuer: 'aa-node-component',
     cert:fs.readFileSync(path.join(__dirname, '../../certificates/authentication-node.pem'),'utf-8'),

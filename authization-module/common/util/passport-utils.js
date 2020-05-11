@@ -13,7 +13,7 @@ module.exports = {
 
     findUserByIdp: async (idp) => {
         // needs endpoint
-        let user = userLayer.getUserByIdp(idp)
+        let user = userLayer.getUserByIDP(idp)
         if (!user) return null
         return {
             id: user.id,

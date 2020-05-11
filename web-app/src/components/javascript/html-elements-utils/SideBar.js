@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import SideNav, { NavItem, NavText} from '@trendmicro/react-sidenav';
 import {Link} from 'react-router-dom';
@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
  * Receives the width of the sidebar when collapsed or expanded
  * @param navWidthCollapsed
  * @param navWidthExpanded
+ * @param expanded
  * @returns {*}
  * @constructor
  */
@@ -18,30 +19,31 @@ export default function Sidebar({navWidthCollapsed , navWidthExpanded}) {
      * @type {({link: string, text: string, key: string}|{link: string, text: string, key: string}|{link: string, text: string, key: string}|{subItems: [{link: string, text: string}, {link: string, text: string}, {link: string, text: string}], link: string, text: string, key: string})[]}
      */
     var mainItems = [
-        {key:'home',link:'/',text:'Homepage'},
-        {key:'login',link:'/login',text:'Login'},
-        {key:'protocol',link:'/loginAdmin',text:'Protocol'},
-        {key:'office',link:'/backoffice',text:'Backoffice', subItems:officeSubItems}];
+        {key:'home',link:'/',icon:<i className="fa fa-home" style={{'font-size':"36px"}}/>,text:'Homepage'},
+        {key:'login',link:'/login',icon:<i className="fa fa-sign-in" style={{'font-size':"36px"}}/> , text:'Login',},
+        {key:'protocol',link:'/loginAdmin',icon:<i className="fa fa-lock" style={{'font-size':"36px"}}/>,text:'Protocol'},
+        {key:'office',link:'/backoffice',icon:<i className="fa fa-tachometer" style={{'font-size':"36px"}}/>,text:'Backoffice', subItems:officeSubItems}];
 
-    var expanded = false
+    const [expand, setexpand]=useState(false);
 
     /**
      * Opens or closes the Side Bar
      */
     function toggleListener() {
-        expanded= !expanded
-        document.getElementById('sidebar').style.width= expanded ? navWidthExpanded : navWidthCollapsed
-        document.getElementById('main').style.marginLeft= expanded ? navWidthExpanded : navWidthCollapsed
+        setexpand(!expand)
+        console.log('set Expanded')
+        document.getElementById('sidebar').style.width= expand ? navWidthExpanded : navWidthCollapsed
+        document.getElementById('main').style.marginLeft= expand ? navWidthCollapsed:navWidthExpanded
     }
 
 
     return (
-        <SideNav id={"sidebar"} style={{'backgroundColor': '#282c34',width: navWidthCollapsed}} onToggle={(selected) => toggleListener()}>
+        <SideNav id={"sidebar"} style={{'backgroundColor': '#282c34',width: expand?navWidthExpanded :navWidthCollapsed}} onToggle={(selected) => toggleListener()}>
             <SideNav.Toggle />
             <SideNav.Nav defaultSelected="home">
                 {mainItems.map(item=>
                     <NavItem eventKey={item.key}>
-                        <Link to={item.link} > {item.text} </Link>
+                        <Link to={item.link} > {expand?<div>{item.icon} {item.text}</div>:item.icon} </Link>
                         { item.subItems!==undefined? item.subItems.map(subItem=>
                             <NavItem>
                                 <NavText>

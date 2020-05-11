@@ -13,7 +13,7 @@ import {BackofficeList} from "./routesSrc/BackofficeList";
 import LoginSuccessfully from "./routesSrc/loginComponents/LoginSuccessfully"
 import {BackofficePermission} from "./routesSrc/BackofficePermission"
 import UserInfo from "./routesSrc/UserInfo"
-
+import {UserConsumer} from "../Context";
 
 class Routes extends Component{
     state = { redirect:{should:false, link:"/"}};
@@ -31,11 +31,16 @@ class Routes extends Component{
         return (
             <Switch id={"switch"}  >
                 <div id={"main"} style={ {marginLeft : this.props.sidebarCollapsedSize}}>
-                    <UperBar setRedirect={this.setRedirect}/>
+                    <UserConsumer>
+                        {state=> (<UperBar isLoggedIn={state.isLoggedIn} logoutWith={state.setUser} setRedirect={this.setRedirect}/>)}
+                    </UserConsumer>
+
                     {this.renderRedirect()}
                     <Route path={'/'} exact component={Homepage} />
                     <Route path={'/login'} exact component={()=><UserLogin app={this.state} setRedirect={this.setRedirect}/>} />
-                    <Route path={'/loginAdmin'} exact component={()=><AuthenticationProtocol selectedListener={this.props.changeProtocol}/>}/>
+                    <UserConsumer >
+                        {state=> <Route path={'/loginAdmin'} exact component={()=><AuthenticationProtocol selectedListener={state.changeProtocol}/>}/> }
+                    </UserConsumer>
                     <Route path={'/loginSuccessfully'} exact component={()=><LoginSuccessfully setRedirect={this.setRedirect}/>}/>
                     <Route path={'/users/:id'} exact component={()=><UserInfo/>}/>
                     <Route path={'/backoffice'} exact component={()=><BackOffice setRedirect={this.setRedirect}/>}/>

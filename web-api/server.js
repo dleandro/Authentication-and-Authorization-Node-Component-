@@ -4,14 +4,13 @@
 
 const
     express = require('express'),
-    app = express(),
+    app = express()
 
-    // Setup app's middleware
-    authization = require('./common/middleware/app-middleware')(app);
+// Setup app's middleware
+require('./common/middleware/app-middleware')(app)
 
-    
 // api routes and their behaviour
-app.use('/api', require("./web-api")(authization))
+app.use('/api', require("./web-api"))
 
 // Every endpoint that doesn't start with /api is redirected to our web app, make sure web app has updated production build
 //app.use(express.static(path.resolve(__dirname, '..', 'web-app', 'build')))

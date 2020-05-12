@@ -9,7 +9,7 @@ module.exports = function (app) {
     // app configurations
 
     // using authization module to setup authentication and authorization middleware
-    const authization = require('../../../authization-module/authization')(app)
+    var c = require('../../../authization-module/authization')(app)
 
     // For request logging
     app.use(morgan('tiny'))
@@ -18,6 +18,4 @@ module.exports = function (app) {
     app.use(function (err, req, res, next) {
         res.status(500).send(err.message)
     })
-
-    return authization
 }

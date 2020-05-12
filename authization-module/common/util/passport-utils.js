@@ -1,12 +1,12 @@
 'use strict'
 
 const
-    userLayer = require('../../functionalities/user-dal'),
-    listLayer = require('../../functionalities/list-dal'),
-    idpLayer=require('../../functionalities/idp-dal'),
-    userHistoryLayer=require('../../functionalities/user-history-dal'),
+    users = require('../../functionalities/user-dal'),
+    lists = require('../../functionalities/list-dal'),
+    idps = require('../../functionalities/idp-dal'),
+    userHistories = require('../../functionalities/user-history-dal'),
     BASE_URL = require('../config/config').BASE_URL,
-    moment=require('moment')
+    moment = require('moment')
 
 /**
  *
@@ -27,7 +27,7 @@ module.exports = {
      * @param userId
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    findUser: (userId) => userLayer.getUserById(userId),
+    findUser: (userId) => users.getById(userId),
     /**
      *
      * @param idp
@@ -35,7 +35,7 @@ module.exports = {
      */
     findUserByIdp: async (idp) => {
         // needs endpoint
-        const user = await userLayer.getUserbyIDP(idp)
+        const user = await users.getByIdp(idp)
         return user ? { id: user.id, idp: idp, username: user.username } : null
     },
     /**
@@ -45,7 +45,7 @@ module.exports = {
      */
     findCorrespondingUser: async (username) => {
         try {
-            return await userLayer.getUserByUsername(username)
+            return await users.getByUsername(username)
         } catch (error) {
             return null
         }
@@ -62,9 +62,9 @@ module.exports = {
      */
     createUser: async (idp_id, idpName, username, password) => {
 
-        const user_id = await userLayer.insertUser(username, password)
-        
-        await idpLayer.insertIDP(idp_id, idpName, user_id.insertId)
+        const user_id = await users.create(username, password)
+
+        await idps.create(idp_id, idpName, user_id.insertId)
 
         return {
             id: user_id.insertId,
@@ -78,15 +78,15 @@ module.exports = {
      * @returns {Promise<boolean>}
      */
     isBlackListed: async (userId) => {
-         let result=await listLayer.isBlackListed(userId)
-         return result.length>0
+        let result = await lists.isUserBlackListed(userId)
+        return result.length > 0
     },
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    addNotification : async(userId)=>{
-        await userHistoryLayer.addUserHistory(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
-    }    
+    addNotification: async (userId) => {
+        await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
+    }
 }

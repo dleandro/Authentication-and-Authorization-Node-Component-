@@ -21,7 +21,7 @@ const
  * @param userId
  * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
  */
-async function getUserActiveList(userId) {
+async function getUsersActive(userId) {
     return dalUtils.executeQuery({
         statement: `Select * from Lists where user_id=? AND active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
         description: "getting user's active lists",
@@ -53,9 +53,9 @@ module.exports = {
      * @param active
      * @returns {Promise<CustomError>}
      */
-    addList: (user_id, list, start_date, end_date, updater, active) => getUserActiveList(user_id)
+    create: (user_id, list, start_date, end_date, updater, active) => getUsersActive(user_id)
         // getUsersActiveList returned a list which means we can't add another list to this user
-        .then(val => errors.userDuplicateActiveList )
+        .then(val => errors.userDuplicateActiveList)
         // if it lands on catch it means that getUserActiveList threw an error meaning that this user has no active list
         // if that's the case it means we can proceed adding the user to a new list
         .catch(err => dalUtils.executeQuery(
@@ -71,7 +71,7 @@ module.exports = {
      * @param listId
      * @returns {*}
      */
-    deactivateList: (listId) => dalUtils.executeQuery(
+    deactivate: (listId) => dalUtils.executeQuery(
         {
             statement: 'UPDATE Lists SET active = 0 WHERE id = ?',
             description: "deactivate list's status",
@@ -83,7 +83,7 @@ module.exports = {
      * @param listId
      * @returns {*}
      */
-    deleteList: (listId) => dalUtils.executeQuery(
+    delete: (listId) => dalUtils.executeQuery(
         {
             statement: `DELETE FROM Lists WHERE id=?`,
             description: "deleting list",
@@ -94,7 +94,7 @@ module.exports = {
      * asks the database for all list entries
      * @returns {PromiseLike<Uint8Array | BigInt64Array | *[] | Float64Array | Int8Array | Float32Array | Int32Array | Uint32Array | Uint8ClampedArray | BigUint64Array | Int16Array | Uint16Array> | Promise<Uint8Array | BigInt64Array | *[] | Float64Array | Int8Array | Float32Array | Int32Array | Uint32Array | Uint8ClampedArray | BigUint64Array | Int16Array | Uint16Array>}
      */
-    getLists: () => dalUtils.executeQuery(
+    getAll: () => dalUtils.executeQuery(
         {
             statement: `Select * from Lists`,
             description: "getting all lists",
@@ -107,21 +107,20 @@ module.exports = {
      * asks the database for all list entries that are active at the moment
      * @returns {PromiseLike<function(*=): *> | Promise<function(*=): *>}
      */
-    getActiveLists: () => dalUtils.executeQuery(
+    getAllActive: () => dalUtils.executeQuery(
         {
             statement: `Select * from Lists where active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
             description: "getting active lists",
             params: []
         })
-        //.then(result => result.map(list => parseList(list)))
-        .then(result => list => parseList(list) |> result.map),
+        .then(result => result.map(list => parseList(list))),
 
     // asks the database for all list entries that are active and associated with a specific user
-    getUserActiveList,
+    getUsersActive,
 
-    isBlackListed: async (userId) => {
-        
-        const query={
+    isUserBlackListed: async (userId) => {
+
+        const query = {
             statement: `Select * from Lists where user_id=? AND active=1 AND LIST='BLACK'`,
             description: "checking if user is blacklisted",
             params: [userId]

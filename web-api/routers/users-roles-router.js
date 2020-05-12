@@ -35,7 +35,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getUserActiveRoles(req, res) {
-        userRoles.getUsersActive(req.params.id)
+        userRoles.getUserActiveRoles(req.params.id)
             .then(answer => apiUtils.setResponse(res, answer, 200))
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

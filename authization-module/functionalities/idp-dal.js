@@ -2,8 +2,8 @@ const dalUtils=require('../common/util/dal-utils')
 /**
  *
  * @type {{
- * insertIDP: insertIDP,
- * deleteIDPByUserId: deleteIDPByUserId}}
+ create: insertIDP,
+ delete: deleteIDPByUserId}}
  */
 module.exports={
     /**
@@ -13,7 +13,7 @@ module.exports={
      * @param userId
      * @returns {Promise<*>}
      */
-    insertIDP: (idpId, idpname, userId) =>
+    create: (idpId, idpname, userId) =>
         dalUtils.executeQuery({
             statement: 'Insert into IDP(user_id,idp_id,idpname) values (?,?,?)',
             description: "user's username update",
@@ -24,7 +24,7 @@ module.exports={
      * @param idpId
      * @returns {Promise<*>}
      */
-    deleteIDPByUserId: (idpId) =>
+    delete: (idpId) =>
         dalUtils.executeQuery({
             statement: 'Delete from IDP where user_id=?',
             description: "user's username update",

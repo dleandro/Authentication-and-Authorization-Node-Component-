@@ -33,13 +33,13 @@ module.exports = {
         }
     },
 
-    executeQueryWithReturn: (query)=>{
+    executeQueryWithReturn: (query) => {
         var connection;
         return db.connect()
-            .catch(err=>throw errors.dbConnection)
-            .then(con=>{connection=con;return con.query(query.statement, query.params)})
-            .catch(err=>throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`))
-            .finally(()=>{connection.end()}) //nunca retornar no finnally!
+            .catch(err => { throw errors.dbConnection })
+            .then(con => { connection = con; return con.query(query.statement, query.params) })
+            .catch(err => { throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`) })
+            .finally(() => { connection.end() }) //nunca retornar no finnally!
             ;
     },
 

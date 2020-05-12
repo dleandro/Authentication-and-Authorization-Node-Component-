@@ -52,12 +52,12 @@ module.exports = {
                 throw error
             }
         },
-        getPermissionById :async (method,path) => {
+        getPermissionById :async (id) => {
             
             const query = {
                 statement: `Select * from Permission where id=?`,
                 description: "get permission by id",
-                params: [method,path]
+                params: [id]
             }
             
             try {
@@ -67,6 +67,27 @@ module.exports = {
                 throw error
             }
         },
+        getPermission :async (method,path) => {
+            
+            const query = {
+                statement: `Select * from Permission where method=? and path=?`,
+                description: "get permission by id",
+                params: [method,path]
+            }
+            
+            try {
+                let result= await dalUtils.executeQuery(query)   
+                return result.length==0?null:{
+                    id:result[0].id,
+                    method:result[0].method,
+                    path:result[0].path
+                }          
+                
+            } catch (error) {
+                throw error
+            }
+        },
+        
         
         
     }

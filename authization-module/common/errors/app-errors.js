@@ -51,4 +51,14 @@ module.exports = {
         detail: "User tried to access a resource that requires a specific role and he doesn't meet those requirements",
         status: 404
     })),
+    permissionNotFound: new CustomError(JSON.stringify({
+        title: "Permissions does not exist",
+        detail: "The permission that you are trying to acess does not exist in the database",
+        status: 404
+    })),
+    permissionRolesNotFound :new CustomError(JSON.stringify({
+        title: "Permission Is Not Associated with this Role",
+        detail: "The permission that you are trying to acess is not associated with this role",
+        status: 404
+    })),
 }

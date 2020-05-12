@@ -4,8 +4,11 @@
 module.exports = function (apiUtils) {
 
     const data = require('../../authization-module/authization').user
+    const authization = require('../../authization-module/authization')
 
     const userRouter = require('express').Router()
+
+    userRouter.use(authization.checkAuthorization.hasPermissions)
 
     const getAllUsers = (req, res) => {
         data.getAllUsers()
@@ -14,7 +17,7 @@ module.exports = function (apiUtils) {
     }
 
     const createUser = (req, res) => {
-        data.createUser(req.body.username, req.body.password)
+        data.insertUser(req.body.username, req.body.password)
             .then(answer => {
                 req.body.id = answer.insertId
                 apiUtils.setResponse(res, req.body, 201)
@@ -23,7 +26,7 @@ module.exports = function (apiUtils) {
     }
 
     const getSpecificUser = (req, res) => {
-        data.getSpecificUser(req.params.id)
+        data.getUserById(req.params.id)
             .then(answer => apiUtils.setResponse(res, answer, 200))
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

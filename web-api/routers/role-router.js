@@ -3,8 +3,10 @@
 // this module contains all role related endpoints
 module.exports = function(apiUtils) {
     const data=require('../../authization-module/authization').role
+    const authization = require('../../authization-module/authization')
     
     const roleRouter = require('express').Router()
+    roleRouter.use(authization.checkAuthorization.hasPermissions)
     
     roleRouter.route('/')
     .post(addRole)

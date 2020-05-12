@@ -4,8 +4,10 @@ const
     config = require('../common/config/config'),
     errors = require('../common/errors/app-errors'),
     apiUtils = require('../common/util/api-utils'),
-    listLayer = require('../functionalities/list-dal'),
-    permissionLayer = require('../functionalities/permission-dal')
+    userRoleLayer = require('../functionalities//user-role-dal'),
+    permissionLayer = require('../functionalities/permission-dal'),
+    rolesPermissionLayer=require('../functionalities/role-permission-dal'),
+    rolesLayer=require('../functionalities/role-dal')
 
 module.exports = {
 
@@ -21,40 +23,46 @@ module.exports = {
         }
 
 
-        let userRoles = listLayer.getUserActiveList(req.user.id).map(element => element.role_id)
-
-
-        if (userRoles.length === 0) {
+        let userRoles = await userRoleLayer.getUserActiveRoles(req.user.id)
+        if (!userRoles) {
             const err = JSON.parse(errors.userRoleNotFound.message)
+            apiUtils.setResponse(resp, err, err.status)
+            return;
+        }
+        userRoles=userRoles.map(role=>role.role_id)
+
+        let permission=await permissionLayer.getPermission(req.method, req.baseUrl)
+        if(!permission){
+            const err = JSON.parse(errors.permissionNotFound.message)
             apiUtils.setResponse(resp, err, err.status)
         }
 
-        let obj = permissionLayer.getPermissionById()
-        await dal.permission.getPermissionID(req.method, req.baseUrl)
-        if(obj.length === 0) resp.end("Permissions were not defined to this endpoint")
-        let roles = await dal.rolesPermission.getRolesByPermission(JSON.parse(obj[0].id)).then(roles=>roles.map(element => element.role))
+        let permissionRoles = await rolesPermissionLayer.getRolesByPermission(permission.id)
 
-        if(roles.length === 0) resp.end("There isn't any role associated with the endpoint")
-        while(true) {
+        if(!permissionRoles){
+            const err = JSON.parse(errors.permissionRolesNotFound.message)
+            apiUtils.setResponse(resp, err, err.status)
+        } 
+        permissionRoles=permissionRoles.map(permissionRole=>permissionRole.role)
 
-            if (roles.some(role=>userRoles.includes(role))) return next();
-            if (roles.every(element => element === null)) {
-                resp.end("Insufficient Permissions")
-            }
-            roles = await getParents(roles).then(roles=>roles.flat())
+        while(!permissionRoles.every(element => element === null)){
+
+            if (permissionRoles.some(role=>userRoles.includes(role))) return next();
+            
+            permissionRoles = await getParents(permissionRoles)
         }
-    }
-};
+
+
+}
+}
 
 async function getParents(roles) {
     let parentRoles = []
     await Promise.all(
-        roles.map((role) =>
-            dal
-                .role
-                .getRoleById(role)
-                .then(parentRole=>parentRole.map(role => role.parent_role))
-                .then(parentRole=>parentRoles.push(parentRole))
+        roles.map(async (role) =>{
+            let res=await rolesLayer.getRoleById(role)
+            parentRoles.push(res.parent_role)
+        }
         )
     )
     return parentRoles

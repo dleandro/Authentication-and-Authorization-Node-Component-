@@ -4,8 +4,11 @@
 module.exports = function(apiUtils) {
 
     const data=require('../../authization-module/authization').userHistory
+    const authization = require('../../authization-module/authization')
     
     const userHistoryRouter = require('express').Router()
+
+    userHistoryRouter.use(authization.checkAuthorization.hasPermissions)
 
     userHistoryRouter
     .get('/', getAllHistories)

@@ -1,7 +1,8 @@
 'use strict'
 
 const moment = require('moment'),
-    dalUtils = require('../common/util/dal-utils')
+    dalUtils = require('../common/util/dal-utils'),
+    errors=require('../common/errors/app-errors')
 module.exports = {
 
 
@@ -54,7 +55,10 @@ module.exports = {
         }
 
         try {
-            return await dalUtils.executeQuery(query)
+            
+            let result= await dalUtils.executeQuery(query)
+
+                result.length==0?null:result
 
         } catch (error) {
             throw error
@@ -65,13 +69,15 @@ module.exports = {
 
     getUserActiveRoles: async (id) => {
         const query = {
-            statement: `Select * from Users_Roles where user_id=? AND active=1 AND (end_date>'${moment().format('YYYY-MM-DD HH:MM:SS')}' || end_date IS NULL)`,
+            statement: `Select * from Users_Roles where user_id=? AND active=1 AND (end_date>CURRENT_TIMESTAMP || end_date IS NULL)`,
             description: "getting user's active roles",
             params: [id]
         }
 
         try {
-            return await dalUtils.executeQuery(query)
+            let result= await dalUtils.executeQuery(query)
+
+               return result.length==0?null:result
 
         } catch (error) {
             throw error

@@ -3,7 +3,10 @@
 const
     userLayer = require('../../functionalities/user-dal'),
     listLayer = require('../../functionalities/list-dal'),
-    BASE_URL = require('../config/config').BASE_URL
+    idpLayer=require('../../functionalities/idp-dal'),
+    userHistoryLayer=require('../../functionalities/user-history-dal'),
+    BASE_URL = require('../config/config').BASE_URL,
+    moment=require('moment')
 
 module.exports = {
 
@@ -33,7 +36,7 @@ module.exports = {
 
         const user_id = await userLayer.insertUser(username, password)
         
-        await userLayer.insertIDP(idp_id, idpName, user_id.insertId)
+        await idpLayer.insertIDP(idp_id, idpName, user_id.insertId)
 
         return {
             id: user_id.insertId,
@@ -42,5 +45,12 @@ module.exports = {
         }
     },
 
-    isBlackListed: async (userId) => await listLayer.isBlackListed(userId).length > 0
+    isBlackListed: async (userId) => {
+         let result=await listLayer.isBlackListed(userId)
+         return result.length>0
+        },
+        
+    addNotification : async(userId)=>{
+        await userHistoryLayer.addUserHistory(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
+    }    
 }

@@ -22,6 +22,11 @@ const strategy = new AzureAdOAuth2Strategy({
             user = await passportUtils.createUser(params.id_token, 'azureAD', mail, null)
         }
         
+        let blacklisted=await passportUtils.isBlackListed(user.id) 
+        if(blacklisted){
+            passportUtils.addNotification(user.id)
+            done(null, false, { message: 'User is BlackListed' })
+        }
         done(null, user)
     })
 

@@ -90,10 +90,14 @@ module.exports = {
     // asks the database for all list entries that are active and associated with a specific user
     getUserActiveList,
 
-    isBlackListed: (userId) => dalUtils.executeQuery(
-        {
+    isBlackListed: async (userId) => {
+        
+        const query={
             statement: `Select * from Lists where user_id=? AND active=1 AND LIST='BLACK'`,
             description: "checking if user is blacklisted",
             params: [userId]
-        })
+        }
+
+        return await dalUtils.executeQuery(query)
+    }
 }

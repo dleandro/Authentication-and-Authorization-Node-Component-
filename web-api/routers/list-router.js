@@ -5,6 +5,8 @@ module.exports = function(apiUtils) {
     
     const data=require('../../authization-module/authization').list
     const listRouter = require('express').Router()
+    const authization = require('../../authization-module/authization')
+    listRouter.use(authization.checkAuthorization.hasPermissions)
         
     listRouter.route('/')
     .get(getLists)

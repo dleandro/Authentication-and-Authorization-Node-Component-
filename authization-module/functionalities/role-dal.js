@@ -32,7 +32,12 @@ module.exports = {
         
             try {
         
-                return await dalUtils.executeQuery(query)
+                let result=await dalUtils.executeQuery(query)
+                return result.length==0?null:{
+                    id:result[0].id,
+                    role:result[0].role,
+                    parent_role:result[0].parent_role
+                }
         
             } catch (error) {
                 throw error

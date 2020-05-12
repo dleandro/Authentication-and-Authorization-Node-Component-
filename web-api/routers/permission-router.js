@@ -5,6 +5,8 @@ module.exports = function(apiUtils) {
     
     const permissionRouter = require('express').Router()
     const data=require('../../authization-module/authization').permission
+    const authization = require('../../authization-module/authization')
+    permissionRouter.use(authization.checkAuthorization.hasPermissions)
     
     permissionRouter.route('/')
     .get(getPermissions)

@@ -4,8 +4,12 @@
 module.exports = function(apiUtils) {
 
     const data=require('../../authization-module/authization').rolePermission
+    const authization = require('../../authization-module/authization')
     
     const rolesPermissionRouter = require('express').Router()
+
+    rolesPermissionRouter.use(authization.checkAuthorization.hasPermissions)
+
         
     rolesPermissionRouter.route('/')
     .post(addRolesPermission)

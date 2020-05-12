@@ -4,7 +4,7 @@
 const dalUtils = require('../common/util/dal-utils')
 module.exports = {
         
-        addRole: async (role) => {
+        create: async (role) => {
             
             const query = {
                 statement: `INSERT INTO Roles(role) VALUES (?);`,
@@ -22,7 +22,7 @@ module.exports = {
             
         },
 
-        getRoleById: async function getRoleById(roleId) {
+        getSpecificById: async function getRoleById(roleId) {
 
             const query = {
                 statement: `Select * from Roles where id= ?`,
@@ -44,7 +44,7 @@ module.exports = {
             }
         },
         
-        deleteRole: async (roleId)=> {
+        delete: async (roleId)=> {
             
             const query = {
                 statement: `DELETE FROM Roles WHERE id = ?`,
@@ -62,7 +62,8 @@ module.exports = {
            
             }
         },
-        getRoles: async () => {
+
+        getAll: async () => {
 
             const query = {
                 statement: `Select * from Roles`,

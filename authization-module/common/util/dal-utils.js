@@ -24,7 +24,7 @@ module.exports = {
         } catch (error) {
             throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`)
         } finally {
-            connection.end();
+            await connection.end();
         }
     },
     

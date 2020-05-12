@@ -26,6 +26,7 @@ const strategy = new AzureAdOAuth2Strategy({
         if(blacklisted){
             passportUtils.addNotification(user.id)
             done(null, false, { message: 'User is BlackListed' })
+            return
         }
         done(null, user)
     })

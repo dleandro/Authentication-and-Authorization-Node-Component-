@@ -2,14 +2,12 @@
 
 const moment = require('moment'),
     dalUtils = require('../common/util/dal-utils'),
-    errors=require('../common/errors/app-errors')
+    errors = require('../common/errors/app-errors')
+
 module.exports = {
 
-
-
-
     // database should return duplicate error to throw
-    addUserRole: async (user, role, start_date, end_date, updater, active) => {
+    create: async (user, role, start_date, end_date, updater, active) => {
 
         var result
 
@@ -28,7 +26,7 @@ module.exports = {
 
     },
 
-    deactivateUserRole: async (id) => {
+    deactivate: async (id) => {
 
         const query = {
             statement: 'UPDATE Users_Roles SET active = 0 WHERE id = ?',
@@ -46,7 +44,7 @@ module.exports = {
 
     },
 
-    getActiveRoles: async () => {
+    getAllActive: async () => {
 
         const query = {
             statement: `Select * from User_Roles where active=1 AND end_date>'${moment().format()}'`,
@@ -55,10 +53,10 @@ module.exports = {
         }
 
         try {
-            
-            let result= await dalUtils.executeQuery(query)
 
-                result.length==0?null:result
+            let result = await dalUtils.executeQuery(query)
+
+            result.length == 0 ? null : result
 
         } catch (error) {
             throw error
@@ -67,7 +65,7 @@ module.exports = {
 
     },
 
-    getUserActiveRoles: async (id) => {
+    getUsersActive: async (id) => {
         const query = {
             statement: `Select * from Users_Roles where user_id=? AND active=1 AND (end_date>CURRENT_TIMESTAMP || end_date IS NULL)`,
             description: "getting user's active roles",
@@ -75,9 +73,9 @@ module.exports = {
         }
 
         try {
-            let result= await dalUtils.executeQuery(query)
+            let result = await dalUtils.executeQuery(query)
 
-               return result.length==0?null:result
+            return result.length == 0 ? null : result
 
         } catch (error) {
             throw error
@@ -86,7 +84,7 @@ module.exports = {
 
     },
 
-    getUserRoles: async () => {
+    getAll: async () => {
 
         const query = {
             statement: `Select * from User_Roles`,
@@ -103,7 +101,7 @@ module.exports = {
 
     },
 
-    getUserRolesById: async (id) => {
+    getById: async (id) => {
 
         const query = {
             statement: 'Select * from User_Roles where user_id=?',

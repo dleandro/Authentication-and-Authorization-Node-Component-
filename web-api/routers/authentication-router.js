@@ -1,8 +1,8 @@
 'use strict'
 
-module.exports = function (apiUtils) {
+module.exports = function (apiUtils, authization) {
 
-  const authization = require('../../authization-module/authization')
+  const authenticate = authization.authenticate
   const bodyParser = require('body-parser');
 
   // this module contains all user authentication related endpoints
@@ -11,31 +11,31 @@ module.exports = function (apiUtils) {
 
   authenticationRouter.get(
     '/google',
-    authization.authenticate.usingGoogle
+    authenticate.usingGoogle
   )
 
   authenticationRouter.get(
     '/google/callback',
-    authization.authenticate.usingGoogleCallback,
+    authenticate.usingGoogleCallback,
     (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
   )
 
   authenticationRouter.get(
     '/saml',
-    authization.authenticate.usingSaml,
+    authenticate.usingSaml,
   )
 
   authenticationRouter.post(
     '/saml/callback',
     bodyParser.urlencoded({ extended: false }),
-    authization.authenticate.usingSamlCallback,
+    authenticate.usingSamlCallback,
     (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
 
   )
 
   authenticationRouter.post(
     '/local',
-    authization.authenticate.usingLocal,
+    authenticate.usingLocal,
     (req, res) => {
       apiUtils.setResponse(res, { success: "login successful" }, 200)
     }
@@ -43,18 +43,18 @@ module.exports = function (apiUtils) {
 
   authenticationRouter.post(
     '/logout',
-    authization.authenticate.logout,
+    authenticate.logout,
     (req, res, ) => apiUtils.setResponse(res, { success: "logout successful" }, 200)
   )
 
   authenticationRouter.get(
     '/azureAD',
-    authization.authenticate.usingOffice365,
+    authenticate.usingOffice365,
   );
 
   authenticationRouter.get(
     '/azureAD/callback',
-    authization.authenticate.usingOffice365Callback,
+    authenticate.usingOffice365Callback,
     function (req, res) {
       apiUtils.setResponse(res, { success: "login successful" }, 200)
     }

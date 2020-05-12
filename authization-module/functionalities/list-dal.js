@@ -16,7 +16,7 @@ const
         }
     }
 
-async function getUserActiveList(userId) {
+async function getUsersActive(userId) {
     return dalUtils.executeQuery({
         statement: `Select * from Lists where user_id=? AND active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
         description: "getting user's active lists",
@@ -39,7 +39,7 @@ module.exports = {
 
 
     // Creates a list entry with a user_id associated and a type of list
-    addList: (user_id, list, start_date, end_date, updater, active) => getUserActiveList(user_id)
+    create: (user_id, list, start_date, end_date, updater, active) => getUsersActive(user_id)
         // getUsersActiveList returned a list which means we can't add another list to this user
         .then(val => errors.userDuplicateActiveList)
         // if it lands on catch it means that getUserActiveList threw an error meaning that this user has no active list
@@ -53,7 +53,7 @@ module.exports = {
             })),
 
     // deactivates active list, it only deactivates because we don't wanna change inactive list's status for history purposes
-    deactivateList: (listId) => dalUtils.executeQuery(
+    deactivate: (listId) => dalUtils.executeQuery(
         {
             statement: 'UPDATE Lists SET active = 0 WHERE id = ?',
             description: "deactivate list's status",
@@ -61,7 +61,7 @@ module.exports = {
         }),
 
     // deletes the user association to a list
-    deleteList: (listId) => dalUtils.executeQuery(
+    delete: (listId) => dalUtils.executeQuery(
         {
             statement: `DELETE FROM Lists WHERE id=?`,
             description: "deleting list",
@@ -69,7 +69,7 @@ module.exports = {
         }),
 
     // asks the database for all list entries
-    getLists: () => dalUtils.executeQuery(
+    getAll: () => dalUtils.executeQuery(
         {
             statement: `Select * from Lists`,
             description: "getting all lists",
@@ -79,7 +79,7 @@ module.exports = {
     ,
 
     // asks the database for all list entries that are active at the moment
-    getActiveLists: () => dalUtils.executeQuery(
+    getAllActive: () => dalUtils.executeQuery(
         {
             statement: `Select * from Lists where active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
             description: "getting active lists",
@@ -88,9 +88,9 @@ module.exports = {
         .then(result => result.map(list => parseList(list))),
 
     // asks the database for all list entries that are active and associated with a specific user
-    getUserActiveList,
+    getUsersActive,
 
-    isBlackListed: async (userId) => {
+    isUserBlackListed: async (userId) => {
         
         const query={
             statement: `Select * from Lists where user_id=? AND active=1 AND LIST='BLACK'`,

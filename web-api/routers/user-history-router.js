@@ -1,33 +1,30 @@
 'use strict'
 
 // this module contains all user's history related endpoints
-module.exports = function(apiUtils) {
+module.exports = function (apiUtils, authization) {
 
-    const data=require('../../authization-module/authization').userHistory
-    const authization = require('../../authization-module/authization')
-    
+    const userHistory = authization.userHistory
+
     const userHistoryRouter = require('express').Router()
 
-    userHistoryRouter.use(authization.checkAuthorization.hasPermissions)
+    userHistoryRouter
+        .get('/', getAllHistories)
 
     userHistoryRouter
-    .get('/', getAllHistories)
-
-    userHistoryRouter
-    .get('/:userId', getAllHistoriesFromSpecificUser)
+        .get('/:userId', getAllHistoriesFromSpecificUser)
 
     function getAllHistories(req, res) {
-        data.getAllHistories()
-        .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        userHistory.getAll()
+            .then(answer => apiUtils.setResponse(res, answer, 200))
+            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
 
     function getAllHistoriesFromSpecificUser(req, res) {
-        data.getAllHistoriesFromSpecificUser(req.params.id)
-        .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        userHistory.getAllFromUser(req.params.id)
+            .then(answer => apiUtils.setResponse(res, answer, 200))
+            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
 
     return userHistoryRouter
-    
+
 }

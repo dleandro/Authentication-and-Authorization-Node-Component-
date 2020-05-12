@@ -11,6 +11,7 @@ const strategy = new LocalStrategy(
         if(blacklisted){
             passportUtils.addNotification(user.id)
             done(null, false, { message: 'User is BlackListed' })
+            return
         }
         done(null, user)
     }

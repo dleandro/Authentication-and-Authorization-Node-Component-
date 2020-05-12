@@ -3,9 +3,6 @@
 const
 fs = require('fs'),
 configRouter = require('express').Router()
-const authization = require('../../authization-module/authization')
-
-configRouter.use(authization.checkAuthorization.hasPermissions)
 
 configRouter.post('/database',(req,res)=>{
     let obj=req.body

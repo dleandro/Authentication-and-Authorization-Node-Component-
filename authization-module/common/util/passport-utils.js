@@ -12,17 +12,17 @@ module.exports = {
 
     // All find user functions should search for a list entry, 
     // if it finds one than it should return an error because that user shouldn't login 
-    findUser: (userId) => userLayer.getUserById(userId),
+    findUser: (userId) => userLayer.getById(userId),
 
     findUserByIdp: async (idp) => {
         // needs endpoint
-        const user = await userLayer.getUserbyIDP(idp)
+        const user = await userLayer.getByIdp(idp)
         return user ? { id: user.id, idp: idp, username: user.username } : null
     },
 
     findCorrespondingUser: async (username) => {
         try {
-            return await userLayer.getUserByUsername(username)
+            return await userLayer.getByUsername(username)
         } catch (error) {
             return null
         }
@@ -34,9 +34,9 @@ module.exports = {
     */
     createUser: async (idp_id, idpName, username, password) => {
 
-        const user_id = await userLayer.insertUser(username, password)
+        const user_id = await userLayer.create(username, password)
         
-        await idpLayer.insertIDP(idp_id, idpName, user_id.insertId)
+        await idpLayer.create(idp_id, idpName, user_id.insertId)
 
         return {
             id: user_id.insertId,
@@ -46,11 +46,11 @@ module.exports = {
     },
 
     isBlackListed: async (userId) => {
-         let result=await listLayer.isBlackListed(userId)
+         let result=await listLayer.isUserBlackListed(userId)
          return result.length>0
         },
         
     addNotification : async(userId)=>{
-        await userHistoryLayer.addUserHistory(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
+        await userHistoryLayer.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
     }    
 }

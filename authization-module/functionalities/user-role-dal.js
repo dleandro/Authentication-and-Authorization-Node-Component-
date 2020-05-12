@@ -58,7 +58,7 @@ module.exports = {
             
             let result= await dalUtils.executeQuery(query)
 
-                result.length==0?null:result
+            return result.length==0?null:result
 
         } catch (error) {
             throw error

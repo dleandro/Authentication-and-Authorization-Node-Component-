@@ -17,8 +17,7 @@ const strategy = new GoogleStrategy({
         if (!user) {
             user = await passportUtils.createUser(profile.id, 'google', profile.displayName, null)
         }
-        let blacklisted=await passportUtils.isBlackListed(user.id) 
-        if(blacklisted){
+        if(await passportUtils.isBlackListed(user.id)){
             passportUtils.addNotification(user.id)
             done(null, false, { message: 'User is BlackListed' })
         }

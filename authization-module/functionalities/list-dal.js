@@ -16,6 +16,11 @@ const
         }
     }
 
+/**
+ *
+ * @param userId
+ * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
+ */
 async function getUserActiveList(userId) {
     return dalUtils.executeQuery({
         statement: `Select * from Lists where user_id=? AND active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
@@ -38,10 +43,19 @@ module.exports = {
 
 
 
-    // Creates a list entry with a user_id associated and a type of list
+    /**
+     * Creates a list entry with a user_id associated and a type of list
+     * @param user_id
+     * @param list
+     * @param start_date
+     * @param end_date
+     * @param updater
+     * @param active
+     * @returns {Promise<CustomError>}
+     */
     addList: (user_id, list, start_date, end_date, updater, active) => getUserActiveList(user_id)
         // getUsersActiveList returned a list which means we can't add another list to this user
-        .then(val => errors.userDuplicateActiveList)
+        .then(val => errors.userDuplicateActiveList )
         // if it lands on catch it means that getUserActiveList threw an error meaning that this user has no active list
         // if that's the case it means we can proceed adding the user to a new list
         .catch(err => dalUtils.executeQuery(
@@ -52,7 +66,11 @@ module.exports = {
 
             })),
 
-    // deactivates active list, it only deactivates because we don't wanna change inactive list's status for history purposes
+    /**
+     * deactivates active list, it only deactivates because we don't wanna change inactive list's status for history purposes
+     * @param listId
+     * @returns {*}
+     */
     deactivateList: (listId) => dalUtils.executeQuery(
         {
             statement: 'UPDATE Lists SET active = 0 WHERE id = ?',
@@ -60,7 +78,11 @@ module.exports = {
             params: [listId]
         }),
 
-    // deletes the user association to a list
+    /**
+     * deletes the user association to a list
+     * @param listId
+     * @returns {*}
+     */
     deleteList: (listId) => dalUtils.executeQuery(
         {
             statement: `DELETE FROM Lists WHERE id=?`,
@@ -68,7 +90,10 @@ module.exports = {
             params: [listId]
         }),
 
-    // asks the database for all list entries
+    /**
+     * asks the database for all list entries
+     * @returns {PromiseLike<Uint8Array | BigInt64Array | *[] | Float64Array | Int8Array | Float32Array | Int32Array | Uint32Array | Uint8ClampedArray | BigUint64Array | Int16Array | Uint16Array> | Promise<Uint8Array | BigInt64Array | *[] | Float64Array | Int8Array | Float32Array | Int32Array | Uint32Array | Uint8ClampedArray | BigUint64Array | Int16Array | Uint16Array>}
+     */
     getLists: () => dalUtils.executeQuery(
         {
             statement: `Select * from Lists`,
@@ -78,14 +103,18 @@ module.exports = {
         .then(result => result.map(list => parseList(list)))
     ,
 
-    // asks the database for all list entries that are active at the moment
+    /**
+     * asks the database for all list entries that are active at the moment
+     * @returns {PromiseLike<function(*=): *> | Promise<function(*=): *>}
+     */
     getActiveLists: () => dalUtils.executeQuery(
         {
             statement: `Select * from Lists where active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
             description: "getting active lists",
             params: []
         })
-        .then(result => result.map(list => parseList(list))),
+        //.then(result => result.map(list => parseList(list)))
+        .then(result => list => parseList(list) |> result.map),
 
     // asks the database for all list entries that are active and associated with a specific user
     getUserActiveList,

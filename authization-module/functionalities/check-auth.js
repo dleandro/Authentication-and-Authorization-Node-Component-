@@ -8,9 +8,18 @@ const
     permissionLayer = require('../functionalities/permission-dal'),
     rolesPermissionLayer=require('../functionalities/role-permission-dal'),
     rolesLayer=require('../functionalities/role-dal')
-
+/**
+ *
+ * @type {{hasPermissions: hasPermissions}}
+ */
 module.exports = {
-
+    /**
+     *
+     * @param req
+     * @param resp
+     * @param next
+     * @returns {Promise<*>}
+     */
     hasPermissions: async (req, resp, next) => {
 
         if (config.env === config.test) {
@@ -42,27 +51,36 @@ module.exports = {
         if(!permissionRoles){
             const err = JSON.parse(errors.permissionRolesNotFound.message)
             apiUtils.setResponse(resp, err, err.status)
-        } 
-        permissionRoles=permissionRoles.map(permissionRole=>permissionRole.role)
-
-        while(!permissionRoles.every(element => element === null)){
-
-            if (permissionRoles.some(role=>userRoles.includes(role))) return next();
-            
-            permissionRoles = await getParents(permissionRoles)
         }
-
-
+        return await searchUserRolesForPermissionRole(permissionRoles.map(permissionRole=>permissionRole.role),userRoles,next)
+    }
 }
+
+/**
+ *
+ * @param permissionRoles
+ * @param userRoles
+ * @param next
+ * @returns {Promise<*>}
+ */
+async function searchUserRolesForPermissionRole(permissionRoles,userRoles,next){
+    if(!permissionRoles.every(element => element === null)){
+        return permissionRoles.some(role => userRoles.includes(role)) ? next() : idk(await getParents(permissionRoles));
+    }
 }
 
+/**
+ *
+ * @param roles
+ * @returns {Promise<[]>}
+ */
 async function getParents(roles) {
     let parentRoles = []
     await Promise.all(
         roles.map(async (role) =>{
-            let res=await rolesLayer.getRoleById(role)
-            parentRoles.push(res.parent_role)
-        }
+                let res=await rolesLayer.getRoleById(role)
+                parentRoles.push(res.parent_role)
+            }
         )
     )
     return parentRoles

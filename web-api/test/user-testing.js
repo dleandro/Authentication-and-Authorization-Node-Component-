@@ -4,10 +4,10 @@ const
     app = require('../server'),
     request = require('supertest'),
     assert = require('assert');
-
+const TEST = '1234'
 const user = {
     username: 'test@test.pt',
-    password: '1234'
+    password: TEST
 }
 const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 
@@ -82,8 +82,9 @@ describe('[USER CRUD TESTING]', function() {
 
 
     it('should update test user´s password', function(done) {
+        const TEST = 'newPassword'
         const user = {
-            password: 'newPassword'
+            password: TEST
         }
         contentTypeSetter(
             request(app)

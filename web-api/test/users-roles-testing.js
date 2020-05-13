@@ -5,10 +5,10 @@ const
     request = require('supertest'),
     moment = require('moment'),
     assert = require('assert');
-
+const TEST = '1234'
 const user = {
     username: 'test@test.pt',
-    password: '1234'
+    password: TEST
 }
 
 const role = {

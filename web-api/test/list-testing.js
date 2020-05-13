@@ -6,10 +6,10 @@ const
     moment = require('moment'),
     links = require('../../links'),
     assert = require('assert');
-
+const TEST_PASS = 'test'
 const user = {
-    username: 'test',
-    password: 'test'
+    username: TEST_PASS,
+    password: TEST_PASS
 }
 const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 

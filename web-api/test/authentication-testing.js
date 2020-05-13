@@ -5,10 +5,11 @@ const
     request = require('supertest'),
     links = require('../../links'),
     assert = require('assert');
-
+const  USER_PASS = '123'
+const  USER_NAME = '123'
 const user = {
-    username: '123',
-    password: '123'
+    username: USER_NAME,
+    password: USER_PASS
 }
 
 var userId

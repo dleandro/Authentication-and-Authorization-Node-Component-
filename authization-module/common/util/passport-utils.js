@@ -8,17 +8,7 @@ const
     BASE_URL = require('../config/config').BASE_URL,
     moment = require('moment')
 
-/**
- *
- * @type {
- * {findUser: (function(*=): Promise<{password: *, id: *, username: *}>),
- * findUserByIdp: (function(*=): *),
- * isBlackListed: (function(*=): boolean),
- * addNotification: addNotification,
- * findCorrespondingUser: findCorrespondingUser,
- * createUser: (function(*=, *=, *=, *=): {idp_id: *, id: number, username: *})}
- * }
- */
+
 module.exports = {
 
     /**
@@ -54,21 +44,21 @@ module.exports = {
     /**
      * When Using identity providers you need this method to create an entry on the database for the user using the identity provider
      * If there is an entry for the user who is trying to authenticate we simply search its id on our database and return the specific user
-     * @param idp_id
+     * @param idpId
      * @param idpName
      * @param username
      * @param password
      * @returns {Promise<{idp_id: *, id: number, username: *}>}
      */
-    createUser: async (idp_id, idpName, username, password) => {
+    createUser: async (idpId, idpName, username, password) => {
 
-        const user_id = await users.create(username, password)
+        const userId = await users.create(username, password)
 
-        await idps.create(idp_id, idpName, user_id.insertId)
+        await idps.create(idpId, idpName, userId.insertId)
 
         return {
-            id: user_id.insertId,
-            idp_id,
+            id: userId.insertId,
+            idp_id: idpId,
             username: username
         }
     },
@@ -77,10 +67,7 @@ module.exports = {
      * @param userId
      * @returns {Promise<boolean>}
      */
-    isBlackListed: async (userId) => {
-        let result = await lists.isUserBlackListed(userId)
-        return result.length > 0
-    },
+    isBlackListed: async (userId) => lists.isUserBlackListed(userId).then(result=>result.length>0),
     /**
      *
      * @param userId

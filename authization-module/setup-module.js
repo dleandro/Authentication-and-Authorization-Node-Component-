@@ -5,7 +5,7 @@ const
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
-    cookie_secret = 'justasecretstring', // should change after a while if it has some security implication openssl rand -hex 32 on the cmd
+    cookieSecret = 'justasecretstring', // should change after a while if it has some security implication openssl rand -hex 32 on the cmd
     config = require('./common/config/config'),
     MySQLStore = require('express-mysql-session')(session),
     sessionStore = new MySQLStore(config.database_opts),
@@ -36,7 +36,7 @@ module.exports = function (app) {
         //saveUninitialized to false to only create a session if a UA(User agent) made a login
         saveUninitialized: false,
         store: sessionStore,
-        secret: cookie_secret,
+        secret: cookieSecret,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24
         }

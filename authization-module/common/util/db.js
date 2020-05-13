@@ -3,17 +3,14 @@
 const
   config = require("../config/config")
 
-/**
- *
- * @type {{connect: connect}}
- */
+
 module.exports = {
 
   /**
    *
    * @returns {Promise<PoolConnection>}
    */
-  connect: config.sgbd == "mariadb" ? async () => {
+  connect: config.sgbd === "mariadb" ? async () => {
     const mariadb = require('mariadb')
 
     const pool = mariadb.createPool(config.database_opts)
@@ -39,7 +36,6 @@ module.exports = {
 
       pool = new Pool(config.database_opts)
       return pool
-      
     } catch (err) {
 
       console.log('unable to connect')

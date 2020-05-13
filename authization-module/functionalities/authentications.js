@@ -1,19 +1,7 @@
 'use strict'
 
 const passport = require('passport')
-/**
- *
- * @type {{
- * usingSamlCallback: usingSamlCallback,
- * usingSaml: usingSaml,
- * logout: logout,
- * usingGoogleCallback: usingGoogleCallback,
- * usingOffice365: usingOffice365,
- * usingOpenId: usingOpenId,
- * usingLocal: usingLocal,
- * usingOffice365Callback: usingOffice365Callback,
- * usingGoogle: usingGoogle}}
- */
+
 module.exports = {
 
     /**

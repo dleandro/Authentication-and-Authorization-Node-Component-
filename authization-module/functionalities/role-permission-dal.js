@@ -2,60 +2,38 @@
 
 const dalUtils = require('../common/util/dal-utils')
 module.exports = {
-    
-
-        create: async (role, permission) => {
-            
-            const query = {
+    /**
+     *
+     * @param role
+     * @param permission
+     * @returns {Promise<void>}
+     */
+    create: async (role, permission) => dalUtils
+        .executeQuery(
+            {
                 statement: `INSERT INTO Roles_Permission(role,permission) VALUES (?,?);`,
                 description: "adding role_permission",
-                params: [role, permission]
-            }
+                params: [role, permission]}),
+    /**
+     *
+     * @param role
+     * @param permission
+     * @returns {Promise<void>}
+     */
+    delete: async (role, permission) => dalUtils.executeQuery(
+        {
+            statement: `DELETE FROM Roles_Permission Where role=? AND permission=?`,
+            description: "deleting role_permission",
+            params: [role, permission]}),
+    /**
+     *
+     * @param permission
+     * @returns {Promise<void>}
+     */
+    getRolesByPermission: async (permission) =>dalUtils.executeQuery(
+        {
+            statement: `Select * from Roles_Permission where permission=?`,
+            description: "get roles by permission",
+            params: [permission]})
 
-            try {
-                return await dalUtils.executeQuery(query)             
-    
-            } catch (error) {
-                throw error
-            }
-            
-            
-        },
-
-        delete: async (role, permission) => {
-            
-            const query = {
-                statement: `DELETE FROM Roles_Permission Where role=? AND permission=?`,
-                description: "deleting role_permission",
-                params: [role, permission]
-            }
-
-            try {
-                return await dalUtils.executeQuery(query)          
-    
-            } catch (error) {
-                throw error
-            }
-            
-            
-        },
-        
-        getRolesByPermission: async (permission) => {
-            
-            const query = {
-                statement: `Select * from Roles_Permission where permission=?`,
-                description: "get roles by permission",
-                params: [permission]
-            }
-
-            try {
-                return await dalUtils.executeQuery(query)          
-    
-            } catch (error) {
-                throw error
-            }
-            
-            
-        }
-        
-    }
+}

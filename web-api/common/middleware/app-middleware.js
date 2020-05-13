@@ -9,7 +9,7 @@ module.exports = function (app) {
     // app configurations
 
     // using authization module to setup authentication and authorization middleware
-    var c = require('../../../authization-module/authization')(app)
+    require('../../../authization-module/authization')(app)
 
     // For request logging
     app.use(morgan('tiny'))

@@ -18,7 +18,7 @@ const
     rolesPermissionRouter = require('./routers/roles-permission-router')(apiUtils, authization),
     usersRolesRouter = require('./routers/users-roles-router')(apiUtils, authization),
     userHistoryRouter = require('./routers/user-history-router')(apiUtils, authization),
-    configRouter = require('./routers/config-router')
+    configRouter = require('./routers/config-router') (apiUtils, authization)
 
 router.use('/users', userRouter)
 router.use('/permissions', permissionRouter)

@@ -1,10 +1,8 @@
 'use strict'
 
 const
-  mariadb = require('mariadb'),
   config = require("../config/config")
 
-const pool = mariadb.createPool(config.database_opts)
 /**
  *
  * @type {{connect: connect}}
@@ -15,7 +13,10 @@ module.exports = {
    *
    * @returns {Promise<PoolConnection>}
    */
-  connect: async function connect() {
+  connect: config.sgbd == "mariadb" ? async () => {
+    const mariadb = require('mariadb')
+
+    const pool = mariadb.createPool(config.database_opts)
 
     let connection
     try {
@@ -28,6 +29,25 @@ module.exports = {
 
       throw err;
     }
+  } : async () => {
+
+    const { Pool } = require('pg')
+
+    var pool
+
+    try {
+
+      pool = new Pool(config.database_opts)
+      return pool
+      
+    } catch (err) {
+
+      console.log('unable to connect')
+
+      throw err;
+    }
+
   }
+
 
 }

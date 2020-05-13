@@ -2,6 +2,7 @@
 
 const db = require('./db'),
     errors = require('../errors/app-errors')
+    
 /**
  *
  * @type {{throwErrorIfNecessary: throwErrorIfNecessary, executeQuery: executeQuery}}

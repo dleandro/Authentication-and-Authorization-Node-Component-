@@ -1,34 +1,31 @@
 'use strict'
 
-const
-fs = require('fs'),
-configRouter = require('express').Router()
 
-configRouter.post('/database',(req,res)=>{
-    let obj=req.body
-    let config=JSON.parse(fs.readFileSync(__dirname + '/common/config/production.json','utf-8'))
-    console.log(config)
-    config.database_opts=obj
-    console.log(config)
-    res.end()
-})
+module.exports = function(apiUtils, authization) {
 
-configRouter.post('/google',(req,res)=>{
-    let obj=req.body
-    let config=JSON.parse(fs.readFileSync(__dirname + '/common/config/production.json','utf-8'))
-    console.log(config)
-    config.google=obj
-    console.log(config)
-    res.end()
-})
+    const
+        configRouter = require('express').Router()
+    
+    configRouter.put('/database', (req, res) => {
 
-configRouter.post('/azureAD',(req,res)=>{
-    let obj=req.body
-    let config=JSON.parse(fs.readFileSync(__dirname + '/common/config/production.json','utf-8'))
-    console.log(config)
-    config.azureAD=obj
-    console.log(config)
-    res.end()
-})
+        authization.configurations.changeDatabaseOptions(req.body)
 
-module.exports = configRouter
+        apiUtils.setResponse(res, { success: "changes made successfully" }, 200)
+    })
+    
+    configRouter.put('/google', (req, res) => {
+
+        authization.configurations.changeGoogleAuthenticationOptions(req.body)
+
+        apiUtils.setResponse(res, { success: "changes made successfully" }, 200)
+    })
+    
+    configRouter.put('/azureAD', (req, res) => {
+
+        authization.configurations.changeAzureADAuthenticationOptions(req.body)
+
+        apiUtils.setResponse(res, { success: "changes made successfully" }, 200)
+    })
+
+    return configRouter
+}

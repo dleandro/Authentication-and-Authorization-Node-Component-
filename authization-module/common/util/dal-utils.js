@@ -1,7 +1,26 @@
 'use strict'
 
 const db = require('./db'),
-    errors = require('../errors/app-errors')
+    errors = require('../errors/app-errors'),
+    config = require('../config/config'),
+
+    formatQueryForPG = async (statement) => {
+        var wildCardIndex = 1
+        var newStatement = ""
+
+        Array.from(statement).forEach(char => {
+
+            if (char == '?') {
+                wildCardIndex++
+                newStatement += `$${wildCardIndex - 1}`
+                return 
+            }
+
+            newStatement += char
+        })
+
+        return newStatement
+    }
 
 module.exports = {
 
@@ -21,6 +40,8 @@ module.exports = {
             } catch (error) {
                 throw errors.dbConnection
             }
+
+            query.statement = config.sgbd == "mariadb" ? query.statement : await formatQueryForPG(query.statement)
             return await connection.query(query.statement, query.params);
         } catch (error) {
             throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`)

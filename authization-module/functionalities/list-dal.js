@@ -27,7 +27,8 @@ async function getUsersActive(userId) {
             {
                 statement: `Select * from Lists where user_id=? AND active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
                 description: "getting user's active lists",
-                params: [userId]})
+                params: [userId]
+            })
         .then(result => {
 
             return {
@@ -64,10 +65,16 @@ module.exports = {
         .catch(err => dalUtils
             .executeQuery(
                 {
-                    statement: `INSERT INTO Lists(user_id,list,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);`,
+                    statement: config.sgbd == 'mariadb' ? 
+                    `INSERT INTO Lists(user_id,list,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);` : 
+                    `INSERT INTO Lists(user_id,list,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?) RETURNING id;`,
                     description: "adding list",
-                    params: [userId, list, startDate, endDate, updater, active]})
-        ),
+                    params: [userId, list, startDate, endDate, updater, active]
+                })
+            .then(async result => {
+                return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+            })),
+
 
     /**
      * deactivates active list, it only deactivates because we don't wanna change inactive list's status for history purposes
@@ -79,7 +86,8 @@ module.exports = {
             {
                 statement: 'UPDATE Lists SET active = 0 WHERE id = ?',
                 description: "deactivate list's status",
-                params: [listId]}),
+                params: [listId]
+            }),
 
     /**
      * deletes the user association to a list
@@ -91,7 +99,8 @@ module.exports = {
             {
                 statement: `DELETE FROM Lists WHERE id=?`,
                 description: "deleting list",
-                params: [listId]}),
+                params: [listId]
+            }),
 
     /**
      * asks the database for all list entries
@@ -105,7 +114,8 @@ module.exports = {
             {
                 statement: `Select * from Lists`,
                 description: "getting all lists",
-                params: []})
+                params: []
+            })
         .then(result => result.map(list => parseList(list)))
     ,
 
@@ -118,7 +128,8 @@ module.exports = {
             {
                 statement: `Select * from Lists where active=1 AND end_date>'${moment().format("YYYY-MM-DD HH:mm:ss")}'`,
                 description: "getting active lists",
-                params: []})
+                params: []
+            })
         .then(result => result.map(list => parseList(list))),
 
     // asks the database for all list entries that are active and associated with a specific user

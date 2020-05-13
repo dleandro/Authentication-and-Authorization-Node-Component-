@@ -7,6 +7,7 @@ const
     dalUtils = require('../common/util/dal-utils'),
     errors = require('../common/errors/app-errors'),
     DATE_FORMAT = "YYYY-MM-DD HH:mm:ss",
+    config = require('../common/config/config'),
     parseIfPossible = (data)=> {
         // if there weren't any users found return with an exception
         dalUtils.throwErrorIfNecessary(() => data.length === 0, errors.noUsersFound)
@@ -108,13 +109,14 @@ module.exports = {
     create: async (username, password) => dalUtils
         .executeQuery(
             {
-                statement: `INSERT INTO Users(username, password) VALUES (?, ?);`,
+                statement: config.sgbd == 'mariadb' ? 
+                `INSERT INTO Users(username, password) VALUES (?, ?);` : 'INSERT INTO Users(username, password) VALUES (?, ?) RETURNING id;',
                 description: 'user creation',
                 params: [username, password]})
         .then(async result=>{
             //make sure user creation is registered on the user's history
             await userHistoryDal.create(result.insertId, moment().format(DATE_FORMAT), "User creation")
-            return result
+            return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
         }),
 
 

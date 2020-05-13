@@ -13,9 +13,15 @@ module.exports = {
      */
     create: async (method, path, description) => dalUtils
         .executeQuery({
-            statement: `INSERT INTO Permission(method,path,description) VALUES (?,?,?);`,
+            statement: config.sgbd == 'mariadb' ? 
+            `INSERT INTO Permission(method,path,description) VALUES (?,?,?);` :
+            `INSERT INTO Permission(method,path,description) VALUES (?,?,?) RETURNING id;`,
             description: "adding permission",
-            params: [method, path, description]}),
+            params: [method, path, description]
+        }).then(async result => {
+            return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+        }),
+
     /**
      *
      * @param method
@@ -26,7 +32,8 @@ module.exports = {
         .executeQuery({
             statement: `DELETE FROM Permission WHERE id=?`,
             description: "deleting permission",
-            params: [method, path]}),
+            params: [method, path]
+        }),
     /**
      *
      * @returns {Promise<void>}
@@ -35,7 +42,8 @@ module.exports = {
         .executeQuery({
             statement: `Select * from Permission`,
             description: "getting all permissions",
-            params: []}),
+            params: []
+        }),
     /**
      *
      * @param id
@@ -45,7 +53,8 @@ module.exports = {
         .executeQuery({
             statement: `Select * from Permission where id=?`,
             description: "get permission by id",
-            params: [id]}),
+            params: [id]
+        }),
     /**
      *
      * @param method
@@ -57,8 +66,9 @@ module.exports = {
             {
                 statement: `Select * from Permission where method=? and path=?`,
                 description: "get permission by id",
-                params: [method, path]})
-        .then(result=> result.length === 0 ? null : {
+                params: [method, path]
+            })
+        .then(result => result.length === 0 ? null : {
             id: result[0].id,
             method: result[0].method,
             path: result[0].path

@@ -2,7 +2,8 @@
 
 const moment = require('moment'),
     dalUtils = require('../common/util/dal-utils'),
-    errors = require('../common/errors/app-errors')
+    errors = require('../common/errors/app-errors'),
+    config = require('../common/config/config')
 
 module.exports = {
 
@@ -19,9 +20,13 @@ module.exports = {
     create: async (user, role, startDate, endDate, updater, active) => dalUtils
         .executeQuery(
             {
-                statement: 'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);',
+                statement: config.sgbd == 'mariadb' ?
+                'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);' :
+                'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?) RETURNING id;',
                 description: "adding user_role",
                 params: [user, role, startDate, endDate, updater, active]
+            }).then(async result=>{
+                return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
             }),
     /**
      *

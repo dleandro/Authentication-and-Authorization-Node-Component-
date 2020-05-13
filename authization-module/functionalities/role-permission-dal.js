@@ -1,6 +1,9 @@
 'use strict'
 
-const dalUtils = require('../common/util/dal-utils')
+const
+    dalUtils = require('../common/util/dal-utils'),
+    config = require('../common/config/config')
+
 module.exports = {
     /**
      *
@@ -11,9 +14,14 @@ module.exports = {
     create: async (role, permission) => dalUtils
         .executeQuery(
             {
-                statement: `INSERT INTO Roles_Permission(role,permission) VALUES (?,?);`,
+                statement: config.sgbd == 'mariadb' ?
+                    `INSERT INTO Roles_Permission(role,permission) VALUES (?,?);` :
+                    `INSERT INTO Roles_Permission(role,permission) VALUES (?,?) RETURNING id;`,
                 description: "adding role_permission",
-                params: [role, permission]}),
+                params: [role, permission]
+            }).then(async result => {
+                return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+            }),
     /**
      *
      * @param role
@@ -24,16 +32,18 @@ module.exports = {
         {
             statement: `DELETE FROM Roles_Permission Where role=? AND permission=?`,
             description: "deleting role_permission",
-            params: [role, permission]}),
+            params: [role, permission]
+        }),
     /**
      *
      * @param permission
      * @returns {Promise<void>}
      */
-    getRolesByPermission: async (permission) =>dalUtils.executeQuery(
+    getRolesByPermission: async (permission) => dalUtils.executeQuery(
         {
             statement: `Select * from Roles_Permission where permission=?`,
             description: "get roles by permission",
-            params: [permission]})
+            params: [permission]
+        })
 
 }

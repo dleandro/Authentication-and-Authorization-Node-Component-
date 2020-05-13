@@ -16,7 +16,12 @@ export default function Sidebar({navWidthCollapsed , navWidthExpanded}) {
     const officeSubItems = [{link: '/backoffice/permissions',text:'Permissions'},{link: '/backoffice/roles',text:'Roles'},{link: '/backoffice/lists',text:'Lists'}]
     /**
      *
-     * @type {({link: string, text: string, key: string}|{link: string, text: string, key: string}|{link: string, text: string, key: string}|{subItems: [{link: string, text: string}, {link: string, text: string}, {link: string, text: string}], link: string, text: string, key: string})[]}
+     * @type {({link: string, text: string, key: string}|
+     * {link: string, text: string, key: string}|
+     * {link: string, text: string, key: string}|
+     * {subItems: [{link: string, text: string},
+     * {link: string, text: string},
+     * {link: string, text: string}], link: string, text: string, key: string})[]}
      */
     var mainItems = [
         {key:'home',link:'/',icon:<i className="fa fa-home" style={{'font-size':"36px"}}/>,text:'Homepage'},

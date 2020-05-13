@@ -1,11 +1,20 @@
 'use strict'
 
-// this module contains all user related endpoints
+/**
+ * this module contains all user related endpoints
+ * @param apiUtils
+ * @param authization
+ * @returns {*|Router}
+ */
 module.exports = function (apiUtils, authization) {
 
     const users = authization.user,
         idps = authization.idp,
         userRouter = require('express').Router()
+
+    const promiseDataToResponse = (res,dataPromise) => dataPromise
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
 
     userRouter.route('/')
         .get(getAllUsers)
@@ -16,37 +25,18 @@ module.exports = function (apiUtils, authization) {
         .delete(deleteUser)
 
     // get user from idp by its idp id
-    userRouter.get(
-        'idp/:id',
-        getUserFromIdp
-    )
-
+    userRouter.get('idp/:id', getUserFromIdp)
     // get user by username
-    userRouter.get(
-        '/:username',
-        getUserByUsername
-    )
-
+    userRouter.get('/:username', getUserByUsername)
     // create an entry on the idp users table
-    userRouter.post(
-        '/idp',
-        createIdpUser
-    )
+    userRouter.post('/idp', createIdpUser)
 
-    userRouter.put(
-        '/:id/username',
-        updateUsername
-    )
+    userRouter.put('/:id/username', updateUsername)
 
-    userRouter.put(
-        '/:id/password',
-        updatePassword
-    )
+    userRouter.put('/:id/password', updatePassword)
 
     function getAllUsers(req, res) {
-        users.getAll()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err).message, JSON.parse(err.message).status))
+        promiseDataToResponse(res,users.getAll())
     }
 
     function createUser(req, res) {
@@ -59,33 +49,23 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getSpecificUser(req, res) {
-        users.getById(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,users.getById(req.params.id))
     }
 
     function deleteUser(req, res) {
-        users.delete(req.params.id)
-            .then(answer => apiUtils.setResponse(res, { success: "User deleted" }, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,users.delete(req.params.id))
     }
 
     function getUserFromIdp(req, res) {
-        users.getByIdp(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,users.getByIdp(req.params.id))
     }
 
     function getUserByUsername(req, res) {
-        users.getByUsername(req.params.username)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,users.getByUsername(req.params.username))
     }
 
     function createIdpUser(req, res) {
-        idps.create(req.body.idpId, req.body.idpName, req.body.userId)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,idps.create(req.body.idpId, req.body.idpName, req.body.userId))
     }
 
     function updatePassword(req, res) {

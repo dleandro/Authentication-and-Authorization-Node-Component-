@@ -1,8 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../stylesheets/App.css';
 import React, { Component } from 'react'
-import {Switch,Route} from 'react-router-dom'
-import { Redirect } from 'react-router-dom';
+import {Switch,Route,Redirect} from 'react-router-dom'
 import BackOffice from "./routesSrc/backoffice";
 import Homepage from "./routesSrc/Homepage";
 import UserLogin from './routesSrc/loginComponents/UserLogin'
@@ -25,6 +24,7 @@ class Routes extends Component{
         if (this.state.redirect.should) {
             return <Redirect to={this.state.redirect.link} />
         }
+        return null
     }
 
     render() {

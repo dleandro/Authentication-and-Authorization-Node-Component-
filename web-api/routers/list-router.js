@@ -1,8 +1,18 @@
 'use strict'
 
-// this module contains all list related endpoints
+
+
+/**
+ * this module contains all list related endpoints
+ * @param apiUtils
+ * @param authization
+ * @returns {*|Router}
+ */
 module.exports = function (apiUtils, authization) {
 
+    const promiseDataToResponse = (res,dataPromise) => dataPromise
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
     const lists = authization.list
     const listRouter = require('express').Router()
 
@@ -28,33 +38,23 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteList(req, res) {
-        lists.delete(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,lists.delete(req.params.id))
     }
 
     function getLists(req, res) {
-        lists.getAll()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,lists.getAll())
     }
 
     function getActiveLists(req, res) {
-        lists.getAllActive()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,lists.getAllActive())
     }
 
     function getUserActiveList(req, res) {
-        lists.getUsersActive(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,lists.getUsersActive(req.params.id))
     }
 
     function deactivateList(req, res) {
-        lists.deactivate(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,lists.deactivate(req.params.id))
     }
 
 

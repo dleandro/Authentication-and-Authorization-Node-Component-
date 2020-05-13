@@ -28,7 +28,9 @@ class BackOffice extends React.Component {
 
     render() {
         return (
-            <CustomTable addRequest={this.addUser} editRequest={this.editUsername} deleteRequest={this.deleteUser} labels={labels} rows={this.state.users.map(user=>[user.id,user.username,'****'])} />
+            <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
+                         deleteRequest={this.deleteUser} labels={labels}
+                         rows={this.state.users.map(user=>[user.id,user.username,'****'])} />
         )
     }
 }

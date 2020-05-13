@@ -1,10 +1,13 @@
 'use strict'
 
-// this module contains all role's permissions related endpoints
+/**
+ * this module contains all role's permissions related endpoints
+ * @param apiUtils
+ * @param authization
+ * @returns {*|Router}
+ */
 module.exports = function (apiUtils, authization) {
-
     const rolePermission = authization.rolePermission
-
     const rolesPermissionRouter = require('express').Router()
 
     rolesPermissionRouter.route('/')

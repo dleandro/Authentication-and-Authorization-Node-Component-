@@ -1,6 +1,11 @@
 'use strict'
 
-// this module contains all user's roles related endpoints
+/**
+ * this module contains all user's roles related endpoints
+ * @param apiUtils
+ * @param authization
+ * @returns {*|Router}
+ */
 module.exports = function (apiUtils, authization) {
 
     const userRoles = authization.userRole
@@ -10,6 +15,10 @@ module.exports = function (apiUtils, authization) {
     usersRolesRouter.route('/')
         .post(addUsersRoles)
         .get(getUsersRoles)
+
+    const promiseDataToResponse = (res,dataPromise) => dataPromise
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
 
     usersRolesRouter.get('/active', getActiveRoles)
     usersRolesRouter.get('/active/user/:id', getUserActiveRoles)
@@ -23,34 +32,24 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getUsersRoles(req, res) {
-        userRoles.getAll()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userRoles.getAll())
     }
 
     function getActiveRoles(req, res) {
-        userRoles.getAllActive()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userRoles.getAllActive())
     }
 
     function getUserActiveRoles(req, res) {
-        userRoles.getUserActiveRoles(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userRoles.getUserActiveRoles(req.params.id))
     }
 
 
     function getUserRolesById(req, res) {
-        userRoles.getById(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userRoles.getById(req.params.id))
     }
 
     function deactivateUserRole(req, res) {
-        userRoles.deactivate(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userRoles.deactivate(req.params.id))
     }
 
     return usersRolesRouter

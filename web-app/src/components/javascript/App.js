@@ -4,7 +4,7 @@ import SideBar from "./html-elements-utils/SideBar";
 import {BrowserRouter as Router} from 'react-router-dom'
 import Routes from "./routes";
 import '../stylesheets/App.css';
-import {UserConsumer, UserProvider} from '../Context'
+import {UserProvider} from '../Context'
 
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 

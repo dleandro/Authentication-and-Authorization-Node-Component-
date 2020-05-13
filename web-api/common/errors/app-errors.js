@@ -3,23 +3,21 @@
 const CustomError = require('./custom-error')
 
 module.exports = {
-    
     errorExecutingQuery: (failedQuery) => new CustomError(JSON.stringify({
         title: "Problem executing Query",
         detail: `There was a problem executing the query, check if all the data was inserted correctly. The failed Query was the following ${failedQuery}`,
-        status: 400 
+        status: 400
     })),
-    
     duplicateValues: new CustomError(JSON.stringify({
         title: "Duplicate Values",
         detail: "Value already inserted,Please choose another one",
-        status: 403 
+        status: 403
     })),
 
-    noUsersFound: new CustomError(JSON.stringify({ 
+    noUsersFound: new CustomError(JSON.stringify({
         title: "No users found",
         detail: "No users with these parameters are currently on the database",
-        status: 404 
+        status: 404
     })),
 
     dbConnection: new CustomError(JSON.stringify({

@@ -28,8 +28,12 @@ function LoginSuccessfully({setRedirect}) {
     return (
         <React.Fragment>
             <CardDeck className="col-lg-8 row-cols-md-12 mx-auto  my-auto ">
-                <CustomCard onClick={redirectBackoffice} title={"Backoffice"} buttonText={"JUST DO IT"} desc={"A place were you can acess our api endpoint through an UI"} imgLink={"https://blog.nxfacil.com.br/wp-content/uploads/2018/07/mbo-experts-1.png"} />
-                <CustomCard onClick={backToClientPage} title={"Bring me back"} buttonText={"It's rewind Time"} desc={"The place were you came from, the place before the login page"} imgLink={"https://ih1.redbubble.net/image.705747383.3039/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"} />
+                <CustomCard onClick={redirectBackoffice} title={"Backoffice"} buttonText={"JUST DO IT"}
+                            desc={"A place were you can acess our api endpoint through an UI"}
+                            imgLink={"https://blog.nxfacil.com.br/wp-content/uploads/2018/07/mbo-experts-1.png"} />
+                <CustomCard onClick={backToClientPage} title={"Bring me back"} buttonText={"It's rewind Time"}
+                            desc={"The place were you came from, the place before the login page"}
+                            imgLink={"https://ih1.redbubble.net/image.705747383.3039/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"} />
             </CardDeck>
         </React.Fragment>
     )

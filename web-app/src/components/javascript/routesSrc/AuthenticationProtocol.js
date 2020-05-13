@@ -10,6 +10,3 @@ const AuthenticationProtocol = ({selectedListener})=>
     </ToggleButtonGroup>
 
 export default AuthenticationProtocol
-    
-
-   

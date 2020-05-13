@@ -1,8 +1,16 @@
 'use strict'
 
-// this module contains all permissions related endpoints
+/**
+ * this module contains all permissions related endpoints
+ * @param apiUtils
+ * @param authization
+ * @returns {*|Router}
+ */
 module.exports = function (apiUtils, authization) {
 
+    const promiseDataToResponse = (res,dataPromise) => dataPromise
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
     const permissionRouter = require('express').Router()
     const permissions = authization.permission
 
@@ -15,9 +23,7 @@ module.exports = function (apiUtils, authization) {
         .delete(deletePermission)
 
     function getPermissions(req, res) {
-        permissions.getAll()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,permissions.getAll())
     }
 
     function addPermission(req, res) {
@@ -30,15 +36,11 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deletePermission(req, res) {
-        permissions.delete(req.body.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(permissions.delete(req.body.id))
     }
 
     function getPermissionById(req, res) {
-        permissions.getSpecificById(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(permissions.getSpecificById(req.params.id))
     }
 
     return permissionRouter

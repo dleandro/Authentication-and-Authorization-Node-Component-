@@ -3,8 +3,10 @@
 // this module contains all role related endpoints
 module.exports = function (apiUtils, authization) {
 
+    const promiseDataToResponse = (res,dataPromise) => dataPromise
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
     const roles = authization.role
-
     const roleRouter = require('express').Router()
 
     roleRouter.route('/')
@@ -25,21 +27,16 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteRole(req, res) {
-        roles.delete(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,roles.delete(req.params.id))
     }
 
+
     function getRoles(req, res) {
-        roles.getAll()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,roles.getAll())
     }
 
     function getRoleById(req, res) {
-        roles.getSpecificById(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,roles.getSpecificById(req.params.id))
     }
 
     return roleRouter

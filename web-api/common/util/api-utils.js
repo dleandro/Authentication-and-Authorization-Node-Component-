@@ -1,11 +1,12 @@
 'use strict'
 
 module.exports = {
-    
-    
-    // TODO: probably should have a function that calls auth module and checks if user is authenticated and that it had permissions
-    
-    // set a basic response if request was executed succesfully
+    /**
+     * set a basic response if request was executed succesfully
+     * @param res
+     * @param answer
+     * @param statusCode
+     */
     setResponse: (res, answer, statusCode) => {
         res.status(statusCode)
         res.statusMessage = 'OK'

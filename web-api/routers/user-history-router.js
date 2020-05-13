@@ -4,8 +4,10 @@
 module.exports = function (apiUtils, authization) {
 
     const userHistory = authization.userHistory
-
     const userHistoryRouter = require('express').Router()
+    const promiseDataToResponse = (res,dataPromise) => dataPromise
+        .then(answer => apiUtils.setResponse(res, answer, 200))
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
 
     userHistoryRouter
         .get('/', getAllHistories)
@@ -14,15 +16,11 @@ module.exports = function (apiUtils, authization) {
         .get('/:userId', getAllHistoriesFromSpecificUser)
 
     function getAllHistories(req, res) {
-        userHistory.getAll()
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userHistory.getAll())
     }
 
     function getAllHistoriesFromSpecificUser(req, res) {
-        userHistory.getAllFromUser(req.params.id)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res,userHistory.getAllFromUser(req.params.id))
     }
 
     return userHistoryRouter

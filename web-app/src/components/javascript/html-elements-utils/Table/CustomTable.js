@@ -15,7 +15,7 @@ import TableRow from "./TableRow";
 export default function CustomTable({labels,rows,editRequest,addRequest,deleteRequest}) {
     console.log(rows)
 
-    let renderRows= (rows) => {
+    const renderRows= (rows) => {
         var tRows= rows.map(rowCells => <TableRow editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells} /> )
         tRows.push(<TableRow editRequest={addRequest} cols={labels.map(cell=>undefined)} />)
         return tRows

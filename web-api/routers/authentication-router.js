@@ -1,5 +1,6 @@
 'use strict'
-
+const SUCESS_MSG = "login successful";
+const successCallback = (req, res) => apiUtils.setResponse(res, { success: SUCESS_MSG }, 200)
 module.exports = function (apiUtils, authization) {
 
   const authenticate = authization.authenticate
@@ -9,56 +10,21 @@ module.exports = function (apiUtils, authization) {
 
   const authenticationRouter = require('express').Router()
 
-  authenticationRouter.get(
-    '/google',
-    authenticate.usingGoogle
-  )
+  authenticationRouter.get('/google', authenticate.usingGoogle)
 
-  authenticationRouter.get(
-    '/google/callback',
-    authenticate.usingGoogleCallback,
-    (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
-  )
+  authenticationRouter.get('/google/callback', authenticate.usingGoogleCallback, successCallback)
 
-  authenticationRouter.get(
-    '/saml',
-    authenticate.usingSaml,
-  )
+  authenticationRouter.get('/saml', authenticate.usingSaml)
 
-  authenticationRouter.post(
-    '/saml/callback',
-    bodyParser.urlencoded({ extended: false }),
-    authenticate.usingSamlCallback,
-    (req, res) => apiUtils.setResponse(res, { success: "login successful" }, 200)
+  authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-  )
+  authenticationRouter.post('/local', authenticate.usingLocal,successCallback)
 
-  authenticationRouter.post(
-    '/local',
-    authenticate.usingLocal,
-    (req, res) => {
-      apiUtils.setResponse(res, { success: "login successful" }, 200)
-    }
-  )
+  authenticationRouter.post('/logout', authenticate.logout,successCallback)
 
-  authenticationRouter.post(
-    '/logout',
-    authenticate.logout,
-    (req, res, ) => apiUtils.setResponse(res, { success: "logout successful" }, 200)
-  )
+  authenticationRouter.get('/azureAD', authenticate.usingOffice365,);
 
-  authenticationRouter.get(
-    '/azureAD',
-    authenticate.usingOffice365,
-  );
-
-  authenticationRouter.get(
-    '/azureAD/callback',
-    authenticate.usingOffice365Callback,
-    function (req, res) {
-      apiUtils.setResponse(res, { success: "login successful" }, 200)
-    }
-  )
+  authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback,successCallback)
 
   return authenticationRouter
 

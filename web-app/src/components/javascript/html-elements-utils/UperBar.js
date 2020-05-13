@@ -1,8 +1,6 @@
-import React, { useContext } from 'react'
-import { authenticationService} from '../service'
+import React from 'react'
 import DropdownButton from "react-bootstrap/DropdownButton";
 import {Dropdown} from "react-bootstrap";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 
 /**
@@ -18,12 +16,12 @@ export default function Uperbar({setRedirect,isLoggedIn,logoutWith}) {
 
 
 
-    let logoutAndRedirect= ()=> {
+    const logoutAndRedirect= ()=> {
         logoutWith({name:undefined,pass:undefined})
         setRedirect('/login')
     }
 
-    let render =(predicate)=> {
+    const render =(predicate)=> {
         console.log(`predicate:${predicate}`)
         return predicate ? <React.Fragment ><Dropdown.Divider />
             <Dropdown.Item eventKey="4" onClick={logoutAndRedirect}><i className="fa fa-sign-out fa-fw"/> Logout</Dropdown.Item> </React.Fragment>: null

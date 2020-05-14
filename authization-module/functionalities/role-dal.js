@@ -10,14 +10,14 @@ module.exports = {
     create: async (role) => dalUtils
         .executeQuery(
             {
-                statement: config.sgbd == 'mariadb' ? 
+                statement: config.sgbd == 'mysql' ? 
                 `INSERT INTO Roles(role) VALUES (?);` :
-                `INSERT INTO Roles(role) VALUES (?) RETURNING id;`,
+                `INSERT INTO Roles(role) VALUES ($1) RETURNING id;`,
                 description: "adding role",
                 params: [role]
             }
         ).then(async result => {
-            return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+            return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
         }),
 
     /**

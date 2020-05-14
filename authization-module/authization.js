@@ -74,7 +74,7 @@ module.exports = function (app) {
     }
 
     if (app) {
-        require('./setup-module')(app)
+        require('./common/middleware/setup-middleware')(app)
         return functionalities
     }
 

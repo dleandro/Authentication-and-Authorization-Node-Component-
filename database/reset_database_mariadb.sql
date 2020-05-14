@@ -83,5 +83,10 @@ PRIMARY KEY(user_id,session_id)
 );
 CREATE TABLE Protocols(
 protocol VARCHAR(100),
+active BIT(1),
 PRIMARY KEY(protocol)
 );
+
+INSERT INTO Protocols ("Google", 1);
+INSERT INTO Protocols ("AzureAD", 1);
+INSERT INTO Protocols ("Saml", 1);

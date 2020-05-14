@@ -3,6 +3,7 @@
 const AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy,
     config = require('../../config/config'),
     passportUtils = require('../../util/passport-utils'),
+    protocolName='AzureAD',
     jwt = require('jsonwebtoken');
 
 const strategy = new AzureAdOAuth2Strategy({

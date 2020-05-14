@@ -10,7 +10,7 @@ module.exports = {
    *
    * @returns {Promise<PoolConnection>}
    */
-  connect: config.sgbd == "mariadb" ? async () => {
+  connect: config.sgbd == "mysql" ? async () => {
     const mariadb = require('mariadb')
     let connection
 

@@ -68,3 +68,18 @@ idpname VARCHAR(20),
 PRIMARY KEY(user_id),
 FOREIGN KEY(user_id) REFERENCES Users(id)
 );
+CREATE TABLE Users_Sessions(
+user_id INT,
+session_id VARCHAR(128),
+FOREIGN KEY (user_id) REFERENCES Users(id),
+PRIMARY KEY(user_id,session_id)
+);
+CREATE TABLE Protocols(
+protocol VARCHAR(100),
+active BIT(1),
+PRIMARY KEY(protocol)
+);
+
+INSERT INTO Protocols ("Google", B'1');
+INSERT INTO Protocols ("AzureAD", B'1');
+INSERT INTO Protocols ("Saml", B'1');

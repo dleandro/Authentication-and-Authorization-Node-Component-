@@ -13,7 +13,7 @@ const db = require('./db'),
             if (char == '?') {
                 wildCardIndex++
                 newStatement += `$${wildCardIndex - 1}`
-                return 
+                return
             }
 
             newStatement += char
@@ -41,11 +41,13 @@ module.exports = {
                 throw errors.dbConnection
             }
 
-            query.statement = config.sgbd == "mariadb" ? query.statement : await formatQueryForPG(query.statement)
-            return await connection.query(query.statement, query.params);
+            query.statement = config.sgbd == "mysql" ? query.statement : await formatQueryForPG(query.statement)
+            return config.sgbd == "mysql" ?
+                await connection.query(query.statement, query.params) :
+                (await connection.query(query.statement, query.params)).rows;
         } catch (error) {
             throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`)
-        }finally{
+        } finally {
             connection.end()
         }
     },
@@ -60,10 +62,11 @@ module.exports = {
             .catch(err => { throw errors.dbConnection })
             .then(con => {
                 connection = con;
-                return con.query(query.statement, query.params) })
+                return con.query(query.statement, query.params)
+            })
             .catch(err => { throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`) })
-            .then(data=> {
-                if (data.length){
+            .then(data => {
+                if (data.length) {
                     return data
                 }
                 throw errors.noUsersFound

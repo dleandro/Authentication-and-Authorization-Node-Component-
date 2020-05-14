@@ -20,13 +20,13 @@ module.exports = {
     create: async (user, role, startDate, endDate, updater, active) => dalUtils
         .executeQuery(
             {
-                statement: config.sgbd == 'mariadb' ?
+                statement: config.sgbd == 'mysql' ?
                 'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);' :
-                'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?) RETURNING id;',
+                'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id;',
                 description: "adding user_role",
                 params: [user, role, startDate, endDate, updater, active]
             }).then(async result=>{
-                return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+                return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
             }),
     /**
      *

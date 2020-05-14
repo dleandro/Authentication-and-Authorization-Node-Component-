@@ -1,32 +1,40 @@
 'use strict'
-const SUCESS_MSG = "login successful";
+const
+  SUCCESS_MSG = "login successful",
+  UNSUCCESSFUL_MSG = "login unsuccessful"
 
-module.exports = function (apiUtils, authization) {
+  module.exports = function (apiUtils, authization) {
 
-  const successCallback = (req, res) => apiUtils.setResponse(res, { success: SUCESS_MSG }, 200)
-  const authenticate = authization.authenticate
-  const bodyParser = require('body-parser');
+    const successCallback = (req, res) => {
+      if (req.isAuthenticated()) {
+        apiUtils.setResponse(res, { success: SUCCESS_MSG }, 200)
+        return
+      }
+      apiUtils.setResponse(res, { success: UNSUCCESSFUL_MSG }, 401)
+    }
+    const authenticate = authization.authenticate
+    const bodyParser = require('body-parser');
 
-  // this module contains all user authentication related endpoints
+    // this module contains all user authentication related endpoints
 
-  const authenticationRouter = require('express').Router()
+    const authenticationRouter = require('express').Router()
 
-  authenticationRouter.get('/google', authenticate.usingGoogle)
+    authenticationRouter.get('/google', authenticate.usingGoogle)
 
-  authenticationRouter.get('/google/callback', authenticate.usingGoogleCallback, successCallback)
+    authenticationRouter.get('/google/callback', authenticate.usingGoogleCallback, successCallback)
 
-  authenticationRouter.get('/saml', authenticate.usingSaml)
+    authenticationRouter.get('/saml', authenticate.usingSaml)
 
-  authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
+    authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-  authenticationRouter.post('/local', authenticate.usingLocal,successCallback)
+    authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
 
-  authenticationRouter.post('/logout', authenticate.logout,successCallback)
+    authenticationRouter.post('/logout', authenticate.logout, successCallback)
 
-  authenticationRouter.get('/azureAD', authenticate.usingOffice365,);
+    authenticationRouter.get('/azureAD', authenticate.usingOffice365);
 
-  authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback,successCallback)
+    authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback, successCallback)
 
-  return authenticationRouter
+    return authenticationRouter
 
-}
+  }

@@ -65,14 +65,14 @@ module.exports = {
         .catch(err => dalUtils
             .executeQuery(
                 {
-                    statement: config.sgbd == 'mariadb' ? 
+                    statement: config.sgbd == 'mysql' ? 
                     `INSERT INTO Lists(user_id,list,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);` : 
-                    `INSERT INTO Lists(user_id,list,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?) RETURNING id;`,
+                    `INSERT INTO Lists(user_id,list,start_date,end_date,updater,active) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id;`,
                     description: "adding list",
                     params: [userId, list, startDate, endDate, updater, active]
                 })
             .then(async result => {
-                return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+                return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
             })),
 
 
@@ -138,7 +138,7 @@ module.exports = {
     isUserBlackListed: async (userId) =>await dalUtils
         .executeQuery(
             {
-                statement: `Select * from Lists where user_id=? AND active=1 AND LIST='BLACK'`,
+                statement: `Select * from Lists where user_id=? AND active=B'1' AND LIST='BLACK'`,
                 description: "checking if user is blacklisted",
                 params: [userId]
             })

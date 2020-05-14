@@ -4,6 +4,7 @@ const
     fs = require('fs'),
     path = require('path'),
     passportUtils = require('../../util/passport-utils'),
+    protocolName='Saml',
     SamlStrategy = new (require('passport-saml').Strategy)({
 
         callbackUrl: 'http://localhost:8082/api/authentications/saml/callback',  //redirect after sucessfull login

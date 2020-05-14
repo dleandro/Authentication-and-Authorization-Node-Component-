@@ -113,14 +113,14 @@ module.exports = {
     create: async (username, password) => dalUtils
         .executeQuery(
             {
-                statement: config.sgbd == 'mariadb' ? 
-                `INSERT INTO Users(username, password) VALUES (?, ?);` : 'INSERT INTO Users(username, password) VALUES (?, ?) RETURNING id;',
+                statement: config.sgbd == 'mysql' ? 
+                `INSERT INTO Users(username, password) VALUES (?, ?);` : 'INSERT INTO Users(username, password) VALUES ($1, $2) RETURNING id;',
                 description: 'user creation',
                 params: [username, password]})
         .then(async result=>{
             //make sure user creation is registered on the user's history
             await userHistoryDal.create(result.insertId, moment().format(DATE_FORMAT), "User creation")
-            return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+            return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
         }),
 
 

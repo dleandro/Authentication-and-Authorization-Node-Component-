@@ -14,13 +14,13 @@ module.exports = {
     create: async (role, permission) => dalUtils
         .executeQuery(
             {
-                statement: config.sgbd == 'mariadb' ?
+                statement: config.sgbd == 'mysql' ?
                     `INSERT INTO Roles_Permission(role,permission) VALUES (?,?);` :
-                    `INSERT INTO Roles_Permission(role,permission) VALUES (?,?) RETURNING id;`,
+                    `INSERT INTO Roles_Permission(role,permission) VALUES ($1,$2) RETURNING id;`,
                 description: "adding role_permission",
                 params: [role, permission]
             }).then(async result => {
-                return config.sgbd == 'mariadb' ? result : { insertId: result.rows[0].id }
+                return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
             }),
     /**
      *

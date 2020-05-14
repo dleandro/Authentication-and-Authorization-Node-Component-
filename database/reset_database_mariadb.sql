@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS Users_Sessions;
 DROP TABLE IF EXISTS Roles_Permission ;
 DROP TABLE IF EXISTS Users_Roles;
 DROP TABLE IF EXISTS Lists;
@@ -7,6 +8,7 @@ DROP TABLE IF EXISTS IDP;
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS Permission;
+DROP TABLE IF EXISTS Protocols;
 
 CREATE TABLE Permission(
 id int AUTO_INCREMENT ,
@@ -72,4 +74,14 @@ idp_id VARCHAR(20000),
 idpname VARCHAR(20),
 PRIMARY KEY(user_id),
 FOREIGN KEY(user_id) REFERENCES Users(id)
+);
+CREATE TABLE Users_Sessions(
+user_id INT,
+session_id VARCHAR(128),
+FOREIGN KEY (user_id) REFERENCES Users(id),
+PRIMARY KEY(user_id,session_id)
+);
+CREATE TABLE Protocols(
+protocol VARCHAR(100),
+PRIMARY KEY(protocol)
 );

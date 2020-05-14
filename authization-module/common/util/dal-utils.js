@@ -45,8 +45,8 @@ module.exports = {
             return await connection.query(query.statement, query.params);
         } catch (error) {
             throw errors.errorExecutingQuery(`${error.message} on query ${query.description}`)
-        } finally {
-            await connection.end();
+        }finally{
+            connection.end()
         }
     },
 

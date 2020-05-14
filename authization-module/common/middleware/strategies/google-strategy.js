@@ -3,6 +3,7 @@
 const
     GoogleStrategy = require('passport-google-oauth20').Strategy,
     passportUtils = require('../../util/passport-utils'),
+    protocolName='Google',
     config = require('../../config/config')
 
 
@@ -12,6 +13,10 @@ const strategy = new GoogleStrategy({
     callbackURL: config.google.callbackURL
 },
     async function (accessToken, refreshToken, profile, done) {
+        if(!(await passportUtils.checkProtocol(protocolName))){
+            done(null,false,{message:'Protocol is not avaiable'})
+            return
+        }
         var user = await passportUtils.findUserByIdp(profile.id)
 
         if (!user) {

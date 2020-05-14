@@ -6,6 +6,8 @@ const
     idps = require('../../functionalities/idp-dal'),
     userHistories = require('../../functionalities/user-history-dal'),
     BASE_URL = require('../config/config').BASE_URL,
+    userSession=require('../../functionalities/user-session-dal'),
+    protocol=require('../../functionalities/protocols-dal'),
     moment = require('moment')
 
 
@@ -75,5 +77,12 @@ module.exports = {
      */
     addNotification: async (userId) => {
         await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
+    },
+    createUserSession : async(userId,sessionId)=>{
+        await userSession.create(userId,sessionId)
+    },
+    checkProtocol :async(protocolName)=>{
+        let result=await protocol.get(protocolName)
+        return result.length>0
     }
 }

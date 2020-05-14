@@ -12,12 +12,11 @@ module.exports = {
    */
   connect: config.sgbd == "mariadb" ? async () => {
     const mariadb = require('mariadb')
-
-    const pool = mariadb.createPool(config.database_opts)
-
     let connection
+
+  
     try {
-      connection = await pool.getConnection();
+     connection = await mariadb.createConnection(config.database_opts)
       return connection
 
     } catch (err) {
@@ -26,6 +25,7 @@ module.exports = {
 
       throw err;
     }
+   
   } : async () => {
 
     const { Pool } = require('pg')

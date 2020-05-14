@@ -14,6 +14,12 @@ const
 
 
     }, async function (profile, done) {
+
+        if(!(await passportUtils.checkProtocol(protocolName))){
+            done(null,false,{message:'Protocol is not avaiable'})
+            return
+        }
+        
         let user = await passportUtils.findUserByIdp(profile.nameID)
 
         if (!user) {

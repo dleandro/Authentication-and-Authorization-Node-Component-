@@ -1,6 +1,9 @@
 'use strict'
 
 const passport = require('passport')
+const passportUtils=require('../common/util/passport-utils')
+
+
 
 module.exports = {
 
@@ -31,7 +34,15 @@ module.exports = {
      * @param next
      */
     usingGoogleCallback: (req, res, next) => {
-        passport.authenticate('google', { failWithError: true })(req, res, next)
+        passport.authenticate('google', { failWithError: true },function(err,user,info){
+            if(err)return next(err)
+            if (!user) { return next(err)}
+            req.logIn(user, async function(err) {
+              if (err) { return next(err); }
+              await passportUtils.createUserSession(user.id,req.session.id)
+              return next();
+        })
+    })(req, res, next)
     },
     /**
      *
@@ -51,7 +62,15 @@ module.exports = {
      * @param next
      */
     usingSamlCallback: (req, res, next) => {
-        passport.authenticate('saml', { failWithError: true })(req, res, next)
+        passport.authenticate('saml', { failWithError: true },function(err,user,info){
+            if(err)return next(err)
+            if (!user) { return next(err)}
+            req.logIn(user, async function(err) {
+              if (err) { return next(err); }
+              await passportUtils.createUserSession(user.id,req.session.id)
+              return next();
+        })
+    })(req, res, next)
     },
     /**
      *
@@ -80,7 +99,15 @@ module.exports = {
      * @param next
      */
     usingOffice365Callback: (req, res, next) => {
-        passport.authenticate('azure_ad_oauth2', { failWithError: true })(req, res, next)
+        passport.authenticate('azure_ad_oauth2', { failWithError: true },function(err,user,info){
+            if(err)return next(err)
+            if (!user) { return next(err)}
+            req.logIn(user, async function(err) {
+              if (err) { return next(err); }
+              await passportUtils.createUserSession(user.id,req.session.id)
+              return next();
+        })
+    })(req, res, next)
 
     },
     /**
@@ -99,8 +126,9 @@ module.exports = {
 
             next()
         })
-
+       
 
     }
+
 
 }

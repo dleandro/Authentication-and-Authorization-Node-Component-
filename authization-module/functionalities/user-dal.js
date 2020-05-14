@@ -41,12 +41,16 @@ module.exports = {
      * @param idp
      * @returns {Promise<void>}
      */
-    getByIdp: async (idp) =>dalUtils.executeQuery(
-        {
+    getByIdp: async (idp) =>{
+        let query={
             statement: `Select * from IDP where idp_id= ?`,
             description: "get user by id",
-            params: [idp]})
-        .then(result=>result[0] === null?null:getById(result[0].user_id)),
+            params: [idp]
+        }
+           let result= await dalUtils.executeQuery(query)
+
+        return result[0]==null?null:getById(result[0].user_id)
+    },
 
     /**
      *

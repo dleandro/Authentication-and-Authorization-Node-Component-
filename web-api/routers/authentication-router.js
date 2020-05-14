@@ -1,8 +1,9 @@
 'use strict'
 const SUCESS_MSG = "login successful";
-const successCallback = (req, res) => apiUtils.setResponse(res, { success: SUCESS_MSG }, 200)
+
 module.exports = function (apiUtils, authization) {
 
+  const successCallback = (req, res) => apiUtils.setResponse(res, { success: SUCESS_MSG }, 200)
   const authenticate = authization.authenticate
   const bodyParser = require('body-parser');
 

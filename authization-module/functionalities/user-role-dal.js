@@ -1,9 +1,6 @@
 'use strict'
 
-const moment = require('moment'),
-    dalUtils = require('../common/util/dal-utils'),
-    errors = require('../common/errors/app-errors'),
-    config = require('../common/config/config')
+const UserRole = require('../functionalities/Models/users_roles')
 
 module.exports = {
 
@@ -17,71 +14,47 @@ module.exports = {
      * @param active
      * @returns {Promise<void>}
      */
-    create: async (user, role, startDate, endDate, updater, active) => dalUtils
-        .executeQuery(
-            {
-                statement: config.sgbd == 'mysql' ?
-                'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES (?,?,?,?,?,?);' :
-                'INSERT INTO Users_Roles(user,role,start_date,end_date,updater,active) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id;',
-                description: "adding user_role",
-                params: [user, role, startDate, endDate, updater, active]
-            }).then(async result=>{
-                return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
-            }),
+    create: async (user, role, startDate, endDate, updater, active) =>
+        await UserRole.create({
+            user_id: user,
+            role_id: role,
+            start_date: startDate,
+            end_date: endDate,
+            updater: updater,
+            active: active
+        })
+    ,
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    deactivate: async (id) => dalUtils
-        .executeQuery(
-            {
-                statement: 'UPDATE Users_Roles SET active = 0 WHERE id = ?',
-                description: 'deactivate user_role´s status',
-                params: [id]
-            }),
+    deactivate: async (id) =>
+        await UserRole.update({ active: 0 }, { where: { id: id } }),
     /**
      * checks if all User roles are active
      * @returns {Promise<*>}
      */
-    getAllActive: async () => dalUtils
-        .executeQuery(
-            {
-                statement: `Select * from User_Roles where active=1 AND end_date>'${moment().format()}'`,
-                description: "getting active roles",
-                params: []})
-        .then(result=>result.length === 0 ? null : result),
+    getAllActive: async () =>
+        await UserRole.findAll({ where: { active: 1 } }),
     /**
      *
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: async (id) => dalUtils
-        .executeQuery(
-            {
-                statement: `Select * from Users_Roles where user_id=? AND active=1 AND (end_date>CURRENT_TIMESTAMP || end_date IS NULL)`,
-                description: "getting user's active roles",
-                params: [id]})
-        .then(result=>result.length === 0 ? null : result),
+    getUserActiveRoles: async (id) =>
+        await UserRole.findAll({ where: { id: id, active: 1 } }),
     /**
      *
      * @returns {Promise<void>}
      */
-    getAll: async () =>dalUtils
-        .executeQuery(
-            {
-                statement: `Select * from User_Roles`,
-                description: "getting all user roles",
-                params: []}),
+    getAll: async () =>
+        await UserRole.findAll({ raw: true }),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getById: async (id) => dalUtils
-        .executeQuery(
-            {
-                statement: 'Select * from User_Roles where user_id=?',
-                description: "getting all user's roles",
-                params: [id]})
+    getById: async (id) =>
+        await UserRole.findByPk(id)
 }

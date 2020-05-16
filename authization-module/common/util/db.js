@@ -1,49 +1,14 @@
 'use strict'
 
 const
-  config = require("../config/config")
+  config = require("../config/config"),
+  { Sequelize } = require('sequelize'),
 
 
-module.exports = {
 
-  /**
-   *
-   * @returns {Promise<PoolConnection>}
-   */
-  connect: config.sgbd == "mysql" ? async () => {
-    const mariadb = require('mariadb')
-    let connection
+  sequelize = new Sequelize(config.database_opts.database, config.database_opts.user, config.database_opts.password, {
+    host: config.database_opts.host,
+    dialect: config.sgbd
+  })
 
-  
-    try {
-     connection = await mariadb.createConnection(config.database_opts)
-      return connection
-
-    } catch (err) {
-
-      console.log('unable to connect')
-
-      throw err;
-    }
-   
-  } : async () => {
-
-    const { Pool } = require('pg')
-
-    var pool
-
-    try {
-
-      pool = new Pool(config.database_opts)
-      return pool
-    } catch (err) {
-
-      console.log('unable to connect')
-
-      throw err;
-    }
-
-  }
-
-
-}
+module.exports = sequelize

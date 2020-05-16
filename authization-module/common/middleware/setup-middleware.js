@@ -6,19 +6,17 @@ const
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     cookieSecret = 'justasecretstring', // should change after a while if it has some security implication openssl rand -hex 32 on the cmd
-    config = require('../config/config'),
-    KnexSessionStore = require("connect-session-knex")(session),
-    Knex = require('knex');
+    config = require('../config/config')
+//SessionStore = require('express-session-sequelize')(session.Store);
 
-const knex = Knex({
-    client: config.sgbd,
-    connection: config.database_opts
-});
 
-const store = new KnexSessionStore({
-    knex: knex,
-    tablename: "sessions" // optional. Defaults to 'sessions'
-});
+
+/*
+      const sequelizeSessionStore = new SessionStore({
+        db: config.database_opts,
+    });
+    */
+
 
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = function (app) {
@@ -44,7 +42,7 @@ module.exports = function (app) {
         resave: false,
         //saveUninitialized to false to only create a session if a UA(User agent) made a login
         saveUninitialized: false,
-        store: store,
+        // store: sequelizeSessionStore,
         secret: cookieSecret,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24

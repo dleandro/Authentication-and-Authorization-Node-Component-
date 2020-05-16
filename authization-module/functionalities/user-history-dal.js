@@ -1,6 +1,6 @@
 'use strict'
 
-const dalUtils = require('../common/util/dal-utils')
+const UserHistory = require('../functionalities/Models/user_history')
 module.exports = {
 
     /**
@@ -10,35 +10,25 @@ module.exports = {
      * @param description
      * @returns {Promise<void>}
      */
-    create: async (userId, date, description) => dalUtils
-        .executeQuery(
-            {
-                statement: 'INSERT INTO Users_History(user_id,date,description) VALUES (?,?,?);',
-                description: "user history registration",
-                params: [userId, date, description]
-            }),
+    create: async (userId, date, description) =>
+        await UserHistory.create({
+            user_id: userId,
+            date: date,
+            description: description
+        })
+    ,
     /**
      *
      * @returns {Promise<void>}
      */
-    getAll: async () => dalUtils
-        .executeQuery(
-            {
-                statement: "SELECT * FROM Users_History",
-                description: "get all user histories",
-                params: []
-            }),
+    getAll: async () =>
+        await UserHistory.findAll({ raw: true }),
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    getAllFromUser: async (userId) => dalUtils
-        .executeQuery(
-            {
-                statement: "SELECT * FROM Users_History WHERE id = ?",
-                description: "get all histories from specific user",
-                params: [userId]
-            })
+    getAllFromUser: async (userId) =>
+        await UserHistory.findByPk(userId)
 
 }

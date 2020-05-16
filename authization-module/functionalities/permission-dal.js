@@ -1,7 +1,7 @@
 'use strict'
 
 
-const dalUtils = require('../common/util/dal-utils')
+const Permission = require('../functionalities/Models/permission')
 
 module.exports = {
     /**
@@ -11,15 +11,11 @@ module.exports = {
      * @param description
      * @returns {Promise<void>}
      */
-    create: async (method, path, description) => dalUtils
-        .executeQuery({
-            statement: config.sgbd == 'mysql' ? 
-            `INSERT INTO Permission(method,path,description) VALUES (?,?,?);` :
-            `INSERT INTO Permission(method,path,description) VALUES ($1,$2,$3) RETURNING id;`,
-            description: "adding permission",
-            params: [method, path, description]
-        }).then(async result => {
-            return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
+    create: async (method, path, description) =>
+        await Permission.create({
+            method: method,
+            path: path,
+            description: description
         }),
 
     /**
@@ -28,50 +24,38 @@ module.exports = {
      * @param path
      * @returns {Promise<void>}
      */
-    delete: async (method, path) => dalUtils
-        .executeQuery({
-            statement: `DELETE FROM Permission WHERE id=?`,
-            description: "deleting permission",
-            params: [method, path]
+    delete: async (method, path) =>
+        await Permission.delete({
+            where: {
+                method: method,
+                path: path
+            }
         }),
     /**
      *
      * @returns {Promise<void>}
      */
-    getAll: async () => dalUtils
-        .executeQuery({
-            statement: `Select * from Permission`,
-            description: "getting all permissions",
-            params: []
-        }),
+    getAll: async () =>
+        await Permission.findAll({ raw: true }),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getSpecificById: async (id) => dalUtils
-        .executeQuery({
-            statement: `Select * from Permission where id=?`,
-            description: "get permission by id",
-            params: [id]
-        }),
+    getSpecificById: async (id) =>
+        await Permission.findByPk(id),
     /**
      *
      * @param method
      * @param path
      * @returns {Promise<*>}
      */
-    getSpecific: async (method, path) => dalUtils
-        .executeQuery(
-            {
-                statement: `Select * from Permission where method=? and path=?`,
-                description: "get permission by id",
-                params: [method, path]
-            })
-        .then(result => result.length === 0 ? null : {
-            id: result[0].id,
-            method: result[0].method,
-            path: result[0].path
+    getSpecific: async (method, path) =>
+        await Permission.findAll({
+            where: {
+                method: method,
+                path: path
+            }
         }),
 
 }

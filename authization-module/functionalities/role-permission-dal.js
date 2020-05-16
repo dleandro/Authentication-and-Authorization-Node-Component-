@@ -1,8 +1,6 @@
 'use strict'
 
-const
-    dalUtils = require('../common/util/dal-utils'),
-    config = require('../common/config/config')
+const RolePermission = require('../functionalities/Models/roles_permission')
 
 module.exports = {
     /**
@@ -11,39 +9,33 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    create: async (role, permission) => dalUtils
-        .executeQuery(
-            {
-                statement: config.sgbd == 'mysql' ?
-                    `INSERT INTO Roles_Permission(role,permission) VALUES (?,?);` :
-                    `INSERT INTO Roles_Permission(role,permission) VALUES ($1,$2) RETURNING id;`,
-                description: "adding role_permission",
-                params: [role, permission]
-            }).then(async result => {
-                return config.sgbd == 'mysql' ? result : { insertId: result.rows[0].id }
-            }),
+    create: async (role, permission) =>
+        await RolePermission.create({
+            role: role,
+            permission: permission
+        }),
     /**
      *
      * @param role
      * @param permission
      * @returns {Promise<void>}
      */
-    delete: async (role, permission) => dalUtils.executeQuery(
-        {
-            statement: `DELETE FROM Roles_Permission Where role=? AND permission=?`,
-            description: "deleting role_permission",
-            params: [role, permission]
+    delete: async (role, permission) =>
+        await RolePermission.destroy({
+            where: {
+                role: role, permission: permission
+            }
         }),
     /**
      *
      * @param permission
      * @returns {Promise<void>}
      */
-    getRolesByPermission: async (permission) => dalUtils.executeQuery(
-        {
-            statement: `Select * from Roles_Permission where permission=?`,
-            description: "get roles by permission",
-            params: [permission]
+    getRolesByPermission: async (permission) =>
+        await RolePermission.findAll({
+            where: {
+                permission: permission
+            }
         })
 
 }

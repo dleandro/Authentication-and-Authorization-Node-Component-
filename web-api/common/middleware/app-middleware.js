@@ -14,8 +14,5 @@ module.exports = function (app) {
     // For request logging
     app.use(morgan('tiny'))
 
-    // Custom error handler
-    app.use(function (err, req, res, next) {
-        res.status(500).send(err.message)
-    })
+
 }

@@ -12,9 +12,9 @@ module.exports = function (apiUtils, authization) {
         idps = authization.idp,
         userRouter = require('express').Router()
 
-    const promiseDataToResponse = (res,dataPromise) => dataPromise
+    const promiseDataToResponse = (res, dataPromise) => dataPromise
         .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
+        .catch(err => apiUtils.setResponse(res, err, 400));
 
     userRouter.route('/')
         .get(getAllUsers)
@@ -36,36 +36,35 @@ module.exports = function (apiUtils, authization) {
     userRouter.put('/:id/password', updatePassword)
 
     function getAllUsers(req, res) {
-        promiseDataToResponse(res,users.getAll())
+        promiseDataToResponse(res, users.getAll())
     }
 
     function createUser(req, res) {
         users.create(req.body.username, req.body.password)
             .then(answer => {
-                req.body.id = answer.insertId
-                apiUtils.setResponse(res, req.body, 201)
+                apiUtils.setResponse(res, answer.dataValues, 201)
             })
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+            .catch(err => apiUtils.setResponse(res, err, 400));
     }
 
     function getSpecificUser(req, res) {
-        promiseDataToResponse(res,users.getById(req.params.id))
+        promiseDataToResponse(res, users.getById(req.params.id))
     }
 
     function deleteUser(req, res) {
-        promiseDataToResponse(res,users.delete(req.params.id))
+        promiseDataToResponse(res, users.delete(req.params.id))
     }
 
     function getUserFromIdp(req, res) {
-        promiseDataToResponse(res,users.getByIdp(req.params.id))
+        promiseDataToResponse(res, users.getByIdp(req.params.id))
     }
 
     function getUserByUsername(req, res) {
-        promiseDataToResponse(res,users.getByUsername(req.params.username))
+        promiseDataToResponse(res, users.getByUsername(req.params.username))
     }
 
     function createIdpUser(req, res) {
-        promiseDataToResponse(res,idps.create(req.body.idpId, req.body.idpName, req.body.userId))
+        promiseDataToResponse(res, idps.create(req.body.idpId, req.body.idpName, req.body.userId))
     }
 
     function updatePassword(req, res) {

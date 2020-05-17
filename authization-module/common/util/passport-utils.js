@@ -1,13 +1,12 @@
 'use strict'
 
 const
-    users = require('../../functionalities/user-dal'),
-    lists = require('../../functionalities/list-dal'),
-    idps = require('../../functionalities/idp-dal'),
-    userHistories = require('../../functionalities/user-history-dal'),
-    BASE_URL = require('../config/config').BASE_URL,
-    userSession=require('../../functionalities/user-session-dal'),
-    protocol=require('../../functionalities/protocols-dal'),
+    users = require('../../resources/users/users-dal'),
+    lists = require('../../resources/lists/lists-dal'),
+    idps = require('../../resources/idps/idps-dal'),
+    userHistories = require('../../resources/users-history/users-history-dal'),
+    userSession = require('../../resources/users-session/user-session-dal'),
+    protocol = require('../../resources/protocols/protocols-dal'),
     moment = require('moment')
 
 
@@ -69,7 +68,7 @@ module.exports = {
      * @param userId
      * @returns {Promise<boolean>}
      */
-    isBlackListed: async (userId) => lists.isUserBlackListed(userId).then(result=>result.length>0),
+    isBlackListed: async (userId) => lists.isUserBlackListed(userId).then(result => result.length > 0),
     /**
      *
      * @param userId
@@ -78,11 +77,11 @@ module.exports = {
     addNotification: async (userId) => {
         await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
     },
-    createUserSession : async(userId,sessionId)=>{
-        await userSession.create(userId,sessionId)
+    createUserSession: async (userId, sessionId) => {
+        await userSession.create(userId, sessionId)
     },
-    checkProtocol :async(protocolName)=>{
-        let result=await protocol.get(protocolName)
-        return result.length>0
+    checkProtocol: async (protocolName) => {
+        let result = await protocol.get(protocolName)
+        return result.length > 0
     }
 }

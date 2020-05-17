@@ -20,7 +20,7 @@
     },
     "webAppUri": "http://localhost:3000",
     "isModuleSetUp": false,
-    "sgbd": "mysql"
+    "sgbd": "mariadb"
     
 }
 

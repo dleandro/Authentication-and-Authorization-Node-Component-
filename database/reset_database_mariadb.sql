@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS Permission;
 DROP TABLE IF EXISTS Protocols;
 
-CREATE TABLE Permission(
+CREATE TABLE Permissions(
 id int AUTO_INCREMENT ,
 method VARCHAR(10),
 path VARCHAR(50),
@@ -32,7 +32,7 @@ PASSWORD VARCHAR(20),
 PRIMARY KEY(id)
 );
 
-CREATE TABLE Roles_Permission(
+CREATE TABLE Roles_Permissions(
 role INT ,
 permission INT,
 PRIMARY KEY(role,permission),
@@ -63,12 +63,12 @@ active BIT(1),
 PRIMARY KEY(id),
 FOREIGN KEY (user_id) REFERENCES Users(id)
 );
-CREATE TABLE Users_History (
+CREATE TABLE Users_Histories (
 user_id INT,
 DATE DATETIME,
 description VARCHAR(1000)
 );
-CREATE TABLE IDP(
+CREATE TABLE idps(
 user_id INT,
 idp_id VARCHAR(20000),
 idpname VARCHAR(20),

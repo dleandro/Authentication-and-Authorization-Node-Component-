@@ -8,12 +8,10 @@ module.exports = {
      * @param statusCode
      */
     setResponse: (res, answer, statusCode) => {
-        res.status(statusCode)
-        res.statusMessage = 'OK'
         res.headers = {
             'Content-type': 'application/json'
         }
-        res.send(answer)
+        res.status(statusCode).send(answer)
     }
 
 }

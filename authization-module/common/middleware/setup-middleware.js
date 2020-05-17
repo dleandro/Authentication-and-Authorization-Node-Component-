@@ -1,7 +1,7 @@
 'use strict'
 
 const
-    passport = require('./passport'),
+    passport = require('./authentication-middleware/passport'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),

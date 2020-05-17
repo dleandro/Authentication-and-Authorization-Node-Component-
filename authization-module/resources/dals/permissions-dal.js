@@ -1,7 +1,7 @@
 'use strict'
 
 
-const Permission = require('./permission-model')
+const Permission = require('../sequelize-model').Permission
 
 module.exports = {
     /**

@@ -1,6 +1,6 @@
 'use strict'
 
-const RolePermission = require('./role-permission-model')
+const RolePermission = require('../sequelize-model').RolePermission
 
 module.exports = {
     /**

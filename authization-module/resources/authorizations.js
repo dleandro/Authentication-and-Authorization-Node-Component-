@@ -4,10 +4,10 @@ const
     config = require('../common/config/config'),
     errors = require('../common/errors/app-errors'),
     apiUtils = require('../common/util/api-utils'),
-    userRoleLayer = require('./users-roles/users-roles-dal'),
-    permissionLayer = require('./permissions/permissions-dal'),
-    rolesPermissionLayer = require('./roles-permission/roles-permissions-dal'),
-    rolesLayer = require('./roles/roles-dal')
+    userRoleLayer = require('./dals/users-roles-dal'),
+    permissionLayer = require('./dals/permissions-dal'),
+    rolesPermissionLayer = require('./dals/roles-permissions-dal'),
+    rolesLayer = require('./dals/roles-dal')
 
 module.exports = {
     /**

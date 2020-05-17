@@ -22,7 +22,7 @@ const
         /**
          * returns user resource file to manage users
          */
-        user: require('./resources/users/users-dal'),
+        user: require('./resources/dals/users-dal'),
 
         /**
          * returns idp resource file to manage idp users
@@ -32,32 +32,32 @@ const
         /**
          * returns list resource file to manage lists
          */
-        list: require('./resources/lists/lists-dal'),
+        list: require('./resources/dals/lists-dal'),
 
         /**
          * returns permission resource file to manage permissions
          */
-        permission: require('./resources/permissions/permissions-dal'),
+        permission: require('./resources/dals/permissions-dal'),
 
         /**
          * returns role resource file to manage roles
          */
-        role: require('./resources/roles/roles-dal'),
+        role: require('./resources/dals/roles-dal'),
 
         /**
          * returns userRole resource file to manage user's roles
          */
-        userRole: require('./resources/users-roles/users-roles-dal'),
+        userRole: require('./resources/dals/users-roles-dal'),
 
         /**
          * returns rolePermission resource file to manage role's permissions
          */
-        rolePermission: require('./resources/roles-permission/roles-permissions-dal'),
+        rolePermission: require('./resources/dals/roles-permissions-dal'),
 
         /**
          * returns userHistory resource file to check user's history
          */
-        userHistory: require('./resources/users-history/users-history-dal'),
+        userHistory: require('./resources/dals/users-history-dal'),
 
         /**
          * returns configuration management file

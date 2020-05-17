@@ -1,12 +1,12 @@
 'use strict'
 
 const
-    users = require('../../resources/users/users-dal'),
-    lists = require('../../resources/lists/lists-dal'),
+    users = require('../../resources/dals/users-dal'),
+    lists = require('../../resources/dals/lists-dal'),
     idps = require('../../resources/idps/idps-dal'),
-    userHistories = require('../../resources/users-history/users-history-dal'),
-    userSession = require('../../resources/users-session/user-session-dal'),
-    protocol = require('../../resources/protocols/protocols-dal'),
+    userHistories = require('../../resources/dals/users-history-dal'),
+    userSession = require('../../resources/dals/user-session-dal'),
+    protocol = require('../../resources/dals/protocols-dal'),
     moment = require('moment')
 
 

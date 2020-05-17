@@ -1,6 +1,6 @@
 'use strict'
 
-const UserHistory = require('./user-history-model')
+const UserHistory = require('../sequelize-model').UserHistory
 module.exports = {
 
     /**

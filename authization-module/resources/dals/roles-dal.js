@@ -1,6 +1,6 @@
 'use strict'
 
-const Role = require('./role-model')
+const Role = require('../sequelize-model').Role
 module.exports = {
     /**
      *

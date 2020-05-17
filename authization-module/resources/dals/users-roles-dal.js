@@ -1,6 +1,6 @@
 'use strict'
 
-const UserRole = require('./users-roles-model')
+const UserRole = require('../sequelize-model').UserRoles
 
 module.exports = {
 

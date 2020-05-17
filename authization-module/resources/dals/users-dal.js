@@ -1,6 +1,6 @@
 'use strict'
 
-const Users = require('./user-model'),
+const Users = require('../sequelize-model').User,
 
     /**
      *

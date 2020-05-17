@@ -1,4 +1,4 @@
-const Idp = require('./idp-model')
+const Idp = require('../sequelize-model').Idp
 
 module.exports = {
     /**

@@ -1,4 +1,4 @@
-const Protocols = require('./protocol-model')
+const Protocols = require('../sequelize-model').Protocols
 
 module.exports = {
     create: async (name,active) =>

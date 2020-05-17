@@ -1,6 +1,6 @@
 'use strict'
 
-const List = require('./list-model')
+const List = require('../sequelize-model').List
 
 
 /**

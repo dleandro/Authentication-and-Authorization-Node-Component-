@@ -1,17 +1,13 @@
 'use strict'
 const
-  SUCCESS_MSG = "login successful",
-  UNSUCCESSFUL_MSG = "login unsuccessful"
+    SUCCESS_MSG = "login successful",
+    UNSUCCESSFUL_MSG = "login unsuccessful"
 
-  module.exports = function (apiUtils, authization) {
+module.exports = function (apiUtils, authization) {
 
-    const successCallback = (req, res) => {
-      if (req.isAuthenticated()) {
-        apiUtils.setResponse(res, { success: SUCCESS_MSG }, 200)
-        return
-      }
-      apiUtils.setResponse(res, { success: UNSUCCESSFUL_MSG }, 401)
-    }
+    const successCallback = (req, res) => req.isAuthenticated() ?
+        apiUtils.setResponse(res, {success: SUCCESS_MSG}, 200) :
+        apiUtils.setResponse(res, {success: UNSUCCESSFUL_MSG}, 401)
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
 
@@ -25,7 +21,7 @@ const
 
     authenticationRouter.get('/saml', authenticate.usingSaml)
 
-    authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
+    authenticationRouter.post('/saml/callback', bodyParser.urlencoded({extended: false}), authenticate.usingSamlCallback, successCallback)
 
     authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
 
@@ -37,4 +33,4 @@ const
 
     return authenticationRouter
 
-  }
+}

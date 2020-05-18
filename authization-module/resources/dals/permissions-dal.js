@@ -12,7 +12,7 @@ module.exports = {
      * @returns {Promise<void>}
      */
     create: async (method, path, description) =>
-        await Permission.create({
+         Permission.create({
             method: method,
             path: path,
             description: description
@@ -25,7 +25,7 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: async (method, path) =>
-        await Permission.delete({
+         Permission.delete({
             where: {
                 method: method,
                 path: path
@@ -36,14 +36,14 @@ module.exports = {
      * @returns {Promise<void>}
      */
     getAll: async () =>
-        await Permission.findAll({ raw: true }),
+         Permission.findAll({raw: true}),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
     getSpecificById: async (id) =>
-        await Permission.findByPk(id),
+        Permission.findByPk(id),
     /**
      *
      * @param method
@@ -51,7 +51,7 @@ module.exports = {
      * @returns {Promise<*>}
      */
     getSpecific: async (method, path) =>
-        await Permission.findAll({
+        Permission.findAll({
             where: {
                 method: method,
                 path: path

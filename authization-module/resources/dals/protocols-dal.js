@@ -1,15 +1,15 @@
 const Protocols = require('../sequelize-model').Protocols
 
 module.exports = {
-    create: async (name,active) =>
-        await Protocols.create({
+    create: async (name, active) =>
+        Protocols.create({
             name: name,
-            active:active
+            active: active
         }),
     getAll: async () =>
-        await Protocols.findAll({ raw: true })
+        Protocols.findAll({raw: true})
     ,
     get: async (name) => {
-        await Protocols.findByPk(name)
+        Protocols.findByPk(name)
     },
 }

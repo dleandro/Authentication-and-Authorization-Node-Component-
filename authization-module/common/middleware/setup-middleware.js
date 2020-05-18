@@ -10,7 +10,6 @@ const
 //SessionStore = require('express-session-sequelize')(session.Store);
 
 
-
 /*
       const sequelizeSessionStore = new SessionStore({
         db: config.database_opts,

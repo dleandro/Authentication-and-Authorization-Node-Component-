@@ -8,13 +8,13 @@ const
 
 
 const strategy = new GoogleStrategy({
-    clientID: config.google.google_client_id,
-    clientSecret: config.google.google_client_secret,
-    callbackURL: config.google.callbackURL
-},
+        clientID: config.google.google_client_id,
+        clientSecret: config.google.google_client_secret,
+        callbackURL: config.google.callbackURL
+    },
     async function (accessToken, refreshToken, profile, done) {
         if (!(await passportUtils.checkProtocol(protocolName))) {
-            done(null, false, { message: 'Protocol is not avaiable' })
+            done(null, false, {message: 'Protocol is not avaiable'})
             return
         }
         var user = await passportUtils.findUserByIdp(profile.id)
@@ -24,7 +24,7 @@ const strategy = new GoogleStrategy({
         }
         if (await passportUtils.isBlackListed(user.id)) {
             passportUtils.addNotification(user.id)
-            done(null, false, { message: 'User is BlackListed' })
+            done(null, false, {message: 'User is BlackListed'})
             return
         }
         done(null, user)

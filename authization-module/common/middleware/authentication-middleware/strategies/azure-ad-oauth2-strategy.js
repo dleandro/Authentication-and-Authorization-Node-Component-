@@ -7,15 +7,15 @@ const AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy,
     jwt = require('jsonwebtoken');
 
 const strategy = new AzureAdOAuth2Strategy({
-    clientID: config.azureAD.azure_client_id,
-    clientSecret: config.azureAD.azure_client_secret,
-    callbackURL: config.azureAD.callbackURL,
-    tenant: config.azureAD.tenant
-},
+        clientID: config.azureAD.azure_client_id,
+        clientSecret: config.azureAD.azure_client_secret,
+        callbackURL: config.azureAD.callbackURL,
+        tenant: config.azureAD.tenant
+    },
     async function (accessToken, refreshToken, params, profile, done) {
 
         if (!(await passportUtils.checkProtocol(protocolName))) {
-            done(null, false, { message: 'Protocol is not avaiable' })
+            done(null, false, {message: 'Protocol is not avaiable'})
             return
         }
 
@@ -27,7 +27,7 @@ const strategy = new AzureAdOAuth2Strategy({
         }
         if (await passportUtils.isBlackListed(user.id)) {
             passportUtils.addNotification(user.id)
-            done(null, false, { message: 'User is BlackListed' })
+            done(null, false, {message: 'User is BlackListed'})
             return
         }
         done(null, user)

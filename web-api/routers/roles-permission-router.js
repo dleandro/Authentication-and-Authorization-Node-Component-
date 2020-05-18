@@ -10,6 +10,20 @@ module.exports = function (apiUtils, authization) {
     const rolePermission = authization.rolePermission
     const rolesPermissionRouter = require('express').Router()
 
+    const promiseDataToResponse = (res, dataPromise) => dataPromise
+        .catch(err => {
+            throw errors.errorExecutingQuery
+        })
+        .then(data => {
+            if (data && data.length) {
+                return apiUtils.setResponse(res, data, 200)
+            }
+            throw errors.noResponseFound
+        })
+        .catch(err => {
+            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
+        });
+
     rolesPermissionRouter.route('/')
         .post(addRolesPermission)
         .delete(deleteRolesPermission)
@@ -24,9 +38,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteRolesPermission(req, res) {
-        rolePermission.delete(req.body.role, req.body.permission)
-            .then(answer => apiUtils.setResponse(res, answer, 200))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+        promiseDataToResponse(res, rolePermission.delete(req.body.role, req.body.permission))
     }
 
     return rolesPermissionRouter

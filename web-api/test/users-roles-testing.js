@@ -15,7 +15,7 @@ const role = {
     role: 'admin',
     parent_role: ''
 }
-const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
+const contentTypeSetter = (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 
 var id,
     userId,
@@ -29,21 +29,22 @@ const userRoles = {
     updater: userId,
     active: 1
 }
-function bodyLengthChecker(resp){
+
+function bodyLengthChecker(resp) {
     assert.equal(resp.body.length > 0, true)
     done()
 }
 
-describe('[USERS ROLES CRUD TESTING]', function() {
+describe('[USERS ROLES CRUD TESTING]', function () {
 
     // create a user and a role to associate in a user role entry
-    before(function() {
+    before(function () {
         contentTypeSetter(
             request(app)
                 .post('/user')
                 .send(user))
             .expect(201)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 userId = resp.body.id
             })
         contentTypeSetter(
@@ -51,19 +52,19 @@ describe('[USERS ROLES CRUD TESTING]', function() {
                 .post('/role/')
                 .send(role))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 roleId = resp.body.id
             })
 
     })
 
-    it('should create a new user role', function(done) {
+    it('should create a new user role', function (done) {
         contentTypeSetter(
             request(app)
                 .post('/users-roles/')
                 .send(userRoles))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 id = resp.body.id
 
                 assert.equal(resp.body.user_id, userId)
@@ -76,41 +77,41 @@ describe('[USERS ROLES CRUD TESTING]', function() {
 
     // TDO: SHOULD DEACTIVATE USER ROLE
 
-    it('should get all users roles', function(done) {
+    it('should get all users roles', function (done) {
         contentTypeSetter(
             request(app)
                 .get('/users-roles/'))
             .expect(200)
-            .end( (err, resp) => bodyLengthChecker(resp))
+            .end((err, resp) => bodyLengthChecker(resp))
 
     })
 
-    it('should get active user roles', function(done) {
+    it('should get active user roles', function (done) {
         contentTypeSetter(
             request(app)
                 .get('/users-roles/active')
                 .send(list))
             .expect(200)
-            .end( (err, resp) => bodyLengthChecker(resp))
+            .end((err, resp) => bodyLengthChecker(resp))
 
     })
 
-    it('should get user´s active roles', function(done) {
+    it('should get user´s active roles', function (done) {
         contentTypeSetter(
             request(app)
                 .get(`/users-roles/active/user/${id}`)
                 .send(list))
             .expect(200)
-            .end( (err, resp) => bodyLengthChecker(resp))
+            .end((err, resp) => bodyLengthChecker(resp))
 
     })
 
-    it('should delete a user role', function(done) {
+    it('should delete a user role', function (done) {
         contentTypeSetter(
             request(app)
                 .delete(`/users-roles/${id}`))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 assert(err == null, true)
 
                 done()

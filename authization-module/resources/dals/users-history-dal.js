@@ -10,8 +10,7 @@ module.exports = {
      * @param description
      * @returns {Promise<void>}
      */
-    create: async (userId, date, description) =>
-        await UserHistory.create({
+    create: (userId, date, description) => UserHistory.create({
             user_id: userId,
             date: date,
             description: description
@@ -21,14 +20,13 @@ module.exports = {
      *
      * @returns {Promise<void>}
      */
-    getAll: async () =>
-        await UserHistory.findAll({ raw: true }),
+    getAll: () => UserHistory.findAll({raw: true}),
+
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    getAllFromUser: async (userId) =>
-        await UserHistory.findByPk(userId)
+    getAllFromUser: (userId) =>UserHistory.findByPk(userId)
 
 }

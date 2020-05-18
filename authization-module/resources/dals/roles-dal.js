@@ -7,10 +7,10 @@ module.exports = {
      * @param role
      * @returns {Promise<void>}
      */
-    create: async (role, parent_role) =>
-        await Role.create({
+    create: async (role, parentRole) =>
+        Role.create({
             role: role,
-            parent_role: parent_role
+            parent_role: parentRole
         }),
 
     /**
@@ -19,14 +19,14 @@ module.exports = {
      * @returns {Promise<*>}
      */
     getSpecificById: async (roleId) =>
-        await Role.findByPk(roleId),
+        Role.findByPk(roleId),
     /**
      *
      * @param roleId
      * @returns {Promise<void>}
      */
-    delete: async (roleId) =>
-        await Role.destroy({
+    delete: (roleId) =>
+        Role.destroy({
             where: {
                 id: roleId
             }
@@ -35,6 +35,5 @@ module.exports = {
      *
      * @returns {Promise<void>}
      */
-    getAll: async () =>
-        await Role.findAll({ raw: true })
+    getAll: () =>Role.findAll({raw: true})
 }

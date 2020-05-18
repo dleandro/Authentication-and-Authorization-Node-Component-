@@ -4,7 +4,7 @@ const
     app = require('../server'),
     request = require('supertest'),
     assert = require('assert');
-const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
+const contentTypeSetter = (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 
 var
     roleId,
@@ -24,7 +24,7 @@ const role = {
     }
 
 
-describe('[ROLES PERMISSION CRUD TESTING]', function() {
+describe('[ROLES PERMISSION CRUD TESTING]', function () {
 
     // create a role and a permission so we can associate them in a role_permission
     before(function () {
@@ -33,7 +33,7 @@ describe('[ROLES PERMISSION CRUD TESTING]', function() {
                 .post('/role/')
                 .send(role))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 roleId = resp.body.id
             })
         contentTypeSetter(
@@ -41,18 +41,18 @@ describe('[ROLES PERMISSION CRUD TESTING]', function() {
                 .post('/permission/')
                 .send(permission))
             .expect(201)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 permissionId = resp.body.id
             })
     })
 
-    it('should create a new roles permission', function(done) {
+    it('should create a new roles permission', function (done) {
         contentTypeSetter(
             request(app)
                 .post('/roles-permission/')
                 .send(rolesPermission))
             .expect(201)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 assert.equal(resp.body.permission, permissionId)
 
                 done()
@@ -60,12 +60,12 @@ describe('[ROLES PERMISSION CRUD TESTING]', function() {
 
     })
 
-    it('should delete a list', function(done) {
+    it('should delete a list', function (done) {
         contentTypeSetter(
             request(app)
                 .delete(`/roles-permission`))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
 
                 assert(err == null, true)
 

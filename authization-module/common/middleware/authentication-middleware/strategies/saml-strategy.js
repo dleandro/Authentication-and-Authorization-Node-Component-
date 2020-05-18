@@ -17,7 +17,7 @@ const
     }, async function (profile, done) {
 
         if (!(await passportUtils.checkProtocol(protocolName))) {
-            done(null, false, { message: 'Protocol is not avaiable' })
+            done(null, false, {message: 'Protocol is not avaiable'})
             return
         }
 
@@ -28,7 +28,7 @@ const
         }
         if (await passportUtils.isBlackListed(user.id)) {
             passportUtils.addNotification(user.id)
-            done(null, false, { message: 'User is BlackListed' })
+            done(null, false, {message: 'User is BlackListed'})
             return
         }
         done(null, user)

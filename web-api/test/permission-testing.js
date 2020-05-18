@@ -9,7 +9,7 @@ const permission = {
     method: "GET",
     path: "/user/1/username"
 }
-const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
+const contentTypeSetter = (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 
 var id
 
@@ -18,22 +18,22 @@ const getAllPermissions = (cb) => {
         request(app)
             .get('/permission/'))
         .expect(200)
-        .end( (err, resp) => {
+        .end((err, resp) => {
 
             cb(err, resp)
 
         })
 }
 
-describe('[PERMISSIONS CRUD TESTING]', function() {
+describe('[PERMISSIONS CRUD TESTING]', function () {
 
-    it('should create a new permission', function(done) {
+    it('should create a new permission', function (done) {
         contentTypeSetter(
             request(app)
                 .post('/permission/')
                 .send(permission))
             .expect(201)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 id = resp.body.id
 
                 assert.equal(resp.body.path, permission.path)
@@ -43,7 +43,7 @@ describe('[PERMISSIONS CRUD TESTING]', function() {
 
     })
 
-    it('should get all permissions', function(done) {
+    it('should get all permissions', function (done) {
 
         getAllPermissions((err, resp) => {
             assert.equal(resp.body.length > 0, true)
@@ -53,13 +53,13 @@ describe('[PERMISSIONS CRUD TESTING]', function() {
 
     })
 
-    it('should delete a permission', function(done) {
+    it('should delete a permission', function (done) {
         contentTypeSetter(
             request(app)
                 .delete(`/permission/`)
                 .send(permission))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
 
                 getAllPermissions((err, resp) => {
 

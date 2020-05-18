@@ -3,9 +3,9 @@
 const CustomError = require('./custom-error')
 
 module.exports = {
-    errorExecutingQuery: (failedQuery) => new CustomError(JSON.stringify({
+    errorExecutingQuery: new CustomError(JSON.stringify({
         title: "Problem executing Query",
-        detail: `There was a problem executing the query, check if all the data was inserted correctly. The failed Query was the following ${failedQuery}`,
+        detail: `There was a problem executing the query, check if all the data was inserted correctly. Contact the authization-module devs for more information`,
         status: 400
     })),
     duplicateValues: new CustomError(JSON.stringify({
@@ -31,7 +31,11 @@ module.exports = {
         detail: "User already has an active list, change active list status first before adding the user to a new list",
         status: 403
     })),
-
+    noResponseFound: new CustomError(JSON.stringify({
+        title: "No Value found",
+        detail: "The response given from the database was empty, either the table were empty or the query didn't output a value",
+        status: 404
+    })),
     noListFound: new CustomError(JSON.stringify({
         title: "No List found",
         detail: "query didn't go through because there were no lists found with this id",

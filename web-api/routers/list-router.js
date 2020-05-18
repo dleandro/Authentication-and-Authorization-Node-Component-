@@ -1,7 +1,6 @@
 'use strict'
 
-
-
+const errors = require('../common/errors/app-errors')
 /**
  * this module contains all list related endpoints
  * @param apiUtils
@@ -10,9 +9,20 @@
  */
 module.exports = function (apiUtils, authization) {
 
-    const promiseDataToResponse = (res,dataPromise) => dataPromise
-        .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
+    const promiseDataToResponse = (res, dataPromise) => dataPromise
+        .catch(err => {
+            throw errors.errorExecutingQuery
+        })
+        .then(data => {
+            if (data && data.length) {
+                return apiUtils.setResponse(res, data, 200)
+            }
+            throw errors.noResponseFound
+        })
+        .catch(err => {
+            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
+        });
+
     const lists = authization.list
     const listRouter = require('express').Router()
 
@@ -38,23 +48,23 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteList(req, res) {
-        promiseDataToResponse(res,lists.delete(req.params.id))
+        promiseDataToResponse(res, lists.delete(req.params.id))
     }
 
     function getLists(req, res) {
-        promiseDataToResponse(res,lists.getAll())
+        promiseDataToResponse(res, lists.getAll())
     }
 
     function getActiveLists(req, res) {
-        promiseDataToResponse(res,lists.getAllActive())
+        promiseDataToResponse(res, lists.getAllActive())
     }
 
     function getUserActiveList(req, res) {
-        promiseDataToResponse(res,lists.getUsersActive(req.params.id))
+        promiseDataToResponse(res, lists.getUsersActive(req.params.id))
     }
 
     function deactivateList(req, res) {
-        promiseDataToResponse(res,lists.deactivate(req.params.id))
+        promiseDataToResponse(res, lists.deactivate(req.params.id))
     }
 
 

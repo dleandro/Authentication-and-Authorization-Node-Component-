@@ -16,9 +16,19 @@ module.exports = function (apiUtils, authization) {
         .post(addUsersRoles)
         .get(getUsersRoles)
 
-    const promiseDataToResponse = (res,dataPromise) => dataPromise
-        .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status));
+    const promiseDataToResponse = (res, dataPromise) => dataPromise
+        .catch(err => {
+            throw errors.errorExecutingQuery
+        })
+        .then(data => {
+            if (data && data.length) {
+                return apiUtils.setResponse(res, data, 200)
+            }
+            throw errors.noResponseFound
+        })
+        .catch(err => {
+            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
+        });
 
     usersRolesRouter.get('/active', getActiveRoles)
     usersRolesRouter.get('/active/user/:id', getUserActiveRoles)
@@ -32,24 +42,24 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getUsersRoles(req, res) {
-        promiseDataToResponse(res,userRoles.getAll())
+        promiseDataToResponse(res, userRoles.getAll())
     }
 
     function getActiveRoles(req, res) {
-        promiseDataToResponse(res,userRoles.getAllActive())
+        promiseDataToResponse(res, userRoles.getAllActive())
     }
 
     function getUserActiveRoles(req, res) {
-        promiseDataToResponse(res,userRoles.getUserActiveRoles(req.params.id))
+        promiseDataToResponse(res, userRoles.getUserActiveRoles(req.params.id))
     }
 
 
     function getUserRolesById(req, res) {
-        promiseDataToResponse(res,userRoles.getById(req.params.id))
+        promiseDataToResponse(res, userRoles.getById(req.params.id))
     }
 
     function deactivateUserRole(req, res) {
-        promiseDataToResponse(res,userRoles.deactivate(req.params.id))
+        promiseDataToResponse(res, userRoles.deactivate(req.params.id))
     }
 
     return usersRolesRouter

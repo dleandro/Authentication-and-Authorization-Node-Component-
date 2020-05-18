@@ -9,11 +9,11 @@ module.exports = {
      * @returns {Promise<*>}
      */
     create: async (idpId, idpname, userId) =>
-        await Idp.create({
-            idp_id: idpId,
-            idpname: idpname,
-            user_id: userId
-        }
+         Idp.create({
+                idp_id: idpId,
+                idpname: idpname,
+                user_id: userId
+            }
         ),
     /**
      *
@@ -21,5 +21,5 @@ module.exports = {
      * @returns {Promise<*>}
      */
     delete: async (idpId) =>
-        await Idp.destroy({ where: { idp_id: idpId } })
+        Idp.destroy({where: {idp_id: idpId}})
 }

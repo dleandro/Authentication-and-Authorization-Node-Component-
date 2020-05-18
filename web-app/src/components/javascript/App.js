@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import SideBar from "./html-elements-utils/SideBar";
 import {BrowserRouter as Router} from 'react-router-dom'
@@ -13,7 +13,11 @@ const sidebarExtendedSize = "250px";
 
 class App extends Component {
 
-    state = { selectedProtocol: "/", redirect:{should:false, link:"/"},user:{user:{name:"",pass:""},isLoggedIn:false}};
+    state = {
+        selectedProtocol: "/",
+        redirect: {should: false, link: "/"},
+        user: {user: {name: "", pass: ""}, isLoggedIn: false}
+    };
 
     changeProtocol = inputProto => {
         this.setState({selectedProtocol: inputProto})
@@ -25,7 +29,7 @@ class App extends Component {
         return (
             <Router>
                 <UserProvider>
-                    <SideBar navWidthCollapsed={sidebarCollapsedSize} navWidthExpanded={sidebarExtendedSize} />
+                    <SideBar navWidthCollapsed={sidebarCollapsedSize} navWidthExpanded={sidebarExtendedSize}/>
                     <Routes sidebarCollapsedSize={sidebarCollapsedSize} changeProtocol={this.changeProtocol}> </Routes>
                 </UserProvider>
             </Router>

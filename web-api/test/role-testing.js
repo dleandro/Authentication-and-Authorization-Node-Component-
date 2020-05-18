@@ -11,28 +11,28 @@ const role = {
 }
 
 var id
-const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
+const contentTypeSetter = (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 
 const getRole = (cb) => {
     contentTypeSetter(
         request(app)
             .get(`/role/${id}`))
         .expect(200)
-        .end( (err, resp) => {
+        .end((err, resp) => {
             cb(err, resp)
         })
 
 }
 
-describe('[ROLE CRUD TESTING]', function() {
+describe('[ROLE CRUD TESTING]', function () {
 
-    it('should create a new role', function(done) {
+    it('should create a new role', function (done) {
         contentTypeSetter(
             request(app)
                 .post('/role/')
                 .send(role))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 id = resp.body.id
 
                 assert.equal(resp.body.role, role.role)
@@ -42,12 +42,12 @@ describe('[ROLE CRUD TESTING]', function() {
 
     })
 
-    it('should get all roles', function(done) {
+    it('should get all roles', function (done) {
         contentTypeSetter(
             request(app)
                 .get('/role/'))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
                 assert.equal(resp.body.length > 0, true)
 
                 done()
@@ -55,7 +55,7 @@ describe('[ROLE CRUD TESTING]', function() {
 
     })
 
-    it('should get the created role', function(done) {
+    it('should get the created role', function (done) {
 
         getRole((err, resp) => {
 
@@ -67,12 +67,12 @@ describe('[ROLE CRUD TESTING]', function() {
 
     })
 
-    it('should delete a role', function(done) {
+    it('should delete a role', function (done) {
         contentTypeSetter(
             request(app)
                 .delete(`/role/${id}`))
             .expect(200)
-            .end( (err, resp) => {
+            .end((err, resp) => {
 
                 getRole((err, resp) => {
                     assert.equal(err != null, true)

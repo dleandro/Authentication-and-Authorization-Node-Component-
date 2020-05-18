@@ -1,28 +1,30 @@
 import React from 'react'
-import { userService } from '../service'
+import {userService} from '../service'
 import CustomTable from "../html-elements-utils/Table/CustomTable";
-const labels = ["Id","Username","Password"]
+
+const labels = ["Id", "Username", "Password"]
 
 /**
  * Backoffice's initial page were the list of all registred users are displayed
  */
 class BackOffice extends React.Component {
+    service = userService()
+
     constructor() {
         super()
-        this.state = { users: [] }
+        this.state = {users: []}
     }
-    service= userService()
 
     addUser = (arr) => this.service.addUser(arr)
-    editUsername =(arr)=> this.service.editUsername(arr)
-    deleteUser=(arr)=> this.service.deleteUser(arr)
+    editUsername = (arr) => this.service.editUsername(arr)
+    deleteUser = (arr) => this.service.deleteUser(arr)
     requestUsers = () => this.service.getUsers()
 
     componentDidMount() {
-        this.requestUsers().then(data =>{
+        this.requestUsers().then(data => {
             console.log("Users:")
             console.log(data)
-            this.setState({ users: data })
+            this.setState({users: data})
         })
     }
 
@@ -30,8 +32,9 @@ class BackOffice extends React.Component {
         return (
             <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
                          deleteRequest={this.deleteUser} labels={labels}
-                         rows={this.state.users.map(user=>[user.id,user.username,'****'])} />
+                         rows={this.state.users.map(user => [user.id, user.username, '****'])}/>
         )
     }
 }
-export default  BackOffice
+
+export default BackOffice

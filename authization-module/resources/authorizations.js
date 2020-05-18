@@ -24,25 +24,25 @@ module.exports = {
         }
 
         if (!req.isAuthenticated()) {
-            return setErrResponse(errors.userNotAuthenticated.message,resp);
+            return setErrResponse(errors.userNotAuthenticated.message, resp);
         }
 
 
         let userRoles = await userRoleLayer.getUserActiveRoles(req.user.id)
         if (!userRoles) {
-            return setErrResponse(errors.userRoleNotFound.message,resp);
+            return setErrResponse(errors.userRoleNotFound.message, resp);
         }
         userRoles = userRoles.map(role => role.role_id)
 
         const permission = await permissionLayer.getSpecific(req.method, req.baseUrl)
         if (!permission) {
-            return setErrResponse(errors.permissionNotFound.message,resp);
+            return setErrResponse(errors.permissionNotFound.message, resp);
         }
 
         const permissionRoles = await rolesPermissionLayer.getRolesByPermission(permission.id)
 
         if (!permissionRoles) {
-            return setErrResponse(errors.permissionRolesNotFound.message,resp);
+            return setErrResponse(errors.permissionRolesNotFound.message, resp);
         }
         return searchUserRolesForPermissionRole(permissionRoles.map(permissionRole => permissionRole.role), userRoles, next)
     }
@@ -71,9 +71,9 @@ async function getParents(roles) {
     const parentRoles = []
     await Promise.all(
         roles.map(async (role) => {
-            const res = await rolesLayer.getRoleById(role)
-            parentRoles.push(res.parent_role)
-        }
+                const res = await rolesLayer.getRoleById(role)
+                parentRoles.push(res.parent_role)
+            }
         )
     )
     return parentRoles
@@ -84,7 +84,7 @@ async function getParents(roles) {
  * @param err
  * @param resp
  */
-function setErrResponse(err,resp) {
+function setErrResponse(err, resp) {
     const error = JSON.parse(err)
     return apiUtils.setResponse(resp, error, error.status)
 }

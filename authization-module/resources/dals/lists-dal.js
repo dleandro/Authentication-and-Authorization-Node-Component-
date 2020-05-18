@@ -1,6 +1,5 @@
 'use strict'
-
-const List = require('../sequelize-model').List
+const {List,User} = require('../sequelize-model')
 
 
 /**
@@ -20,7 +19,6 @@ async function getUsersActive(userId) {
 module.exports = {
 
 
-
     /**
      * Creates a list entry with a user_id associated and a type of list
      * @param userId
@@ -32,7 +30,7 @@ module.exports = {
      * @returns {Promise<CustomError>}
      */
     create: async (userId, list, startDate, endDate, updater, active) =>
-        await List.create({
+        List.create({
             user_id: userId,
             list: list,
             start_date: startDate,
@@ -48,7 +46,7 @@ module.exports = {
      * @returns {*}
      */
     deactivate: async (listId) =>
-        await List.update({ active: 0 }, { where: { id: listId } }),
+         List.update({active: 0}, {where: {id: listId}}),
 
     /**
      * deletes the user association to a list
@@ -56,7 +54,7 @@ module.exports = {
      * @returns {*}
      */
     delete: async (listId) =>
-        await List.destroy({ where: { id: listId } }),
+         List.destroy({where: {id: listId}}),
 
     /**
      * asks the database for all list entries
@@ -65,22 +63,19 @@ module.exports = {
      * | Uint8ClampedArray | BigUint64Array | Int16Array | Uint16Array> | Promise<Uint8Array | BigInt64Array | *[]
      * | Float64Array | Int8Array | Float32Array | Int32Array | Uint32Array | Uint8ClampedArray | BigUint64Array | Int16Array | Uint16Array>}
      */
-    getAll: async () =>
-        await List.findAll({ raw: true })
-    ,
+    getAll: () => List.findAll({raw: true}),
 
     /**
      * asks the database for all list entries that are active at the moment
      * @returns {PromiseLike<function(*=): *> | Promise<function(*=): *>}
      */
-    getAllActive: async () =>
-        await List.findAll({ where: { active: 1 } }),
+    getAllActive: () => List.findAll({where: {active: 1}}),
 
     // asks the database for all list entries that are active and associated with a specific user
     getUsersActive,
 
     isUserBlackListed: async (userId) =>
-        await List.findAll({
+        List.findAll({
             where: {
                 list: 'BLACK',
                 active: 1,

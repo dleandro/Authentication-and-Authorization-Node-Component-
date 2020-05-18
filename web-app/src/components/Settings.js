@@ -1,11 +1,11 @@
 import React from 'react'
 
 
-export default function Settings(){
+export default function Settings() {
     fetch("http://localhost:3000/users")
-        .then(response=>response.json())
-        .then(data=>console.log(data))
-    return(
+        .then(response => response.json())
+        .then(data => console.log(data))
+    return (
         <div>
             <h1>Settings</h1>
             <p>Network Protocol:</p>

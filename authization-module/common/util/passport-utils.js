@@ -3,7 +3,7 @@
 const
     users = require('../../resources/dals/users-dal'),
     lists = require('../../resources/dals/lists-dal'),
-    idps = require('../../resources/idps/idps-dal'),
+    idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
     userSession = require('../../resources/dals/user-session-dal'),
     protocol = require('../../resources/dals/protocols-dal'),
@@ -27,7 +27,7 @@ module.exports = {
     findUserByIdp: async (idp) => {
         // needs endpoint
         const user = await users.getByIdp(idp)
-        return user ? { id: user.id, idp: idp, username: user.username } : null
+        return user ? {id: user.id, idp: idp, username: user.username} : null
     },
     /**
      *
@@ -81,7 +81,7 @@ module.exports = {
         await userSession.create(userId, sessionId)
     },
     checkProtocol: async (protocolName) => {
-        let result = await protocol.get(protocolName)
+        const result = await protocol.get(protocolName)
         return result.length > 0
     }
 }

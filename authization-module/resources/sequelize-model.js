@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize'),
-    sequelize = require('../../common/util/db')
+    sequelize = require('../common/util/db')
 /**
  * allowNull defaults to true
  * @type {{type: StringDataTypeConstructor}}
@@ -8,21 +8,21 @@ const DefaultString = {type: Sequelize.STRING}
 const DefaultDate = {type: Sequelize.DATE}
 const DefaultInt = {type: Sequelize.INTEGER}
 const DefaultBool = {type: Sequelize.BOOLEAN}
-const NonNullDate = { ...DefaultDate, allowNull: false} //only used 1 time considering remove this const
+const NonNullDate = {...DefaultDate, allowNull: false} //only used 1 time considering remove this const
 const NonNullString = {...DefaultString, allowNull: false}
-const NonNullUniqueString = {...NonNullString,unique: true} //only used 1 time considering remove this const
-const NonNullStringPK = {...NonNullString, primaryKey:true} //only used 1 time considering remove this const
-const NonNullIntPK = {...DefaultInt, allowNull: false, primaryKey:true}
-const NonNullAutoIncIntPK = {type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey:true}
-const foreignKey= (Model,Key,dataConstraints) => {
-    return {...dataConstraints,references: {model: Model, key: Key}}
+const NonNullUniqueString = {...NonNullString, unique: true} //only used 1 time considering remove this const
+const NonNullStringPK = {...NonNullString, primaryKey: true} //only used 1 time considering remove this const
+const NonNullIntPK = {...DefaultInt, allowNull: false, primaryKey: true}
+const NonNullAutoIncIntPK = {type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true}
+const foreignKey = (Model, Key, dataConstraints) => {
+    return {...dataConstraints, references: {model: Model, key: Key}}
 }
 /**
  * @param modelName
  * @param attributes
  * @returns {Model}
  */
-const defineTable= (modelName,attributes) => sequelize.define(modelName,attributes,{timestamps: false});
+const defineTable = (modelName, attributes) => sequelize.define(modelName, attributes, {timestamps: false,freezeTableName: true});
 
 /**
  * Permission(
@@ -32,14 +32,19 @@ const defineTable= (modelName,attributes) => sequelize.define(modelName,attribut
  * - description: DefaultString)
  * @type {Model}
  */
-export const Permission = defineTable('Permission', {id: NonNullAutoIncIntPK, method: NonNullString, path: DefaultString, description: DefaultString});
+const Permission = defineTable('Permission', {
+    id: NonNullAutoIncIntPK,
+    method: NonNullString,
+    path: DefaultString,
+    description: DefaultString
+});
 /**
  * Protocols(
  * - protocol: NonNullStringPK,
  * - active:DefaultBool)
  * @type {Model}
  */
-export const Protocols = defineTable('Protocols', {protocol: NonNullStringPK, active:DefaultBool});
+const Protocols = defineTable('Protocols', {protocol: NonNullStringPK, active: DefaultBool});
 /**
  Role(
  * - id: NonNullAutoIncIntPK,
@@ -47,16 +52,17 @@ export const Protocols = defineTable('Protocols', {protocol: NonNullStringPK, ac
  * - parent_role: DefaultInt)
  * @type {Model}
  */
-export const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueString, parent_role: DefaultInt});
+const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueString, parent_role: DefaultInt});
 /**
  * RolePermission(
  * - role: NonNullAutoIncIntPK,
  * - permission: NonNullIntPK)
  * @type {Model}
  */
-export const RolePermission = defineTable('RolePermission', {
-    role: foreignKey(Role,'id',NonNullAutoIncIntPK),
-    permission: foreignKey(Permission,'id',NonNullIntPK) });
+const RolePermission = defineTable('RolePermission', {
+    role: foreignKey(Role, 'id', NonNullAutoIncIntPK),
+    permission: foreignKey(Permission, 'id', NonNullIntPK)
+});
 /**
  * User_History(
  * - user_id: NonNullAutoIncIntPK,
@@ -64,7 +70,11 @@ export const RolePermission = defineTable('RolePermission', {
  * - description: DefaultString)
  * @type {Model}
  */
-export const UserHistory = defineTable('User_History', {user_id: NonNullAutoIncIntPK, date: NonNullDate, description: DefaultString});
+const UserHistory = defineTable('User_History', {
+    user_id: NonNullAutoIncIntPK,
+    date: NonNullDate,
+    description: DefaultString
+});
 /**
  * User(
  * - id: NonNullAutoIncIntPK,
@@ -72,14 +82,21 @@ export const UserHistory = defineTable('User_History', {user_id: NonNullAutoIncI
  * - password: DefaultString)
  * @type {Model}
  */
-export const User = defineTable('User', {id: NonNullAutoIncIntPK, username: NonNullUniqueString, password: DefaultString});
+const User = defineTable('User', {
+    id: NonNullAutoIncIntPK,
+    username: NonNullUniqueString,
+    password: DefaultString
+});
 /**
  * UserSession(
  * - user_id: NonNullAutoIncIntPK,
  * - session_id: NonNullStringPK)
  * @type {Model}
  */
-export const UserSession = defineTable('User_Session', {user_id: foreignKey(User,'id',NonNullAutoIncIntPK), session_id: NonNullStringPK});
+const UserSession = defineTable('User_Session', {
+    user_id: foreignKey(User, 'id', NonNullAutoIncIntPK),
+    session_id: NonNullStringPK
+});
 /**
  * List(
  * - id: NonNullAutoIncIntPK,
@@ -91,9 +108,9 @@ export const UserSession = defineTable('User_Session', {user_id: foreignKey(User
  * - active: DefaultBool)
  * @type {Model}
  */
-export const List = defineTable('List', {
+const List = defineTable('List', {
     id: NonNullAutoIncIntPK,
-    user_id: foreignKey(User,'id',DefaultInt),
+    user_id: foreignKey(User, 'id', DefaultInt),
     list: DefaultString,
     start_date: DefaultDate,
     end_date: DefaultDate,
@@ -107,7 +124,11 @@ export const List = defineTable('List', {
  * - idpname: DefaultString)
  * @type {Model}
  */
-export const Idp = defineTable('Idp', {user_id: foreignKey(User,'id',NonNullIntPK), idp_id: DefaultString, idpname: DefaultString});
+const Idp = defineTable('Idp', {
+    user_id: foreignKey(User, 'id', NonNullIntPK),
+    idp_id: DefaultString,
+    idpname: DefaultString
+});
 /**
  * UserRoles(
  * - id: NonNullAutoIncIntPK,
@@ -119,12 +140,23 @@ export const Idp = defineTable('Idp', {user_id: foreignKey(User,'id',NonNullIntP
  * - active: DefaultBool)
  * @type {Model}
  */
-export const UserRoles = defineTable('UserRoles', {
+const UserRoles = defineTable('UserRoles', {
     id: NonNullAutoIncIntPK,
-    user_id: foreignKey(User,'id',DefaultInt),
-    role_id: foreignKey(Role,'id',DefaultInt),
+    user_id: foreignKey(User, 'id', DefaultInt),
+    role_id: foreignKey(Role, 'id', DefaultInt),
     start_date: DefaultDate,
     end_date: DefaultDate,
     updater: DefaultInt,
     active: DefaultBool
 });
+
+exports.Permission =Permission
+exports.Protocols = Protocols
+exports.Role = Role
+exports.RolePermission = RolePermission
+exports.UserHistory = UserHistory
+exports.User = User
+exports.UserSession = UserSession
+exports.List = List
+exports.Idp = Idp
+exports.UserRoles = UserRoles

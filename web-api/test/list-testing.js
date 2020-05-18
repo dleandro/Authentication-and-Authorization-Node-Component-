@@ -11,7 +11,7 @@ const user = {
     username: TEST_PASS,
     password: TEST_PASS
 }
-const contentTypeSetter= (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
+const contentTypeSetter = (request) => request.set('Accept', 'application/json').expect('Content-Type', /json/)
 
 var
     listId,
@@ -31,7 +31,7 @@ const list = (userId) => {
     }
 }
 
-function bodyLengthChecker(resp){
+function bodyLengthChecker(resp) {
     assert.equal(resp.body.length > 0, true)
     done()
 }
@@ -79,13 +79,10 @@ describe('[LIST CRUD TESTING]', function () {
     })
 
 
-
     it('should get the previously created list', function (done) {
 
 
     })
-
-
 
 
     it('should get lists', function (done) {
@@ -96,8 +93,6 @@ describe('[LIST CRUD TESTING]', function () {
             .end((err, resp) => bodyLengthChecker(resp))
 
     })
-
-
 
 
     it('should get active lists', function (done) {
@@ -151,7 +146,8 @@ describe('[LIST UPDATE AND DELETE TESTING]', function () {
             request(app)
                 .delete(links.users.SPECIFIC_USER_PATH(userId)))
             .expect(200)
-            .end((err, resp) => { })
+            .end((err, resp) => {
+            })
     })
 
 

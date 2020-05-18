@@ -9,8 +9,8 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    create: async (role, permission) =>
-        await RolePermission.create({
+    create: (role, permission) =>
+        RolePermission.create({
             role: role,
             permission: permission
         }),
@@ -20,8 +20,8 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    delete: async (role, permission) =>
-        await RolePermission.destroy({
+    delete:  (role, permission) =>
+        RolePermission.destroy({
             where: {
                 role: role, permission: permission
             }
@@ -31,8 +31,8 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    getRolesByPermission: async (permission) =>
-        await RolePermission.findAll({
+    getRolesByPermission:  (permission) =>
+        RolePermission.findAll({
             where: {
                 permission: permission
             }

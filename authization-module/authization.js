@@ -27,7 +27,7 @@ const
         /**
          * returns idp resource file to manage idp users
          */
-        idp: require('./resources/idps/idps-dal'),
+        idp: require('./resources/dals/idps-dal'),
 
         /**
          * returns list resource file to manage lists

@@ -17,8 +17,8 @@ passport.use('local', require('./strategies/local-strategy'))
  * @param done - callback
  */
 function refToUser(userRef, done) {
-  passportUtils.findUser(userRef)
-      .then(user => (user) ? done(null, user) : done('User unknown'))
+    passportUtils.findUser(userRef)
+        .then(user => (user) ? done(null, user) : done('User unknown'))
 }
 
 /**
@@ -27,7 +27,7 @@ function refToUser(userRef, done) {
  * @param done - callback
  */
 function userToRef(user, done) {
-  done(null, user.id);
+    done(null, user.id);
 }
 
 passport.serializeUser(userToRef);

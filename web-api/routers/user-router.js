@@ -13,8 +13,18 @@ module.exports = function (apiUtils, authization) {
         userRouter = require('express').Router()
 
     const promiseDataToResponse = (res, dataPromise) => dataPromise
-        .then(answer => apiUtils.setResponse(res, answer, 200))
-        .catch(err => apiUtils.setResponse(res, err, 400));
+        .catch(err => {
+            throw errors.errorExecutingQuery
+        })
+        .then(data => {
+            if (data && data.length) {
+                return apiUtils.setResponse(res, data, 200)
+            }
+            throw errors.noResponseFound
+        })
+        .catch(err => {
+            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
+        });
 
     userRouter.route('/')
         .get(getAllUsers)

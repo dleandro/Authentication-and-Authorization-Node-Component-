@@ -9,7 +9,7 @@ module.exports = {
     getAll: async () =>
         Protocols.findAll({raw: true})
     ,
-    get: async (name) => {
-        Protocols.findByPk(name)
-    },
+    get: async (name) => 
+        Protocols.findByPk(name,{raw:true})
+    ,
 }

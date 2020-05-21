@@ -34,8 +34,8 @@ const defineTable = (modelName, attributes) => sequelize.define(modelName, attri
  */
 const Permission = defineTable('Permission', {
     id: NonNullAutoIncIntPK,
-    method: NonNullString,
-    path: DefaultString,
+    resource: NonNullString,
+    action: DefaultString,
     description: DefaultString
 });
 /**
@@ -60,9 +60,7 @@ const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueSt
  * @type {Model}
  */
 const RolePermission = defineTable('RolePermission', {
-    role: foreignKey(Role, 'id', NonNullAutoIncIntPK),
-    permission: foreignKey(Permission, 'id', NonNullIntPK)
-});
+})
 /**
  * User_History(
  * - user_id: NonNullAutoIncIntPK,
@@ -149,6 +147,9 @@ const UserRoles = defineTable('UserRoles', {
     updater: DefaultInt,
     active: DefaultBool
 });
+Role.belongsToMany(Permission, { through: RolePermission });
+Permission.belongsToMany(Role, { through: RolePermission });
+
 
 exports.Permission =Permission
 exports.Protocols = Protocols

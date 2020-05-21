@@ -1,6 +1,7 @@
 'use strict'
 
-const Role = require('../sequelize-model').Role
+const Role = require('../sequelize-model').Role,
+sequelize=require('../../common/util/db')
 module.exports = {
     /**
      *
@@ -35,5 +36,10 @@ module.exports = {
      *
      * @returns {Promise<void>}
      */
-    getAll: () =>Role.findAll({raw: true})
+    getAll: () =>Role.findAll({raw: true}),
+
+    getRolesWithParents :()=>sequelize.query(
+        "SELECT id, role, parent_role FROM Role WHERE parent_role IS NOT NULL",
+    { type: sequelize.QueryTypes.SELECT }
+    )
 }

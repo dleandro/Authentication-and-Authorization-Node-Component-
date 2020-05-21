@@ -1,6 +1,8 @@
 'use strict'
 
-const RolePermission = require('../sequelize-model').RolePermission
+const RolePermission = require('../sequelize-model').RolePermission,
+sequelize=require('../../common/util/db')
+
 
 module.exports = {
     /**
@@ -36,6 +38,14 @@ module.exports = {
             where: {
                 permission: permission
             }
-        })
+        }),
+
+    joinRolesAndPermissions:()=>
+       sequelize.query(
+           "SELECT role,resource,action FROM RolePermission JOIN Role ON Role.id=RolePermission.RoleId JOIN Permission ON Permission.id=RolePermission.PermissionId",
+       { type: sequelize.QueryTypes.SELECT }
+       )
+        
+  
 
 }

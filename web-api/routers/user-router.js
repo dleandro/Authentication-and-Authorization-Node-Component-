@@ -10,7 +10,8 @@ module.exports = function (apiUtils, authization) {
 
     const users = authization.user,
         idps = authization.idp,
-        userRouter = require('express').Router()
+        userRouter = require('express').Router(),
+        rbac=require('../../authization-module/common/middleware/rbac')
 
     const promiseDataToResponse = (res, dataPromise) => dataPromise
         .catch(err => {
@@ -45,8 +46,11 @@ module.exports = function (apiUtils, authization) {
 
     userRouter.put('/:id/password', updatePassword)
 
-    function getAllUsers(req, res) {
-        promiseDataToResponse(res, users.getAll())
+    async function getAllUsers(req, res) {
+        if(await rbac.can('admin','get','user')){
+            console.log("you can get a user")
+            promiseDataToResponse(res, users.getAll())
+        }
     }
 
     function createUser(req, res) {

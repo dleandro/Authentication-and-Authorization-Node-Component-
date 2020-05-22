@@ -5,7 +5,7 @@ const rolesDal=require('../../resources/dals/roles-dal'),
       rolePermissionDal=require('../../resources/dals/roles-permissions-dal')
 
       const rbac = new RBAC()
-init();
+//init();
 
 
 

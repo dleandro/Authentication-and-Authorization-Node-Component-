@@ -1,10 +1,13 @@
 {
   "name": "authization",
+  "jest": {
+    "verbose": true
+  },
   "version": "1.0.0",
   "description": "Module for authentication and authorization",
   "main": "authization.js",
   "scripts": {
-    "test": "npm test"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -36,5 +39,8 @@
     "pg-hstore": "^2.3.3",
     "rbac": "^5.0.3",
     "sequelize": "^5.21.9"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1"
   }
 }

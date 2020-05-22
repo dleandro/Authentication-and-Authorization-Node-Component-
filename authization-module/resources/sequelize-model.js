@@ -60,10 +60,6 @@ const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueSt
  * @type {Model}
  */
 
-/*const RolePermission = defineTable('RolePermission', {
-    //role: DefaultString,//foreignKey(Role, 'id', NonNullAutoIncIntPK),
-   // permission: DefaultInt//foreignKey(Permission, 'id', NonNullIntPK)
-});*/
 Role.belongsToMany(Permission, { through: 'RolePermission',timestamps: false });
 Permission.belongsToMany(Role, { through: 'RolePermission',timestamps: false });
 /**
@@ -145,7 +141,7 @@ const Idp = defineTable('Idp', {
     idp_id: Sequelize.STRING,
     idpname: Sequelize.STRING
 });
-User.hasMany(Idp, { foreignKey: 'user_id' })
+User.hasOne(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(
  * - id: NonNullAutoIncIntPK,

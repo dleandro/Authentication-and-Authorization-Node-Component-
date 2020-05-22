@@ -13,7 +13,6 @@ import TableRow from "./TableRow";
  * @constructor
  */
 export default function CustomTable({labels, rows, editRequest, addRequest, deleteRequest}) {
-    console.log(rows)
 
     const renderRows = (rows) => {
         var tRows = rows.map(rowCells => <TableRow editRequest={editRequest} deleteRequest={deleteRequest}

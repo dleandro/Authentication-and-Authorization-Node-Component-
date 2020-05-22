@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize'),
+const  { Sequelize, DataTypes } = require('sequelize'),
     sequelize = require('../common/util/db')
 /**
  * allowNull defaults to true
@@ -34,9 +34,9 @@ const defineTable = (modelName, attributes) => sequelize.define(modelName, attri
  */
 const Permission = defineTable('Permission', {
     id: NonNullAutoIncIntPK,
+    path: Sequelize.STRING,
     method: NonNullString,
-    path: DefaultString,
-    description: DefaultString
+    description: Sequelize.STRING,
 });
 /**
  * Protocols(
@@ -59,9 +59,27 @@ const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueSt
  * - permission: NonNullIntPK)
  * @type {Model}
  */
-const RolePermission = defineTable('RolePermission', {
-    role: foreignKey(Role, 'id', NonNullAutoIncIntPK),
-    permission: foreignKey(Permission, 'id', NonNullIntPK)
+/*const RolePermission = defineTable('RolePermission', {
+    //role: DefaultString,//foreignKey(Role, 'id', NonNullAutoIncIntPK),
+   // permission: DefaultInt//foreignKey(Permission, 'id', NonNullIntPK)
+});*/
+Role.belongsToMany(Permission, { through: 'RolePermission',timestamps: false });
+Permission.belongsToMany(Role, { through: 'RolePermission',timestamps: false });
+/**
+ * User(
+ * - id: NonNullAutoIncIntPK,
+ * - username: NonNullString,
+ * - password: DefaultString)
+ * @type {Model}
+ */
+const User = defineTable('User', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },//NonNullUniqueString,
+    id: NonNullAutoIncIntPK,
+    password: DefaultString
 });
 /**
  * User_History(
@@ -71,22 +89,11 @@ const RolePermission = defineTable('RolePermission', {
  * @type {Model}
  */
 const UserHistory = defineTable('User_History', {
-    user_id: NonNullAutoIncIntPK,
+    //user_id: NonNullAutoIncIntPK,
     date: NonNullDate,
-    description: DefaultString
+    description: Sequelize.STRING
 });
-/**
- * User(
- * - id: NonNullAutoIncIntPK,
- * - username: NonNullString,
- * - password: DefaultString)
- * @type {Model}
- */
-const User = defineTable('User', {
-    id: NonNullAutoIncIntPK,
-    username: NonNullUniqueString,
-    password: DefaultString
-});
+User.hasMany(UserHistory, { foreignKey: 'user_id' })
 /**
  * UserSession(
  * - user_id: NonNullAutoIncIntPK,
@@ -94,9 +101,15 @@ const User = defineTable('User', {
  * @type {Model}
  */
 const UserSession = defineTable('User_Session', {
-    user_id: foreignKey(User, 'id', NonNullAutoIncIntPK),
-    session_id: NonNullStringPK
+    //user_id: foreignKey(User, 'id', NonNullAutoIncIntPK),
+    session_id:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true,
+    }
 });
+User.hasMany(UserSession, { foreignKey: 'user_id' })
+
 /**
  * List(
  * - id: NonNullAutoIncIntPK,
@@ -110,13 +123,15 @@ const UserSession = defineTable('User_Session', {
  */
 const List = defineTable('List', {
     id: NonNullAutoIncIntPK,
-    user_id: foreignKey(User, 'id', DefaultInt),
-    list: DefaultString,
+    //user_id: foreignKey(User, 'id', DefaultInt),
+    list: Sequelize.STRING,
     start_date: DefaultDate,
-    end_date: DefaultDate,
-    updater: DefaultInt,
+    end_date: Sequelize.DATE,
+    updater: Sequelize.INTEGER,
     active: DefaultBool
 });
+List.belongsToMany(User, {through: 'UserList',timestamps: false})
+User.belongsToMany(List, {through: 'UserList',timestamps: false})
 /**
  * Idp(
  * - user_id: NonNullIntPK,
@@ -125,10 +140,11 @@ const List = defineTable('List', {
  * @type {Model}
  */
 const Idp = defineTable('Idp', {
-    user_id: foreignKey(User, 'id', NonNullIntPK),
-    idp_id: DefaultString,
-    idpname: DefaultString
+    //user_id: foreignKey(User, 'id', NonNullIntPK),
+    idp_id: Sequelize.STRING,
+    idpname: Sequelize.STRING
 });
+User.hasMany(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(
  * - id: NonNullAutoIncIntPK,
@@ -142,21 +158,25 @@ const Idp = defineTable('Idp', {
  */
 const UserRoles = defineTable('UserRoles', {
     id: NonNullAutoIncIntPK,
-    user_id: foreignKey(User, 'id', DefaultInt),
-    role_id: foreignKey(Role, 'id', DefaultInt),
+    //user_id: foreignKey(User, 'id', DefaultInt),
+    //role_id: foreignKey(Role, 'id', DefaultInt),
     start_date: DefaultDate,
-    end_date: DefaultDate,
-    updater: DefaultInt,
+    end_date: Sequelize.DATE,
+    updater: Sequelize.INTEGER,
     active: DefaultBool
 });
+Role.belongsToMany(User, { through: UserRoles });
+User.belongsToMany(Role, { through: UserRoles });
+
 
 exports.Permission =Permission
 exports.Protocols = Protocols
 exports.Role = Role
-exports.RolePermission = RolePermission
+exports.RolePermission = sequelize.models.RolePermission
 exports.UserHistory = UserHistory
 exports.User = User
 exports.UserSession = UserSession
 exports.List = List
 exports.Idp = Idp
+exports.UserList = sequelize.models.UserList
 exports.UserRoles = UserRoles

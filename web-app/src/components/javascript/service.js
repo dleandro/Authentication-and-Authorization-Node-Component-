@@ -1,23 +1,23 @@
 var {users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs} = require('../links')
 
 const HOMEPAGE = "http://localhost:8082";
+const DEFAULT_OPTIONS = (met)=> {return {method: met, credentials: "include",headers: {'Content-Type': "application/json"}}}
+function produceInit(body, met){
+    return {...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true}
+}
+function handleResponse(resp) {
+    if (resp.ok) {
+        return resp.json()
+    }
+    throw new Error('Network response was not ok');
+}
 
-const handleResponse = (resp) => resp.headers.get("content-type").includes("application/json") ? resp.json() : resp.text()
-const getRequest = async (url) => fetch(HOMEPAGE + url, {method: "GET", credentials: "include"})
-    .then(resp => handleResponse(resp))
-    .catch(err => {
-        console.log(`failed to fetch: GET ${url}`);
-        return [err]
-    })
-const makeRequest = (url, body, met) => fetch(HOMEPAGE + url,
-    {
-        credentials: "include",
-        method: met,
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(body),
-        json: true
-    })
-    .then(resp => handleResponse(resp)).catch(err => console.log(`failed to fetch: ${met} ${url}`))
+
+const request = (url,init) => fetch(url,init).then(resp=>handleResponse(resp)).catch(err => {console.error(`failed to fetch: ${init.method} ${url}`);return [err]})
+
+const getRequest = (url) => request(HOMEPAGE + url,DEFAULT_OPTIONS('GET'))
+const makeRequest = (url, body, met) => request(HOMEPAGE + url,produceInit(body,met))
+
 
 /**
  * Function used to make login logout
@@ -48,11 +48,7 @@ export function userService() {
 
 export function listService() {
     return {
-        getLists: async () => getRequest(lists.LIST_PATH)
-            .then(v => {
-                console.log(v);
-                return v
-            }),
+        getLists: async () => getRequest(lists.LIST_PATH),
         addList: async (arr) => makeRequest(lists.LIST_PATH, {
             user: arr[0],
             list: [2],

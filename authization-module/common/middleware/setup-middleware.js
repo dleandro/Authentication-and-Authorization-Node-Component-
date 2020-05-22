@@ -6,15 +6,18 @@ const
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     cookieSecret = 'justasecretstring', // should change after a while if it has some security implication openssl rand -hex 32 on the cmd
-    config = require('../config/config')
-//SessionStore = require('express-session-sequelize')(session.Store);
+    config = require('../config/config'),
+    mydb=require('../util/db'),
+    SessionStore = require('express-session-sequelize')(session.Store);
+    require('./rbac')
 
 
-/*
+
+
       const sequelizeSessionStore = new SessionStore({
-        db: config.database_opts,
+        db: mydb,
     });
-    */
+    
 
 
 // This module is used to setup middleware on the app passed as a parameter
@@ -41,7 +44,7 @@ module.exports = function (app) {
         resave: false,
         //saveUninitialized to false to only create a session if a UA(User agent) made a login
         saveUninitialized: false,
-        // store: sequelizeSessionStore,
+        store: sequelizeSessionStore,
         secret: cookieSecret,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24

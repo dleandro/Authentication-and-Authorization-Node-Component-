@@ -59,6 +59,7 @@ const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueSt
  * - permission: NonNullIntPK)
  * @type {Model}
  */
+
 /*const RolePermission = defineTable('RolePermission', {
     //role: DefaultString,//foreignKey(Role, 'id', NonNullAutoIncIntPK),
    // permission: DefaultInt//foreignKey(Permission, 'id', NonNullIntPK)

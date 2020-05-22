@@ -1,6 +1,7 @@
 'use strict'
 
-const Users = require('../sequelize-model').User
+const Users = require('../sequelize-model').User,
+Idp=require('../sequelize-model').Idp
 
 module.exports = {
     /**
@@ -9,13 +10,7 @@ module.exports = {
      * @returns {Promise<void>}
      */
     getByIdp: async (idp) => {
-        const query = {
-            statement: `Select * from IDP where idp_id= ?`,
-            description: "get user by id",
-            params: [idp]
-        }
-        const result = await dalUtils.executeQuery(query)
-
+        const result=await Idp.findAll({where:{idp_id:idp}})
         return result[0] == null ? null : getById(result[0].user_id)
     },
     /**

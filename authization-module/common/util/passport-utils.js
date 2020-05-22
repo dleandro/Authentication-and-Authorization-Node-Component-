@@ -55,10 +55,10 @@ module.exports = {
 
         const userId = await users.create(username, password)
 
-        await idps.create(idpId, idpName, userId.insertId)
+        await idps.create(idpId, idpName, userId.id)
 
         return {
-            id: userId.insertId,
+            id: userId.id,
             idp_id: idpId,
             username: username
         }
@@ -82,6 +82,6 @@ module.exports = {
     },
     checkProtocol: async (protocolName) => {
         const result = await protocol.get(protocolName)
-        return result.length > 0
+        return result!=null
     }
 }

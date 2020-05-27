@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 
 import SideNav, {NavIcon, NavItem, NavText} from '@trendmicro/react-sidenav';
 import {Link} from 'react-router-dom';
-const fontSize={fontSize: '1.75em',color: '#1cc4e6'}
+const fontSize={fontSize: '1.75em'/*,color: '#1cc4e6'*/}
 
 /**
  * Receives the width of the sidebar when collapsed or expanded
@@ -53,9 +53,9 @@ export default function Sidebar({navWidthCollapsed, navWidthExpanded}) {
             <SideNav.Toggle/>
             <SideNav.Nav defaultSelected="home">
                 {mainItems.map(item =>
-                    <NavItem eventKey={item.key} style={ { color: 'blue' } }>
-                            <NavIcon style={ { color: 'blue' } }><Link to={item.link}>{item.icon}</Link></NavIcon>
-                            { expand ? <NavText ><Link to={item.link} style={ { color: 'blue' } }> {item.text}</Link></NavText>:null}
+                    <NavItem eventKey={item.key}>
+                            <NavIcon ><Link to={item.link}>{item.icon}</Link></NavIcon>
+                            { expand ? <NavText ><Link to={item.link}> {item.text}</Link></NavText>:null}
 
                         {item.subItems !== undefined ? item.subItems.map(subItem =>
                             <NavItem>

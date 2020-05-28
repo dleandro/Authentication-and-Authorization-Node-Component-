@@ -1,28 +1,28 @@
-const  { Sequelize, DataTypes } = require('sequelize'),
+const { Sequelize, DataTypes } = require('sequelize'),
     sequelize = require('../common/util/db')
 /**
  * allowNull defaults to true
  * @type {{type: StringDataTypeConstructor}}
  */
-const DefaultString = {type: Sequelize.STRING}
-const DefaultDate = {type: Sequelize.DATE}
-const DefaultInt = {type: Sequelize.INTEGER}
-const DefaultBool = {type: Sequelize.BOOLEAN}
-const NonNullDate = {...DefaultDate, allowNull: false} //only used 1 time considering remove this const
-const NonNullString = {...DefaultString, allowNull: false}
-const NonNullUniqueString = {...NonNullString, unique: true} //only used 1 time considering remove this const
-const NonNullStringPK = {...NonNullString, primaryKey: true} //only used 1 time considering remove this const
-const NonNullIntPK = {...DefaultInt, allowNull: false, primaryKey: true}
-const NonNullAutoIncIntPK = {type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true}
+const DefaultString = { type: Sequelize.STRING }
+const DefaultDate = { type: Sequelize.DATE }
+const DefaultInt = { type: Sequelize.INTEGER }
+const DefaultBool = { type: Sequelize.BOOLEAN }
+const NonNullDate = { ...DefaultDate, allowNull: false } //only used 1 time considering remove this const
+const NonNullString = { ...DefaultString, allowNull: false }
+const NonNullUniqueString = { ...NonNullString, unique: true } //only used 1 time considering remove this const
+const NonNullStringPK = { ...NonNullString, primaryKey: true } //only used 1 time considering remove this const
+const NonNullIntPK = { ...DefaultInt, allowNull: false, primaryKey: true }
+const NonNullAutoIncIntPK = { type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true }
 const foreignKey = (Model, Key, dataConstraints) => {
-    return {...dataConstraints, references: {model: Model, key: Key}}
+    return { ...dataConstraints, references: { model: Model, key: Key } }
 }
 /**
  * @param modelName
  * @param attributes
  * @returns {Model}
  */
-const defineTable = (modelName, attributes) => sequelize.define(modelName, attributes, {timestamps: false,freezeTableName: true});
+const defineTable = (modelName, attributes) => sequelize.define(modelName, attributes, { timestamps: false, freezeTableName: true });
 
 /**
  * Permission(
@@ -44,7 +44,7 @@ const Permission = defineTable('Permission', {
  * - active:DefaultBool)
  * @type {Model}
  */
-const Protocols = defineTable('Protocols', {protocol: NonNullStringPK, active: DefaultBool});
+const Protocols = defineTable('Protocols', { protocol: NonNullStringPK, active: DefaultBool });
 /**
  Role(
  * - id: NonNullAutoIncIntPK,
@@ -52,7 +52,7 @@ const Protocols = defineTable('Protocols', {protocol: NonNullStringPK, active: D
  * - parent_role: DefaultInt)
  * @type {Model}
  */
-const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueString, parent_role: DefaultInt});
+const Role = defineTable('Role', { id: NonNullAutoIncIntPK, role: NonNullUniqueString, parent_role: DefaultInt });
 /**
  * RolePermission(
  * - role: NonNullAutoIncIntPK,
@@ -60,8 +60,8 @@ const Role = defineTable('Role', {id: NonNullAutoIncIntPK, role: NonNullUniqueSt
  * @type {Model}
  */
 
-Role.belongsToMany(Permission, { through: 'RolePermission',timestamps: false });
-Permission.belongsToMany(Role, { through: 'RolePermission',timestamps: false });
+Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false });
+Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false });
 /**
  * User(
  * - id: NonNullAutoIncIntPK,
@@ -99,7 +99,7 @@ User.hasMany(UserHistory, { foreignKey: 'user_id' })
  */
 const UserSession = defineTable('User_Session', {
     //user_id: foreignKey(User, 'id', NonNullAutoIncIntPK),
-    session_id:{
+    session_id: {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
@@ -127,8 +127,8 @@ const List = defineTable('List', {
     updater: Sequelize.INTEGER,
     active: DefaultBool
 });
-List.belongsToMany(User, {through: 'UserList',timestamps: false})
-User.belongsToMany(List, {through: 'UserList',timestamps: false})
+List.hasOne(User, { through: 'UserList', timestamps: false })
+User.belongsTo(List, { through: 'UserList', timestamps: false })
 /**
  * Idp(
  * - user_id: NonNullIntPK,
@@ -166,7 +166,7 @@ Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
 
 
-exports.Permission =Permission
+exports.Permission = Permission
 exports.Protocols = Protocols
 exports.Role = Role
 exports.RolePermission = sequelize.models.RolePermission

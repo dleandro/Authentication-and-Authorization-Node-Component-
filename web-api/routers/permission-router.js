@@ -13,8 +13,14 @@ module.exports = function (apiUtils, authization) {
             throw errors.errorExecutingQuery
         })
         .then(data => {
-            if (data && data.length) {
-                return apiUtils.setResponse(res, data, 200)
+            if (Array.isArray(data)){
+                if (data.length) {
+                    return apiUtils.setResponse(res, data, 200)
+                }
+            } else {
+               if (data){
+                   return apiUtils.setResponse(res, data, 200)
+               }
             }
             throw errors.noResponseFound
         })
@@ -37,7 +43,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function addPermission(req, res) {
-        permissions.create(req.body.method, req.body.path, req.body.description)
+        permissions.create(req.body.action,req.body.resource)
             .then(answer => {
                 req.body.id = answer.insertId
                 apiUtils.setResponse(res, req.body, 201)
@@ -46,11 +52,11 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deletePermission(req, res) {
-        promiseDataToResponse(permissions.delete(req.body.id))
+        promiseDataToResponse(res,permissions.delete(req.params.id))
     }
 
     function getPermissionById(req, res) {
-        promiseDataToResponse(permissions.getSpecificById(req.params.id))
+        promiseDataToResponse(res,permissions.getSpecificById(req.params.id))
     }
 
     return permissionRouter

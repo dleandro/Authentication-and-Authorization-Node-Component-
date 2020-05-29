@@ -12,7 +12,8 @@ module.exports = {
         res.headers = {
             'Content-type': 'application/json'
         }
-        res.status(statusCode).send(answer)
+        res.status(statusCode)
+        res.send(JSON.stringify(answer))
     }
 
 }

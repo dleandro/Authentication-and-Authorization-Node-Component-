@@ -92,15 +92,15 @@
 .Office-container {
     display: flex;
     align-items: center;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 .Office-image {
     display: inline-block;
     border: 1px solid #ea3e23;
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.45rem;
     background-image: url(https://gxcuf89792.i.lithium.com/t5/image/serverpage/image-id/1296i7768C2951837E376/image-size/small);
     border-radius: 4px;
     background-size: cover;

@@ -4,13 +4,8 @@
   "description": "",
   "main": "./server/index.js",
   "dependencies": {
-    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "lodash": "^4.17.15",
-    "mariadb": "^2.2.0",
-    "morgan": "^1.10.0",
-    "mysql2": "^2.1.0",
-    "sequelize": "^5.21.9"
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "mocha": "^7.1.1",

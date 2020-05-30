@@ -14,8 +14,14 @@ module.exports = function (apiUtils, authization) {
             throw errors.errorExecutingQuery
         })
         .then(data => {
-            if (data && data.length) {
-                return apiUtils.setResponse(res, data, 200)
+            if (Array.isArray(data)){
+                if (data.length) {
+                    return apiUtils.setResponse(res, data, 200)
+                }
+            } else {
+               if (data){
+                   return apiUtils.setResponse(res, data, 200)
+               }
             }
             throw errors.noResponseFound
         })
@@ -38,14 +44,23 @@ module.exports = function (apiUtils, authization) {
 
     listRouter.put('/deactivate/:id', deactivateList)
 
-    function addList(req, res) {
-        lists.create(req.body.user, req.body.list, req.body.start_date, req.body.end_date, req.body.updater, req.body.active)
+    function addList(req,res){
+        lists.create(req.body.list)
+        .then(answer => {
+            req.body.id = answer.insertId
+            apiUtils.setResponse(res, req.body, 201)
+        })
+        .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+    }
+
+   /* function addUserToList(req, res) {
+        userlist.create(req.body.user, req.body.list, req.body.start_date, req.body.end_date, req.body.updater, req.body.active)
             .then(answer => {
                 req.body.id = answer.insertId
                 apiUtils.setResponse(res, req.body, 201)
             })
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
-    }
+    }*/
 
     function deleteList(req, res) {
         promiseDataToResponse(res, lists.delete(req.params.id))

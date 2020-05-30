@@ -20,7 +20,7 @@ const defineTable = (modelName, attributes) => sequelize.define(modelName, attri
  * - description: DefaultString)
  * @type {Model}
  */
-const Permission = defineTable('Permission', {path: STRING, method: NonNullString, description: STRING});
+const Permission = defineTable('Permission', {action: STRING, resource: STRING});
 /**
  * Protocols(
  * - protocol: NonNullStringPK,

@@ -11,11 +11,10 @@ module.exports = {
      * @param description
      * @returns {Promise<void>}
      */
-    create: async (method, path, description) =>
+    create: async (action,resource) =>
          Permission.create({
-            method: method,
-            path: path,
-            description: description
+            action: action,
+            resource: resource
         }),
 
     /**
@@ -24,11 +23,10 @@ module.exports = {
      * @param path
      * @returns {Promise<void>}
      */
-    delete: async (method, path) =>
-         Permission.delete({
+    delete: async (id) =>
+         Permission.destroy({
             where: {
-                method: method,
-                path: path
+               id:id
             }
         }),
     /**
@@ -50,11 +48,11 @@ module.exports = {
      * @param path
      * @returns {Promise<*>}
      */
-    getSpecific: async (method, path) =>
+    getSpecific: async (action, resource) =>
         Permission.findAll({
             where: {
-                method: method,
-                path: path
+                action: action,
+                resource: resource
             }
         }),
 

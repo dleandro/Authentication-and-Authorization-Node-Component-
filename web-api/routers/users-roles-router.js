@@ -21,8 +21,14 @@ module.exports = function (apiUtils, authization) {
             throw errors.errorExecutingQuery
         })
         .then(data => {
-            if (data && data.length) {
-                return apiUtils.setResponse(res, data, 200)
+            if (Array.isArray(data)){
+                if (data.length) {
+                    return apiUtils.setResponse(res, data, 200)
+                }
+            } else {
+               if (data){
+                   return apiUtils.setResponse(res, data, 200)
+               }
             }
             throw errors.noResponseFound
         })

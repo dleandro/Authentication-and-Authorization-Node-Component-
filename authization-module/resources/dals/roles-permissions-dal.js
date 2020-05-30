@@ -13,8 +13,8 @@ module.exports = {
      */
     create: (role, permission) =>
         RolePermission.create({
-            role: role,
-            permission: permission
+            RoleId: role,
+            PermissionId: permission
         }),
     /**
      *
@@ -25,7 +25,7 @@ module.exports = {
     delete:  (role, permission) =>
         RolePermission.destroy({
             where: {
-                role: role, permission: permission
+                RoleId: role, PermissionId: permission
             }
         }),
     /**
@@ -36,7 +36,7 @@ module.exports = {
     getRolesByPermission:  (permission) =>
         RolePermission.findAll({
             where: {
-                permission: permission
+                PermissionId: permission
             }
         }),
 

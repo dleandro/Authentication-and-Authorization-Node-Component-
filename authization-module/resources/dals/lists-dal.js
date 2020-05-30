@@ -29,14 +29,9 @@ module.exports = {
      * @param active
      * @returns {Promise<CustomError>}
      */
-    create: async (userId, list, startDate, endDate, updater, active) =>
+    create: async (list) =>
         List.create({
-            user_id: userId,
-            list: list,
-            start_date: startDate,
-            end_date: endDate,
-            updater: updater,
-            active: active
+            list: list
         }),
 
 

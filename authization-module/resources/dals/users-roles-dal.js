@@ -15,8 +15,8 @@ module.exports = {
      * @returns {Promise<void>}
      */
     create: (user, role, startDate, endDate, updater, active) => UserRole.create({
-            user_id: user,
-            role_id: role,
+            UserId: user,
+            RoleId: role,
             start_date: startDate,
             end_date: endDate,
             updater: updater,

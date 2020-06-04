@@ -10,14 +10,7 @@
     "callbackURL": "http://localhost:8082/api/authentications/azureAD/callback",
     "tenant": "bb367ab9-9da9-455e-b938-fd65cd29f5ae"
   },
-  "database_opts": {
-    "host": "eporqep6b4b8ql12.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
-    "port": 3306,
-    "user": "jvp56pl2nbv1v9pw",
-    "password": "pv9t6oy23bsv65ri",
-    "connectionLimit": 5,
-    "database": "r15dtqer5c72jvex"
-  },
+  "database_opts": {},
   "webAppUri": "http://localhost:3000",
   "isModuleSetUp": false,
   "sgbd": "mariadb"

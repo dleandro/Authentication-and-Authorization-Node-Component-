@@ -4,10 +4,18 @@
 
 const
     express = require('express'),
-    app = express()
+    app = express(),
+    db={
+        "host": "eporqep6b4b8ql12.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+        "port": 3306,
+        "user": "jvp56pl2nbv1v9pw",
+        "password": "pv9t6oy23bsv65ri",
+        "connectionLimit": 5,
+        "database": "r15dtqer5c72jvex"
+      }
 
 // Setup app's middleware
-require('./common/middleware/app-middleware')(app)
+require('./common/middleware/app-middleware')(app,db)
 
 // api routes and their behaviour
 app.use('/api', require("./web-api"))

@@ -3,9 +3,15 @@
 // This file is the entry point for our authentication and autorization nodejs module
 // it also calls the setup file
 
-const
-    config = require('./common/config/config'),
-    functionalities = {
+
+
+module.exports = function (app,db) {
+
+    const
+    config = require('./common/config/config')
+    
+    config.database_opts=db;
+   const functionalities = {
 
 
         /**
@@ -66,8 +72,6 @@ const
 
 
     }
-
-module.exports = function (app) {
 
     if (config.isModuleSetUp) {
 

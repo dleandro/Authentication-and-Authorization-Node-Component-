@@ -22,6 +22,7 @@ const links =
             USERNAME_UPDATE_PATH: userId => `${USER_PATH}/${userId}/username`,
             PASSWORD_UPDATE_PATH: userId => `${USER_PATH}/${userId}/password`,
             SPECIFIC_USER_PATH: userId => `${USER_PATH}/${userId}`,
+            SPECIFIC_USER_PATH_BY_USERNAME: userName => `${USER_PATH}/byUsername/${userName}`,
             GOOGLE_LOGIN_PATH: `${AUTHENTICATION_PATH}/google`,
             SAML_LOGIN_PATH: `${AUTHENTICATION_PATH}/saml`,
             AZUREAD_LOGIN_PATH: `${AUTHENTICATION_PATH}/azureAD`,

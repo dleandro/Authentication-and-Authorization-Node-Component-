@@ -11,7 +11,7 @@ import {Dropdown} from "react-bootstrap";
  * @returns {*}
  * @constructor
  */
-export default function Uperbar({setRedirect, isLoggedIn, logoutWith}) {
+export default function Uperbar({setRedirect, isLoggedIn, logoutWith,userId}) {
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
 
@@ -33,7 +33,7 @@ export default function Uperbar({setRedirect, isLoggedIn, logoutWith}) {
                 title={<i className={"fa fa-user-circle-o"}> </i>}
                 id={`dropdown-variants-Info`}
             >
-                <Dropdown.Item eventKey="1"><i className="fa fa-vcard"/> Profile</Dropdown.Item>
+                <Dropdown.Item eventKey="1" onClick={()=>setRedirect(`/users/${userId}`)}><i className="fa fa-vcard"/> Profile</Dropdown.Item>
                 <Dropdown.Item eventKey="3" active>
                     <i className={"fa fa-cog fa-spin"}/> Settings
                 </Dropdown.Item>

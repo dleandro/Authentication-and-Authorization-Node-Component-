@@ -7,7 +7,7 @@ class UserProvider extends Component {
     state = {
         selectedProtocol: "/",
         redirect: {should: false, link: "/"},
-        user: {name: "", pass: ""},
+        user: {name: "", pass: "", id:''},
         isLoggedIn: false,
         changeProtocol: (inputProto) => {
             this.setState({selectedProtocol: inputProto});

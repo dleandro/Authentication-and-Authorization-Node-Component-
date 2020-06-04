@@ -36,7 +36,7 @@ export function authenticationService() {
 
 export function userService() {
     return {
-        getUser: async (id) => getRequest(users.USER_PATH + id),
+        getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUsers: async () => getRequest(users.USER_PATH),
         addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[1], password: arr[2]}, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), {username: arr[1]}, 'PUT'),
@@ -59,7 +59,8 @@ export function listService() {
         }, 'POST'),
         deactivateList: async (id) => makeRequest(lists.LIST_DEACTIVATION_PATH(id), {}, 'PUT'),
         deleteList: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
-        getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH)
+        getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH),
+        getUserActiveLists: async (id) => getRequest(lists.USERS_ACTIVE_LISTS_PATH(id))
     }
 }
 
@@ -71,7 +72,8 @@ export function rolesService() {
 
 export function permissionService() {
     return {
-        getPermissions: async () => getRequest(permissions.PERMISSION_PATH)
+        getPermissions: async () => getRequest(permissions.PERMISSION_PATH),
+        getUserPermission: async (userId) => {console.log('getUserPermission needs to be done'); return {action:'mock',resource:'all'} }
 
     }
 }

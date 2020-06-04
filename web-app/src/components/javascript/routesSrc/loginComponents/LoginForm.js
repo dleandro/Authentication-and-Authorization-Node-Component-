@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import {authenticationService} from '../../service'
+import {authenticationService,userService} from '../../service'
 import UserContext from "../../../Context";
 import GoogleButton from 'react-google-button'
 
@@ -34,9 +34,13 @@ export default function LoginForm({id, app: state, setRedirect}) {
     var user, pass = "";
     var loginMe = () => {
         //alert("Loggin in with"+user +pass)
-        authenticationService().login(user, pass)
-            .then(resp => setUser({name: user, pass: pass}))
+        userService().getUser(user)
+            .then(t=>{authenticationService().login(user, pass);return t})
+            .then(setUser)
             .then(setRedirect('/loginSuccessfully'))
+            //.then(t=>authenticationService().login(user, pass))
+            //.then(resp => setUser({name: user, pass: pass}))
+            //.then(setRedirect('/loginSuccessfully'))
     }
 
 

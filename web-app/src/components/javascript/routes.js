@@ -32,7 +32,7 @@ class Routes extends Component {
             <Switch id={"switch"}>
                 <div id={"main"} style={{marginLeft: this.props.sidebarCollapsedSize}}>
                     <UserConsumer>
-                        {state => (<UperBar isLoggedIn={state.isLoggedIn} logoutWith={state.setUser}
+                        {state => (<UperBar isLoggedIn={state.isLoggedIn} logoutWith={state.setUser} userId={state.user.id}
                                             setRedirect={this.setRedirect}/>)}
                     </UserConsumer>
 
@@ -46,7 +46,10 @@ class Routes extends Component {
                     </UserConsumer>
                     <Route path={'/loginSuccessfully'} exact
                            component={() => <LoginSuccessfully setRedirect={this.setRedirect}/>}/>
-                    <Route path={'/users/:id'} exact component={() => <UserInfo/>}/>
+
+                    <UserConsumer>
+                        {state=> <Route path={'/users/:id'} exact component={() => <UserInfo user={state.user}/>}/> }
+                    </UserConsumer>
                     <Route path={'/backoffice'} exact component={() => <BackOffice setRedirect={this.setRedirect}/>}/>
                     <Route path={'/backoffice/lists'} exact component={() => <BackofficeList/>}/>
                     <Route path={'/backoffice/permissions'} exact component={() => <BackofficePermission/>}/>

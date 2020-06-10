@@ -9,7 +9,7 @@ init();
 
 
 
-async function createPermissions() {
+/*async function createPermissions() {
     const permissions = await permissionDal.getAll()
     permissions.map(async (permission) => {
         await rbac.createPermission(permission.action, permission.resource, true)
@@ -36,14 +36,14 @@ async function createHierarchyGrants() {
     const roles = await rolesDal.getRolesWithParents()
     roles.map(async (role) => await rbac.grant(await rbac.getRole(rolePermission.parent_role), await rbac.getRole(role.role)))
     console.log('perai')
-}
+}*/
 
 
 
 async function init() {
-    await createRoles()
-    await createPermissions()
-    await createGrants()
+    //await createRoles()
+    //await createPermissions()
+    //await createGrants()
     await rbac.init()
 }
 

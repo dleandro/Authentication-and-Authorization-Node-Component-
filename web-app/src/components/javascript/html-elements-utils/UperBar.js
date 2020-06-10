@@ -40,11 +40,7 @@ export default function Uperbar({setRedirect, isLoggedIn, logoutWith,userId}) {
                 {render(isLoggedIn)}
             </DropdownButton>
 
-            <div>
-                <input className="form-control mr-sm-2" name="searchBar" id="searcher" type="search"
-                       placeholder="Search" aria-label="Search"/>
-            </div>
-            <button className="btn btn-outline-primary my-2 my-sm-0 " id="searchbutton"> Search</button>
+    
         </nav>
     )
 }

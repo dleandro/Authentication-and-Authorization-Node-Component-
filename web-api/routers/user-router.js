@@ -53,10 +53,8 @@ module.exports = function (apiUtils, authization) {
     userRouter.put('/:id/password', updatePassword)
 
     async function getAllUsers(req, res) {
-        if(await rbac.can('admin','get','user')){
             console.log("you can get a user")
             promiseDataToResponse(res, users.getAll())
-        }
     }
 
     function createUser(req, res) {

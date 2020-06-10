@@ -1,18 +1,20 @@
 'use strict'
 
 const Role = require('../sequelize-model').Role,
-sequelize=require('../../common/util/db')
+sequelize=require('../../common/util/db'),
+rbac=require('../../common/middleware/rbac')
 module.exports = {
     /**
      *
      * @param role
      * @returns {Promise<void>}
      */
-    create: async (role, parentRole) =>
+    create: async (role, parentRole) =>{
+        rbac.createRole(role,true)
         Role.create({
             role: role,
             parent_role: parentRole
-        }),
+        })},
 
     /**
      *

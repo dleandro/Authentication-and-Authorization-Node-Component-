@@ -1,7 +1,8 @@
 'use strict'
 
 const Users = require('../sequelize-model').User,
-Idp=require('../sequelize-model').Idp
+Idp=require('../sequelize-model').Idp,
+    Role= require('../sequelize-model').Role
 
 module.exports = {
     /**
@@ -74,7 +75,9 @@ module.exports = {
      * @param userId
      * @returns {Promise<void>}
      */
-    delete:  (userId) =>Users.destroy({where: {id: userId}})
+    delete:  (userId) =>Users.destroy({where: {id: userId}}),
+
+    getUserRoles: (userId) => User.findAll({ where: { id:userId}, include: [Role],raw:true})
 
 
 }

@@ -1,6 +1,7 @@
 'use strict'
 
 const {User,Idp,List,Permission,Protocols,Role,UserHistory} =require('../resources/sequelize-model')
+const userDal = require('../resources/dals/users-dal')
 
 const containsSubObject = (jsonObject,subObject) => {
     console.log(`Searching for ${JSON.stringify(subObject).toString()} in ${JSON.stringify(jsonObject).toString()}`)
@@ -76,6 +77,17 @@ describe("Sequelize Testings", () => {
         await basicCheckByJson(user,User)
     });
 
+    test("Check join User with Role ", async () => {
+         await User.findAll({ where: { id:1}, include: [Role],raw:true}).then(data=>console.log(data))
+    });
+
+    test("Check join User with List ", async () => {
+        await User.findAll({where:{id:1},include:[List],raw:true}).then(data=>console.log(data))
+    });
+
+    test("Check join Permission with Roles ", async () => {
+        await Role.findAll({where:{id:1},include:[Permission],raw:true}).then(data=>console.log(data))
+    });
 });
 
 

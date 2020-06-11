@@ -33,6 +33,8 @@ module.exports = function (apiUtils, authization) {
         .get(getRoleById)
         .delete(deleteRole)
 
+    roleRouter.route('/:id/permissions').get((req,res)=>promiseDataToResponse(res,roles.getRolePermissions(req.params.id)))
+
     function addRole(req, res) {
         roles.create(req.body.role)
             .then(answer => {

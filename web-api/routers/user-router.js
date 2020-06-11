@@ -45,6 +45,8 @@ module.exports = function (apiUtils, authization) {
     userRouter.get('idp/:id', getUserFromIdp)
     // get user by username
     userRouter.get('/byUsername/:username', getUserByUsername)
+
+    userRouter.get('/:id/roles', (req,res)=>promiseDataToResponse(res, users.getUserRoles(req.params.id)))
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
 

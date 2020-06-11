@@ -1,6 +1,7 @@
 import React from 'react'
 import DropdownButton from "react-bootstrap/DropdownButton";
 import {Dropdown} from "react-bootstrap";
+import {userService} from '../service'
 
 
 /**
@@ -11,6 +12,7 @@ import {Dropdown} from "react-bootstrap";
  * @returns {*}
  * @constructor
  */
+
 export default function Uperbar({setRedirect, isLoggedIn, logoutWith,userId}) {
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
@@ -19,6 +21,7 @@ export default function Uperbar({setRedirect, isLoggedIn, logoutWith,userId}) {
         logoutWith({name: undefined, pass: undefined})
         setRedirect('/login')
     }
+
 
     const render = (predicate) => {
         console.log(`predicate:${predicate}`)
@@ -40,11 +43,7 @@ export default function Uperbar({setRedirect, isLoggedIn, logoutWith,userId}) {
                 {render(isLoggedIn)}
             </DropdownButton>
 
-            <div>
-                <input className="form-control mr-sm-2" name="searchBar" id="searcher" type="search"
-                       placeholder="Search" aria-label="Search"/>
-            </div>
-            <button className="btn btn-outline-primary my-2 my-sm-0 " id="searchbutton"> Search</button>
+    
         </nav>
     )
 }

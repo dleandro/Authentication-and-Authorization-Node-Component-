@@ -12,4 +12,6 @@ module.exports = {
     get: async (name) => 
         Protocols.findByPk(name,{raw:true})
     ,
+    getAllActive:async()=>Protocols.findAll({where:{active:1}}),
+    changeActive:async(protocol,active)=>Protocols.update({active: active}, {where: {protocol: protocol}})
 }

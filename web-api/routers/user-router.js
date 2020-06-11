@@ -46,7 +46,9 @@ module.exports = function (apiUtils, authization) {
     // get user by username
     userRouter.get('/byUsername/:username', getUserByUsername)
 
+
     userRouter.get('/:id/roles', (req,res)=>promiseDataToResponse(res, users.getUserRoles(req.params.id)))
+
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
 
@@ -55,10 +57,8 @@ module.exports = function (apiUtils, authization) {
     userRouter.put('/:id/password', updatePassword)
 
     async function getAllUsers(req, res) {
-        if(await rbac.can('admin','get','user')){
             console.log("you can get a user")
             promiseDataToResponse(res, users.getAll())
-        }
     }
 
     function createUser(req, res) {
@@ -70,7 +70,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getSpecificUser(req, res) {
-        promiseDataToResponse(res, users.getById(req.params.id))
+        promiseDataToResponse(res, users.getSpecificUser(req.params.id))
     }
 
     function deleteUser(req, res) {

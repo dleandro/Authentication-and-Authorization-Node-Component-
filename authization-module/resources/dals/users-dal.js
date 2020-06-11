@@ -4,6 +4,7 @@ const Users = require('../sequelize-model').User,
 Idp=require('../sequelize-model').Idp,
     Role= require('../sequelize-model').Role
 
+function getById(id){ return Users.findByPk(id)}
 module.exports = {
     /**
      *
@@ -12,14 +13,14 @@ module.exports = {
      */
     getByIdp: async (idp) => {
         const result=await Idp.findAll({where:{idp_id:idp}})
-        return result[0] == null ? null : getById(result[0].user_id)
+        return result[0] == null ? null : await getById(result[0].user_id)
     },
     /**
      * Requests the database for a user with given id
      * @param id
      * @returns {Promise<*>}
      */
-    getById: (id) => Users.findByPk(id),
+    getById:getById,
 
     /**
      *

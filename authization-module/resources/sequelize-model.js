@@ -104,6 +104,8 @@ const UserRoles = UserAssociation('UserRoles');
 Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
 
+UserRoles.hasMany(Role)
+
 exports.Permission = Permission
 exports.Protocols = Protocols
 exports.Role = Role

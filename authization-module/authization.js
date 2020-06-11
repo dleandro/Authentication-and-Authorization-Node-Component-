@@ -68,7 +68,9 @@ module.exports = function (app,db) {
         /**
          * returns configuration management file
          */
-        configurations: require('./resources/configurations')
+        configurations: require('./resources/configurations'),
+
+        protocols:require('./resources/dals/protocols-dal')
 
 
     }

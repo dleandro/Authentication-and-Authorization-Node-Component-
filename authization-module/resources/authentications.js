@@ -19,7 +19,9 @@ module.exports = {
      * @param next
      */
     usingLocal: (req, res, next) => {
-        passport.authenticate('local', {failWithError: true})(req, res, next)
+        passport.authenticate('local', {failWithError: true},function(err,user){
+         passportUtils.createUserSession(user.id, req.session.id)
+        })(req, res, next)
     },
     /**
      *
@@ -37,7 +39,15 @@ module.exports = {
      * @param next
      */
     usingGoogleCallback: (req, res, next) => {
-        passport.authenticate('google', {failWithError: true}, authCallback)(req, res, next)
+        passport.authenticate('google', {failWithError: true},function(err, user, info) {
+            if (!user || err) {
+                return next(err)
+            }
+         passportUtils.createUserSession(user.id, req.session.id)
+              req.logIn(user,function(err) {
+                if (err) { return next(err); }})
+                return next();
+        })(req, res, next)
     },
     /**
      *
@@ -57,7 +67,14 @@ module.exports = {
      * @param next
      */
     usingSamlCallback: (req, res, next) => {
-        passport.authenticate('saml', {failWithError: true}, authCallback)(req, res, next)
+        passport.authenticate('saml', {failWithError: true}, function(err, user, info) {
+            if (!user || err) {
+                return next(err)
+            }
+            req.logIn(user,function(err) {
+                if (err) { return next(err); }})
+                return next();
+        })(req, res, next)
     },
     /**
      *
@@ -86,7 +103,14 @@ module.exports = {
      * @param next
      */
     usingOffice365Callback: (req, res, next) => {
-        passport.authenticate('azure_ad_oauth2', {failWithError: true}, authCallback)(req, res, next)
+        passport.authenticate('azure_ad_oauth2', {failWithError: true}, function(err, user, info) {
+            if (!user || err) {
+                return next(err)
+            }
+             req.logIn(user,function(err) {
+                if (err) { return next(err); }})
+                return next();
+        })(req, res, next)
     },
     /**
      *

@@ -1,13 +1,14 @@
-var {users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs} = require('../links')
+
+var {users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs,protocols,userRoles} = require('../links')
 
 const HOMEPAGE = "http://localhost:8082";
 const DEFAULT_OPTIONS = (met)=> {return {method: met, credentials: "include",headers: {'Content-Type': "application/json"}}}
 function produceInit(body, met){
     return {...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true}
 }
-function handleResponse(resp) {
+ function handleResponse(resp) {
     if (resp.ok) {
-        return resp.json()
+        return  resp.json()
     }
     throw new Error('Network response was not ok');
 }
@@ -34,11 +35,17 @@ export function authenticationService() {
     }
 }
 
+export function protocolService() {
+    return {
+        changeActive: async (protocolName,active) => makeRequest(protocols.ACTIVATE_PATH, {protocol:protocolName,active:active}, 'PUT'),
+    }
+}
+
 export function userService() {
     return {
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUsers: async () => getRequest(users.USER_PATH),
-        addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[1], password: arr[2]}, 'POST'),
+        addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[0], password: arr[1]}, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), {username: arr[1]}, 'PUT'),
         deleteUser: async (arr) => {
             makeRequest(users.SPECIFIC_USER_PATH(arr[0]), '', 'DELETE')
@@ -77,5 +84,11 @@ export function permissionService() {
 
     }
 }
+
+    export function userRoleService(){
+        return{
+            getUserRoles:async(id)=>getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id))
+        }
+    }
 
 

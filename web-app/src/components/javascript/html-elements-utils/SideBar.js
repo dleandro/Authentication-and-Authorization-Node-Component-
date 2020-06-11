@@ -30,7 +30,7 @@ export default function Sidebar({navWidthCollapsed, navWidthExpanded}) {
     var mainItems = [
         {key: 'home', link: '/', icon:<i className="fa fa-home" style={fontSize}/>, text: 'Homepage'},
         {key: 'login', link: '/login', icon:<i className="fa fa-sign-in" style={fontSize}/>, text: 'Login',},
-        {key: 'protocol', link: '/loginAdmin', icon:<i className="fa fa-lock" style={fontSize}/>, text: 'Protocol'},
+        {key: 'protocol', link: '/protocols', icon:<i className="fa fa-lock" style={fontSize}/>, text: 'Protocol'},
         {key: 'office', link: '/backoffice', icon:<i className="fa fa-tachometer" style={fontSize}/>, text: 'Backoffice', subItems: officeSubItems}];
 
     const [expand, setexpand] = useState(false);

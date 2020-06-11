@@ -45,6 +45,7 @@ module.exports = function (apiUtils, authization) {
     userRouter.get('idp/:id', getUserFromIdp)
     // get user by username
     userRouter.get('/byUsername/:username', getUserByUsername)
+
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
 
@@ -66,7 +67,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getSpecificUser(req, res) {
-        promiseDataToResponse(res, users.getById(req.params.id))
+        promiseDataToResponse(res, users.getSpecificUser(req.params.id))
     }
 
     function deleteUser(req, res) {

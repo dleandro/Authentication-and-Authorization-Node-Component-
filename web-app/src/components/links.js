@@ -13,7 +13,8 @@ const
     USER_HITORY_PATH = "/api/users_history",
     ROLES_PERMISSION_PATH = "/api/roles_permissions",
     AUTHENTICATION_PATH = "/api/authentications",
-    CONFIG_PATH = "/api/configs"
+    CONFIG_PATH = "/api/configs",
+    PROTOCOL_PATH="/api/protocols"
 
 const links =
     {
@@ -48,8 +49,7 @@ const links =
         users_roles: {
             USERS_ROLES_PATH,
             ACTIVE_USERS_ROLES_PATH: `${USERS_ROLES_PATH}/active`,
-            USER_ACTIVE_ROLES_PATH: userId => `${USERS_ROLES_PATH}/active/user/${userId}`,
-            USERS_ACTIVE_ROLES_PATH: `${USERS_ROLES_PATH}/active/user`,
+            USERS_ACTIVE_ROLES_PATH: userId=>`${USERS_ROLES_PATH}/active/user/${userId}`,
             USER_ROLES_DEACTIVATION_PATH: userRoleId => `${USERS_ROLES_PATH}/deactivate/${userRoleId}`
         },
 
@@ -70,8 +70,11 @@ const links =
             GOOGLE_CONFIG_PATH: `${CONFIG_PATH}/google`,
             AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/azureAD`,
             DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`
-        }
+        },
 
+        protocols:{
+            ACTIVATE_PATH:`${PROTOCOL_PATH}/active`
+        }
     }
 
 module.exports = links

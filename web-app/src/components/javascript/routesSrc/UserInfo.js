@@ -1,36 +1,24 @@
-import React from 'react'
-import {userService} from '../service'
+
+import React,{useEffect, useContext,useState} from 'react'
 import {Button, Dropdown} from "react-bootstrap";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import {listService,permissionService} from "../service";
+import {listService,permissionService,userRoleService} from "../service";
+import UserContext from "../../Context"
+import CustomTable from "../html-elements-utils/Table/CustomTable";
 
-export default function UserInfo({user}) {
-    const [userList, setList] = React.useState('')
-    const [userRoles, setRoles] = React.useState('')
-    const [userPermission, setPermission] = React.useState('')
-    const [request,setRequest] = React.useState({serviceFunc:()=>listService().getUserActiveLists(user.id), dataSetter:setList})
-
-    const fetchData = () => {
-        request.serviceFunc().then(data=>request.dataSetter(data))
-    };
-
-
-    React.useEffect(()=> fetchData(),[request])
-
-    let prinUserValues= ()=> {
-        console.log(`User= ${JSON.stringify(user)}`)
-        console.log(`User List= ${JSON.stringify(userList)}`)
-        console.log(`User Roles= ${JSON.stringify(userRoles)}`)
-        console.log(`User Permissions= ${JSON.stringify(userPermission)}`)
-
-    };
-
-
+export default function UserInfo() {
+    const labels = ["Id"]
+    const userctx=useContext(UserContext)
+    const {user}=userctx
+    const [userRoles,setRoles]=React.useState([])
+    useEffect( async ()=>{const aux=await userRoleService().getUserRoles(user.id)
+    setRoles(aux)
+    },[user.id])
     return (
-        <React.Fragment>
-            <Button onClick={()=>setRequest({serviceFunc:()=>permissionService().getUserPermission(user.id), dataSetter:setRoles})} > Fetch User Roles</Button>
-            <Button onClick={prinUserValues} > Print Info </Button>
-        </React.Fragment>
-
+        <div>
+        <h3>Current Roles</h3>
+        <CustomTable labels={labels}
+                         rows={userRoles.map(userRole=>[userRole.UserId])}/>
+        </div>
     )
 }
+

@@ -23,14 +23,15 @@ const
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = function (app) {
 
-    // Accept request's from different origins, necessary to use our web application
-    app.use(require('cors')({
+    // app configurations
+
+     // Accept request's from different origins, necessary to use our web application
+     app.use(require('cors')({
         // how to change origins between clients
         "origin": config.webAppUri,
         "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
         "credentials": true
     }))
-    // app configurations
 
     // Makes it easier to manage the request's body
     app.use(bodyParser.json())

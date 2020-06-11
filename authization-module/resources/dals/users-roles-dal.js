@@ -1,6 +1,9 @@
 'use strict'
 
-const UserRole = require('../sequelize-model').UserRoles
+const { Role } = require('../sequelize-model')
+
+const UserRole = require('../sequelize-model').UserRoles,
+sequelize=require('../../common/util/db')
 
 module.exports = {
 
@@ -27,7 +30,7 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    deactivate: (id) => UserRole.update({active: 0}, {where: {id: id}}),
+    deactivate: (id) => UserRole.update({active: 0}, {where: {UserId: id}}),
     /**
      * checks if all User roles are active
      * @returns {Promise<*>}
@@ -38,7 +41,7 @@ module.exports = {
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: (id) => UserRole.findAll({where: {id: id, active: 1}}),
+    getUserActiveRoles: (id) => UserRole.findAll({where: {UserId: id, active: 1},include :[Role]}),
     /**
      *
      * @returns {Promise<void>}

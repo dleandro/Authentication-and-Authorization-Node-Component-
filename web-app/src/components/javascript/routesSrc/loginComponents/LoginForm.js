@@ -17,6 +17,7 @@ const officeStyle= {
     width: '75px',
     height: '25px',
 }
+
 const officeButtonStyle = {border: '1px solid #ea3e23', color: '#ea3e23',
     'width': '100px', height: '35px',}
 const googleStyle = {border: '1px solid #ea3e23', color: '#ea3e23',
@@ -32,12 +33,13 @@ export default function LoginForm({id, app: state, setRedirect}) {
     const {setUser} = userctx
 
     var user, pass = "";
-    var loginMe = () => {
+    var loginMe =  () => {
         //alert("Loggin in with"+user +pass)
         userService().getUser(user)
-            .then(t=>{authenticationService().login(user, pass);return t})
+            .then(t=>{
+                authenticationService().login(user, pass);return t})
             .then(setUser)
-            .then(setRedirect('/loginSuccessfully'))
+            .then(setRedirect('/backoffice'))
             //.then(t=>authenticationService().login(user, pass))
             //.then(resp => setUser({name: user, pass: pass}))
             //.then(setRedirect('/loginSuccessfully'))
@@ -52,6 +54,15 @@ export default function LoginForm({id, app: state, setRedirect}) {
         user = event.target.value
     }
 
+    var loginIdp=async (idp) => { 
+         fetch(`${IDP_BASE_URL}/${idp}`,{mode : 'cors',
+         headers: {
+           'Access-Control-Allow-Origin':'*'
+         }})
+         .then(setRedirect('/'))
+         .catch(setRedirect('/login'))           
+        }
+
     return (
         <div className="col-12 form-input" id={id}>
 
@@ -63,19 +74,11 @@ export default function LoginForm({id, app: state, setRedirect}) {
             </InputGroup>
 
             <Button variant="primary" onClick={loginMe}>{'Login'}</Button>
-            <GoogleButton style={centered} onClick={() => setRedirect(`${IDP_BASE_URL}/google`)}/>
-
-            <div className="Office-image"  onClick={() => setRedirect(`${IDP_BASE_URL}/azureAD`)} />
-            <div className="Office-button-text" onClick={() => setRedirect(`${IDP_BASE_URL}/azureAD`)}>office 365</div>
-            <Button style={officeButtonStyle} variant="outline-light" onClick={() => setRedirect(`${IDP_BASE_URL}/azureAD`) } >
-                <img  style={officeStyle} src="office365Logo.png"/>
-            </Button>
-
-            <Button style={googleStyle} variant="outline-light" onClick={() => setRedirect(`${IDP_BASE_URL}/saml`)} >
+            <GoogleButton style={centered} onClick={()=>loginIdp("google")}/>
+            <Button><img src="ms-symbollockup_signin_dark.png" alt="my image" onClick={()=>loginIdp("azureAD")} /></Button>
+            <Button style={googleStyle} variant="outline-light" onClick={()=>loginIdp("saml")} >
                 <img style={authStyle} src="https://www.drupal.org/files/project-images/auth0-logo-whitebg.png" />
             </Button>
-
-
 
         </div>
     )

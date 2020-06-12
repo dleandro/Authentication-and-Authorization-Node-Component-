@@ -3,7 +3,7 @@ import {listService} from '../service'
 import CustomTable from "../html-elements-utils/Table/CustomTable";
 
 const service = listService()
-const labels = ["User Id", "Id", "List", "Start Date", "End Date", "Updater", "Is Active?"]
+const labels = [ "Id", "List"]
 
 /**
  * Represents all database Lists entrys
@@ -31,7 +31,7 @@ export class BackofficeList extends Component {
                          rows={this
                              .state
                              .lists
-                             .map(list => [list.user, list.id, list.list, list.start_date, list.end_date, list.updater, list.active])
+                             .map(list => [list.id, list.list])
                          }
             />
 

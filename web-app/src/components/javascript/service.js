@@ -1,4 +1,3 @@
-
 var {users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs,protocols,userRoles} = require('../links')
 
 const HOMEPAGE = "http://localhost:8082";
@@ -44,6 +43,7 @@ export function protocolService() {
 export function userService() {
     return {
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
+        getUserById:async(id)=>getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
         addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[0], password: arr[1]}, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), {username: arr[1]}, 'PUT'),
@@ -56,6 +56,7 @@ export function userService() {
 export function listService() {
     return {
         getLists: async () => getRequest(lists.LIST_PATH),
+        getList:async (id)=> getRequest(lists.SPECIFIC_LIST_PATH(id)),
         addList: async (arr) => makeRequest(lists.LIST_PATH, {
             user: arr[0],
             list: [2],
@@ -73,13 +74,15 @@ export function listService() {
 
 export function rolesService() {
     return {
-        getRoles: async () => getRequest(roles.ROLE_PATH)
+        getRoles: async () => getRequest(roles.ROLE_PATH),
+        getRole: async(id) => getRequest(roles.SPECIFIC_ROLE_PATH(id))
     }
 }
 
 export function permissionService() {
     return {
         getPermissions: async () => getRequest(permissions.PERMISSION_PATH),
+        getPermission:async(id)=>getRequest(permissions.SPECIFIC_PERMISSION_PATH(id)),
         getUserPermission: async (userId) => {console.log('getUserPermission needs to be done'); return {action:'mock',resource:'all'} }
 
     }

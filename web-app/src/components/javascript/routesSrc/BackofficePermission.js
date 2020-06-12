@@ -3,7 +3,7 @@ import CustomTable from "../html-elements-utils/Table/CustomTable";
 import {permissionService} from "../service"
 
 const service = permissionService()
-const labels = ["Id", "Method", "Path"]
+const labels = ["Id", "Action", "Resource"]
 
 export class BackofficePermission extends Component {
     constructor() {
@@ -18,7 +18,7 @@ export class BackofficePermission extends Component {
     render() {
         return (
             <CustomTable labels={labels}
-                         rows={this.state.permission.map(permission => [permission.id, permission.method, permission.path])}/>
+                         rows={this.state.permission.map(permission => [permission.id, permission.action, permission.resource])}/>
 
             // <CustomTable  labels={labels} rows={this.state.lists} />
         )

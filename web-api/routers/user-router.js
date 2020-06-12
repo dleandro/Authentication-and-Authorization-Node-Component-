@@ -70,7 +70,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getSpecificUser(req, res) {
-        promiseDataToResponse(res, users.getSpecificUser(req.params.id))
+        promiseDataToResponse(res, users.getById(req.params.id))
     }
 
     function deleteUser(req, res) {

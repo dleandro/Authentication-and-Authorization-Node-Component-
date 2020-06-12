@@ -13,6 +13,9 @@ import {BackofficePermission} from "./routesSrc/BackofficePermission"
 import UserInfo from "./routesSrc/UserInfo"
 import {UserConsumer} from "../Context";
 import Register from "./routesSrc/Register"
+import ListInfo from "./routesSrc/ListInfo"
+import PermissionInfo from "./routesSrc/PermissionInfo"
+import RoleInfo from "./routesSrc/RoleInfo"
 
 class Routes extends Component {
     state = {redirect: {should: false, link: "/"}};
@@ -44,13 +47,16 @@ class Routes extends Component {
                     
                     <Route path={'/protocols'} exact component={() => <AuthenticationProtocol/>}/>
                             <UserConsumer>
-                        {state=> <Route path={'/users/:id'} exact component={() => <UserInfo user={state.user}/>}/> }
+                        {state=> <Route path={'/users/:id'} exact component={() => <UserInfo userId={state.user}/>}/> }
                     </UserConsumer>
                     <Route path={'/backoffice'} exact component={() => <BackOffice setRedirect={this.setRedirect}/>}/>
                     <Route path={'/backoffice/lists'} exact component={() => <BackofficeList/>}/>
                     <Route path={'/backoffice/permissions'} exact component={() => <BackofficePermission/>}/>
                     <Route path={'/backoffice/roles'} exact component={() => <BackofficeRole/>}/>
                     <Route path={'/register'} exact component={()=><Register></Register>}/>
+                    <Route path={'/lists/:id'} exact component={()=><ListInfo/>}/>
+                    <Route path={'/permissions/:id'} exact component={()=><PermissionInfo/>}/>
+                    <Route path={'/roles/:id'} exact component={()=><RoleInfo/>}/>
                 </div>
             </Switch>
         );

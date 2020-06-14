@@ -1,13 +1,12 @@
 'use strict'
 
-const
-    apiUtils = require('../common/util/api-utils'),
-    successCallback = (req, res, configChangeCB) => {
-        configChangeCB(req.body)
-        apiUtils.setResponse(res, { success: "changes made successfully" }, 200)
-    }
 module.exports = function (apiUtils, authization) {
-
+    const
+        successCallback = (req, res, configChangeCB) => {
+            configChangeCB(req.body)
+            apiUtils.setResponse(res, { success: "changes made successfully" }, 200)
+        }
+    
     const
         configRouter = require('express').Router()
 

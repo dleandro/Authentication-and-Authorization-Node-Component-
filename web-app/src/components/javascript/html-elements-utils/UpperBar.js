@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react'
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { Dropdown } from "react-bootstrap";
 import { userService, authenticationService } from '../service'
-import DropdownItem from 'react-bootstrap/DropdownItem';
-import SideNav, { NavIcon, NavItem, NavText } from '@trendmicro/react-sidenav';
-import SideBar from './SideBar'
-
 
 
 /**

@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React from 'react'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import { authenticationService, userService } from '../../service'
-import UserContext from "../../../Context";
+import { authenticationService } from '../../service'
 import GoogleButton from 'react-google-button'
-import { webAppLinks, webApiLinks } from '../../../links'
+import { webApiLinks } from '../../../links'
 
 import '../../../stylesheets/App.css'
 const IDP_BASE_URL = '/api/authentications';
@@ -34,8 +33,6 @@ const centered = {
 }
 
 export default function LoginForm({ id, app: state, setRedirect }) {
-
-    const [isCallbackUrlSetUp, setState] = useState(false)
 
     var user, pass = "";
 

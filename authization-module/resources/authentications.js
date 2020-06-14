@@ -4,13 +4,14 @@ const passport = require('passport')
 const passportUtils = require('../common/util/passport-utils')
 const config = require('../common/config/config')
 
+/*
 function authCallback(err, user, info) {
     if (!user || err) {
         return next(err)
     }
     const options = async (err) => (err) ? next(err) : passportUtils.createUserSession(user.id, req.session.id).then(useless => next())
     return req.logIn(user, options)
-}
+}*/
 
 module.exports = {
 
@@ -79,8 +80,8 @@ module.exports = {
             if (!user || err) {
                 return next(err)
             }
-            req.logIn(user, function (err) {
-                if (err) { return next(err); }
+            req.logIn(user, function (error) {
+                if (error) { return next(error); }
             })
             return next();
         })(req, res, next)
@@ -116,8 +117,8 @@ module.exports = {
             if (!user || err) {
                 return next(err)
             }
-            req.logIn(user, function (err) {
-                if (err) { return next(err); }
+            req.logIn(user, function (error) {
+                if (error) { return next(error); }
             })
             return next();
         })(req, res, next)

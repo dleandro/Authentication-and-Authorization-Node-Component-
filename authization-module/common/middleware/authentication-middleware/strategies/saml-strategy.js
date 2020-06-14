@@ -1,5 +1,7 @@
 'use strict'
 
+const config = require('../../../config/config')
+
 const
     fs = require('fs'),
     path = require('path'),
@@ -7,17 +9,16 @@ const
     protocolName = 'Saml',
     SamlStrategy = new (require('passport-saml').Strategy)({
 
-        callbackUrl: 'http://localhost:8082/api/authentications/saml/callback',  //redirect after sucessfull login
-        entryPoint: 'https://authentication-node.eu.auth0.com/samlp/gkngnFEKD5tU9H6gaWR0UR7eqolioXaX',
-        issuer: 'aa-node-component',
+        callbackUrl: config.callbackUrl,
+        entryPoint: config.entryPoint,
+        issuer: config.issuer,
         cert: fs.readFileSync(path.join(__dirname, '../../../certificates/authentication-node.pem'), 'utf-8'),
         privateCert: fs.readFileSync(path.join(__dirname, '../../../certificates/privateKey.pem'), 'utf-8')
-
 
     }, async function (profile, done) {
 
         if (!(await passportUtils.checkProtocol(protocolName))) {
-            done(null, false, {message: 'Protocol is not avaiable'})
+            done(null, false, { message: 'Protocol is not avaiable' })
             return
         }
 
@@ -28,7 +29,7 @@ const
         }
         if (await passportUtils.isBlackListed(user.id)) {
             passportUtils.addNotification(user.id)
-            done(null, false, {message: 'User is BlackListed'})
+            done(null, false, { message: 'User is BlackListed' })
             return
         }
         done(null, user)

@@ -11,21 +11,22 @@ module.exports = function (apiUtils, authization) {
     const users = authization.user,
         idps = authization.idp,
         userRouter = require('express').Router(),
-        rbac=require('../../authization-module/common/middleware/rbac')
+        rbac = require('../../authization-module/common/middleware/rbac'),
+        errors = require('../common/errors/app-errors')
 
     const promiseDataToResponse = (res, dataPromise) => dataPromise
         .catch(err => {
             throw errors.errorExecutingQuery
         })
         .then(data => {
-            if (Array.isArray(data)){
+            if (Array.isArray(data)) {
                 if (data.length) {
                     return apiUtils.setResponse(res, data, 200)
                 }
             } else {
-               if (data){
-                   return apiUtils.setResponse(res, data, 200)
-               }
+                if (data) {
+                    return apiUtils.setResponse(res, data, 200)
+                }
             }
             throw errors.noResponseFound
         })
@@ -54,8 +55,8 @@ module.exports = function (apiUtils, authization) {
     userRouter.put('/:id/password', updatePassword)
 
     async function getAllUsers(req, res) {
-            console.log("you can get a user")
-            promiseDataToResponse(res, users.getAll())
+        console.log("you can get a user")
+        promiseDataToResponse(res, users.getAll())
     }
 
     function createUser(req, res) {
@@ -67,7 +68,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getSpecificUser(req, res) {
-        promiseDataToResponse(res, users.getSpecificUser(req.params.id))
+        promiseDataToResponse(res, users.getById(req.params.id))
     }
 
     function deleteUser(req, res) {
@@ -97,7 +98,6 @@ module.exports = function (apiUtils, authization) {
             .then(answer => apiUtils.setResponse(res, req.body, 201))
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
-
 
     return userRouter
 }

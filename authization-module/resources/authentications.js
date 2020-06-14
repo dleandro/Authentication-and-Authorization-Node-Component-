@@ -2,11 +2,13 @@
 
 const passport = require('passport')
 const passportUtils = require('../common/util/passport-utils')
-function authCallback(err, user, info){
+const config = require('../common/config/config')
+
+function authCallback(err, user, info) {
     if (!user || err) {
         return next(err)
     }
-    const options = async (err) =>(err)? next(err):passportUtils.createUserSession(user.id, req.session.id).then(useless=>next())
+    const options = async (err) => (err) ? next(err) : passportUtils.createUserSession(user.id, req.session.id).then(useless => next())
     return req.logIn(user, options)
 }
 
@@ -19,8 +21,12 @@ module.exports = {
      * @param next
      */
     usingLocal: (req, res, next) => {
-        passport.authenticate('local', {failWithError: true},function(err,user){
-         passportUtils.createUserSession(user.id, req.session.id)
+        passport.authenticate('local', { failWithError: true }, function (err, user) {
+            if (!err && user) {
+                passportUtils.createUserSession(user.id, req.session.id)
+                res.redirect(config.localCallbackUrl)
+            }
+            next(err)
         })(req, res, next)
     },
     /**
@@ -30,8 +36,9 @@ module.exports = {
      * @param next
      */
     usingGoogle: (req, res, next) => {
-        passport.authenticate('google', {scope: ['profile']})(req, res, next)
+        passport.authenticate('google', { scope: ['profile'] })(req, res, next)
     },
+
     /**
      *
      * @param req
@@ -39,14 +46,15 @@ module.exports = {
      * @param next
      */
     usingGoogleCallback: (req, res, next) => {
-        passport.authenticate('google', {failWithError: true},function(err, user, info) {
+        passport.authenticate('google', { failWithError: true }, function (err, user, info) {
             if (!user || err) {
                 return next(err)
             }
-         passportUtils.createUserSession(user.id, req.session.id)
-              req.logIn(user,function(err) {
-                if (err) { return next(err); }})
-                return next();
+            passportUtils.createUserSession(user.id, req.session.id)
+            req.logIn(user, function (error) {
+                if (error) { return next(error); }
+            })
+            return next();
         })(req, res, next)
     },
     /**
@@ -67,13 +75,14 @@ module.exports = {
      * @param next
      */
     usingSamlCallback: (req, res, next) => {
-        passport.authenticate('saml', {failWithError: true}, function(err, user, info) {
+        passport.authenticate('saml', { failWithError: true }, function (err, user, info) {
             if (!user || err) {
                 return next(err)
             }
-            req.logIn(user,function(err) {
-                if (err) { return next(err); }})
-                return next();
+            req.logIn(user, function (err) {
+                if (err) { return next(err); }
+            })
+            return next();
         })(req, res, next)
     },
     /**
@@ -103,13 +112,14 @@ module.exports = {
      * @param next
      */
     usingOffice365Callback: (req, res, next) => {
-        passport.authenticate('azure_ad_oauth2', {failWithError: true}, function(err, user, info) {
+        passport.authenticate('azure_ad_oauth2', { failWithError: true }, function (err, user, info) {
             if (!user || err) {
                 return next(err)
             }
-             req.logIn(user,function(err) {
-                if (err) { return next(err); }})
-                return next();
+            req.logIn(user, function (err) {
+                if (err) { return next(err); }
+            })
+            return next();
         })(req, res, next)
     },
     /**
@@ -120,16 +130,7 @@ module.exports = {
      */
     logout: (req, res, next) => {
         req.logout()
-        req.session.destroy((err) => {
-
-            if (err) {
-                next(err)
-            }
-
-            next()
-        })
-
-
+        next()
     }
 
 

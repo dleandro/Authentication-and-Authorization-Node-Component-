@@ -25,14 +25,6 @@ module.exports = function (app) {
 
     // app configurations
 
-     // Accept request's from different origins, necessary to use our web application
-     app.use(require('cors')({
-        // how to change origins between clients
-        "origin": config.webAppUri,
-        "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-        "credentials": true
-    }))
-
     // Makes it easier to manage the request's body
     app.use(bodyParser.json())
 

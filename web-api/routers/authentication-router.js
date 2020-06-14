@@ -6,8 +6,8 @@ const
 module.exports = function (apiUtils, authization) {
 
     const successCallback = (req, res) => req.isAuthenticated() ?
-        apiUtils.setResponse(res, {success: SUCCESS_MSG}, 200) :
-        apiUtils.setResponse(res, {success: UNSUCCESSFUL_MSG}, 401)
+        res.redirect("http://localhost:3000") :
+        res.redirect("http://localhost:3000/login") 
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
 
@@ -21,7 +21,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/saml', authenticate.usingSaml)
 
-    authenticationRouter.post('/saml/callback', bodyParser.urlencoded({extended: false}), authenticate.usingSamlCallback, successCallback)
+    authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
     authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
 
@@ -30,6 +30,13 @@ module.exports = function (apiUtils, authization) {
     authenticationRouter.get('/azureAD', authenticate.usingOffice365);
 
     authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback, successCallback)
+
+    authenticationRouter.get('/authenticated-user', (req, res) => {
+        apiUtils.setResponse(res, req.user || {}, 200)
+    }
+)
+
+
 
     return authenticationRouter
 

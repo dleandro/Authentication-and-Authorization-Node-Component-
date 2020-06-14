@@ -1,23 +1,30 @@
 
 import React,{useEffect, useContext,useState} from 'react'
+import {Redirect, Route, useParams} from 'react-router-dom'
 import {Button, Dropdown} from "react-bootstrap";
-import {listService,permissionService,userRoleService} from "../service";
-import UserContext from "../../Context"
+import {listService,permissionService,userRoleService, rolesService, userService} from "../service";
 import CustomTable from "../html-elements-utils/Table/CustomTable";
 
 export default function UserInfo() {
-    const labels = ["Id"]
-    const userctx=useContext(UserContext)
-    const {user}=userctx
+    let { id } = useParams();
+    const userRoleLabels = ["Id","Start Date","End Date","Updater"]
+    const listLabels=["Id","Start Date","End Date","Updater"]
     const [userRoles,setRoles]=React.useState([])
-    useEffect( async ()=>{const aux=await userRoleService().getUserRoles(user.id)
-    setRoles(aux)
-    },[user.id])
+    const [lists,setList]=React.useState([])
+    const [user,setUser]=React.useState([])
+    useEffect( async ()=>{
+        setUser(await userService().getUserById(id))
+        setRoles(await userRoleService().getUserRoles(id))
+        setList(await listService().getUserActiveLists(id))
+    },[id])
     return (
         <div>
+            <h3>Username:{user.username}</h3>
         <h3>Current Roles</h3>
-        <CustomTable labels={labels}
-                         rows={userRoles.map(userRole=>[userRole.UserId])}/>
+        <CustomTable labels={userRoleLabels} rows={userRoles.map(userRole=>[userRole.RoleId,userRole.start_date,userRole.end_date,userRole.updater])}/>
+        <h3>Current Lists</h3>
+        <CustomTable labels={listLabels} rows={lists.map(list=>[list.ListId,list.start_date,list.end_date,list.updater])}/>
+                         
         </div>
     )
 }

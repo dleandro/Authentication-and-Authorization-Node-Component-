@@ -32,7 +32,7 @@ export class BackofficeList extends Component {
                              .state
                              .lists
                              .map(list => [list.id, list.list])
-                         }
+                         } redirectPage="lists"
             />
 
         )

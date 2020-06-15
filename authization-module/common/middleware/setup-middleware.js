@@ -23,8 +23,6 @@ const
 module.exports =function (app,jsonObj) {
 
     // app configurations
-
-<<<<<<< HEAD
     databasesetup(jsonObj)
     
 
@@ -36,8 +34,6 @@ module.exports =function (app,jsonObj) {
         "credentials": true
     }))
 
-=======
->>>>>>> 78253bb718b6fd2212c4650eb34461ba4ee2565d
     // Makes it easier to manage the request's body
     app.use(bodyParser.json())
 

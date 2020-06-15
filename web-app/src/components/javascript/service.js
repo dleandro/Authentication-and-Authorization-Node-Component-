@@ -43,14 +43,9 @@ export function userService() {
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
-<<<<<<< HEAD
         getUserRoles:async(id)=>getRequest(users.ROLES_PATH(id)),
         addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[0], password: arr[1]}, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), {username: arr[1]}, 'PUT'),
-=======
-        addUser: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
-        editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
->>>>>>> 78253bb718b6fd2212c4650eb34461ba4ee2565d
         deleteUser: async (arr) => {
             makeRequest(users.SPECIFIC_USER_PATH(arr[0]), '', 'DELETE')
         }
@@ -79,12 +74,9 @@ export function listService() {
 export function rolesService() {
     return {
         getRoles: async () => getRequest(roles.ROLE_PATH),
-<<<<<<< HEAD
         getRole: async(id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id)=>getRequest(roles.ROLE_USERS_PATH(id))
-=======
-        getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id))
->>>>>>> 78253bb718b6fd2212c4650eb34461ba4ee2565d
+
     }
 }
 

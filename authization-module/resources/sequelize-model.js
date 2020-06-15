@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize'),
-    sequelize = require('../common/util/db')
+    sequelize = require('../common/util/db').sequelize
 
 const {STRING,DATE,BOOLEAN, INTEGER} = Sequelize
 const NonNullDate = { type: DATE, allowNull: false } //only used 1 time considering remove this const

@@ -5,7 +5,7 @@
 
 
 
-module.exports = function (app,db) {
+module.exports = function (app,db,jsonObj) {
 
     const
     config = require('./common/config/config')
@@ -84,7 +84,7 @@ module.exports = function (app,db) {
     if (app) {
 
         // setup required middleware
-        require('./common/middleware/setup-middleware')(app)
+        require('./common/middleware/setup-middleware')(app,jsonObj)
 
         return functionalities
     }

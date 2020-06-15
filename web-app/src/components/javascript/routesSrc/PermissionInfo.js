@@ -16,7 +16,7 @@ export default function PermissionInfo() {
     return (
         <div>
         <h3>Permission {permission.action} {permission.resource} </h3>
-                         
+         <h3>Roles associated with this permission</h3>               
         </div>
     )
 }

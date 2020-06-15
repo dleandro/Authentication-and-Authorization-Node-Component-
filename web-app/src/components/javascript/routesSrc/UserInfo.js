@@ -7,23 +7,23 @@ import CustomTable from "../html-elements-utils/Table/CustomTable";
 
 export default function UserInfo() {
     let { id } = useParams();
-    const userRoleLabels = ["Id","Start Date","End Date","Updater"]
+    const userRoleLabels = ["role","Start Date","End Date","Updater"]
     const listLabels=["Id","Start Date","End Date","Updater"]
     const [userRoles,setRoles]=React.useState([])
     const [lists,setList]=React.useState([])
     const [user,setUser]=React.useState([])
     useEffect( async ()=>{
         setUser(await userService().getUserById(id))
-        setRoles(await userRoleService().getUserRoles(id))
+        setRoles(await userService().getUserRoles(id))
         setList(await listService().getUserActiveLists(id))
     },[id])
     return (
         <div>
             <h3>Username:{user.username}</h3>
         <h3>Current Roles</h3>
-        <CustomTable labels={userRoleLabels} rows={userRoles.map(userRole=>[userRole.RoleId,userRole.start_date,userRole.end_date,userRole.updater])}/>
+        <CustomTable labels={userRoleLabels} rows={userRoles.map(userRole=>[userRole["Roles.role"],userRole["Roles.UserRoles.start_date"],userRole["Roles.UserRoles.end_date"],userRole["Roles.UserRoles.updater"]])}/>
         <h3>Current Lists</h3>
-        <CustomTable labels={listLabels} rows={lists.map(list=>[list.ListId,list.start_date,list.end_date,list.updater])}/>
+        <CustomTable labels={listLabels} redirectPage="lists" rows={lists.map(list=>[list.ListId,list.start_date,list.end_date,list.updater])}/>
                          
         </div>
     )

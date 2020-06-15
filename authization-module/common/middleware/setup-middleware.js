@@ -7,23 +7,25 @@ const
     session = require('express-session'),
     cookieSecret = 'justasecretstring', // should change after a while if it has some security implication openssl rand -hex 32 on the cmd
     config = require('../config/config'),
-    mydb=require('../util/db'),
+    {databasesetup,sequelize}=require('../util/db'),
     SessionStore = require('express-session-sequelize')(session.Store);
-    require('./rbac')
 
 
 
 
       const sequelizeSessionStore = new SessionStore({
-        db: mydb,
+        db: sequelize,
     });
     
 
 
 // This module is used to setup middleware on the app passed as a parameter
-module.exports = function (app) {
+module.exports =function (app,jsonObj) {
 
     // app configurations
+
+    databasesetup(jsonObj)
+    
 
      // Accept request's from different origins, necessary to use our web application
      app.use(require('cors')({

@@ -78,7 +78,7 @@ module.exports = {
      */
     delete:  (userId) =>Users.destroy({where: {id: userId}}),
 
-    getUserRoles: (userId) => User.findAll({ where: { id:userId}, include: [Role],raw:true})
+    getUserRoles: (userId) => Users.findAll({ where: { id:userId}, include: [Role],raw:true})
 
 
 }

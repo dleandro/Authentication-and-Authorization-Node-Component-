@@ -45,12 +45,20 @@ class TableRow extends React.Component {
             <tr>
                 {
 
-                    this.state.cols.map((col, index) =>
-                        <td>
+                    this.state.cols.map((col, index) =>{
+                    if(index==0){
+                        return<td>
+                            
+                                   {this.props.cols[index]} 
+                        </td>
+                    }else{
+                        return <td>
                             <input className="form-control border-0 text-white bg-transparent" type="text"
                                    value={this.props.cols[index]} onChange={e => this.handleChange(e, index)}/>
                         </td>
-                    )
+                    }
+                    })
+                    
                 }
                 <td>
                     <Button onClick={this.submitListener}>Submit</Button>

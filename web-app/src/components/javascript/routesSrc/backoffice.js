@@ -32,7 +32,8 @@ class BackOffice extends React.Component {
         return (
             <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
                          deleteRequest={this.deleteUser} labels={labels}
-                         rows={this.state.users.map(user => [user.id, user.username, '****'])}/>
+                         rows={this.state.users.map(user => [user.id, user.username, '****'])}
+                         redirectPage="users"/>
         )
     }
 }

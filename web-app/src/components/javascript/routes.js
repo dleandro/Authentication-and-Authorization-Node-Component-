@@ -49,10 +49,10 @@ class Routes extends Component {
                             <UserConsumer>
                         {state=> <Route path={'/users/:id'} exact component={() => <UserInfo userId={state.user}/>}/> }
                     </UserConsumer>
-                    <Route path={'/backoffice'} exact component={() => <BackOffice setRedirect={this.setRedirect}/>}/>
-                    <Route path={'/backoffice/lists'} exact component={() => <BackofficeList/>}/>
-                    <Route path={'/backoffice/permissions'} exact component={() => <BackofficePermission/>}/>
-                    <Route path={'/backoffice/roles'} exact component={() => <BackofficeRole/>}/>
+                    <Route path={'/users'} exact component={() => <BackOffice setRedirect={this.setRedirect}/>}/>
+                    <Route path={'/lists'} exact component={() => <BackofficeList/>}/>
+                    <Route path={'/permissions'} exact component={() => <BackofficePermission/>}/>
+                    <Route path={'/roles'} exact component={() => <BackofficeRole/>}/>
                     <Route path={'/register'} exact component={()=><Register></Register>}/>
                     <Route path={'/lists/:id'} exact component={()=><ListInfo/>}/>
                     <Route path={'/permissions/:id'} exact component={()=><PermissionInfo/>}/>

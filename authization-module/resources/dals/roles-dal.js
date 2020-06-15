@@ -1,7 +1,7 @@
 'use strict'
 
 const Role = require('../sequelize-model').Role,
-    Permission= require('../sequelize-model').Permission,
+    {Permission,User}= require('../sequelize-model'),
 sequelize=require('../../common/util/db'),
 rbac=require('../../common/middleware/rbac')
 
@@ -25,6 +25,8 @@ module.exports = {
      */
     getSpecificById: async (roleId) =>
         Role.findByPk(roleId),
+
+        getByName: async(roleName)=>Role.findAll({where:{role:roleName}}),
     /**
      *
      * @param roleId
@@ -47,5 +49,7 @@ module.exports = {
     getRolesWithParents :()=>sequelize.query(
         "SELECT id, role, parent_role FROM Role WHERE parent_role IS NOT NULL",
     { type: sequelize.QueryTypes.SELECT }
-    )
+    ),
+    getUsersWithThisRole:(roleId)=>Role.findAll({where:{id:roleId},include:[User]}),
+    addParentRole:(roleId,parentRole)=>Role.update({parent_role:parentRole},{where:{id:roleId}})   
 }

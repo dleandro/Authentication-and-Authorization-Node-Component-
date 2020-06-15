@@ -14,10 +14,10 @@ const fontSize={fontSize: '1.75em'/*,color: '#1cc4e6'*/}
  */
 export default function Sidebar({navWidthCollapsed, navWidthExpanded}) {
 
-    const officeSubItems = [{link: '/backoffice/permissions', text: 'Permissions'}, {
-        link: '/backoffice/roles',
+    const officeSubItems = [{link: '/permissions', text: 'Permissions'}, {
+        link: '/roles',
         text: 'Roles'
-    }, {link: '/backoffice/lists', text: 'Lists'}]
+    }, {link: '/lists', text: 'Lists'}]
     /**
      *
      * @type {({link: string, text: string, key: string}|
@@ -31,7 +31,7 @@ export default function Sidebar({navWidthCollapsed, navWidthExpanded}) {
         {key: 'home', link: '/', icon:<i className="fa fa-home" style={fontSize}/>, text: 'Homepage'},
         {key: 'login', link: '/login', icon:<i className="fa fa-sign-in" style={fontSize}/>, text: 'Login',},
         {key: 'protocol', link: '/protocols', icon:<i className="fa fa-lock" style={fontSize}/>, text: 'Protocol'},
-        {key: 'office', link: '/backoffice', icon:<i className="fa fa-tachometer" style={fontSize}/>, text: 'Backoffice', subItems: officeSubItems}];
+        {key: 'office', link: '/users', icon:<i className="fa fa-tachometer" style={fontSize}/>, text: 'Backoffice', subItems: officeSubItems}];
 
     const [expand, setexpand] = useState(false);
 

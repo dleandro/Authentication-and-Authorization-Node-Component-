@@ -29,11 +29,13 @@ const links =
             AZUREAD_LOGIN_PATH: `${AUTHENTICATION_PATH}/azureAD`,
             LOCAL_LOGIN_PATH: `${AUTHENTICATION_PATH}/local`,
             LOGOUT_PATH: `${AUTHENTICATION_PATH}/logout`,
+            ROLES_PATH:id=>`${USER_PATH}/${id}/roles`
         },
 
         roles: {
             ROLE_PATH,
-            SPECIFIC_ROLE_PATH: roleId => `${ROLE_PATH}/${roleId}`
+            SPECIFIC_ROLE_PATH: roleId => `${ROLE_PATH}/${roleId}`,
+            ROLE_USERS_PATH:roleId=>`${ROLE_PATH}/${roleId}/users`
         },
 
         permissions: {

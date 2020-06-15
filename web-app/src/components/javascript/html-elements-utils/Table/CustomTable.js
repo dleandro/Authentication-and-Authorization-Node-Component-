@@ -12,11 +12,18 @@ import TableRow from "./TableRow";
  * @returns {*}
  * @constructor
  */
-export default function CustomTable({labels, rows, editRequest, addRequest, deleteRequest}) {
+export default function CustomTable({labels, rows, editRequest, addRequest, deleteRequest,redirectPage}) {
 
     const renderRows = (rows) => {
-        var tRows = rows.map(rowCells => <TableRow editRequest={editRequest} deleteRequest={deleteRequest}
-                                                   cols={rowCells}/>)
+       
+
+        var tRows=rows.map(rowCells =>{ 
+            var firstElem=rowCells.shift()
+            var link=`/${redirectPage}/${firstElem}`
+            firstElem=<a href={link}>{firstElem}</a>
+            rowCells.unshift(firstElem)
+            return <TableRow editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells}/>
+        })
         tRows.push(<TableRow editRequest={addRequest} cols={labels.map(cell => undefined)}/>)
         return tRows
     }

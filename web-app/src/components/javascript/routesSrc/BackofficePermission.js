@@ -17,7 +17,7 @@ export class BackofficePermission extends Component {
 
     render() {
         return (
-            <CustomTable labels={labels}
+            <CustomTable labels={labels} redirectPage="permissions"
                          rows={this.state.permission.map(permission => [permission.id, permission.action, permission.resource])}/>
 
             // <CustomTable  labels={labels} rows={this.state.lists} />

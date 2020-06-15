@@ -17,7 +17,7 @@ export class BackofficeRole extends Component {
 
     render() {
         return (
-            <CustomTable labels={labels} rows={this.state.roles.map(user => [user.id, user.role, user.parent_role==null?'null':user.parent_role])}/>
+            <CustomTable labels={labels} redirectPage="roles" rows={this.state.roles.map(user => [user.id, user.role, user.parent_role==null?'null':user.parent_role])}/>
         )
     }
 }

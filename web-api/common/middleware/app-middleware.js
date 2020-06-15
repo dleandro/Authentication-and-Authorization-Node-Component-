@@ -17,10 +17,16 @@ module.exports = function (app) {
         "database": "r15dtqer5c72jvex"
       }
 
+      const jsonObj={
+          "roles":["admin","DbManager","Developer"],
+          "permissions":[{"resource":"users","action":"GET"},{"resource":"permissions","action":"GET"},{"resource":"roles","action":"GET"},{"resource":"roles","action":"POST"}],
+          "grants":{"DbManager":[{"resource":"users","action":"GET"},{"resource":"roles","action":"GET"}],"admin":[{"role":"DbManager"}]}
+      }
+
    
 
     // using authization module to setup authentication and authorization middleware
-    require('../../../authization-module/authization')(app,db)
+    require('../../../authization-module/authization')(app,db,jsonObj)
 
 
     // For request logging

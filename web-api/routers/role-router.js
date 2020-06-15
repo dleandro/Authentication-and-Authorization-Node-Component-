@@ -13,7 +13,7 @@ module.exports = function (apiUtils, authization) {
                     return apiUtils.setResponse(res, data, 200)
                 }
             } else {
-               if (data){
+            if (data){
                    return apiUtils.setResponse(res, data, 200)
                }
             }
@@ -32,6 +32,8 @@ module.exports = function (apiUtils, authization) {
     roleRouter.route('/:id')
         .get(getRoleById)
         .delete(deleteRole)
+
+        roleRouter.get('/:id/users',getUsersWithThisRole)
 
     roleRouter.route('/:id/permissions').get((req,res)=>promiseDataToResponse(res,roles.getRolePermissions(req.params.id)))
 
@@ -55,6 +57,10 @@ module.exports = function (apiUtils, authization) {
 
     function getRoleById(req, res) {
         promiseDataToResponse(res, roles.getSpecificById(req.params.id))
+    }
+
+    function getUsersWithThisRole(req,res){
+        promiseDataToResponse(res,roles.getUsersWithThisRole(req.params.id))
     }
 
     return roleRouter

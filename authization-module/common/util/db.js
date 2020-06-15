@@ -11,7 +11,16 @@ const sequelize = new Sequelize(config.database_opts.database, config.database_o
     query:{raw:true}
 })
 
-// sync present state of the database with our models
-sequelize.sync().then(_ => console.log("All models were synchronized successfully."))
 
-module.exports = sequelize
+async function databasesetup(jsonObj){
+// sync present state of the database with our models
+ await sequelize.sync().then(_ => {console.log("All models were synchronized successfully.")
+ require('../middleware/rbac')(jsonObj)
+})
+
+}
+
+module.exports={
+    sequelize,
+    databasesetup
+}

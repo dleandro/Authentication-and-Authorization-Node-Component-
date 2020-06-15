@@ -48,7 +48,7 @@ export default function Upperbar({ setRedirect }) {
 
     }
     return (
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-md bg-dark">
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
                     <DropdownButton

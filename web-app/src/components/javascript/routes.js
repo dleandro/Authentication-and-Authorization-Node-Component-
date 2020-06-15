@@ -1,30 +1,31 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../stylesheets/App.css';
-import React, {Component} from 'react'
-import {Redirect, Route, Switch} from 'react-router-dom'
-import BackOffice from "./routesSrc/backoffice";
+import React, { Component } from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import BackOffice from "./routesSrc/BackOffice";
 import Homepage from "./routesSrc/Homepage";
 import UserLogin from './routesSrc/loginComponents/UserLogin'
 import AuthenticationProtocol from './routesSrc/AuthenticationProtocol'
-import {BackofficeRole} from "./routesSrc/BackofficeRole";
-import {BackofficeList} from "./routesSrc/BackofficeList";
-import {BackofficePermission} from "./routesSrc/BackofficePermission"
+import { BackofficeRole } from "./routesSrc/BackofficeRole";
+import { BackofficeList } from "./routesSrc/BackofficeList";
+import { BackofficePermission } from "./routesSrc/BackofficePermission"
 import UserInfo from "./routesSrc/UserInfo"
-import {UserConsumer} from "../Context";
+import { UserConsumer } from "../Context";
 import Register from "./routesSrc/Register"
 import ListInfo from "./routesSrc/ListInfo"
 import PermissionInfo from "./routesSrc/PermissionInfo"
 import RoleInfo from "./routesSrc/RoleInfo"
+import Users from './routesSrc/Users'
 
 class Routes extends Component {
-    state = {redirect: {should: false, link: "/"}};
+    state = { redirect: { should: false, link: "/" } };
 
-    setRedirect = (url) => this.setState({redirect: {should: true, link: url}})
+    setRedirect = (url) => this.setState({ redirect: { should: true, link: url } })
 
 
     renderRedirect = () => {
         if (this.state.redirect.should) {
-            return <Redirect to={this.state.redirect.link}/>
+            return <Redirect to={this.state.redirect.link} />
         }
         return null
     }
@@ -32,25 +33,22 @@ class Routes extends Component {
     render() {
         return (
             <Switch id={"switch"}>
-                <div id={"main"} style={{marginLeft: this.props.sidebarCollapsedSize}}>
                     {this.renderRedirect()}
-                    <Route path={'/'} exact component={Homepage}/>
-                    <Route path={'/login'} exact
-                           component={() => <UserLogin app={this.state} setRedirect={this.setRedirect}/>}/>
-                    
-                    <Route path={'/protocols'} exact component={() => <AuthenticationProtocol/>}/>
-                            <UserConsumer>
-                        {state=> <Route path={'/users/:id'} exact component={() => <UserInfo userId={state.user}/>}/> }
+                    <Route path={'/'} exact component={Homepage} />
+                    <Route path={'/backoffice'} exact component={() => <BackOffice/>}/>
+                    <Route path={'/login'} exact component={() => <UserLogin app={this.state} setRedirect={this.setRedirect} />} />
+                    <Route path={'/users'} exact component={() => <Users setRedirect={this.setRedirect} />} />
+                    <Route path={'/protocols'} exact component={() => <AuthenticationProtocol />} />
+                    <UserConsumer>
+                        {state => <Route path={'/users/:id'} exact component={() => <UserInfo userId={state.user} />} />}
                     </UserConsumer>
-                    <Route path={'/users'} exact component={() => <BackOffice setRedirect={this.setRedirect}/>}/>
-                    <Route path={'/lists'} exact component={() => <BackofficeList/>}/>
-                    <Route path={'/permissions'} exact component={() => <BackofficePermission/>}/>
-                    <Route path={'/roles'} exact component={() => <BackofficeRole/>}/>
-                    <Route path={'/register'} exact component={()=><Register></Register>}/>
-                    <Route path={'/lists/:id'} exact component={()=><ListInfo/>}/>
-                    <Route path={'/permissions/:id'} exact component={()=><PermissionInfo/>}/>
-                    <Route path={'/roles/:id'} exact component={()=><RoleInfo/>}/>
-                </div>
+                    <Route path={'/lists'} exact component={() => <BackofficeList />} />
+                    <Route path={'/permissions'} exact component={() => <BackofficePermission />} />
+                    <Route path={'/roles'} exact component={() => <BackofficeRole />} />
+                    <Route path={'/register'} exact component={() => <Register></Register>} />
+                    <Route path={'/lists/:id'} exact component={() => <ListInfo />} />
+                    <Route path={'/permissions/:id'} exact component={() => <PermissionInfo />} />
+                    <Route path={'/roles/:id'} exact component={() => <RoleInfo />} />
             </Switch>
         );
     }

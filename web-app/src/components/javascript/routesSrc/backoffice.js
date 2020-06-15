@@ -1,41 +1,45 @@
 import React from 'react'
-import {userService} from '../service'
-import CustomTable from "../html-elements-utils/Table/CustomTable";
+import Card from 'react-bootstrap/Card'
+import CardColumns from 'react-bootstrap/CardColumns'
+import Button from 'react-bootstrap/Button'
+import { useHistory } from "react-router-dom";
 
-const labels = ["Id", "Username", "Password"]
+export default function BackOffice() {
 
-/**
- * Backoffice's initial page were the list of all registred users are displayed
- */
-class BackOffice extends React.Component {
-    service = userService()
+    const history = useHistory()
 
-    constructor() {
-        super()
-        this.state = {users: []}
-    }
+    return (
 
-    addUser = (arr) => this.service.addUser(arr)
-    editUsername = (arr) => this.service.editUsername(arr)
-    deleteUser = (arr) => this.service.deleteUser(arr)
-    requestUsers = () => this.service.getUsers()
+        <CardColumns style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+        }}>
 
-    componentDidMount() {
-        this.requestUsers().then(data => {
-            console.log("Users:")
-            console.log(data)
-            this.setState({users: data})
-        })
-    }
+            <Card className='mr-2'>
+                <Card.Body>
+                    <Card.Title>Login</Card.Title>
+                    <Card.Text>
+                        This is a longer card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.
+                    </Card.Text>
+                    <Button variant="primary" onClick={() => history.push('/login')} >Take me there</Button>
+                </Card.Body>
+            </Card>
+            <Card className='ml-2'>
+                <Card.Body>
+                    <Card.Title>Backoffice</Card.Title>
+                    <Card.Text>
+                        This is a longer card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.
+                    </Card.Text>
+                    <Button variant="primary" onClick={() => history.push('/backoffice')} >Take me there</Button>
+                </Card.Body>
+            </Card>
 
-    render() {
-        return (
-            <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
-                         deleteRequest={this.deleteUser} labels={labels}
-                         rows={this.state.users.map(user => [user.id, user.username, '****'])}
-                         redirectPage="users"/>
-        )
-    }
+        </CardColumns>
+
+    )
+
 }
 
-export default BackOffice

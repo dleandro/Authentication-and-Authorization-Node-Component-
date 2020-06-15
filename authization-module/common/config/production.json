@@ -18,6 +18,7 @@
   "database_opts": {},
   "webAppUri": "http://localhost:3000",
   "isModuleSetUp": false,
-  "sgbd": "mariadb"
+  "sgbd": "mariadb",
+  "cookieSecret": "justasecretstring"
 }
 

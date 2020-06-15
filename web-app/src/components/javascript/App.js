@@ -10,7 +10,6 @@ import Upperbar from './html-elements-utils/UpperBar';
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
 const sidebarCollapsedSize = "75px";
-const sidebarExtendedSize = "250px";
 
 class App extends Component {
 
@@ -30,9 +29,11 @@ class App extends Component {
         return (
             <Router>
                 <UserProvider>
-                    <Upperbar />
+                        <Upperbar />
+                    <div id={"main"} style={{ marginLeft: sidebarCollapsedSize }}>
+                        <Routes changeProtocol={this.changeProtocol}> </Routes>
+                    </div>
                     <SideBar navWidthCollapsed={sidebarCollapsedSize} />
-                    <Routes sidebarCollapsedSize={sidebarCollapsedSize} changeProtocol={this.changeProtocol}> </Routes>
                 </UserProvider>
             </Router>
 

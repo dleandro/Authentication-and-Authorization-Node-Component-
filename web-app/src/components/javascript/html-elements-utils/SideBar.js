@@ -12,12 +12,13 @@ const fontSize = { fontSize: '1.75em'/*,color: '#1cc4e6'*/ }
  * @returns {*}
  * @constructor
  */
-export default function Sidebar({ sidebarCollapsedSize }) {
+export default function Sidebar({ navWidthCollapsed }) {
 
-    const officeSubItems = [{link: '/permissions', text: 'Permissions'}, {
-        link: '/roles',
-        text: 'Roles'
-    }, {link: '/lists', text: 'Lists'}]
+    const officeSubItems = [
+        {link: '/users', text: 'Users'},
+        {link: '/permissions', text: 'Permissions'}, 
+        {link: '/roles', text: 'Roles'},
+        {link: '/lists', text: 'Lists'}]
 
     const navWidthExpanded = "250px";
     /**
@@ -34,24 +35,23 @@ export default function Sidebar({ sidebarCollapsedSize }) {
         { key: 'home', link: '/', icon: <i className="fa fa-home" style={fontSize} />, text: 'Homepage' },
         { key: 'login', link: '/login', icon: <i className="fa fa-sign-in" style={fontSize} />, text: 'Login', },
         { key: 'protocol', link: '/protocols', icon: <i className="fa fa-lock" style={fontSize} />, text: 'Protocol' },
-        { key: 'office', link: '/users', icon: <i className="fa fa-tachometer" style={fontSize} />, text: 'Backoffice', subItems: officeSubItems }];
+        { key: 'office', link: '/backoffice', icon: <i className="fa fa-tachometer" style={fontSize} />, text: 'Backoffice', subItems: officeSubItems }];
 
         const [expand, setexpand] = useState(false);
 
         /**
          * Opens or closes the Side Bar
          */
-        function toggleListener() {
+        async function toggleListener() {
             setexpand(!expand)
             console.log('set Expanded')
-            document.getElementById('sidebar').style.width = expand ? navWidthExpanded : sidebarCollapsedSize
-            document.getElementById('main').style.marginLeft = expand ? sidebarCollapsedSize : navWidthExpanded
+            document.getElementById('sidebar').style.width = expand ? navWidthExpanded : navWidthCollapsed
+            document.getElementById('main').style.marginLeft = expand ? navWidthCollapsed : navWidthExpanded
         }
-    
     
         return (
             <SideNav id={"sidebar"}
-                     style={{'backgroundColor': '#282c34', width: expand ? navWidthExpanded : sidebarCollapsedSize}}
+                     style={{'backgroundColor': '#282c34', width: expand ? navWidthExpanded : navWidthCollapsed}}
                      onToggle={(selected) => toggleListener()}>
                 <SideNav.Toggle/>
                 <SideNav.Nav defaultSelected="home">

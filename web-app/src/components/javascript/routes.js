@@ -6,7 +6,6 @@ import BackOffice from "./routesSrc/backoffice";
 import Homepage from "./routesSrc/Homepage";
 import UserLogin from './routesSrc/loginComponents/UserLogin'
 import AuthenticationProtocol from './routesSrc/AuthenticationProtocol'
-import UperBar from "./html-elements-utils/UperBar";
 import {BackofficeRole} from "./routesSrc/BackofficeRole";
 import {BackofficeList} from "./routesSrc/BackofficeList";
 import {BackofficePermission} from "./routesSrc/BackofficePermission"
@@ -34,12 +33,6 @@ class Routes extends Component {
         return (
             <Switch id={"switch"}>
                 <div id={"main"} style={{marginLeft: this.props.sidebarCollapsedSize}}>
-                    <UserConsumer>
-                        {state => (<UperBar isLoggedIn={state.isLoggedIn} logoutWith={state.setUser} userId={state.user.id}
-
-                                            setRedirect={this.setRedirect}/>)}
-                    </UserConsumer>
-
                     {this.renderRedirect()}
                     <Route path={'/'} exact component={Homepage}/>
                     <Route path={'/login'} exact

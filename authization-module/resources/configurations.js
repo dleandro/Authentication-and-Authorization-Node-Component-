@@ -7,6 +7,16 @@ const
 module.exports = {
 
     /**
+     * @param callbackUrl 
+     */
+    changeCallbackUrls: (callbackUrl) => {
+        config.google.callbackUrl = callbackUrl
+        config.azureAD.callbackUrl = callbackUrl
+        config.saml.callbackUrl = callbackUrl
+        config.localCallbackUrl = callbackUrl
+    },
+
+    /**
      * change database options
      * @param newConfiguration
      */

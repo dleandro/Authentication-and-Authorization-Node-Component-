@@ -9,7 +9,7 @@ const AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy,
 const strategy = new AzureAdOAuth2Strategy({
         clientID: config.azureAD.azure_client_id,
         clientSecret: config.azureAD.azure_client_secret,
-        callbackURL: config.azureAD.callbackURL,
+        callbackURL: config.azureAD.callbackUrl,
         tenant: config.azureAD.tenant
     },
     async function (accessToken, refreshToken, params, profile, done) {

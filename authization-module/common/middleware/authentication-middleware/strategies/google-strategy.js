@@ -10,7 +10,7 @@ const
 const strategy = new GoogleStrategy({
         clientID: config.google.google_client_id,
         clientSecret: config.google.google_client_secret,
-        callbackURL: config.google.callbackURL
+        callbackURL: config.google.callbackUrl
     },
     async function (accessToken, refreshToken, profile, done) {
         if (!(await passportUtils.checkProtocol(protocolName))) {

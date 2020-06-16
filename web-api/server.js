@@ -5,13 +5,10 @@
 const
     express = require('express'),
     app = express(),
-    path=require('path')
+    path = require('path')
 
 // Setup app's middleware
-const authization=require('./common/middleware/app-middleware')(app)
-
-// api routes and their behaviour
-app.use('/api', require("./web-api")(authization))
+require('./common/middleware/app-middleware')(app)
 
 // export the app for testing
 module.exports = app

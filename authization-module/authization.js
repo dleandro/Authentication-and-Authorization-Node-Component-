@@ -63,12 +63,12 @@ module.exports = function (app, db, jsonObj) {
         /**
          * returns permission resource file to manage permissions
          */
-        permission: require('./resources/dals/permissions-dal')(rbac),
+        permission: require('./resources/dals/permissions-dal'),
 
         /**
          * returns role resource file to manage roles
          */
-        role: require('./resources/dals/roles-dal')(rbac),
+        role: require('./resources/dals/roles-dal'),
 
         /**
          * returns userRole resource file to manage user's roles
@@ -78,7 +78,7 @@ module.exports = function (app, db, jsonObj) {
         /**
          * returns rolePermission resource file to manage role's permissions
          */
-        rolePermission: require('./resources/dals/roles-permissions-dal')(rbac),
+        rolePermission: require('./resources/dals/roles-permissions-dal'),
 
         /**
          * returns userHistory resource file to check user's history

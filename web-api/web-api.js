@@ -1,5 +1,5 @@
 'use strict'
-
+module.exports=function(authization){
 
 // This file defines all routers and passes them the needed parameters
 
@@ -7,9 +7,6 @@
 const
     apiUtils = require('./common/util/api-utils'),
     router = require('express').Router(),
-    authization = require('../authization-module/authization')()
-
-const
     userRouter = require('./routers/user-router')(apiUtils, authization),
     authenticationRouter = require('./routers/authentication-router')(apiUtils, authization),
     permissionRouter = require('./routers/permission-router')(apiUtils, authization),
@@ -32,6 +29,6 @@ router.use('/configs', configRouter)
 router.use('/authentications', authenticationRouter)
 router.use('/protocols',protocolRouter)
 
-
-module.exports = router
+return router
+}
 

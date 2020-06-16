@@ -3,7 +3,11 @@
 
 const Permission = require('../sequelize-model').Permission
 
-module.exports = (rbac) => {
+
+module.exports = () => {
+
+   const config=require('../../common/config/config'),
+    rbac=config.rbac
 
     return {
 
@@ -15,7 +19,7 @@ module.exports = (rbac) => {
          * @returns {Promise<void>}
          */
         create: async (action,resource) =>{
-            rbac.createPermission(action,resource)
+            rbac.createPermission(action,resource,true)
              Permission.create({
                 action: action,
                 resource: resource
@@ -53,7 +57,7 @@ module.exports = (rbac) => {
          * @returns {Promise<*>}
          */
         getSpecific: async (action, resource) =>
-            Permission.findAll({
+            Permission.findOne({
                 where: {
                     action: action,
                     resource: resource

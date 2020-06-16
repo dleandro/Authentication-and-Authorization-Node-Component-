@@ -3,8 +3,12 @@
 const Role = require('../sequelize-model').Role,
     { Permission, User } = require('../sequelize-model'),
     sequelize = require('../../common/util/db')
+    
 
-module.exports = (rbac) => {
+module.exports = ( )=> {
+
+    const config=require('../../common/config/config'),
+    rbac=config.rbac
 
     return {
 

@@ -26,11 +26,11 @@ module.exports = function (app) {
    
 
     // using authization module to setup authentication and authorization middleware
-    require('../../../authization-module/authization')(app,db,jsonObj)
+    const authization=require('../../../authization-module/authization')(app,db,jsonObj)
 
 
     // For request logging
     app.use(morgan('tiny'))
 
-
+return authization
 }

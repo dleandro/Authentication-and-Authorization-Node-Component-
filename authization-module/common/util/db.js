@@ -15,7 +15,8 @@ const sequelize = new Sequelize(config.database_opts.database, config.database_o
 async function databasesetup(jsonObj){
 // sync present state of the database with our models
  await sequelize.sync().then(_ => {console.log("All models were synchronized successfully.")
- return require('../middleware/rbac')(jsonObj)
+ require('../middleware/rbac')(jsonObj)
+ config.isModuleSetup=true
 })
 
 }

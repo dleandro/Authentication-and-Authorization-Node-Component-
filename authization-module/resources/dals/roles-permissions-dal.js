@@ -4,7 +4,10 @@ const RolePermission = require('../sequelize-model').RolePermission,
     sequelize = require('../../common/util/db')
 
 
-module.exports = (rbac, roleDal, permissionDal) => {
+
+module.exports = ( roleDal, permissionDal) => {
+    const config=require('../../common/config/config'),
+    rbac=config.rbac
 
     return {
 
@@ -14,10 +17,8 @@ module.exports = (rbac, roleDal, permissionDal) => {
          * @param permission
          * @returns {Promise<void>}
          */
-        create: async (role, permission) => {
-            const roleName = (await roleDal.getSpecificById(role)).role
-            const permissionObj = await permissionDal.getSpecificById(permission)
-            rbac.grant(rbac.getRole(roleName), rbac.getPermission(permissionObj.action, permissionObj.resource))
+        create: async (role, permission,roleName,permissionObj) => {
+            rbac.grant(await rbac.getRole(roleName), await rbac.getPermission(permissionObj.action, permissionObj.resource))
             RolePermission.create({
                 RoleId: role,
                 PermissionId: permission

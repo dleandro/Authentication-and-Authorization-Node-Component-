@@ -16,6 +16,7 @@
     "issuer": "aa-node-component"
   },
   "database_opts": {},
+  "rbac":{},
   "webAppUri": "http://localhost:3000",
   "isModuleSetUp": false,
   "sgbd": "mariadb",

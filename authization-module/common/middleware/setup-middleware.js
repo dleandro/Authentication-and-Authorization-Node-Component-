@@ -27,6 +27,4 @@ module.exports = function (app, session) {
     //app.use(
     //  (req, res, next) => req.url.includes('authentications') ? next() : authorization.check(req, res, next)
     //)
-
-    config.isModuleSetUp = true
 }

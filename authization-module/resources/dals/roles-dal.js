@@ -2,23 +2,19 @@
 
 const Role = require('../sequelize-model').Role,
     { Permission, User } = require('../sequelize-model'),
-    sequelize = require('../../common/util/db')
+    sequelize = require('../../common/util/db'),
+    config=require('../../common/config/config')
     
 
-module.exports = ( )=> {
+module.exports ={
 
-    const config=require('../../common/config/config'),
-    rbac=config.rbac
-
-    return {
-
-        /**
+    /**
          *
          * @param role
          * @returns {Promise<void>}
          */
         create: async (role, parentRole) => {
-            rbac.createRole(role, true)
+            config.rbac.createRole(role, true)
             Role.create({
                 role: role,
                 parent_role: parentRole
@@ -60,5 +56,4 @@ module.exports = ( )=> {
         getUsersWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [User] }),
         addParentRole: (roleId, parentRole) => Role.update({ parent_role: parentRole }, { where: { id: roleId } })
 
-    }
 }

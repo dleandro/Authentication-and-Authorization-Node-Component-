@@ -18,8 +18,8 @@ module.exports = async function (jsonObj) {
 
     rbac = new RBAC()
     config.rbac = rbac
-    roleDal = require('../../resources/dals/roles-dal')(rbac)
-    permissionsDal = require('../../resources/dals/permissions-dal')(rbac)
+    roleDal = require('../../resources/dals/roles-dal')
+    permissionsDal = require('../../resources/dals/permissions-dal')
     rolesPermissionsDal = require('../../resources/dals/roles-permissions-dal')(roleDal, permissionsDal)
 
     await createRoles(jsonObj.roles)

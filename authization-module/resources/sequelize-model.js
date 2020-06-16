@@ -104,6 +104,10 @@ const UserRoles = UserAssociation('UserRoles');
 Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
 
+User.create({username:"admin",password:"admin"})
+List.bulkCreate([{"list":"BLACK"},{"list":"GREY"},{"list":"RED"}])
+Protocols.bulkCreate([{"protocol":"Google","active":1},{"protocol":"AzureAD","active":1},{"protocol":"Saml","active":1}])
+
 
 exports.Permission = Permission
 exports.Protocols = Protocols

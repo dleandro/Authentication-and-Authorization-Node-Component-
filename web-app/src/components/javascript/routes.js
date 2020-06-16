@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../stylesheets/App.css';
 import React, { Component } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import BackOffice from "./routesSrc/BackOffice";
+import BackOffice from "./routesSrc/backoffice";
 import Homepage from "./routesSrc/Homepage";
 import UserLogin from './routesSrc/loginComponents/UserLogin'
 import AuthenticationProtocol from './routesSrc/AuthenticationProtocol'
@@ -39,9 +39,6 @@ class Routes extends Component {
                     <Route path={'/login'} exact component={() => <UserLogin app={this.state} setRedirect={this.setRedirect} />} />
                     <Route path={'/users'} exact component={() => <Users setRedirect={this.setRedirect} />} />
                     <Route path={'/protocols'} exact component={() => <AuthenticationProtocol />} />
-                    <UserConsumer>
-                        {state => <Route path={'/users/:id'} exact component={() => <UserInfo userId={state.user} />} />}
-                    </UserConsumer>
                     <Route path={'/lists'} exact component={() => <BackofficeList />} />
                     <Route path={'/permissions'} exact component={() => <BackofficePermission />} />
                     <Route path={'/roles'} exact component={() => <BackofficeRole />} />
@@ -49,6 +46,10 @@ class Routes extends Component {
                     <Route path={'/lists/:id'} exact component={() => <ListInfo />} />
                     <Route path={'/permissions/:id'} exact component={() => <PermissionInfo />} />
                     <Route path={'/roles/:id'} exact component={() => <RoleInfo />} />
+                    <UserConsumer>
+                        {state => <Route path={'/users/:id'} exact component={() => <UserInfo userId={state.user} />} />}
+                    </UserConsumer>
+                   
             </Switch>
         );
     }

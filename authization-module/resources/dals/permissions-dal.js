@@ -1,15 +1,12 @@
 'use strict'
 
 
-const Permission = require('../sequelize-model').Permission
+const Permission = require('../sequelize-model').Permission,
+config=require('../../common/config/config')
 
 
-module.exports = () => {
+module.exports ={
 
-   const config=require('../../common/config/config'),
-    rbac=config.rbac
-
-    return {
 
         /**
          *
@@ -19,7 +16,7 @@ module.exports = () => {
          * @returns {Promise<void>}
          */
         create: async (action,resource) =>{
-            rbac.createPermission(action,resource,true)
+            config.rbac.createPermission(action,resource,true)
              Permission.create({
                 action: action,
                 resource: resource
@@ -64,6 +61,5 @@ module.exports = () => {
                 }
             }),
 
-    }
-
 }
+

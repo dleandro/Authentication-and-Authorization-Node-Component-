@@ -1,20 +1,11 @@
 'use strict'
 
 const
-    config = require('../common/config/config')
+    config = require('../common/config/config'),
+    passport = require('passport')
 
 // this module allows clients to change module configurations (database options, client ids and such)
 module.exports = {
-
-    /**
-     * @param callbackUrl 
-     */
-    changeCallbackUrls: (callbackUrl) => {
-        config.google.callbackUrl = callbackUrl
-        config.azureAD.callbackUrl = callbackUrl
-        config.saml.callbackUrl = callbackUrl
-        config.localCallbackUrl = callbackUrl
-    },
 
     /**
      * change database options
@@ -35,6 +26,12 @@ module.exports = {
      */
     changeGoogleAuthenticationOptions: (newConfiguration) => {
         config.google = newConfiguration
+
+        delete passport._strategies.google
+
+        const strat = require('../common/middleware/authentication-middleware/strategies/google-strategy')()
+        
+        passport.use('google', strat)
     },
     /**
      *

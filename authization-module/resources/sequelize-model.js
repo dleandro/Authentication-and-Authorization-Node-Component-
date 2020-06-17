@@ -1,11 +1,13 @@
 const { Sequelize, DataTypes } = require('sequelize'),
-    sequelize = require('../common/util/db').sequelize
+    config = require('../common/config/config'),
+    sequelize = config.sequelize
 
-const {STRING,DATE,BOOLEAN, INTEGER} = Sequelize
+const { STRING, DATE, BOOLEAN, INTEGER } = Sequelize
 const NonNullDate = { type: DATE, allowNull: false } //only used 1 time considering remove this const
 const NonNullString = { type: STRING, allowNull: false }
 const NonNullUniqueString = { ...NonNullString, unique: true } //only used 1 time considering remove this const
 const NonNullStringPK = { ...NonNullString, primaryKey: true } //only used 1 time considering remove this const
+
 /**
  * @param modelName
  * @param attributes
@@ -20,7 +22,7 @@ const defineTable = (modelName, attributes) => sequelize.define(modelName, attri
  * - description: DefaultString)
  * @type {Model}
  */
-const Permission = defineTable('Permission', {action: STRING, resource: STRING});
+const Permission = defineTable('Permission', { action: STRING, resource: STRING });
 /**
  * Protocols(
  * - protocol: NonNullStringPK,
@@ -49,7 +51,7 @@ Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false })
  * - password: DefaultString)
  * @type {Model}
  */
-const User = defineTable('User', {username: {type: STRING, allowNull: false, unique: true}, password: STRING});
+const User = defineTable('User', { username: { type: STRING, allowNull: false, unique: true }, password: STRING });
 /**
  * User_History(
  * - user_id: NonNullAutoIncIntPK,
@@ -57,7 +59,7 @@ const User = defineTable('User', {username: {type: STRING, allowNull: false, uni
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: NonNullDate, description: STRING});
+const UserHistory = defineTable('User_History', { date: NonNullDate, description: STRING });
 User.hasMany(UserHistory, { foreignKey: 'user_id' })
 /**
  * UserSession(
@@ -65,7 +67,7 @@ User.hasMany(UserHistory, { foreignKey: 'user_id' })
  * - session_id: NonNullStringPK)
  * @type {Model}
  */
-const UserSession = defineTable('User_Session', {session_id: {type: STRING, allowNull: false, primaryKey: true,}});
+const UserSession = defineTable('User_Session', { session_id: { type: STRING, allowNull: false, primaryKey: true, } });
 User.hasMany(UserSession, { foreignKey: 'user_id' })
 
 /**
@@ -76,7 +78,8 @@ User.hasMany(UserSession, { foreignKey: 'user_id' })
  */
 const List = defineTable('List', {list: {type: STRING, unique: true}});
 
-const UserAssociation = (associationName) => defineTable(associationName, {start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN});
+
+const UserAssociation = (associationName) => defineTable(associationName, { start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN });
 
 const UserList = UserAssociation('UserList');
 List.belongsToMany(User, { through: UserList });
@@ -88,7 +91,7 @@ User.belongsToMany(List, { through: UserList });
  * - idpname: DefaultString)
  * @type {Model}
  */
-const Idp = defineTable('Idp', {idp_id: STRING, idpname: STRING});
+const Idp = defineTable('Idp', { idp_id: STRING, idpname: STRING });
 User.hasOne(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(
@@ -103,10 +106,6 @@ User.hasOne(Idp, { foreignKey: 'user_id' })
 const UserRoles = UserAssociation('UserRoles');
 Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
-
-User.create({username:"admin",password:"admin"})
-List.bulkCreate([{"list":"BLACK"},{"list":"GREY"},{"list":"RED"}])
-Protocols.bulkCreate([{"protocol":"Google","active":1},{"protocol":"AzureAD","active":1},{"protocol":"Saml","active":1}])
 
 
 exports.Permission = Permission

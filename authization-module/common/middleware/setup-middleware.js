@@ -4,7 +4,7 @@ const
     passport = require('./authentication-middleware/passport'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    config = require('../config/config')
+    authorization = require('../../resources/authorizations')    
 
 
 
@@ -24,7 +24,5 @@ module.exports = function (app, session) {
     app.use(passport.session())
 
     //Interceptor that checks for authorization
-    //app.use(
-    //  (req, res, next) => req.url.includes('authentications') ? next() : authorization.check(req, res, next)
-    //)
+    app.use(authorization.check)
 }

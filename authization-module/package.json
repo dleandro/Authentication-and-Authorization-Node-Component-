@@ -1,7 +1,13 @@
 {
   "name": "authization",
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "testResultsProcessor": "jest-sonar-reporter"
+  },
+  "jestSonar": {
+    "reportPath": "reports",
+    "reportFile": "test-reporter.xml",
+    "indent": 4
   },
   "version": "1.0.0",
   "description": "Module for authentication and authorization",
@@ -34,6 +40,7 @@
     "sequelize": "^5.21.9"
   },
   "devDependencies": {
-    "jest": "^26.0.1"
+    "jest": "^26.0.1",
+    "jest-sonar-reporter": "^2.0.0"
   }
 }

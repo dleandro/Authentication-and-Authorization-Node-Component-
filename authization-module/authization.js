@@ -94,7 +94,7 @@ module.exports = {
             await require('./common/util/db')(rbac_opts)
 
             const
-                SessionStore = require('express-session-sequelize')(session.Store),
+                SessionStore = require('connect-session-sequelize')(session.Store),
                 sequelizeSessionStore = new SessionStore({
                     db: config.sequelize,
                 }),
@@ -108,6 +108,8 @@ module.exports = {
                         maxAge: 1000 * 60 * 60 * 24
                     }
                 }
+
+                 sequelizeSessionStore.sync()
 
             // setup required middleware
             require('./common/middleware/setup-middleware')(app, session(session_opts))

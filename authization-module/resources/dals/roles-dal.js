@@ -13,11 +13,12 @@ module.exports = {
          * @param role
          * @returns {Promise<void>}
          */
-    create: async (role, parentRole) => {
+    create: async (role) => {
         config.rbac.createRole(role, true)
-        Role.create({
-            role: role,
-            parent_role: parentRole
+        Role.findOrCreate({
+            where:{
+            role: role
+            }
         })
     },
 
@@ -54,6 +55,9 @@ module.exports = {
         { type: sequelize.QueryTypes.SELECT }
     ),
     getUsersWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [User] }),
-    addParentRole: (roleId, parentRole) => Role.update({ parent_role: parentRole }, { where: { id: roleId } })
+    addParentRole: async (role, parentRole) =>{ 
+        config.rbac.grant(await config.rbac.getRole(parentRole.role),await config.rbac.getRole(role.role))
+        Role.update({ parent_role: parentRole.id }, { where: { id: role.id} })
+    }
 
 }

@@ -88,5 +88,8 @@ module.exports = {
     checkProtocol: async (protocolName) => {
         const result = await protocol.get(protocolName)
         return result!=null
+    },
+    deleteUserSession : async(userId,sessionId)=>{
+        await userSession.delete(userId,sessionId)
     }
 }

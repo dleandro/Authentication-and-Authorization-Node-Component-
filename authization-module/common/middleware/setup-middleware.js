@@ -24,5 +24,5 @@ module.exports = function (app, session) {
     app.use(passport.session())
 
     //Interceptor that checks for authorization
-    app.use(authorization.check)
+   app.use(authorization.check)
 }

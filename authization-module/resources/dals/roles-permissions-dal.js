@@ -15,9 +15,11 @@ module.exports = {
      */
     create: async (role, permission, roleName, permissionObj) => {
         rbac.grant(await rbac.getRole(roleName), await rbac.getPermission(permissionObj.action, permissionObj.resource))
-        RolePermission.create({
+        RolePermission.findOrCreate({
+            where:{
             RoleId: role,
             PermissionId: permission
+            }
         })
     },
     /**

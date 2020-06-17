@@ -50,7 +50,7 @@ function createGrants(grants) {
         permissions.map(async permission => {
             if ("role" in permission) {
                 const childRole = await roleDal.getByName(permission.role)
-                roleDal.addParentRole(childRole.id, role.id)
+                roleDal.addParentRole(childRole, role)
             } else {
                 const p = await permissionsDal.getSpecific(permission.action, permission.resource)
                 rolesPermissionsDal.create(role.id, p.id, role.role, p)

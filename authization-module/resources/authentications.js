@@ -25,10 +25,14 @@ module.exports = {
         passport.authenticate('local', { failWithError: true }, function (err, user) {
             if (!err && user) {
                 passportUtils.createUserSession(user.id, req.session.id)
-                res.redirect(config.localCallbackUrl)
+                req.logIn(user, function (error) {
+                    if (error) { return next(error); }
+                })
+                return next()
             }
             next(err)
         })(req, res, next)
+
     },
     /**
      *
@@ -130,10 +134,15 @@ module.exports = {
      * @param next
      */
     logout: (req, res, next) => {
+        passportUtils.deleteUserSession(req.user.id,req.sessionID)
         req.logout()
-        req.session.destroy()
-        next()
+        req.session.destroy((err) => {
+            if (err) {
+                next(err)
+            }
+
+            next()
+        })
+
     }
-
-
 }

@@ -40,7 +40,7 @@ module.exports = function (apiUtils, authization) {
 
     userRouter.route('/:id')
         .get(getSpecificUser)
-        .delete(deleteUser)
+        .delete(deleteUser);
 
     // get user from idp by its idp id
     userRouter.get('idp/:id', getUserFromIdp)
@@ -58,14 +58,13 @@ module.exports = function (apiUtils, authization) {
     userRouter.put('/:id/password', updatePassword)
 
     async function getAllUsers(req, res) {
-        console.log("you can get a user")
         promiseDataToResponse(res, users.getAll())
     }
 
     function createUser(req, res) {
         users.create(req.body.username, req.body.password)
             .then(answer => {
-                apiUtils.setResponse(res, answer.dataValues, 201)
+                apiUtils.setResponse(res, answer, 201)
             })
             .catch(err => apiUtils.setResponse(res, err, 400));
     }

@@ -74,7 +74,7 @@ User.hasMany(UserSession, { foreignKey: 'user_id' })
  * - list: DefaultString)
  * @type {Model}
  */
-const List = defineTable('List', {list: STRING});
+const List = defineTable('List', {list: {type: STRING, unique: true}});
 
 const UserAssociation = (associationName) => defineTable(associationName, {start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN});
 

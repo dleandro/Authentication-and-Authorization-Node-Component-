@@ -37,6 +37,22 @@ const basicCheckById = (json,model) => {
 //if something is not working dont forget to add environment variable in your system or in your IDE: NODE_ENV=testing
 //if running test alone make sure to add await in the end of test, running all tests will make them run in parallel
 describe("Sequelize Testings", () => {
+    test('Test UserDal without IDPs methods',async ()=>{
+        const newPass = 'newPass',newName='newUsername';
+        //Create and check
+        const created = await userDal.create('usernameTest','passwordTest').then(data=>data.dataValues);
+        await userDal.getAll().then(users=>expect(users).toContainEqual(created));
+        //Update and check
+        await userDal.updatePassword(newPass,created.id);
+        await userDal.getByUsername(created.username).then(data=>expect(data.password).toEqual(newPass));
+        await userDal.updateUsername(newName,created.id);
+        await userDal.getById(created.id).then(d=>expect(d.username).toEqual(newName));
+        //Delete and check
+        await userDal.delete(created.id);
+        await userDal.get(newName,newPass).then(data=>expect(data).toBeNull());
+        await userDal.getById(created.id).then(data=>expect(data).toBeNull());
+    })
+
     test("Check creation, obtaining and elimination of Idp", async () => {
         const idp = {idp_id: 'test_idp_id', idpname: 'auth0_testing',user_id:1}
         basicCheckByJson(idp,Idp)

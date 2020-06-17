@@ -49,8 +49,8 @@ module.exports = function (apiUtils, authization) {
     function addList(req,res){
         lists.create(req.body.list)
         .then(answer => {
-            req.body.id = answer.insertId
-            apiUtils.setResponse(res, req.body, 201)
+            //req.body = {...req.body,id:answer.insertId}
+            apiUtils.setResponse(res, answer, 201)
         })
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

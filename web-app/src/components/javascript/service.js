@@ -1,5 +1,4 @@
 var { users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs, protocols, userRoles } = require('../links').webApiLinks;
-const fetch = require('node-fetch')
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
 function produceInit(body, met) {

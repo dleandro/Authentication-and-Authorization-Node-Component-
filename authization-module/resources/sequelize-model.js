@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize'),
     config = require('../common/config/config'),
     sequelize = config.sequelize
 
-const { STRING, DATE, BOOLEAN, INTEGER } = Sequelize
+const { STRING, DATE, BOOLEAN, INTEGER,TEXT } = Sequelize
 const NonNullDate = { type: DATE, allowNull: false } //only used 1 time considering remove this const
 const NonNullString = { type: STRING, allowNull: false }
 const NonNullUniqueString = { ...NonNullString, unique: true } //only used 1 time considering remove this const
@@ -91,7 +91,7 @@ User.belongsToMany(List, { through: UserList });
  * - idpname: DefaultString)
  * @type {Model}
  */
-const Idp = defineTable('Idp', { idp_id: STRING, idpname: STRING });
+const Idp = defineTable('Idp', { idp_id: STRING(1234,false), idpname: STRING });
 User.hasOne(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(

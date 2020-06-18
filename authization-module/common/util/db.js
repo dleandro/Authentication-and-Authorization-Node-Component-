@@ -17,21 +17,21 @@ config.sequelize = sequelize
 async function databasesetup(rbac_opts) {
 
     // defining the EA model
-    const { User, List, Protocols,Role } = require('../../resources/sequelize-model')
+    const { User, List, Protocols, Role } = require('../../resources/sequelize-model')
 
     // sync present state of the database with our models
     await sequelize.sync()
 
+    await User.findOrCreate({ where: { "username": "superuser" }, defaults: { "password": "superuser" } })
+    await List.findOrCreate({ where: { "list": "BLACK" } })
+    await List.findOrCreate({ where: { "list": "GREY" } })
+    await List.findOrCreate({ where: { "list": "RED" } })
+    await Protocols.findOrCreate({ where: { "protocol": "Google", "active": 1 } })
+    await Protocols.findOrCreate({ where: { "protocol": "AzureAD", "active": 1 } })
+    await Protocols.findOrCreate({ where: { "protocol": "Saml", "active": 1 } })
+    
     console.log('database setup correctly')
-
-    await User.findOrCreate({ where:{username: "superuser", password: "superuser" }})
-    await List.findOrCreate({where:{ "list": "BLACK" }})
-    await List.findOrCreate({where:{ "list": "GREY" }})
-    await List.findOrCreate({where:{ "list": "RED" }})
-    await Protocols.findOrCreate({where:{"protocol": "Google", "active": 1 }})
-    await Protocols.findOrCreate({where:{ "protocol": "AzureAD", "active": 1 }})
-    await Protocols.findOrCreate({where:{ "protocol": "Saml", "active": 1}})
-
+    
     return require('../middleware/rbac')(rbac_opts)
 }
 

@@ -1,8 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize'),
     config = require('../common/config/config'),
-    sequelize = config.sequelize
+    sequelize = config.sequelize,
+    bcrypt = require('bcrypt')
 
-const { STRING, DATE, BOOLEAN, INTEGER,TEXT } = Sequelize
+const { STRING, DATE, BOOLEAN, INTEGER, TEXT } = Sequelize
 const NonNullDate = { type: DATE, allowNull: false } //only used 1 time considering remove this const
 const NonNullString = { type: STRING, allowNull: false }
 const NonNullUniqueString = { ...NonNullString, unique: true } //only used 1 time considering remove this const
@@ -51,7 +52,26 @@ Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false })
  * - password: DefaultString)
  * @type {Model}
  */
-const User = defineTable('User', { username: { type: STRING, allowNull: false, unique: true }, password: STRING });
+const User = defineTable('User', {
+    username: { type: STRING, allowNull: false, unique: true },
+    password: { type: STRING, get() { return () => this.getDataValue('password') } }
+});
+
+User.encryptPassword = async (password) => await bcrypt.hash(password, bcrypt.genSaltSync(10))
+
+User.correctPassword = async function (enteredPassword, user) {
+    return await bcrypt.compare(enteredPassword, user.password)
+}
+
+const setSaltHashAndPassword = async user => {
+    if (user.changed('password')) {
+        user.password = await User.encryptPassword(user.password())
+    }
+}
+
+User.beforeCreate(setSaltHashAndPassword)
+User.beforeUpdate(setSaltHashAndPassword)
+
 /**
  * User_History(
  * - user_id: NonNullAutoIncIntPK,
@@ -76,7 +96,7 @@ User.hasMany(UserSession, { foreignKey: 'user_id' })
  * - list: DefaultString)
  * @type {Model}
  */
-const List = defineTable('List', {list: {type: STRING, unique: true}});
+const List = defineTable('List', { list: { type: STRING, unique: true } });
 
 
 const UserAssociation = (associationName) => defineTable(associationName, { start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN });
@@ -91,7 +111,7 @@ User.belongsToMany(List, { through: UserList });
  * - idpname: DefaultString)
  * @type {Model}
  */
-const Idp = defineTable('Idp', { idp_id: STRING(1234,false), idpname: STRING });
+const Idp = defineTable('Idp', { idp_id: STRING(1234, false), idpname: STRING });
 User.hasOne(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(

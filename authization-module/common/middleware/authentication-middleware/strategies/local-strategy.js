@@ -2,7 +2,8 @@
 
 const
     LocalStrategy = require('passport-local').Strategy,
-    passportUtils = require('../../../util/passport-utils')
+    passportUtils = require('../../../util/passport-utils'),
+    { User } = require('../../../../resources/sequelize-model')
 
 const strategy = new LocalStrategy(
     async function (username, password, done) {
@@ -14,7 +15,7 @@ const strategy = new LocalStrategy(
             return
         }
 
-        if (user.password === password) {
+        if (await User.correctPassword(password, user)) {
             done(null, user)
         }
     }

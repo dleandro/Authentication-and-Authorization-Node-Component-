@@ -3,7 +3,11 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import {userService} from '../service'
 import Button from 'react-bootstrap/Button'
+import { useHistory } from "react-router";
+
 export default function Register() {
+
+    const history = useHistory();
 
     var user, pass = "";
     const handlePassword = event => {
@@ -15,7 +19,9 @@ export default function Register() {
     }
 
     var register =  () => {
-        userService().addUser([user,pass])
+        userService().addUser([user,pass]).then(
+            history.push('/')
+        )
     }
 
 

@@ -36,6 +36,7 @@ module.exports = function (apiUtils, authization) {
 
     permissionRouter.route('/:id')
         .get(getPermissionById)
+        .put(updatePermission)
         .delete(deletePermission)
 
     function getPermissions(req, res) {
@@ -48,6 +49,11 @@ module.exports = function (apiUtils, authization) {
                 req.body.id = answer.insertId
                 apiUtils.setResponse(res, req.body, 201)
             })
+            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+    }
+    function updatePermission(req, res) {
+        permissions.update(req.params.id,req.body.action, req.body.resource)
+            .then(answer => apiUtils.setResponse(res, req.body, 201))
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
 

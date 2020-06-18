@@ -12,7 +12,7 @@ class Users extends React.Component {
 
     constructor() {
         super()
-        this.state = {users: []}
+        this.state = {users: [],error:undefined}
     }
 
     addUser = (arr) => this.service.addUser(arr)
@@ -22,18 +22,25 @@ class Users extends React.Component {
 
     componentDidMount() {
         this.requestUsers().then(data => {
-            console.log("Users:")
-            console.log(data)
+            if("err" in data){
+                console.log(data.err)
+                this.setState({error:data})
+            }
+            else{
             this.setState({users: data})
+            }
         })
     }
 
     render() {
         return (
-            <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
+            <div>
+            {!this.state.error? <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
                          deleteRequest={this.deleteUser} labels={labels}
                          rows={this.state.users.map(user => [user.id, user.username, '****'])}
-                         redirectPage="users"/>
+                         redirectPage="users"/>:
+            <p>{this.state.error.status} {this.state.error.err}</p>}
+            </div>
         )
     }
 }

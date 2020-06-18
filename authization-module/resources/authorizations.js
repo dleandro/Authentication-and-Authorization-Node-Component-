@@ -5,7 +5,9 @@ const usersDal = require('./dals/users-dal')
 
 const userRoleDal = require('../resources/dals/users-roles-dal'),
     SUPER_USER = 'superuser',
-    config=require('../common/config/config')
+    config=require('../common/config/config'),
+    apiUtils=require('../common/util/api-utils'),
+    errors=require('../common/util/errors/app-errors')
 
 module.exports = {
     /**
@@ -32,7 +34,7 @@ module.exports = {
                 return next()
             }
         }
-        return next("User doesn't have permissions")
+        return next(errors.Unauthorized)
     }
 
 }

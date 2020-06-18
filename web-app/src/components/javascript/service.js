@@ -9,12 +9,24 @@ function handleResponse(resp) {
     if (resp.ok) {
         return resp.json();
     }
+    if(resp.status==401){
+        return createErrObj("Unauthorized:The current user cannot access this resource",401)
+    }
     throw new Error('Network response was not ok');
 }
 
+function createErrObj(msg,status){
+    return JSON.parse(`{ "err":"${msg}","status":"${status}"}`)
+}
 
-const request = (url, init) => fetch(HOME_PATH?HOME_PATH+url:url, init).then(resp => handleResponse(resp))
-    .catch(err => { console.error(`failed to fetch: ${init.method} ${HOME_PATH?HOME_PATH+url:url}`); return [err] })
+
+const request = (url, init) => fetch(HOME_PATH?HOME_PATH+url:url, init)
+    .then(resp =>
+         handleResponse(resp)
+         )
+    .catch(err => {
+         console.error(`failed to fetch: ${init.method} ${HOME_PATH?HOME_PATH+url:url}`);console.error(err); return [err] 
+        })
 
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'))
 const makeRequest = (url, body, met) => request(url, produceInit(body, met))
@@ -48,7 +60,7 @@ export function userService(optionalPort) {
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
         getUserRoles:async(id)=>getRequest(users.ROLES_PATH(id)),
-        addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[0], password: arr[1]}, 'POST'),
+        addUser: async (arr) => makeRequest(users.USER_PATH, {username: arr[1], password: arr[2]}, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), {username: arr[1]}, 'PUT'),
         deleteUser: async (arr) => {
             makeRequest(users.SPECIFIC_USER_PATH(arr[0]), {}, 'DELETE')
@@ -76,7 +88,12 @@ export function rolesService(optionalPort) {
     return {
         getRoles: async () => getRequest(roles.ROLE_PATH),
         getRole: async(id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
-        getUsersWithThisRole: async (id)=>getRequest(roles.ROLE_USERS_PATH(id))
+        getUsersWithThisRole: async (id)=>getRequest(roles.ROLE_USERS_PATH(id)),
+        addRole: async (arr) => makeRequest(roles.ROLE_PATH, {role: arr[1], parent_role: arr[2]}, 'POST'),
+        editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), {role: arr[1], parent_role: arr[2]}, 'PUT'),
+        deleteRole: async (arr) => {
+            makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), {}, 'DELETE')
+        }
 
     }
 }
@@ -86,8 +103,12 @@ export function permissionService(optionalPort) {
     return {
         getPermissions: async () => getRequest(permissions.PERMISSION_PATH),
         getPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id)),
-        getUserPermission: async (userId) => { console.log('getUserPermission needs to be done'); return { action: 'mock', resource: 'all' } }
-
+        getUserPermission: async (userId) => { console.log('getUserPermission needs to be done'); return { action: 'mock', resource: 'all' } },
+        addPermission: async (arr) => makeRequest(permissions.PERMISSION_PATH, {action: arr[1], resource: arr[2]}, 'POST'),
+        editPermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {action: arr[1], resource: arr[2]}, 'PUT'),
+        deletePermission: async (arr) => {
+            makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {}, 'DELETE')
+        }
     }
 }
 

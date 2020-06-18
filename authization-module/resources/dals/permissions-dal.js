@@ -64,5 +64,9 @@ module.exports = {
             }
         }),
 
+        update:async (id,action,resource)=>{
+            Permission.update({action:action,resource:resource},{where: {id: id}})
+        }
+
 }
 

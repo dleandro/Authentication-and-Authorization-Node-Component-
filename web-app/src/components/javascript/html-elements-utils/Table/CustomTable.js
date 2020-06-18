@@ -18,13 +18,9 @@ export default function CustomTable({labels, rows, editRequest, addRequest, dele
        
 
         var tRows=rows.map(rowCells =>{ 
-            var firstElem=rowCells.shift()
-            var link=`/${redirectPage}/${firstElem}`
-            firstElem=<a href={link}>{firstElem}</a>
-            rowCells.unshift(firstElem)
-            return <TableRow editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells}/>
+            return <TableRow  redirectPage={redirectPage} editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells}/>
         })
-        tRows.push(<TableRow editRequest={addRequest} cols={labels.map(cell => undefined)}/>)
+        tRows.push(<TableRow redirectPage={redirectPage} editRequest={addRequest} cols={labels.map(cell => undefined)}/>)
         return tRows
     }
 

@@ -21,6 +21,11 @@ class TableRow extends React.Component {
     //checks if any change was submited
     submitListener = _ => this.stateWasChanged ? this.props.editRequest(this.state.cols) : alert(MISS_CLICK_ALERT)
 
+    deleteListener = _ =>{
+        this.props.deleteRequest(this.state.cols)
+        this.setState({cols:undefined})
+    }
+
     changeColNum = (i, value) => {
         var ret = this.state.cols
         ret[i] = value;
@@ -42,14 +47,16 @@ class TableRow extends React.Component {
 
     render() {
         return (
+            <React.Fragment>
+                {this.state.cols?
             <tr>
                 {
 
                     this.state.cols.map((col, index) =>{
                     if(index==0){
+                        var link=`/${this.props.redirectPage}/${this.props.cols[index]}`
                         return<td>
-                            
-                                   {this.props.cols[index]} 
+                                   <a href={link}>{this.props.cols[index]}</a>
                         </td>
                     }else{
                         return <td>
@@ -65,9 +72,11 @@ class TableRow extends React.Component {
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                    {(!this.isEmptyRow) ? undefined : <Button onClick={this.props.deleteRequest}>Delete</Button>}
+                    {(!this.isEmptyRow) ? undefined : <Button onClick={this.deleteListener}>Delete</Button>}
                 </td>
-            </tr>
+            </tr>:null
+            }
+           </React.Fragment>
         )
     }
 }

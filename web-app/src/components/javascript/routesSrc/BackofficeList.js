@@ -11,7 +11,7 @@ const labels = [ "Id", "List"]
 export class BackofficeList extends Component {
     constructor() {
         super();
-        this.state = {lists: []}
+        this.state = {lists: [],error:undefined}
     }
 
     addList = (arr) => service.addList(arr)
@@ -19,12 +19,20 @@ export class BackofficeList extends Component {
     deleteList = (arr) => service.deleteList(arr[1])
 
     componentDidMount() {
-        service.getLists().then(data => this.setState({lists: data}))
+        service.getLists().then(data =>{
+        if("err" in data){
+            console.log(data.err)
+            this.setState({error:data})
+        }else{
+        this.setState({lists: data})
+        }
+    })
     }
 
     render() {
         return (
-            <CustomTable addRequest={this.addList}
+            <div>
+            {!this.state.error?<CustomTable addRequest={this.addList}
                          editRequest={this.editList}
                          deleteRequest={this.deleteList}
                          labels={labels}
@@ -33,8 +41,9 @@ export class BackofficeList extends Component {
                              .lists
                              .map(list => [list.id, list.list])
                          } redirectPage="lists"
-            />
-
+            />:
+            <p>{this.state.error.status} {this.state.error.err}</p>}
+            </div>
         )
     }
 }

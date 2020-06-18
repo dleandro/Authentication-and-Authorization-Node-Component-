@@ -2,25 +2,40 @@ import React, {Component} from 'react'
 import CustomTable from "../html-elements-utils/Table/CustomTable";
 import {permissionService} from "../service"
 
-const service = permissionService()
 const labels = ["Id", "Action", "Resource"]
 
 export class BackofficePermission extends Component {
+    service = permissionService()
     constructor() {
         super();
-        this.state = {permission: []}
+        this.state = {permission: [],error:undefined}
     }
+    
+
+    addPermission = (arr) => this.service.addPermission(arr)
+    editPermission = (arr) => this.service.editPermission(arr)
+    deletePermission = (arr) => this.service.deletePermission(arr)
 
     componentDidMount() {
-        service.getPermissions().then(data => this.setState({permission: data}))
+        this.service.getPermissions().then(data =>{
+            if("err" in data){
+                console.log(data.err)
+                this.setState({error:data})
+            }
+            else{
+            this.setState({permission: data})
+            }
+        })
     }
 
     render() {
         return (
-            <CustomTable labels={labels} redirectPage="permissions"
-                         rows={this.state.permission.map(permission => [permission.id, permission.action, permission.resource])}/>
-
-            // <CustomTable  labels={labels} rows={this.state.lists} />
+            <div>
+            {!this.state.error?<CustomTable labels={labels} redirectPage="permissions"
+                        addRequest={this.addPermission} editRequest={this.editPermission}
+                        deleteRequest={this.deletePermission} rows={this.state.permission.map(permission => [permission.id, permission.action, permission.resource])}/>:
+            <p>{this.state.error.status} {this.state.error.err}</p>}
+            </div>
         )
     }
 }

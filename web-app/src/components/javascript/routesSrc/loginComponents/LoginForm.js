@@ -36,9 +36,10 @@ export default function LoginForm({ id, app: state, setRedirect }) {
 
     var user, pass = "";
 
-    var loginLocalStrat = () => {
-        authenticationService().login(user, pass)
-    }
+    var loginLocalStrat = () => authenticationService().login(user, pass).then(t=>{
+            setRedirect('/')
+            window.location.reload(false);
+        });
 
     const handlePassword = event => {
         pass = event.target.value

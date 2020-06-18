@@ -11,7 +11,7 @@ import { BackofficeList } from "./routesSrc/BackofficeList";
 import { BackofficePermission } from "./routesSrc/BackofficePermission"
 import UserInfo from "./routesSrc/UserInfo"
 import { UserConsumer } from "../Context";
-import Register from "./routesSrc/Register"
+import Register from "./routesSrc/loginComponents/Register"
 import ListInfo from "./routesSrc/ListInfo"
 import PermissionInfo from "./routesSrc/PermissionInfo"
 import RoleInfo from "./routesSrc/RoleInfo"
@@ -42,7 +42,7 @@ class Routes extends Component {
                     <Route path={'/lists'} exact component={() => <BackofficeList />} />
                     <Route path={'/permissions'} exact component={() => <BackofficePermission />} />
                     <Route path={'/roles'} exact component={() => <BackofficeRole />} />
-                    <Route path={'/register'} exact component={() => <Register></Register>} />
+                    <Route path={'/register'} exact component={() => <Register setRedirect={this.setRedirect} />} />
                     <Route path={'/lists/:id'} exact component={() => <ListInfo />} />
                     <Route path={'/permissions/:id'} exact component={() => <PermissionInfo />} />
                     <Route path={'/roles/:id'} exact component={() => <RoleInfo />} />

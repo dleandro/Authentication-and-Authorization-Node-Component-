@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import DropdownButton from "react-bootstrap/DropdownButton";
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Dropdown } from "react-bootstrap";
-import { userService, authenticationService } from '../service'
+import { userService, authenticationService } from '../service';
 
 
 /**
@@ -12,7 +12,6 @@ import { userService, authenticationService } from '../service'
  * @returns {*}
  * @constructor
  */
-
 export default function Upperbar({ setRedirect }) {
     //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
@@ -53,12 +52,12 @@ export default function Upperbar({ setRedirect }) {
                 <ul class="navbar-nav ml-auto">
                     <DropdownButton
                         alignRight
-                        title={<i className={"fa fa-user-circle-o"}> {loggedInUser.username} </i>}
+                        title={<i className={'fa fa-user-circle-o'}> {loggedInUser.username} </i>}
                         id={`dropdown-variants-Info`}
                     >
                         {render()}
                         <Dropdown.Item eventKey="3" active>
-                            <i className={"fa fa-cog fa-spin"} /> Settings
+                            <i className={'fa fa-cog fa-spin'} /> Settings
                 </Dropdown.Item>
                     </DropdownButton>
                 </ul>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="C:\Users\Matias\Desktop\Nova pasta\Authentication-and-Authorization-Node-Component-\authization-module\__tests__\sequelize-model-tests.test.js">
+        <testCase name="Sequelize Testings Test UserDal without IDPs methods" duration="1222"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Idp" duration="0"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of List" duration="0"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Permission" duration="0"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Protocols" duration="0"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of Role" duration="0"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of User History" duration="0"/>
+        <testCase name="Sequelize Testings Check creation, obtaining and elimination of User " duration="0"/>
+        <testCase name="Sequelize Testings Check join User with Role " duration="0"/>
+        <testCase name="Sequelize Testings Check join User with List " duration="0"/>
+        <testCase name="Sequelize Testings Check join Permission with Roles " duration="0"/>
+    </file>
+</testExecutions>

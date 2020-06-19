@@ -6,21 +6,43 @@ import UserContext from "../../Context"
 import CustomTable from "../html-elements-utils/Table/CustomTable";
 
 export default function RoleInfo() {
+    const service=userRoleService()
     let { id } = useParams();
-    const userRoleLabels = ["Id","Start Date","End Date","Updater"]
-    const listLabels=["Id","Start Date","End Date","Updater"]
+    const userRoleLabels = ["User id ","Username","Start Date","End Date","Updater"]
+    const permissionLabels=["Id","Action","Resource"]
     const [role,setRole]=React.useState([])
     const [users,setUsers]=React.useState([])
+    const [error,setError]=React.useState(undefined)
+    const [permissions,setPermissions]=React.useState([])
+    const addRole = (arr) => this.service.addRole(arr)
+    const editRole = (arr) => this.service.editRole(arr)
+    const deleteRole = (arr) => this.service.deleteRole(arr[0])
+
     useEffect( async ()=>{
         setRole(await rolesService().getRole(id))
         setUsers(await rolesService().getUsersWithThisRole(id))
+        setPermissions(await rolesService().getPermissionsWithThisRole(id))
         users.map(user=>alert(user["Users.username"]))
     },[id])
     return (
-        <div>
-        <h3>Role {role.role}</h3>
-         <h3>Users with this Role</h3>
-         <h3>Permissions associated to this role</h3>                
-        </div>
+        
+                      
+         <React.Fragment>
+            {!error?
+            <React.Fragment>
+            <h3>Role {role.role}</h3>
+            <h3>Users with this Role</h3>
+            <CustomTable labels={userRoleLabels}
+            addRequest={addRole} editRequest={editRole} deleteRequest={deleteRole}
+            redirectPage="users" rows={users.map(user => [user["Users.id"], user["Users.username"],user["Users.UserRoles.start_date"],user["Users.UserRoles.end_date"],user["Users.UserRoles.updater"]])}/>
+            <h3>Permissions associated to this role</h3> 
+            <CustomTable labels={permissionLabels}
+            addRequest={addRole} editRequest={editRole} deleteRequest={deleteRole}
+            redirectPage="permissions" rows={permissions.map(permission => [permission["Permissions.id"],permission["Permissions.action"], permission["Permissions.resource"]])}/>
+            </React.Fragment> 
+            :
+            
+            <p>{this.state.error.status} {this.state.error.err}</p>}
+            </React.Fragment>
     )
 }

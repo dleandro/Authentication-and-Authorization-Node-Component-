@@ -71,6 +71,10 @@ module.exports = {
     // asks the database for all list entries that are active and associated with a specific user
     getUsersActive,
 
+    update:(id,list)=>List.update({list:list},{where:{id:id}}),
+
+    getUsersInThisList:(id)=>List.findAll({where:{id:id},include:[User],raw:true}),
+
     isUserBlackListed: async (userId) =>
         List.findAll({
             where: {

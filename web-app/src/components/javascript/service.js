@@ -73,13 +73,14 @@ export function listService(optionalPort) {
     return {
         getLists: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
-        addList: async (listName) => makeRequest(lists.LIST_PATH, {
-            list: listName
+        addList: async (arr) => makeRequest(lists.LIST_PATH, {
+            list: arr[1]
         }, 'POST'),
-        deactivateList: async (id) => makeRequest(lists.LIST_DEACTIVATION_PATH(id), {}, 'PUT'),
+        editList: async (arr) => makeRequest(lists.SPECIFIC_LIST_PATH(arr[0]), {list:arr[1]}, 'PUT'),
         deleteList: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
         getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH),
-        getUserActiveLists: async (id) => getRequest(lists.USERS_ACTIVE_LISTS_PATH(id))
+        getUserActiveLists: async (id) => getRequest(lists.USERS_ACTIVE_LISTS_PATH(id)),
+        getUsersInThisList:async(id)=>getRequest(lists.SPECIFIC_LIST_PATH(id) + "/users")
     }
 }
 
@@ -89,10 +90,11 @@ export function rolesService(optionalPort) {
         getRoles: async () => getRequest(roles.ROLE_PATH),
         getRole: async(id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id)=>getRequest(roles.ROLE_USERS_PATH(id)),
+        getPermissionsWithThisRole: async (id)=>getRequest(roles.ROLES_PERMISSION_PATH(id)),
         addRole: async (arr) => makeRequest(roles.ROLE_PATH, {role: arr[1], parent_role: arr[2]}, 'POST'),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), {role: arr[1], parent_role: arr[2]}, 'PUT'),
-        deleteRole: async (arr) => {
-            makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), {}, 'DELETE')
+        deleteRole: async (id) => {
+            makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
         }
 
     }
@@ -108,7 +110,8 @@ export function permissionService(optionalPort) {
         editPermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {action: arr[1], resource: arr[2]}, 'PUT'),
         deletePermission: async (arr) => {
             makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {}, 'DELETE')
-        }
+        },
+        getRolesWithThisPermission:async(id)=>getRequest(permissions.SPECIFIC_PERMISSION_PATH(id)+'/roles')
     }
 }
 

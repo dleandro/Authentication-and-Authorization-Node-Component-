@@ -21,6 +21,7 @@ module.exports = {
             }
         })
     },
+    update: (id, role,parent_role) =>Role.update({role: role,parent_role:parent_role}, {where: {id: id}}),
 
     /**
      *
@@ -54,7 +55,8 @@ module.exports = {
         "SELECT id, role, parent_role FROM Role WHERE parent_role IS NOT NULL",
         { type: sequelize.QueryTypes.SELECT }
     ),
-    getUsersWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [User] }),
+    getUsersWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [User],raw:true}),
+    getPermissionsWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [Permission],raw:true}),
     addParentRole: async (role, parentRole) =>{ 
         config.rbac.grant(await config.rbac.getRole(parentRole.role),await config.rbac.getRole(role.role))
         Role.update({ parent_role: parentRole.id }, { where: { id: role.id} })

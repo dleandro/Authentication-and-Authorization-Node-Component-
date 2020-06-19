@@ -13,7 +13,7 @@ export class BackofficeRole extends Component {
 
     addRole = (arr) => this.service.addRole(arr)
     editRole = (arr) => this.service.editRole(arr)
-    deleteRole = (arr) => this.service.deleteRole(arr)
+    deleteRole = (arr) => this.service.deleteRole(arr[0])
 
     componentDidMount() {
         this.service.getRoles().then(data =>{

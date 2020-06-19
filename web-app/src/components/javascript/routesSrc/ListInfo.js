@@ -8,15 +8,19 @@ import CustomTable from "../html-elements-utils/Table/CustomTable";
 
 export default function ListInfo() {
     let { id } = useParams();
-    const userRoleLabels = ["Id","Start Date","End Date","Updater"]
-    const listLabels=["Id","Start Date","End Date","Updater"]
+    const listLabels=["User Id","Username","Start Date","End Date","Updater"]
     const [list,setList]=React.useState([])
+    const [users,setUsers]=React.useState([])
     useEffect( async ()=>{
         setList(await listService().getList(id))
+        setUsers(await listService().getUsersInThisList(id))
     },[id])
     return (
         <div>
         <h3>{list.list} List</h3>
+        <h3>Current Users in this List</h3>
+        <CustomTable labels={listLabels} rows={users.map(user=>[ user["Users.id"],user["Users.username"],user["Users.UserList.start_date"],user["Users.UserList.end_date"],user["Users.UserList.updater"]])}/>          
+
                          
         </div>
     )

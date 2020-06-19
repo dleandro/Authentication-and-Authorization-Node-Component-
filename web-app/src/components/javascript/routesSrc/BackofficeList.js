@@ -2,24 +2,25 @@ import React, {Component} from 'react'
 import {listService} from '../service'
 import CustomTable from "../html-elements-utils/Table/CustomTable";
 
-const service = listService()
 const labels = [ "Id", "List"]
 
 /**
  * Represents all database Lists entrys
  */
 export class BackofficeList extends Component {
+
+    service = listService()
     constructor() {
         super();
         this.state = {lists: [],error:undefined}
     }
 
-    addList = (arr) => service.addList(arr)
-    editList = (arr) => service.deactivateList(arr[1])
-    deleteList = (arr) => service.deleteList(arr[1])
+    addList = (arr) => this.service.addList(arr)
+    editList = (arr) => this.service.editList(arr)
+    deleteList = (arr) => this.service.deleteList(arr[0])
 
     componentDidMount() {
-        service.getLists().then(data =>{
+        this.service.getLists().then(data =>{
         if("err" in data){
             console.log(data.err)
             this.setState({error:data})

@@ -1,6 +1,7 @@
 'use strict'
 
-const errors = require('../common/errors/app-errors')
+const errors = require('../common/errors/app-errors');
+const { update } = require('../../authization-module/resources/dals/permissions-dal');
 /**
  * this module contains all list related endpoints
  * @param apiUtils
@@ -38,7 +39,11 @@ module.exports = function (apiUtils, authization) {
 
     listRouter.delete('/:id', deleteList)
 
+    listRouter.put('/:id',updateList)
+
     listRouter.get('/:id', getList)
+
+    listRouter.get('/:id/users', getUsersInThisList)
 
     listRouter.get('/active', getActiveLists)
 
@@ -68,6 +73,10 @@ module.exports = function (apiUtils, authization) {
         promiseDataToResponse(res, lists.delete(req.params.id))
     }
 
+    function getUsersInThisList(req,res){
+        promiseDataToResponse(res, lists.getUsersInThisList(req.params.id))
+    }
+
     function getLists(req, res) {
         promiseDataToResponse(res, lists.getAll())
     }
@@ -86,6 +95,12 @@ module.exports = function (apiUtils, authization) {
 
     function getList(req, res) {
         promiseDataToResponse(res, lists.get(req.params.id))
+    }
+
+    function updateList(req, res) {
+        lists.update(req.params.id,req.body.list)
+            .then(answer => apiUtils.setResponse(res, req.body, 201))
+            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
 
 

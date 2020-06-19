@@ -10,13 +10,16 @@ export default function PermissionInfo() {
     const userRoleLabels = ["Id","Start Date","End Date","Updater"]
     const listLabels=["Id","Start Date","End Date","Updater"]
     const [permission,setPermission]=React.useState([])
+    const [roles,setRoles]=React.useState([])
     useEffect( async ()=>{
         setPermission(await permissionService().getPermission(id))
+        setRoles(await permissionService().getRolesWithThisPermission(id))
     },[id])
     return (
         <div>
         <h3>Permission {permission.action} {permission.resource} </h3>
-         <h3>Roles associated with this permission</h3>               
+         <h3>Roles associated with this permission</h3>
+         <CustomTable labels={userRoleLabels} rows={roles.map(role=>[ role["Roles.id"],role["Roles.role"],role["Roles.UserRoles.start_date"]])}/>          
         </div>
     )
 }

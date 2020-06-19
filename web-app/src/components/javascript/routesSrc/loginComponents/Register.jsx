@@ -17,6 +17,7 @@ export default function Register({setRedirect}) {
 
     return(
         <div className="container">
+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"></link>
             <div className="omb_login">
                 <h3 className="omb_authTitle">Login or <a href="#">Sign up</a></h3>
                 <div className="row omb_row-sm-offset-3 omb_socialButtons">

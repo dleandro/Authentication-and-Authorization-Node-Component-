@@ -44,12 +44,14 @@ export const webApiLinks =
         roles: {
             ROLE_PATH,
             SPECIFIC_ROLE_PATH: roleId => `${ROLE_PATH}/${roleId}`,
-            ROLE_USERS_PATH:roleId=>`${ROLE_PATH}/${roleId}/users`
+            ROLE_USERS_PATH:roleId=>`${ROLE_PATH}/${roleId}/users`,
+            ROLES_PERMISSION_PATH:roleId=>`${ROLE_PATH}/${roleId}/permissions`
         },
 
         permissions: {
             PERMISSION_PATH,
-            SPECIFIC_PERMISSION_PATH: permissionId => `${PERMISSION_PATH}/${permissionId}`
+            SPECIFIC_PERMISSION_PATH: permissionId => `${PERMISSION_PATH}/${permissionId}`,
+            PERMISSION_ROLES_PATH:permissionId => `${PERMISSION_PATH}/${permissionId}/roles`
         },
 
         users_history: {

@@ -1,5 +1,7 @@
 'use strict'
 
+const { Role } = require('../sequelize-model')
+
 
 const Permission = require('../sequelize-model').Permission,
     config = require('../../common/config/config')
@@ -66,6 +68,9 @@ module.exports = {
 
         update:async (id,action,resource)=>{
             Permission.update({action:action,resource:resource},{where: {id: id}})
+        },
+        getRolesByPermission:async (id)=>{
+            Permission.findAll({where:{id:id},include:[Role],raw:true})
         }
 
 }

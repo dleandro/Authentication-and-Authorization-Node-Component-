@@ -3,6 +3,8 @@
 // this module contains all role related endpoints
 module.exports = function (apiUtils, authization) {
 
+    const errors = require('../common/errors/app-errors')
+
     const promiseDataToResponse = (res, dataPromise) => dataPromise
         .catch(err => {
             throw errors.errorExecutingQuery
@@ -32,10 +34,18 @@ module.exports = function (apiUtils, authization) {
     roleRouter.route('/:id')
         .get(getRoleById)
         .delete(deleteRole)
+        .put(updateRole)
 
         roleRouter.get('/:id/users',getUsersWithThisRole)
+        roleRouter.get('/:id/permissions',getPermissionsWithThisRole)
 
     roleRouter.route('/:id/permissions').get((req,res)=>promiseDataToResponse(res,roles.getRolePermissions(req.params.id)))
+
+    function updateRole(req, res) {
+        roles.update(req.params.id,req.body.role,req.body.parent_role)
+            .then(answer => apiUtils.setResponse(res, req.body, 201))
+            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
+    }
 
     function addRole(req, res) {
         roles.create(req.body.role)
@@ -61,6 +71,10 @@ module.exports = function (apiUtils, authization) {
 
     function getUsersWithThisRole(req,res){
         promiseDataToResponse(res,roles.getUsersWithThisRole(req.params.id))
+    }
+
+    function getPermissionsWithThisRole(req,res){
+        promiseDataToResponse(res,roles.getPermissionsWithThisRole(req.params.id))
     }
 
     return roleRouter

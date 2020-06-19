@@ -1,5 +1,6 @@
 'use strict'
 
+
 /**
  * this module contains all permissions related endpoints
  * @param apiUtils
@@ -38,6 +39,14 @@ module.exports = function (apiUtils, authization) {
         .get(getPermissionById)
         .put(updatePermission)
         .delete(deletePermission)
+
+        permissionRouter.get('/:id/roles',getRolesByPermission)
+
+
+        function getRolesByPermission(req,res){
+            promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id))
+        }
+    
 
     function getPermissions(req, res) {
         promiseDataToResponse(res, permissions.getAll())

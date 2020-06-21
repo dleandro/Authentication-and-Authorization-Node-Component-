@@ -57,7 +57,8 @@ const User = defineTable('User', {
     password: { type: STRING, get() { return () => this.getDataValue('password') } }
 });
 
-User.encryptPassword = async (password) => await bcrypt.hash(password, bcrypt.genSaltSync(10))
+// TODO: password encryption is this secure??
+User.encryptPassword = async (password) => await bcrypt.hash(password, await bcrypt.genSalt(10))
 
 User.correctPassword = async function (enteredPassword, user) {
     return await bcrypt.compare(enteredPassword, user.password)

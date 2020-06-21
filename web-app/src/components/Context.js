@@ -1,4 +1,5 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import { userService } from './javascript/service'
 
 const UserContext = React.createContext()
 
@@ -6,26 +7,29 @@ class UserProvider extends Component {
     // Context state
     state = {
         selectedProtocol: "/",
-        redirect: {should: false, link: "/"},
-        user: {name: "", pass: "", id:''},
+        redirect: { should: false, link: "/" },
+        user: { id: undefined, username: undefined },
         isLoggedIn: false,
         changeProtocol: (inputProto) => {
-            this.setState({selectedProtocol: inputProto});
+            this.setState({ selectedProtocol: inputProto });
             console.log("protocol set")
         },
-        setUser: (data) => this.setState(prevState => ({user: data}))
+        setUser: (data) => this.setState(prevState => ({ user: data }))
     };
 
+    async componentDidMount() {
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.user !== this.state.user) {
-            console.log('user state has changed.')
-            this.setState(prevState => ({isLoggedIn: !this.state.isLoggedIn}))
+        const user = await userService().getAuthenticatedUser()
+
+
+        if (user.username) {
+            this.state.setUser(user)
         }
+
     }
 
     render() {
-        const {children} = this.props
+        const { children } = this.props
 
         return (
             <UserContext.Provider value={this.state}>
@@ -37,4 +41,4 @@ class UserProvider extends Component {
 
 export default UserContext
 export const UserConsumer = UserContext.Consumer
-export {UserProvider}
+export { UserProvider }

@@ -4,7 +4,7 @@ import {permissionService} from "../service"
 
 const labels = ["Id", "Action", "Resource"]
 
-export class BackofficePermission extends Component {
+export default class BackofficePermission extends Component {
     service = permissionService()
     constructor() {
         super();

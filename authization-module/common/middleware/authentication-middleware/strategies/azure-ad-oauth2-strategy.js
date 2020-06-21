@@ -21,9 +21,10 @@ const strategy = new AzureAdOAuth2Strategy({
 
         var mail = jwt.decode(params.id_token).email
 
+        // TODO: Decidir como fazer a questão dos users q vêm de idps
         var user = await passportUtils.findCorrespondingUser(mail)
         if (!user) {
-            user = await passportUtils.createUser(params.id_token, 'azureAD', mail, null)
+            user = await passportUtils.createUser(params.id_token, 'azureAD', mail, "null")
         }
         if (await passportUtils.isBlackListed(user.id)) {
             passportUtils.addNotification(user.id)

@@ -13,23 +13,12 @@ const sidebarCollapsedSize = "75px";
 
 class App extends Component {
 
-    state = {
-        selectedProtocol: "/",
-        redirect: { should: false, link: "/" },
-        user: { user: { name: "", pass: "" }, isLoggedIn: false }
-    };
-
-    changeProtocol = inputProto => {
-        this.setState({ selectedProtocol: inputProto })
-        console.log("protocol set")
-    }
-
-
     render() {
         return (
             <Router>
                 <UserProvider>
-                        <Upperbar />
+                    <Upperbar />
+                    
                     <div id={"main"} style={{ marginLeft: sidebarCollapsedSize }}>
                         <Routes changeProtocol={this.changeProtocol}> </Routes>
                     </div>

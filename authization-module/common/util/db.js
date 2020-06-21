@@ -22,13 +22,16 @@ async function databasesetup(rbac_opts) {
     // sync present state of the database with our models
     await sequelize.sync()
 
+    // TODO: Should this use our own dals?? 
+    // TODO: Falta adicionar este superuser a todas as permissions existentes
     await User.findOrCreate({ where: { "username": "superuser" }, defaults: { "password": "superuser" } })
     await List.findOrCreate({ where: { "list": "BLACK" } })
     await List.findOrCreate({ where: { "list": "GREY" } })
     await List.findOrCreate({ where: { "list": "RED" } })
-    await Protocols.findOrCreate({ where: { "protocol": "Google", "active": 1 } })
-    await Protocols.findOrCreate({ where: { "protocol": "AzureAD", "active": 1 } })
-    await Protocols.findOrCreate({ where: { "protocol": "Saml", "active": 1 } })
+    // TODO: No PG isto nao funciona, precisa de booleans.. como fazer isso 
+    await Protocols.findOrCreate({ where: { "protocol": "Google" }, defaults: { "active": 1 } })
+    await Protocols.findOrCreate({ where: { "protocol": "AzureAD" }, defaults: { "active": 1 } })
+    await Protocols.findOrCreate({ where: { "protocol": "Saml" }, defaults: { "active": 1 } } )
     
     console.log('database setup correctly')
     

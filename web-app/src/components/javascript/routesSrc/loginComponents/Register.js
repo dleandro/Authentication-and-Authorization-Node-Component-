@@ -19,11 +19,11 @@ export default function Register({setRedirect}) {
         <div className="container">
             <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"></link>
             <div className="omb_login">
-                <h3 className="omb_authTitle">Login or <a href="#">Sign up</a></h3>
+                <h3 className="omb_authTitle">Sign up</h3>
                 <div className="row omb_row-sm-offset-3 omb_socialButtons">
                     {idps('Facebook','facebook')}
                     {idps('Twitter','twitter')}
-                    {idps('Google+','google')}
+                    {idps('Office365','google')}
                 </div>
                 <br/>
 
@@ -39,16 +39,8 @@ export default function Register({setRedirect}) {
                                 <span style={{height: '25px'}} className="input-group-addon"><i className="fa fa-lock"></i></span>
                                 <input type="password" className="form-control" onChange={e=>setPass(e.target.value)} name="password" placeholder="Password"></input>
                             </div>
-                            <span className="help-block">Password error</span>
 
-                            <button className="btn btn-lg btn-primary btn-block" onClick={register} type="submit">Login</button>
-                    </div>
-                </div>
-                <div className="row omb_row-sm-offset-3">
-                    <div className="col-xs-12 col-sm-3">
-                        <p className="omb_forgotPwd">
-                            <a href="/login">Forgot password?</a>
-                        </p>
+                            <button className="btn btn-lg btn-primary btn-block" onClick={register} type="submit">Register</button>
                     </div>
                 </div>
             </div>

@@ -23,7 +23,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-    authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
+    authenticationRouter.post('/local', authenticate.usingLocal, (req, res) => req.isAuthenticated() ? apiUtils.setResponse())
 
     authenticationRouter.post('/logout', authenticate.logout, successCallback)
 
@@ -31,9 +31,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback, successCallback)
 
-    authenticationRouter.get('/authenticated-user', (req, res) => {
-        apiUtils.setResponse(res, req.user || {}, 200)
-    }
+    authenticationRouter.get('/authenticated-user', (req, res) => apiUtils.setResponse(res, req.user || {}, 200)
 )
 
 

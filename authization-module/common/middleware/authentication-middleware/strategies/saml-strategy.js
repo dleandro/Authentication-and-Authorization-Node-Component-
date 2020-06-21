@@ -25,7 +25,7 @@ const
         let user = await passportUtils.findUserByIdp(profile.nameID)
 
         if (!user) {
-            user = await passportUtils.createUser(profile.nameID, 'saml', profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'], null)
+            user = await passportUtils.createUser(profile.nameID, 'saml', profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'], "null")
         }
         if (await passportUtils.isBlackListed(user.id)) {
             passportUtils.addNotification(user.id)

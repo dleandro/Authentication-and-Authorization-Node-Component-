@@ -1,52 +1,48 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import { authenticationService } from '../../service'
+import { authenticationService, protocolService } from '../../service'
 import GoogleButton from 'react-google-button'
 import { webApiLinks } from '../../../links'
-
 import '../../../stylesheets/App.css'
-const IDP_BASE_URL = '/api/authentications';
+import Alert from 'react-bootstrap/Alert'
+import LoginContext from './LoginContext'
 
 const authStyle = {
     width: '100px',
     height: '50px',
 }
-const officeStyle = {
-    width: '75px',
-    height: '25px',
-}
 
-const officeButtonStyle = {
-    border: '1px solid #ea3e23', color: '#ea3e23',
-    'width': '100px', height: '35px',
-}
-const googleStyle = {
-    border: '1px solid #ea3e23', color: '#ea3e23',
-    'width': '150px', height: '70px',
-}
-
-const centered = {
+const googleBtn = {
     marginLeft: "30px",
     marginBottom: "10px"
 }
 
+const imgBtns = {
+    background: "none",
+    border: "none"
+}
+
 export default function LoginForm({ id, app: state, setRedirect }) {
 
-    var user, pass = "";
+    const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
+    
+    const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
 
-    var loginLocalStrat = () => authenticationService().login(user, pass).then(t=>{
-            setRedirect('/')
-            window.location.reload(false);
-        });
+    const ctx = useContext(LoginContext)
+
+    var loginLocalStrat = () => 
+        userToLogin.username && userToLogin.password ?
+        authenticationService().login(userToLogin.username, userToLogin.password).then(() => window.location.reload(false)) :
+        setError({ errorMessage: "Please insert username and password first", shouldShow: true })
 
     const handlePassword = event => {
-        pass = event.target.value
+        setUserToLogin({...userToLogin, password: event.target.value })
     }
 
     const handleUsername = event => {
-        user = event.target.value
+        setUserToLogin({...userToLogin, username: event.target.value })
     }
 
     var loginIdp = async (idp) => {
@@ -54,23 +50,42 @@ export default function LoginForm({ id, app: state, setRedirect }) {
         window.location.assign(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
     }
 
+    const checkIfSpecificAuthTypeIsActive = (authType) => {
+        return ctx.allowedProtocolsAndIdps.
+            find(availableAuthType => availableAuthType.protocol === authType && availableAuthType.active === 1)
+    }
     return (
-        <div className="col-12 form-input" id={id}>
 
-            <InputGroup className="mb-3">
-                <FormControl placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2"
-                    type="text" onChange={handleUsername} />
-                <FormControl placeholder="password" aria-label="Recipient's password" aria-describedby="basic-addon2"
-                    type="password" onChange={handlePassword} />
-            </InputGroup>
+        <React.Fragment>
 
-            <Button variant="primary" onClick={loginLocalStrat}>{'Login'}</Button>
-            <GoogleButton style={centered} onClick={() => loginIdp("google")} />
-            <Button><img src="ms-symbollockup_signin_dark.png" alt="my image" onClick={() => loginIdp("azureAD")} /></Button>
-            <Button style={googleStyle} variant="outline-light" onClick={() => loginIdp("saml")} >
-                <img style={authStyle} src="https://www.drupal.org/files/project-images/auth0-logo-whitebg.png" />
-            </Button>
+            {
+                error.shouldShow &&
+                <Alert variant={'warning'} onClose={() => setError(false)} dismissible>
+                    {error.errorMessage}
+                </Alert>
+            }
 
-        </div>
+
+            <div className="col-12 form-input" id={id}>
+
+
+                <InputGroup className="mb-3">
+                    <FormControl placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2"
+                        type="text" onChange={handleUsername} />
+                    <FormControl placeholder="password" aria-label="Recipient's password" aria-describedby="basic-addon2"
+                        type="password" onChange={handlePassword} />
+                </InputGroup>
+                <Button variant="primary" onClick={loginLocalStrat}>{'Login'}</Button>
+
+                {checkIfSpecificAuthTypeIsActive('Google') && <GoogleButton style={googleBtn} onClick={() => loginIdp("google")} />}
+
+                {checkIfSpecificAuthTypeIsActive('AzureAD') && <Button style={imgBtns} onClick={() => loginIdp("azureAD")} >
+                    <img src="ms-symbollockup_signin_dark.png" alt="microsoft" /></Button>}
+
+                {checkIfSpecificAuthTypeIsActive('Saml') && <Button style={imgBtns} onClick={() => loginIdp("saml")} >
+                    <img style={authStyle} src="https://www.drupal.org/files/project-images/auth0-logo-whitebg.png" /></Button>}
+
+            </div>
+        </React.Fragment>
     )
 }

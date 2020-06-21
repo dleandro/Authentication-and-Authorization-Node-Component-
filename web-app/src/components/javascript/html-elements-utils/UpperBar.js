@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
+import { useHistory } from "react-router-dom";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Dropdown } from "react-bootstrap";
 import { userService, authenticationService } from '../service';
+import UserContext from '../../Context'
 
 
 /**
@@ -15,47 +17,39 @@ import { userService, authenticationService } from '../service';
 export default function Upperbar({ setRedirect }) {
     //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
-    const [loggedInUser, setLoggedInUser] = useState({})
+    const history = useHistory()
 
-    useEffect(() => {
+    const ctx = useContext(UserContext)
 
-        async function fetchData() {
-            const user = userService().getAuthenticatedUser()
-            if (user) {
-                setLoggedInUser(await user)
-            }
-        }
-
-        fetchData()
-
-    }, [])
+    const username = ctx.user.username || ""
 
     const logoutAndRedirect = async () => {
         await authenticationService().logout()
-        setLoggedInUser({})
+        ctx.setUser({ id: undefined, username: undefined })
+        history.push('/')
     }
 
-
-    const render = () => {
-        console.log(loggedInUser)
-        return loggedInUser.username ? <React.Fragment>
-            <Dropdown.Item eventKey="1" onClick={() => setRedirect(`/user/profile`)}><i
+    const renderUserIfOneIsLoggedIn = () => {
+        return username != "" && <React.Fragment>
+            <Dropdown.Item eventKey="1" onClick={() => history.push(`users/${ctx.user.id}`)}><i
                 className="fa fa-vcard" /> Profile </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={logoutAndRedirect}><i
-                className="fa fa-sign-out fa-fw" /> Logout</Dropdown.Item> </React.Fragment> :
-            null
-
+                className="fa fa-sign-out fa-fw" /> Logout</Dropdown.Item> </React.Fragment>
     }
+
     return (
-        <nav class="navbar navbar-expand-md bg-dark">
-            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                <ul class="navbar-nav ml-auto">
+
+        <React.Fragment>
+
+        <nav className="navbar navbar-expand-md bg-dark">
+            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
                     <DropdownButton
                         alignRight
-                        title={<i className={'fa fa-user-circle-o'}> {loggedInUser.username} </i>}
+                        title={<i className={'fa fa-user-circle-o'}> {username} </i>}
                         id={`dropdown-variants-Info`}
                     >
-                        {render()}
+                        {renderUserIfOneIsLoggedIn()}
                         <Dropdown.Item eventKey="3" active>
                             <i className={'fa fa-cog fa-spin'} /> Settings
                 </Dropdown.Item>
@@ -64,6 +58,8 @@ export default function Upperbar({ setRedirect }) {
             </div>
 
         </nav>
+
+        </React.Fragment>
     )
 }
 

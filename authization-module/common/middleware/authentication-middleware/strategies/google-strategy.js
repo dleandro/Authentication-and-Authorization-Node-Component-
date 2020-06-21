@@ -21,7 +21,7 @@ module.exports = () => {
             var user = await passportUtils.findUserByIdp(profile.id)
 
             if (!user) {
-                user = await passportUtils.createUser(profile.id, 'google', profile.displayName, null)
+                user = await passportUtils.createUser(profile.id, 'google', profile.displayName, "null")
             }
             if (await passportUtils.isBlackListed(user.id)) {
                 passportUtils.addNotification(user.id)

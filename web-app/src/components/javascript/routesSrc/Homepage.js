@@ -13,10 +13,11 @@ export default function Homepage() {
         <CardColumns style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            paddingTop: "25px"
         }}>
 
-            <Card className='mr-2'>
+            <Card className='mr-2 ml-2'>
                 <Card.Body>
                     <Card.Title>Login</Card.Title>
                     <Card.Text>
@@ -26,7 +27,7 @@ export default function Homepage() {
                     <Button variant="primary" onClick={() => history.push('/login')} >Take me there</Button>
                 </Card.Body>
             </Card>
-            <Card className='ml-2'>
+            <Card className='ml-2 mr-2'>
                 <Card.Body>
                     <Card.Title>Backoffice</Card.Title>
                     <Card.Text>

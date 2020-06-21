@@ -49,6 +49,7 @@ export function protocolService(optionalPort) {
 
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
+        getPossibleAuthTypes: async () => getRequest(protocols.PROTOCOLS_PATH)
     }
 }
 

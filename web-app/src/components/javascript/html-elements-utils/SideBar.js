@@ -61,8 +61,8 @@ export default function Sidebar({ navWidthCollapsed }) {
                                 { expand ? <NavText ><Link to={item.link}> {item.text}</Link></NavText>:null}
     
                             {item.subItems !== undefined ? item.subItems.map(subItem =>
-                                <NavItem>
-                                    <NavText>
+                                <NavItem key={subItem.key}>
+                                    <NavText >
                                         <Link to={subItem.link}> {subItem.text}</Link>
                                     </NavText>
                                 </NavItem>

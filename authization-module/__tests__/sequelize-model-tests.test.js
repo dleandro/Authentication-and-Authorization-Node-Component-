@@ -2,6 +2,7 @@
 
 const {User,Idp,List,Permission,Protocols,Role,UserHistory} =require('../resources/sequelize-model')
 const userDal = require('../resources/dals/users-dal')
+const roleDal = require('../resources/dals/roles-dal')
 
 const containsSubObject = (jsonObject,subObject) => {
     console.log(`Searching for ${JSON.stringify(subObject).toString()} in ${JSON.stringify(jsonObject).toString()}`)
@@ -51,6 +52,26 @@ describe("Sequelize Testings", () => {
         await userDal.delete(created.id);
         await userDal.get(newName,newPass).then(data=>expect(data).toBeNull());
         await userDal.getById(created.id).then(data=>expect(data).toBeNull());
+    })
+
+    test('Test RoleDal methods',async ()=>{
+        const newParent = 'admin',newName='newRleTest';
+        //Create and check
+        const created = await roleDal.create(newName).then(data=>data.dataValues);
+        await roleDal.getAll().then(users=>expect(users).toContainEqual(created));
+        console.log('created: ', created)
+        //Update and check
+        const parent = await roleDal.addParentRole(newParent)
+        console.log('parent: ',parent)
+        //await roleDal.update()
+        //await userDal.updatePassword(newPass,created.id);
+       //await userDal.getByUsername(created.username).then(data=>expect(data.password).toEqual(newPass));
+       //await userDal.updateUsername(newName,created.id);
+       //await userDal.getById(created.id).then(d=>expect(d.username).toEqual(newName));
+        //Delete and check
+      // await userDal.delete(created.id);
+      // await userDal.get(newName,newPass).then(data=>expect(data).toBeNull());
+      // await userDal.getById(created.id).then(data=>expect(data).toBeNull());
     })
 
     test("Check creation, obtaining and elimination of Idp", async () => {

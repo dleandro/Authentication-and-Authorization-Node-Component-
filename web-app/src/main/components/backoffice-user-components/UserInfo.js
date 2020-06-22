@@ -1,10 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { listService, userService } from "../../service";
-import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
-import UserContext from '../../UserContext'
-import Nav from 'react-bootstrap/Nav'
-import { AppBar, Tabs, Tab, TabPanel } from '@material-ui/core'
+import React, { useState } from 'react'
+import { AppBar, Tabs, Tab } from '@material-ui/core'
 import UserRoles from './UserRoles'
 import UserSessions from './UserSessions'
 import UserLists from './UserLists'
@@ -16,7 +11,7 @@ const components = {
 }
 
 export default function UserInfo() {
-    const [componentToBeShown, setComponentToBeShown] = useState(2)
+    const [componentToBeShown, setComponentToBeShown] = useState(0)
 
     
     return (

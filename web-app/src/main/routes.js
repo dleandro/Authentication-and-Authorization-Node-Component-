@@ -14,7 +14,7 @@ import PermissionInfo from "./components/backoffice-permission-components/Permis
 import RoleInfo from "./components/backoffice-role-components/RoleInfo"
 import Users from './components/backoffice-user-components/Users'
 import { AuthTypeProvider } from './components/login-components/AuthTypeContext'
-import AccountManagement from './components/backoffice-user-components/AccountManagement'
+import { AccountManagement } from './components/backoffice-user-components/AccountManagement'
 import UserLogin from './components/login-components/UserLogin';
 
 class Routes extends Component {

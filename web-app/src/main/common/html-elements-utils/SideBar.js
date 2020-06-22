@@ -33,7 +33,7 @@ export default function Sidebar({ navWidthCollapsed }) {
     var mainItems = [
 
         { key: 'office', link: '/', icon: <i className="fa fa-tachometer" style={fontSize} />, text: 'Backoffice', subItems: officeSubItems },
-        { key: 'protocol', link: '/protocols', icon: <i className="fa fa-lock" style={fontSize} />, text: 'Authentication' }]
+        { key: 'protocol', link: '/protocols', icon: <i className="fa fa-lock" style={fontSize} />, text: 'Authentication Types' }]
 
         const [expand, setexpand] = useState(false);
 

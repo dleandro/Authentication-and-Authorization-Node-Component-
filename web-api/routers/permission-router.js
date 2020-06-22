@@ -40,12 +40,14 @@ module.exports = function (apiUtils, authization) {
         .put(updatePermission)
         .delete(deletePermission)
 
-        permissionRouter.get('/:id/roles',getRolesByPermission)
+
+    permissionRouter.route('/:id/roles').get(getRolesByPermission)
 
 
-        function getRolesByPermission(req,res){
-            promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id))
-        }
+
+    function getRolesByPermission(req,res){
+        promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id))
+    }
     
 
     function getPermissions(req, res) {

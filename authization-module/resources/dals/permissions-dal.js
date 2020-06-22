@@ -19,7 +19,7 @@ module.exports = {
      */
     create: async (action, resource) => {
         config.rbac.createPermission(action, resource, true)
-        Permission.findOrCreate({
+        return Permission.findOrCreate({
             where:{
             action: action,
             resource: resource
@@ -50,8 +50,7 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    getSpecificById: async (id) =>
-        Permission.findByPk(id),
+    getSpecificById: async (id) => Permission.findByPk(id),
     /**
      *
      * @param method
@@ -66,12 +65,8 @@ module.exports = {
             }
         }),
 
-        update:async (id,action,resource)=>{
-            Permission.update({action:action,resource:resource},{where: {id: id}})
-        },
-        getRolesByPermission:async (id)=>{
-            Permission.findAll({where:{id:id},include:[Role],raw:true})
-        }
+        update:async (id,action,resource)=>Permission.update({action:action,resource:resource},{where: {id: id}}),
+        getRolesByPermission: (id)=>Permission.findAll({where:{id:id},include:[Role],raw:true})
 
 }
 

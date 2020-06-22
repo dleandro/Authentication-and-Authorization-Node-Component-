@@ -22,7 +22,7 @@ const AuthTypeProvider = (props) => {
 
         }
 
-    })
+    },[authTypesWereChangedByUser])
 
     // State was changes by the user so we need to update the database so that it will remain consistent with state
     useEffect(() => {

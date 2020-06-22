@@ -1,6 +1,6 @@
 import React from 'react'
-import {userService} from '../service'
-import CustomTable from "../html-elements-utils/Table/CustomTable";
+import {userService} from '../../service'
+import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
 
 const labels = ["Id", "Username", "Password"]
 

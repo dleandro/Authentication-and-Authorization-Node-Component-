@@ -6,7 +6,7 @@ const
 module.exports = function (apiUtils, authization) {
 
     const successCallback = (req, res) => req.isAuthenticated() ?
-        res.redirect("http://localhost:3000") :
+        res.redirect("http://localhost:3000/") :
         res.redirect("http://localhost:3000/login") 
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
@@ -23,7 +23,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-    authenticationRouter.post('/local', authenticate.usingLocal, (req, res) => req.isAuthenticated() ? apiUtils.setResponse())
+    authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
 
     authenticationRouter.post('/logout', authenticate.logout, successCallback)
 

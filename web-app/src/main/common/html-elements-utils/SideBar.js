@@ -32,10 +32,8 @@ export default function Sidebar({ navWidthCollapsed }) {
      */
     var mainItems = [
 
-        { key: 'home', link: '/', icon: <i className="fa fa-home" style={fontSize} />, text: 'Homepage' },
-        { key: 'login', link: '/login', icon: <i className="fa fa-sign-in" style={fontSize} />, text: 'Login', },
-        { key: 'protocol', link: '/protocols', icon: <i className="fa fa-lock" style={fontSize} />, text: 'Protocol' },
-        { key: 'office', link: '/backoffice', icon: <i className="fa fa-tachometer" style={fontSize} />, text: 'Backoffice', subItems: officeSubItems }];
+        { key: 'office', link: '/', icon: <i className="fa fa-tachometer" style={fontSize} />, text: 'Backoffice', subItems: officeSubItems },
+        { key: 'protocol', link: '/protocols', icon: <i className="fa fa-lock" style={fontSize} />, text: 'Authentication' }]
 
         const [expand, setexpand] = useState(false);
 

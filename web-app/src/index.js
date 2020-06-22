@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/javascript/App';
+import App from './main/App';
 import * as serviceWorker from './serviceWorker';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 

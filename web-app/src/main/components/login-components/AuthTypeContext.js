@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { protocolService } from '../../service'
 
-const LoginContext = React.createContext()
+const AuthTypeContext = React.createContext()
 
-const LoginProvider = (props) => {
+const AuthTypeProvider = (props) => {
 
     const [allowedProtocolsAndIdps, setAllowedProtocolsAndIdps] = useState([])
 
@@ -22,7 +22,7 @@ const LoginProvider = (props) => {
 
         }
 
-    }, [])
+    })
 
     // State was changes by the user so we need to update the database so that it will remain consistent with state
     useEffect(() => {
@@ -36,12 +36,12 @@ const LoginProvider = (props) => {
     }, [allowedProtocolsAndIdps, authTypesWereChangedByUser])
 
     return (
-        <LoginContext.Provider value={{ allowedProtocolsAndIdps, setAllowedProtocolsAndIdps, setAuthTypesFlag }}>
+        <AuthTypeContext.Provider value={{ allowedProtocolsAndIdps, setAllowedProtocolsAndIdps, setAuthTypesFlag }}>
             {props.children}
-        </LoginContext.Provider>
+        </AuthTypeContext.Provider>
     )
 }
 
-export default LoginContext
+export default AuthTypeContext
 
-export { LoginProvider } 
+export { AuthTypeProvider } 

@@ -33,12 +33,9 @@ module.exports = function (apiUtils, authization) {
     protocolRouter.route('/')
     .get(getProtocols)
 
-
 protocolRouter.get('/active', getActiveProtocols)
 
 protocolRouter.put('/active',changeActive)
-
-
 
 function getProtocols(req, res) {
     promiseDataToResponse(res, protocols.getAll())

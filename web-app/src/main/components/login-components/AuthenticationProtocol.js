@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
-import LoginContext from './LoginContext'
+import AuthTypeContext from './AuthTypeContext'
 
 export default function AuthenticationProtocol() {
 
-  const ctx = useContext(LoginContext)
+  const ctx = useContext(AuthTypeContext)
 
   const [state, setState] = useState([])
 
@@ -30,12 +30,12 @@ export default function AuthenticationProtocol() {
 
   return (
     <div style={{ paddingLeft: "30px", paddingTop: "30px" }}>
-      <h2>Select the protocols</h2>
+      <h2>Select Allowed Authentication Types</h2>
       <FormGroup>
         {
           state
             .map(authType =>
-              <FormControlLabel key={authType.protocol} control={<Checkbox checked={authType.active == 1} onChange={handleChange} name={authType.protocol} color="primary" />} label={authType.protocol} />)
+              <FormControlLabel key={authType.protocol} control={<Checkbox checked={authType.active === 1} onChange={handleChange} name={authType.protocol} color="primary" />} label={authType.protocol} />)
         }
       </FormGroup>
       <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={() => saveAuthTypesAllowed()}> Save</button>

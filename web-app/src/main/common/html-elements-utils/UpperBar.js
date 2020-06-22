@@ -2,8 +2,8 @@ import React, { useContext } from 'react'
 import { useHistory } from "react-router-dom";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Dropdown } from "react-bootstrap";
-import { userService, authenticationService } from '../service';
-import UserContext from '../../Context'
+import { authenticationService } from '../../service';
+import UserContext from '../../UserContext'
 
 
 /**
@@ -30,7 +30,7 @@ export default function Upperbar({ setRedirect }) {
     }
 
     const renderUserIfOneIsLoggedIn = () => {
-        return username != "" && <React.Fragment>
+        return username !== "" && <React.Fragment>
             <Dropdown.Item eventKey="1" onClick={() => history.push(`users/${ctx.user.id}`)}><i
                 className="fa fa-vcard" /> Profile </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={logoutAndRedirect}><i

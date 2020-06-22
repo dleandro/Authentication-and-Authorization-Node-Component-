@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import CustomTable from "../html-elements-utils/Table/CustomTable";
-import {permissionService} from "../service"
+import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
+import {permissionService} from "../../service"
 
 const labels = ["Id", "Action", "Resource"]
 

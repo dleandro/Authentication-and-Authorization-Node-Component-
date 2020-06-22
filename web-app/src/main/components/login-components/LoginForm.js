@@ -4,10 +4,10 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import { authenticationService, protocolService } from '../../service'
 import GoogleButton from 'react-google-button'
-import { webApiLinks } from '../../../links'
-import '../../../stylesheets/App.css'
+import { webApiLinks } from '../../common/links'
+import '../../common/stylesheets/App.css'
 import Alert from 'react-bootstrap/Alert'
-import LoginContext from './LoginContext'
+import AuthTypeContext from './AuthTypeContext'
 
 const authStyle = {
     width: '100px',
@@ -24,25 +24,25 @@ const imgBtns = {
     border: "none"
 }
 
-export default function LoginForm({ id, app: state, setRedirect }) {
+export default function LoginForm({ id }) {
 
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
-    
+
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
 
-    const ctx = useContext(LoginContext)
+    const ctx = useContext(AuthTypeContext)
 
-    var loginLocalStrat = () => 
+    var loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
-        authenticationService().login(userToLogin.username, userToLogin.password).then(() => window.location.reload(false)) :
-        setError({ errorMessage: "Please insert username and password first", shouldShow: true })
+            authenticationService().login(userToLogin.username, userToLogin.password).then(() => window.location.reload(false)) :
+            setError({ errorMessage: "Please insert username and password first", shouldShow: true })
 
     const handlePassword = event => {
-        setUserToLogin({...userToLogin, password: event.target.value })
+        setUserToLogin({ ...userToLogin, password: event.target.value })
     }
 
     const handleUsername = event => {
-        setUserToLogin({...userToLogin, username: event.target.value })
+        setUserToLogin({ ...userToLogin, username: event.target.value })
     }
 
     var loginIdp = async (idp) => {
@@ -70,10 +70,12 @@ export default function LoginForm({ id, app: state, setRedirect }) {
 
 
                 <InputGroup className="mb-3">
+
                     <FormControl placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2"
                         type="text" onChange={handleUsername} />
                     <FormControl placeholder="password" aria-label="Recipient's password" aria-describedby="basic-addon2"
-                        type="password" onChange={handlePassword} />
+                        type="password" onChange={handlePassword} onKeyDown={e => e.key == 'Enter' && loginLocalStrat()}/>
+
                 </InputGroup>
                 <Button variant="primary" onClick={loginLocalStrat}>{'Login'}</Button>
 

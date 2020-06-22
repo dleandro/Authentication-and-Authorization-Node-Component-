@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { userService } from './javascript/service'
+import { userService } from './service'
 
 const UserContext = React.createContext()
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {listService} from '../service'
-import CustomTable from "../html-elements-utils/Table/CustomTable";
+import {listService} from '../../service'
+import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
 
 const labels = [ "Id", "List"]
 

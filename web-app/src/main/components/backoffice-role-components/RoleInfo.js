@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { Redirect, Route, useParams } from 'react-router-dom'
 import { Button, Dropdown } from "react-bootstrap";
-import { listService, permissionService, userRoleService, rolesService } from "../service";
-import UserContext from "../../Context"
-import CustomTable from "../html-elements-utils/Table/CustomTable";
+import { listService, permissionService, userRoleService, rolesService } from "../../service";
+import UserContext from "../../UserContext"
+import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
 
 export default function RoleInfo() {
     const service = userRoleService()

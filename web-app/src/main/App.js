@@ -1,53 +1,46 @@
-import React, { Component } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import SideBar from "./common/html-elements-utils/SideBar";
 import { BrowserRouter as Router } from 'react-router-dom'
 import Routes from "./routes";
+import { AuthenticationRoutes } from './AuthenticationRoutes'
 import './common/stylesheets/App.css';
-import { UserProvider, UserConsumer } from './UserContext'
+import UserContext, { UserProvider } from './UserContext'
 import Upperbar from './common/html-elements-utils/UpperBar';
-import UserLogin from './components/login-components/UserLogin'
-import Register from './components/login-components/Register'
-import { AuthTypeProvider } from './components/login-components/AuthTypeContext'
-import { webAppLinks } from '../main/common/links'
+
 
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
 const sidebarCollapsedSize = "75px";
 
-class App extends Component {
+export default function App() {
 
-    render() {
-        return (
-            <Router>
-                <UserProvider>
+    const ctx = useContext(UserContext)
 
-                    <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
+    const [state, setState] = useState(ctx.user)
 
-                    <UserConsumer>
+    useEffect(() => setState(ctx.user))
 
-                        {state => state.user.username ?
-                            <React.Fragment>
+    return (
+        <Router>
+            <UserProvider>
+                <React.Fragment>
 
-                                <Upperbar />
-                                <SideBar navWidthCollapsed={sidebarCollapsedSize} />
+                    {state.username ?
+                        <React.Fragment>
 
-                            </React.Fragment> :
-                            <AuthTypeProvider>
+                            <Upperbar />
+                            <SideBar navWidthCollapsed={sidebarCollapsedSize} />
+                            <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
 
-                                {window.location.pathname === `/register` ? <Register /> : <UserLogin />}
+                        </React.Fragment> :
+                        <AuthenticationRoutes />
+                    }
 
-                            </AuthTypeProvider>
-                        }
+                </React.Fragment>
+            </UserProvider>
+        </Router>
 
-                    </UserConsumer>
-
-
-                </UserProvider>
-            </Router>
-
-        );
-    }
+    );
 }
 
-export default App;

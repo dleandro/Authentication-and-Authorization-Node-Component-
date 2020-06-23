@@ -23,7 +23,6 @@ const UserLogin = ({ app, setRedirect }) =>
                     </div>
                     <LoginForm id={"login"} />
                     <div className="col-12 link-part">
-                        <a href="/passwordForgotten">Forgot Your Password? </a>
                         <a href="/register"> Register</a>
                     </div>
                 </div>

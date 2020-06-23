@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import { authenticationService, protocolService } from '../../service'
+import { authenticationService } from '../../service'
 import GoogleButton from 'react-google-button'
 import { webApiLinks } from '../../common/links'
 import '../../common/stylesheets/App.css'
@@ -34,7 +34,7 @@ export default function LoginForm({ id }) {
 
     var loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
-            authenticationService().login(userToLogin.username, userToLogin.password).then(() => window.location.reload(false)) :
+            authenticationService().login(userToLogin.username, userToLogin.password).then(() => window.location.assign('/backoffice')) :
             setError({ errorMessage: "Please insert username and password first", shouldShow: true })
 
     const handlePassword = event => {

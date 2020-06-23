@@ -1,12 +1,15 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom'
 import {userService,authenticationService} from '../../service';
 
-export default function Register({setRedirect}) {
+export default function Register() {
     const [pass,setPass] = React.useState('');
     const [user,setUser] = React.useState('');
 
+    const history = useHistory()
+
     const register =  () => userService().addUser(['',user,pass]).then( ()=> authenticationService().login(user,pass)).then(()=>{
-        setRedirect('/');
+        history.push('/backoffice')
         window.location.reload(false);
     });
     const idps = (text,btn) => <div className="col-xs-4 col-sm-2">

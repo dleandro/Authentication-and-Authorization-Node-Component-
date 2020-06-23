@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './common/stylesheets/App.css';
 import React, { Component } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import BackOffice from "./components/BackOffice";
 import AuthenticationProtocol from './components/login-components/AuthenticationProtocol'
 import { BackofficeRole } from "./components/backoffice-role-components/BackofficeRole"
@@ -18,17 +18,6 @@ import UserLogin from './components/login-components/UserLogin';
 import  Sessions  from './components/Sessions';
 
 class Routes extends Component {
-    state = { redirect: { should: false, link: "/" } };
-
-    setRedirect = (url) => this.setState({ redirect: { should: true, link: url } })
-
-
-    renderRedirect = () => {
-        if (this.state.redirect.should) {
-            return <Redirect to={this.state.redirect.link} />
-        }
-        return null
-    }
 
     render() {
         return (

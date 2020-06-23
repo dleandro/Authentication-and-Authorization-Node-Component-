@@ -4,8 +4,14 @@ import './index.css';
 import App from './main/App';
 import * as serviceWorker from './serviceWorker';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import { UserProvider } from './main/UserContext'
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render(
+    <UserProvider>
+        <App />
+    </UserProvider>,
+    document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

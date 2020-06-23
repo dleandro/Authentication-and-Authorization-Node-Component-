@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useHistory } from "react-router-dom";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Dropdown } from "react-bootstrap";
@@ -26,7 +26,7 @@ export default function Upperbar({ setRedirect }) {
     const logoutAndRedirect = async () => {
         await authenticationService().logout()
         ctx.setUser({ id: undefined, username: undefined })
-        history.push('/')
+        window.location.assign('/')
     }
 
     const renderUserIfOneIsLoggedIn = () => {

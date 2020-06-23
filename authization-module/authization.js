@@ -69,8 +69,8 @@ const getFunctionalities = () => {
             configurations: require('./resources/configurations'),
 
             protocols: require('./resources/dals/protocols-dal'),
-            
-            sessions:require('./resources/dals/user-session-dal')
+
+            sessions: require('./resources/dals/user-session-dal')
 
         }
 
@@ -88,28 +88,28 @@ module.exports = {
         if (app && db) {
 
             const
-                session = require('express-session')
+                expressSession = require('express-session')
 
             config.database_opts = db;
 
             // setup db entities and db connection
             await require('./common/util/db')(rbac_opts)
 
-            function extendDefaultFields(defaults,session) {
+            function extendDefaultFields(defaults, session) {
                 return {
                     data: defaults.data,
                     expires: defaults.expires,
                     UserId: session.passport.user
                 };
-              }
-               
-            
+            }
+
+
 
             const
-                SessionStore = require('connect-session-sequelize')(session.Store),
+                SessionStore = require('connect-session-sequelize')(expressSession.Store),
                 sequelizeSessionStore = new SessionStore({
                     db: config.sequelize,
-                    table:'Sessions',
+                    table: 'Sessions',
                     extendDefaultFields: extendDefaultFields
                 }),
                 session_opts = {// to keep session active instead of letting it change to the idle state
@@ -123,15 +123,15 @@ module.exports = {
                     }
                 }
 
-                 sequelizeSessionStore.sync()
+            sequelizeSessionStore.sync()
 
             // setup required middleware
-            require('./common/middleware/setup-middleware')(app, session(session_opts))
+            require('./common/middleware/setup-middleware')(app, expressSession(session_opts))
 
             config.isModuleSetUp = true
 
             return getFunctionalities()
-            
+
         } else {
             return new Error("Make sure you provided database connection options and express app")
         }

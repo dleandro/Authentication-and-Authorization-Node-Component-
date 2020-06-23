@@ -18,9 +18,11 @@ module.exports = (authization) => {
         userHistoryRouter = require('./routers/user-history-router')(apiUtils, authization),
         configRouter = require('./routers/config-router')(apiUtils, authization),
         protocolRouter = require('./routers/protocol-router')(apiUtils, authization),
-        sessionRouter=require('./routers/session-router')(apiUtils,authization)
+        sessionRouter=require('./routers/session-router')(apiUtils,authization),
+        userListRouter=require('./routers/user-list-router')(apiUtils,authization)
     
     router.use('/users', userRouter)
+    router.use('/users-lists',userListRouter)
     router.use('/permissions', permissionRouter)
     router.use('/roles', roleRouter)
     router.use('/lists', listRouter)

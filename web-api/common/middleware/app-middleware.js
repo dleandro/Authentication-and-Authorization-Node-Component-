@@ -25,6 +25,10 @@ module.exports = async function (app) {
     const rbac_opts = {
         "roles": ["admin", "DbManager", "Developer","guest"],
         "permissions": [
+            { "resource": "users-lists", "action": "GET" },
+            { "resource": "users-lists", "action": "POST" },
+            { "resource": "users-lists", "action": "PUT" },
+            { "resource": "users-lists", "action": "DELETE" },
             { "resource": "protocols", "action": "GET" },
             { "resource": "protocols", "action": "POST" },
             { "resource": "protocols", "action": "PUT" },
@@ -91,6 +95,7 @@ module.exports = async function (app) {
                     { "resource": "protocols", "action": "POST" },
                     { "resource": "protocols", "action": "PUT" },
                     { "resource": "sessions", "action": "GET" },
+                    { "resource": "users-lists", "action": "POST" },
                 ]
             }
     }

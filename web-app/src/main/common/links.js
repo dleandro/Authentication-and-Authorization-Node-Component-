@@ -12,7 +12,8 @@ const
     AUTHENTICATION_PATH = "/api/authentications",
     CONFIG_PATH = "/api/configs",
     SESSION_PATH="/api/sessions",
-    PROTOCOLS_PATH = "/api/protocols"
+    PROTOCOLS_PATH = "/api/protocols",
+    USERS_LIST_PATH="/api/users-lists"
 
 const WEB_API_HOME_PATH = 'http://localhost:8082'
 
@@ -60,6 +61,10 @@ export const webApiLinks =
         ACTIVE_USERS_ROLES_PATH: `${USERS_ROLES_PATH}/active`,
         USERS_ACTIVE_ROLES_PATH: userId => `${USERS_ROLES_PATH}/active/user/${userId}`,
         USER_ROLES_DEACTIVATION_PATH: userRoleId => `${USERS_ROLES_PATH}/deactivate/${userRoleId}`
+    },
+
+    users_lists:{
+        USERS_LIST_PATH
     },
 
     lists: {

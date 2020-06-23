@@ -70,7 +70,9 @@ const getFunctionalities = () => {
 
             protocols: require('./resources/dals/protocols-dal'),
 
-            sessions: require('./resources/dals/user-session-dal')
+            sessions: require('./resources/dals/user-session-dal'),
+
+            userList:require('./resources/dals/user-list-dal')
 
         }
 

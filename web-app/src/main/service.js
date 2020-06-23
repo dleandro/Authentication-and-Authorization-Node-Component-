@@ -1,4 +1,4 @@
-var { sessions, users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs, protocols, userRoles } = require('./common/links').webApiLinks;
+var { users_lists,sessions, users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs, protocols, userRoles } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
 function produceInit(body, met) {
@@ -138,6 +138,17 @@ export function rolePermissionService(optionalPort) {
         addRolePermission: async (roleId, permissionId, action, resource) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, action: action, resource: resource, roleId: roleId }, 'POST')
         
     }
+}
+
+    export function userListService(optionalPort) {
+        HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+        return {
+            addUserList: async (listId, userId,updater) => {
+                console.log(listId)
+                makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId,active:1,updater:updater}, 'POST')
+            }
+            
+        }
 }
 
 

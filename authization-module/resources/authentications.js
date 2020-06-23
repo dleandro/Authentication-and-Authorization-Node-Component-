@@ -24,7 +24,6 @@ module.exports = {
     usingLocal: (req, res, next) => {
         passport.authenticate('local', { failWithError: true }, function (err, user) {
             if (!err && user) {
-                passportUtils.createUserSession(user.id, req.session.id)
                 req.logIn(user, function (error) {
                     if (error) { return next(error); }
                 })
@@ -55,7 +54,6 @@ module.exports = {
             if (!user || err) {
                 return next(err)
             }
-            passportUtils.createUserSession(user.id, req.session.id)
             req.logIn(user, function (error) {
                 if (error) { return next(error); }
             })
@@ -133,8 +131,7 @@ module.exports = {
      * @param res
      * @param next
      */
-    logout: (req, res, next) => {
-        passportUtils.deleteUserSession(req.user.id,req.sessionID)
+    logout: (req, res, next) => { 
         req.logout()
         req.session.destroy((err) => {
             if (err) {

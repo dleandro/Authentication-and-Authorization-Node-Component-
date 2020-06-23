@@ -14,7 +14,7 @@ const NonNullStringPK = { ...NonNullString, primaryKey: true } //only used 1 tim
  * @param attributes
  * @returns {Model}
  */
-const defineTable = (modelName, attributes) => sequelize.define(modelName, attributes, { timestamps: false, freezeTableName: true });
+const defineTable = (modelName, attributes,timestamps) => sequelize.define(modelName, attributes, { timestamps: timestamps, freezeTableName: true });
 
 /**
  * Permission(
@@ -23,29 +23,29 @@ const defineTable = (modelName, attributes) => sequelize.define(modelName, attri
  * - description: DefaultString)
  * @type {Model}
  */
-const Permission = defineTable('Permission', { action: STRING, resource: STRING });
+const Permission = defineTable('Permission', { action: STRING, resource: STRING },false);
 /**
  * Protocols(
  * - protocol: NonNullStringPK,
  * - active:DefaultBool)
  * @type {Model}
  */
-const Protocols = defineTable('Protocols', { protocol: NonNullStringPK, active: BOOLEAN });
+const Protocols = defineTable('Protocols', { protocol: NonNullStringPK, active: BOOLEAN },false);
 /**
  Role(
  * - role: NonNullString,
  * - parent_role: DefaultInt)
  * @type {Model}
  */
-const Role = defineTable('Role', { role: NonNullUniqueString, parent_role: INTEGER });
+const Role = defineTable('Role', { role: NonNullUniqueString, parent_role: INTEGER },false);
 /**
  * RolePermission(
  * - role: NonNullAutoIncIntPK,
  * - permission: NonNullIntPK)
  * @type {Model}
  */
-Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false });
-Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false });
+Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false },false);
+Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false },false);
 /**
  * User(
  * - username: NonNullString,
@@ -55,7 +55,7 @@ Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false })
 const User = defineTable('User', {
     username: { type: STRING, allowNull: false, unique: true },
     password: { type: STRING, get() { return () => this.getDataValue('password') } }
-});
+},false);
 
 // TODO: password encryption is this secure??
 User.encryptPassword = async (password) => await bcrypt.hash(password, await bcrypt.genSalt(10))
@@ -80,16 +80,8 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: NonNullDate, description: STRING });
+const UserHistory = defineTable('User_History', { date: NonNullDate, description: STRING },false);
 User.hasMany(UserHistory, { foreignKey: 'user_id' })
-/**
- * UserSession(
- * - user_id: NonNullAutoIncIntPK,
- * - session_id: NonNullStringPK)
- * @type {Model}
- */
-const UserSession = defineTable('User_Session', { session_id: { type: STRING, allowNull: false, primaryKey: true, } });
-User.hasMany(UserSession, { foreignKey: 'user_id' })
 
 /**
  * List(
@@ -97,10 +89,10 @@ User.hasMany(UserSession, { foreignKey: 'user_id' })
  * - list: DefaultString)
  * @type {Model}
  */
-const List = defineTable('List', { list: { type: STRING, unique: true } });
+const List = defineTable('List', { list: { type: STRING, unique: true } },false);
 
 
-const UserAssociation = (associationName) => defineTable(associationName, { start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN });
+const UserAssociation = (associationName) => defineTable(associationName, { start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN },false);
 
 const UserList = UserAssociation('UserList');
 List.belongsToMany(User, { through: UserList });
@@ -112,7 +104,7 @@ User.belongsToMany(List, { through: UserList });
  * - idpname: DefaultString)
  * @type {Model}
  */
-const Idp = defineTable('Idp', { idp_id: STRING(1234, false), idpname: STRING });
+const Idp = defineTable('Idp', { idp_id: STRING(1234, false), idpname: STRING },false);
 User.hasOne(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(
@@ -128,6 +120,13 @@ const UserRoles = UserAssociation('UserRoles');
 Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
 
+const Session=defineTable('Sessions',{sid:{type:STRING(36),primaryKey:true},expires:DATE,data:TEXT},true)
+
+User.hasMany(Session)
+Session.belongsTo(User)
+
+
+
 
 exports.Permission = Permission
 exports.Protocols = Protocols
@@ -135,8 +134,8 @@ exports.Role = Role
 exports.RolePermission = sequelize.models.RolePermission
 exports.UserHistory = UserHistory
 exports.User = User
-exports.UserSession = UserSession
 exports.List = List
 exports.Idp = Idp
 exports.UserList = sequelize.models.UserList
 exports.UserRoles = UserRoles
+exports.Session=Session

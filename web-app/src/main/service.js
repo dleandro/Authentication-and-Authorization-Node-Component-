@@ -1,4 +1,4 @@
-var { users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs, protocols, userRoles } = require('./common/links').webApiLinks;
+var { sessions,users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs, protocols, userRoles } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
 function produceInit(body, met) {
@@ -122,5 +122,13 @@ export function userRoleService(optionalPort) {
         getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id))
     }
 }
+
+    export function sessionService(optionalPort) {
+        HOME_PATH = optionalPort?`http://localhost:${optionalPort}`:undefined;
+        return {
+           getSessions: async ()=>getRequest(sessions.SESSION_PATH),
+           getSession:async(id)=>getRequest(sessions.SPECIFIC_SESSION_PATH(id))
+        }
+    }
 
 

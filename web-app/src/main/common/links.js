@@ -11,6 +11,10 @@ const
     ROLES_PERMISSION_PATH = "/api/roles_permissions",
     AUTHENTICATION_PATH = "/api/authentications",
     CONFIG_PATH = "/api/configs",
+<<<<<<< HEAD
+=======
+    SESSION_PATH="/api/sessions",
+>>>>>>> f08d254be4f851a91bf222bafef3afc7362a5f74
     PROTOCOLS_PATH = "/api/protocols"
 
 const WEB_API_HOME_PATH = 'http://localhost:8082'
@@ -83,6 +87,10 @@ export const webApiLinks =
     protocols: {
         PROTOCOLS_PATH,
         ACTIVATE_PATH: `${PROTOCOLS_PATH}/active`,
+    },
+    sessions:{
+        SESSION_PATH,
+        SPECIFIC_SESSION_PATH:id=>`${SESSION_PATH}/${id}`
     }
 }
 

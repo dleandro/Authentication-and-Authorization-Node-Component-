@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { AppBar, Tabs, Tab } from '@material-ui/core'
 import UserRoles from './UserRoles'
-import UserSessions from './UserSessions'
 import UserLists from './UserLists'
+import { UserSessions } from './UserSessions'
 
 const components = {
     0: <UserRoles />,
-    1: <UserSessions />,
+    1: <UserSessions/>,
     2: <UserLists />
 }
 
@@ -19,7 +19,7 @@ export default function UserInfo() {
         <React.Fragment>
 
             <AppBar position="static">
-                <Tabs value={componentToBeShown} style={{backgroundColor: "#282c34"}} onChange={(_, newValue) => {
+                <Tabs value={componentToBeShown} style={{backgroundColor: "#282c34"}} indicatorColor='primary'  onChange={(_, newValue) => {
                     setComponentToBeShown(newValue)}
                     } aria-label="user tabs">
                     <Tab label="Roles" />

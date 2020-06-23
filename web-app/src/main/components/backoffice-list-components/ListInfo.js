@@ -1,32 +1,28 @@
 
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { listService } from "../../service";
 import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
+import { AppBar, Tabs, Tab } from '@material-ui/core';
+import Users from "./Users"
+
+const components = {
+    0: <Users/>
+}
 
 export default function ListInfo() {
-    let { id } = useParams();
-    const listLabels = ["User Id", "Username", "Start Date", "End Date", "Updater"]
-    const [list, setList] = React.useState([])
-    const [users, setUsers] = React.useState([])
-
-    useEffect(() => {
-
-        const setState = async () => {
-            setList(await listService().getList(id))
-            setUsers(await listService().getUsersInThisList(id))
-        }
-
-        setState()
-    }, [id])
+    const [componentToBeShown, setComponentToBeShown] = useState(0)
 
     return (
-        <div>
-            <h3>{list.list} List</h3>
-            <h3>Current Users in this List</h3>
-            <CustomTable labels={listLabels} rows={users.map(user => [user["Users.id"], user["Users.username"], user["Users.UserList.start_date"], user["Users.UserList.end_date"], user["Users.UserList.updater"]])} />
-
-
-        </div>
+        <React.Fragment>
+            <Tabs value={componentToBeShown} indicatorColor='primary'  style={{backgroundColor: "#282c34"}} onChange={(_, newValue) => {
+                    setComponentToBeShown(newValue)}
+                    } aria-label="user tabs">
+                    <Tab label="Roles" style={{color: 'white'}}/>
+                </Tabs>
+                {
+               components[componentToBeShown]
+            }
+       </React.Fragment>
     )
 }

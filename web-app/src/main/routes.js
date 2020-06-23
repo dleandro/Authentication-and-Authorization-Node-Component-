@@ -15,6 +15,7 @@ import Users from './components/backoffice-user-components/Users'
 import { AuthTypeProvider } from './components/login-components/AuthTypeContext'
 import { AccountManagement } from './components/backoffice-user-components/AccountManagement'
 import UserLogin from './components/login-components/UserLogin';
+import  Sessions  from './components/Sessions';
 
 class Routes extends Component {
     state = { redirect: { should: false, link: "/" } };
@@ -49,6 +50,7 @@ class Routes extends Component {
 
                     <Route path={'/lists'} exact component={BackofficeList} />
                     <Route path={'/lists/:id'} exact component={ListInfo} />
+                    <Route path={'/sessions'} exact component={Sessions} />
 
                     <AuthTypeProvider>
 

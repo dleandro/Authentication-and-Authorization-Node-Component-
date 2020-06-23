@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { sessionService } from "../../service";
-import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
-import UserContext from '../../UserContext'
+import { sessionService } from "../service";
+import CustomTable from "../common/html-elements-utils/Table/CustomTable";
 
 
-export const UserSessions = () => {
+export default function Sessions(){
 
     const sessionLabel = ["User id","Session Id"]
     const [sessions, setSessions] = useState([])
-    const ctx = useContext(UserContext)
-    const id=ctx.user.id
+    
     useEffect(() => {
 
 
-        const setState = async () => setSessions(await sessionService().getSession(id))
+        const setState = async () => setSessions(await sessionService().getSessions())
 
         setState()
     }, [])
+
     return (
 
         <React.Fragment>

@@ -68,7 +68,9 @@ const getFunctionalities = () => {
              */
             configurations: require('./resources/configurations'),
 
-            protocols: require('./resources/dals/protocols-dal')
+            protocols: require('./resources/dals/protocols-dal'),
+            
+            sessions:require('./resources/dals/user-session-dal')
 
         }
 
@@ -93,10 +95,22 @@ module.exports = {
             // setup db entities and db connection
             await require('./common/util/db')(rbac_opts)
 
+            function extendDefaultFields(defaults,session) {
+                return {
+                    data: defaults.data,
+                    expires: defaults.expires,
+                    UserId: session.passport.user
+                };
+              }
+               
+            
+
             const
                 SessionStore = require('connect-session-sequelize')(session.Store),
                 sequelizeSessionStore = new SessionStore({
                     db: config.sequelize,
+                    table:'Sessions',
+                    extendDefaultFields: extendDefaultFields
                 }),
                 session_opts = {// to keep session active instead of letting it change to the idle state
                     resave: false,

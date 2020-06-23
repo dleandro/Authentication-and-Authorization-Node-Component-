@@ -14,12 +14,10 @@ import {permissionService} from "../../../service"
  * @returns {*}
  * @constructor
  */
-export default function CustomTable({ labels, rows, editRequest, addRequest, deleteRequest, redirectPage }) {
+export default function DropdownTable({ labels, rows, editRequest, addRequest, deleteRequest, redirectPage }) {
 
     const [permissions,setPermissions]=useState([])
     const renderRows = (rows) => {
-
-
         var tRows = rows.map(rowCells => {
             return <TableRow redirectPage={redirectPage} editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells} />
         })
@@ -51,7 +49,7 @@ export default function CustomTable({ labels, rows, editRequest, addRequest, del
                     <Select style={{color:"white"}} onChange={addRequest}>
                         {
                             permissions.map(permission=>
-                                <option value={`${permission.action} ${permission.resource}`}>{permission.action} {permission.resource}</option>)
+                                <option value={`${permission.id} ${permission.action} ${permission.resource}`}>{permission.action} {permission.resource}</option>)
                         }
 
                     </Select>

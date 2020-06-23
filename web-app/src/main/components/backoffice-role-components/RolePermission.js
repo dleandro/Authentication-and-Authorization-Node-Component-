@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { userService, rolesService,rolePermissionService } from "../../service";
-import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
+import { rolesService, rolePermissionService } from "../../service";
 import UserContext from '../../UserContext'
 import { useParams } from 'react-router-dom';
-import {permissionService} from "../../service"
 import DropdonwTable from "../../common/html-elements-utils/Table/DropdownTable"
 
 
@@ -13,36 +11,41 @@ export default function RolePermission() {
     const [error, setError] = useState(undefined)
     const permissionLabels = ["Id", "Action", "Resource"]
     const ctx = useContext(UserContext)
-    let {id}=useParams()
-    const addRolePermission = (e) => rolePermissionService().addRolePermission(e.target.value,id)
+    let { id } = useParams()
+    const addRolePermission = async (e) => {
+
+        const rolePermissionsJoined =  await rolePermissionService().addRolePermission(id, e.target.value.split(" ")[0], e.target.value.split(" ")[1], e.target.value.split(" ")[2])
+
+        setRolePermissions([...rolePermissions, { "Permissions.id": rolePermissionsJoined.permissionId, "Permissions.action": rolePermissionsJoined.action, "Permissions.resource": rolePermissionsJoined.resource }])
+    }
     const editRole = (arr) => this.service.editRole(arr)
     const deleteRole = (arr) => this.service.deleteRole(arr[0])
 
     useEffect(() => {
-        const setState = async () =>{
-            let data=await rolesService().getPermissionsWithThisRole(id)
-            if("err" in data){
+        const setState = async () => {
+            let data = await rolesService().getPermissionsWithThisRole(id)
+            if ("err" in data) {
                 console.log(data.err)
                 setError(data)
             }
-            else{
-            data=data.filter(permission=>permission["Permissions.id"]!==null)
-            setRolePermissions(data)
+            else {
+                data = data.filter(permission => permission["Permissions.id"] !== null)
+                setRolePermissions(data)
             }
         }
-        
+
         setState()
-    
+
     }, [])
 
     return (
 
         <React.Fragment>
             {
-                error?<p>{error.status} {error.err}</p>:
-                <DropdonwTable labels={permissionLabels}
+                error ? <p>{error.status} {error.err}</p> :
+                    <DropdonwTable labels={permissionLabels}
                         addRequest={addRolePermission} editRequest={editRole} deleteRequest={deleteRole}
-                        redirectPage="permissions" rows={rolePermissions.map(permission => [permission["Permissions.id"], permission["Permissions.action"],permission["Permissions.resource"]])} />
+                        redirectPage="permissions" rows={rolePermissions.map(permission => [permission["Permissions.id"], permission["Permissions.action"], permission["Permissions.resource"]])} />
             }
 
         </React.Fragment>

@@ -1,8 +1,8 @@
 'use strict'
 
 const RolePermission = require('../sequelize-model').RolePermission,
-Permission = require('../sequelize-model').Permission,
-    Role=require('../sequelize-model').Role,
+    permissionsDal = require('./permissions-dal'),
+    rolesDal = require('./roles-dal'),
     sequelize = require('../../common/util/db'),
     config = require('../../common/config/config'),
     rbac = config.rbac
@@ -16,11 +16,11 @@ module.exports = {
      * @returns {Promise<void>}
      */
     create: async (RoleId, permission) => {
-        rbac.grant(await rbac.getRole((await Role.findOne({where:{id:RoleId}}).role)), await rbac.getPermission(permission.action, permission.resource))
-        RolePermission.findOrCreate({
-            where:{
-            RoleId: RoleId,
-            PermissionId: await Permission.findOne({where:{action:permission.action,resource:permission.resource}})
+        rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
+        return RolePermission.findOrCreate({
+            where: {
+                RoleId: RoleId,
+                PermissionId: permission.id
             }
         })
     },

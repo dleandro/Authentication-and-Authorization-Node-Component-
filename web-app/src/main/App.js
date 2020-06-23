@@ -7,7 +7,9 @@ import './common/stylesheets/App.css';
 import { UserProvider, UserConsumer } from './UserContext'
 import Upperbar from './common/html-elements-utils/UpperBar';
 import UserLogin from './components/login-components/UserLogin'
+import Register from './components/login-components/Register'
 import { AuthTypeProvider } from './components/login-components/AuthTypeContext'
+import { webAppLinks } from '../main/common/links'
 
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
@@ -20,6 +22,8 @@ class App extends Component {
             <Router>
                 <UserProvider>
 
+                    <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
+
                     <UserConsumer>
 
                         {state => state.user.username ?
@@ -27,12 +31,11 @@ class App extends Component {
 
                                 <Upperbar />
                                 <SideBar navWidthCollapsed={sidebarCollapsedSize} />
-                                <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
 
                             </React.Fragment> :
                             <AuthTypeProvider>
 
-                                <UserLogin />
+                                {window.location.pathname === `/register` ? <Register /> : <UserLogin />}
 
                             </AuthTypeProvider>
                         }

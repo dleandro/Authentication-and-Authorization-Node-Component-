@@ -11,7 +11,6 @@ const
     ROLES_PERMISSION_PATH = "/api/roles_permissions",
     AUTHENTICATION_PATH = "/api/authentications",
     CONFIG_PATH = "/api/configs",
-
     PROTOCOLS_PATH = "/api/protocols"
 
 const WEB_API_HOME_PATH = 'http://localhost:8082'

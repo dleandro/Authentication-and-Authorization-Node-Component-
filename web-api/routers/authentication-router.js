@@ -6,8 +6,8 @@ const
 module.exports = function (apiUtils, authization) {
 
     const successCallback = (req, res) => req.isAuthenticated() ?
-        res.redirect("http://localhost:3000/") :
-        res.redirect("http://localhost:3000/login") 
+        res.redirect("http://localhost:3000/backoffice") :
+        res.redirect("http://localhost:3000/") 
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
 

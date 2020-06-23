@@ -50,9 +50,6 @@ export default function Upperbar({ setRedirect }) {
                         id={`dropdown-variants-Info`}
                     >
                         {renderUserIfOneIsLoggedIn()}
-                        <Dropdown.Item eventKey="3" active>
-                            <i className={'fa fa-cog fa-spin'} /> Settings
-                </Dropdown.Item>
                     </DropdownButton>
                 </ul>
             </div>

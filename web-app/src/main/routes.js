@@ -8,7 +8,6 @@ import { BackofficeRole } from "./components/backoffice-role-components/Backoffi
 import { BackofficeList } from "./components/backoffice-list-components/BackofficeList"
 import BackofficePermission from "./components/backoffice-permission-components/BackofficePermission"
 import UserInfo from "./components/backoffice-user-components/UserInfo"
-import Register from "./components/login-components/Register"
 import ListInfo from "./components/backoffice-list-components/ListInfo"
 import PermissionInfo from "./components/backoffice-permission-components/PermissionInfo"
 import RoleInfo from "./components/backoffice-role-components/RoleInfo"
@@ -34,14 +33,12 @@ class Routes extends Component {
         return (
             <Switch id={"switch"}>
 
-
                 <div id={"main"} style={{ marginLeft: this.props.sidebarCollapsedSize }}>
-                    <Route path={'/'} exact component={BackOffice} />
+                    <Route path={'/backoffice'} exact component={BackOffice} />
 
                     <Route path={'/users'} exact component={Users} />
                     <Route path={`/users/:id`} exact component={UserInfo} />
                     <Route path={'/account'} exact component={AccountManagement} />
-                    <Route path={'/register'} exact component={Register} />
                     <Route path={'/login'} exact component={UserLogin} />
 
                     <Route path={'/permissions'} exact component={BackofficePermission} />

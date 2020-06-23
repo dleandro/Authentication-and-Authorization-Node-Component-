@@ -14,7 +14,7 @@ export default function BackOffice() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            paddingTop: "100px"
+            paddingTop: "30px"
         }}>
 
             <div class="d-flex flex-column">
@@ -27,7 +27,8 @@ export default function BackOffice() {
                             <Card.Title>Users</Card.Title>
                             <Card.Text>
                                 Manage User configurations and associate them with Roles.
-                    </Card.Text>
+                            </Card.Text>
+                            <br />
                             <Button variant="primary" onClick={() => history.push('/users')} >Take me there</Button>
                         </Card.Body>
                     </Card>
@@ -46,7 +47,7 @@ export default function BackOffice() {
                         <Card.Body>
                             <Card.Title>Roles</Card.Title>
                             <Card.Text>
-                                Crate, Update and Delete Roles. Associate these roles with different sets of Permissions and Users.
+                                Create, Update and Delete Roles. Associate these roles with different sets of Permissions and Users.
                     </Card.Text>
                             <Button variant="primary" onClick={() => history.push('/roles')} >Take me there</Button>
                         </Card.Body>
@@ -63,6 +64,7 @@ export default function BackOffice() {
                             <Card.Text>
                                 Manage Lists and associate them with Users.
                     </Card.Text>
+                            <br />
                             <Button variant="primary" onClick={() => history.push('/lists')} >Take me there</Button>
                         </Card.Body>
                     </Card>
@@ -73,9 +75,22 @@ export default function BackOffice() {
                             <Card.Text>
                                 Choose the allowed authentication types for the application.
                     </Card.Text>
+                            <br />
                             <Button variant="primary" onClick={() => history.push('/protocols')} >Take me there</Button>
                         </Card.Body>
                     </Card>
+
+                    <Card className='ml-2 mr-2'>
+                        <Card.Body>
+                            <Card.Title>Sessions</Card.Title>
+                            <Card.Text>
+                                Manage User Sessions.
+                    </Card.Text>
+                            <br />
+                            <Button variant="primary" onClick={() => history.push('/roles')} >Take me there</Button>
+                        </Card.Body>
+                    </Card>
+
 
                 </div>
 

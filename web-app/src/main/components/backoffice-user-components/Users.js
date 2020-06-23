@@ -1,5 +1,5 @@
 import React from 'react'
-import {userService} from '../../service'
+import { userService } from '../../service'
 import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
 
 const labels = ["Id", "Username", "Password"]
@@ -12,22 +12,22 @@ class Users extends React.Component {
 
     constructor() {
         super()
-        this.state = {users: [],error:undefined}
+        this.state = { users: [], error: undefined }
     }
 
-    addUser = (arr) => this.service.addUser(arr)
+    addUser = async (arr) => this.setState({ users: [...this.state.users, await this.service.addUser(arr)] })
     editUsername = (arr) => this.service.editUsername(arr)
     deleteUser = (arr) => this.service.deleteUser(arr)
     requestUsers = () => this.service.getUsers()
 
     componentDidMount() {
         this.requestUsers().then(data => {
-            if("err" in data){
+            if ("err" in data) {
                 console.log(data.err)
-                this.setState({error:data})
+                this.setState({ error: data })
             }
-            else{
-            this.setState({users: data})
+            else {
+                this.setState({ users: data })
             }
         })
     }
@@ -35,11 +35,11 @@ class Users extends React.Component {
     render() {
         return (
             <div>
-            {!this.state.error? <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
-                         deleteRequest={this.deleteUser} labels={labels}
-                         rows={this.state.users.map(user => [user.id, user.username, '****'])}
-                         redirectPage="users"/>:
-            <p>{this.state.error.status} {this.state.error.err}</p>}
+                {!this.state.error ? <CustomTable addRequest={this.addUser} editRequest={this.editUsername}
+                    deleteRequest={this.deleteUser} labels={labels}
+                    rows={this.state.users.map(user => [user.id, user.username, '****'])}
+                    redirectPage="users" /> :
+                    <p>{this.state.error.status} {this.state.error.err}</p>}
             </div>
         )
     }

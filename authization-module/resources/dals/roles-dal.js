@@ -15,7 +15,7 @@ module.exports = {
          */
     create: async (role) => {
         config.rbac.createRole(role, true)
-        Role.findOrCreate({
+        return Role.findOrCreate({
             where:{
             role: role
             }

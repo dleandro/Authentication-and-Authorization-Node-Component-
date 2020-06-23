@@ -12,7 +12,7 @@ export default class BackofficePermission extends Component {
     }
     
 
-    addPermission = (arr) => this.service.addPermission(arr)
+    addPermission = async (arr) => this.setState({permission: [...this.state.permission, await this.service.addPermission(arr)]})
     editPermission = (arr) => this.service.editPermission(arr)
     deletePermission = (arr) => this.service.deletePermission(arr)
 

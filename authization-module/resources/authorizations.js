@@ -23,9 +23,13 @@ module.exports = {
 
         const user=req.user
         var roles=[]
+
         if(user){
             roles= await usersDal.getUserRoles(user.id)
             roles=roles.map(role=>role["Roles.role"])
+            if (roles.includes('admin')) {
+                return next()
+            }
         }
             roles.push("guest")
 

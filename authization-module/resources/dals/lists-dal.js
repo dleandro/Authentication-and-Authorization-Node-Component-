@@ -30,7 +30,7 @@ module.exports = {
      * @returns {Promise<CustomError>}
      */
     create: async (list) =>
-        List.create({
+        dList.create({
             list: list
         }),
 

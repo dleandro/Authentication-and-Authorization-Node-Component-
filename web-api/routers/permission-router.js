@@ -57,8 +57,7 @@ module.exports = function (apiUtils, authization) {
     function addPermission(req, res) {
         permissions.create(req.body.action,req.body.resource)
             .then(answer => {
-                req.body.id = answer.insertId
-                apiUtils.setResponse(res, req.body, 201)
+                apiUtils.setResponse(res, answer[0].dataValues, 201)
             })
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

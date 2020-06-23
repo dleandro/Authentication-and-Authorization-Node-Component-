@@ -55,7 +55,7 @@ module.exports = function (apiUtils, authization) {
         lists.create(req.body.list)
         .then(answer => {
             //req.body = {...req.body,id:answer.insertId}
-            apiUtils.setResponse(res, answer, 201)
+            apiUtils.setResponse(res, answer.dataValues, 201)
         })
         .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }

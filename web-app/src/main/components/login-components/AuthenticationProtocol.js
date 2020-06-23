@@ -34,7 +34,7 @@ export default function AuthenticationProtocol() {
       {
         ctx.error?<p>{ctx.error.status} {ctx.error.err}</p>:
         <React.Fragment>
-        <h2>Select Allowed Authentication Types</h2>
+        <h2>Select Supported Identity Providers</h2>
       <FormGroup>
         {
           state

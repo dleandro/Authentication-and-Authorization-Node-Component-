@@ -31,7 +31,7 @@ async function databasesetup(rbac_opts) {
     // TODO: No PG isto nao funciona, precisa de booleans.. como fazer isso 
     await Protocols.findOrCreate({ where: { "protocol": "Google" }, defaults: { "active": 1 } })
     await Protocols.findOrCreate({ where: { "protocol": "AzureAD" }, defaults: { "active": 1 } })
-    await Protocols.findOrCreate({ where: { "protocol": "Saml" }, defaults: { "active": 1 } } )
+    await Protocols.findOrCreate({ where: { "protocol": "Auth0" }, defaults: { "active": 1 } } )
     
     console.log('database setup correctly')
     

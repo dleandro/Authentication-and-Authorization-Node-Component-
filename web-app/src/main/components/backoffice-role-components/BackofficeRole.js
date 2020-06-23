@@ -11,7 +11,7 @@ export class BackofficeRole extends Component {
     }
     service = rolesService()
 
-    addRole = (arr) => this.service.addRole(arr)
+    addRole = async (arr) => this.setState({ roles: [...this.state.roles, await this.service.addRole(arr)] })
     editRole = (arr) => this.service.editRole(arr)
     deleteRole = (arr) => this.service.deleteRole(arr[0])
 
@@ -32,7 +32,7 @@ export class BackofficeRole extends Component {
             <div>
                 {!this.state.error ? <CustomTable labels={labels}
                     addRequest={this.addRole} editRequest={this.editRole} deleteRequest={this.deleteRole}
-                    redirectPage="roles" rows={this.state.roles.map(user => [user.id, user.role, user.parent_role == null ? 'null' : user.parent_role])} /> :
+                    redirectPage="roles" rows={this.state.roles.map(role => [role.id, role.role, role.parent_role == null ? 'null' : role.parent_role])} /> :
                     <p>{this.state.error.status} {this.state.error.err}</p>}
             </div>
         )

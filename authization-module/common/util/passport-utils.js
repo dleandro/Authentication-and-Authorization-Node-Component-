@@ -82,8 +82,8 @@ module.exports = {
     addNotification: async (userId) => {
         await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
     },
-    createUserSession: async (userId, sessionId) => {
-        await userSession.create(userId, sessionId)
+    updateSession: async (userId, sessionId) => {
+        await Session.update({UserId:userId},{where:{sid:sessionId}})
     },
     checkProtocol: async (protocolName) => {
         const result = await protocol.get(protocolName)

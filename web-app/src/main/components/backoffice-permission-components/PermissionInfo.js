@@ -1,31 +1,38 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { permissionService } from "../../service";
 import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
+import { AppBar, Tabs, Tab } from '@material-ui/core';
+import RolePermission from "./RolePermission"
+
+const components = {
+    0: <RolePermission/>
+}
 
 export default function PermissionInfo() {
+    const [componentToBeShown, setComponentToBeShown] = useState(0)
     let { id } = useParams();
-    const userRoleLabels = ['Id','Action','Resource','Role Id','Role','Parent Role'];
-    const listLabels = ["Id", "Start Date", "End Date", "Updater"];
-    const [permission, setPermission] = React.useState([]);
-    const [roles, setRoles] = React.useState([]);
+    
 
     useEffect(() => {
 
         const setState = async () => {
 
-            setPermission(await permissionService().getPermission(id));
-            setRoles(await permissionService().getRolesWithThisPermission(id));
-
+            
         };
         setState();
 
     }, [id]);
     return (
-        <div>
-            <h3>Permission {permission.action} {permission.resource} </h3>
-            <h3>Roles associated with this permission</h3>
-            <CustomTable labels={userRoleLabels} rows={roles.map(role => [role.id,role.action,role.resource,role["Roles.id"], role["Roles.role"], role["Roles.parent_role"]])} />
-        </div>
+        <React.Fragment>
+            <Tabs value={componentToBeShown} indicatorColor='primary'  style={{backgroundColor: "#282c34"}} onChange={(_, newValue) => {
+                    setComponentToBeShown(newValue)}
+                    } aria-label="user tabs">
+                    <Tab label="Roles" style={{color: 'white'}} />
+                </Tabs>
+                {
+               components[componentToBeShown]
+            }
+       </React.Fragment>
     )
 }

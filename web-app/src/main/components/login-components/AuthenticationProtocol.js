@@ -30,7 +30,11 @@ export default function AuthenticationProtocol() {
 
   return (
     <div style={{ paddingLeft: "30px", paddingTop: "30px" }}>
-      <h2>Select Allowed Authentication Types</h2>
+       
+      {
+        ctx.error?<p>{ctx.error.status} {ctx.error.err}</p>:
+        <React.Fragment>
+        <h2>Select Allowed Authentication Types</h2>
       <FormGroup>
         {
           state
@@ -39,6 +43,10 @@ export default function AuthenticationProtocol() {
         }
       </FormGroup>
       <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={() => saveAuthTypesAllowed()}> Save</button>
+      </React.Fragment>
+      }
+      
+      
     </div>
   )
 

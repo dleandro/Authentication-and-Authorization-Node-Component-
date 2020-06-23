@@ -1,6 +1,7 @@
 const
     { RBAC } = require('rbac'),
-    config = require('../config/config')
+    config = require('../config/config'),
+    moment=require('moment')
 
 var
     roleDal,
@@ -9,7 +10,7 @@ var
     rbac
 
 
-module.exports = async function (jsonObj) {
+module.exports = async function (jsonObj,UserRoles) {
 
 
     if (config.isModuleSetUp) {
@@ -25,6 +26,7 @@ module.exports = async function (jsonObj) {
     await createRoles(jsonObj.roles)
     await createPermissions(jsonObj.permissions)
     await createGrants(jsonObj.grants)
+    await UserRoles.findOrCreate({where:{UserId:1},defaults: { "start_date": moment().format(),"updater":1,"RoleId": 1 ,"active":1}})
     await rbac.init()
 
     return rbac
@@ -32,14 +34,14 @@ module.exports = async function (jsonObj) {
 
 function createRoles(roles) {
     return Promise.all(roles.map(async role => {
-        roleDal.create(role)
+        await roleDal.create(role)
     })
     )
 }
 
 function createPermissions(permissions) {
     return Promise.all(permissions.map(async permission => {
-        permissionsDal.create(permission.action, permission.resource)
+        await permissionsDal.create(permission.action, permission.resource)
     }))
 }
 
@@ -53,7 +55,7 @@ function createGrants(grants) {
                 roleDal.addParentRole(childRole, role)
             } else {
                 const p = await permissionsDal.getSpecific(permission.action, permission.resource)
-                rolesPermissionsDal.create(role.id, p.id, role.role, p)
+                rolesPermissionsDal.create(role.id, p)
             }
         })
     });

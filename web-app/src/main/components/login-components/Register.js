@@ -34,7 +34,7 @@ export default function Register() {
                     <div className="col-xs-12 col-sm-6">
                             <div className="input-group">
                                 <span style={{height: '25px'}} className="input-group-addon"><i className="fa fa-user"></i></span>
-                                <input type="text" className="form-control" onChange={e=>setUser(e.target.value)} name="username" placeholder="email address"></input>
+                                <input type="text" className="form-control" onChange={e=>setUser(e.target.value)} name="username" placeholder="username"></input>
                             </div>
                             <span className="help-block"></span>
 

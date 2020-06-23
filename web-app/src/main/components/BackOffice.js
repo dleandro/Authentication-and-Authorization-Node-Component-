@@ -87,7 +87,7 @@ export default function BackOffice() {
                                 Manage User Sessions.
                     </Card.Text>
                             <br />
-                            <Button variant="primary" onClick={() => history.push('/roles')} >Take me there</Button>
+                            <Button variant="primary" onClick={() => history.push('/sessions')} >Take me there</Button>
                         </Card.Body>
                     </Card>
 

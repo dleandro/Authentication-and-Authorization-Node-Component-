@@ -18,7 +18,7 @@ export default function ListInfo() {
             <Tabs value={componentToBeShown} indicatorColor='primary'  style={{backgroundColor: "#282c34"}} onChange={(_, newValue) => {
                     setComponentToBeShown(newValue)}
                     } aria-label="user tabs">
-                    <Tab label="Roles" style={{color: 'white'}}/>
+                    <Tab label="Users" style={{color: 'white'}}/>
                 </Tabs>
                 {
                components[componentToBeShown]

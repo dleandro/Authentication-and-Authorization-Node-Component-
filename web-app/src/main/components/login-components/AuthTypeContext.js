@@ -9,11 +9,13 @@ const AuthTypeProvider = (props) => {
 
     const [authTypesWereChangedByUser, setAuthTypesFlag] = useState(false)
 
+    const [error,setError]=useState(undefined)
+
     // get allowed protocols and push them to state
     useEffect(() => {
         const fetchAllowedProtocolsAndIdps = async () => {
             const authTypes = await protocolService().getPossibleAuthTypes()
-            setAllowedProtocolsAndIdps(authTypes)
+            if(authTypes[0])setAllowedProtocolsAndIdps(authTypes)
         }
 
         if (!authTypesWereChangedByUser) {
@@ -29,14 +31,20 @@ const AuthTypeProvider = (props) => {
 
         if (authTypesWereChangedByUser) {
             allowedProtocolsAndIdps
-                .forEach(authType => protocolService().changeActive(authType.protocol, authType.active))
+                .forEach(authType => protocolService().changeActive(authType.protocol, authType.active)
+                .then(data=>
+                    {if("err" in data){
+                    console.log(data.err)
+                    setError(data)
+                }
+            }))
 
         } 
 
     }, [allowedProtocolsAndIdps, authTypesWereChangedByUser])
 
     return (
-        <AuthTypeContext.Provider value={{ allowedProtocolsAndIdps, setAllowedProtocolsAndIdps, setAuthTypesFlag }}>
+        <AuthTypeContext.Provider value={{ allowedProtocolsAndIdps,error, setAllowedProtocolsAndIdps, setAuthTypesFlag }}>
             {props.children}
         </AuthTypeContext.Provider>
     )

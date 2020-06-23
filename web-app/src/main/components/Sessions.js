@@ -5,7 +5,7 @@ import CustomTable from "../common/html-elements-utils/Table/CustomTable";
 
 export default function Sessions(){
 
-    const sessionLabel = ["User id","Session Id"]
+    const sessionLabel = ["User id","Session Id","Expires"]
     const [sessions, setSessions] = useState([])
     
     useEffect(() => {
@@ -20,7 +20,7 @@ export default function Sessions(){
 
         <React.Fragment>
 
-            <CustomTable labels={sessionLabel} redirectPage="users" rows={sessions.map(session => [session.user_id, session.session_id])} />
+            <CustomTable labels={sessionLabel} redirectPage="users" rows={sessions.map(session => [session.UserId, session.sid,session.expires])} />
 
         </React.Fragment>
     )

@@ -17,7 +17,7 @@ config.sequelize = sequelize
 async function databasesetup(rbac_opts) {
 
     // defining the EA model
-    const { User, List, Protocols, Role } = require('../../resources/sequelize-model')
+    const { User, List, Protocols, Role,UserRoles} = require('../../resources/sequelize-model')
 
     // sync present state of the database with our models
     await sequelize.sync()
@@ -35,7 +35,7 @@ async function databasesetup(rbac_opts) {
     
     console.log('database setup correctly')
     
-    return require('../middleware/rbac')(rbac_opts)
+    return require('../middleware/rbac')(rbac_opts,UserRoles)
 }
 
 module.exports = databasesetup

@@ -131,4 +131,16 @@ export function userRoleService(optionalPort) {
         }
     }
 
+    export function rolePermissionService(optionalPort) {
+        HOME_PATH = optionalPort?`http://localhost:${optionalPort}`:undefined;
+        return {
+           addRolePermission: async (permission)=>{
+               console.log(permission)
+            makeRequest(roles_permissions.ROLES_PERMISSION_PATH,{action:permission.split(' ')[0],resource:permission.split(' ')[1]},'POST')
+        }
+        }
+    }
+
+
+
 

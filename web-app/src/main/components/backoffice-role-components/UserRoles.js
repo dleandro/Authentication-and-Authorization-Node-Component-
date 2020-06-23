@@ -9,6 +9,7 @@ export default function UserRoles() {
     let {id}=useParams()
     const userRoleLabels = ["User id", "username"]
     const [users, setUsers] = useState([])
+    const [error, setError] = useState(undefined)
     const ctx = useContext(UserContext)
     const addRole = (arr) => this.service.addRole(arr)
     const editRole = (arr) => this.service.editRole(arr)
@@ -16,7 +17,16 @@ export default function UserRoles() {
 
     useEffect(() => {
 
-        const setState = async () =>  setUsers(await rolesService().getUsersWithThisRole(id))
+        const setState = async () => {
+            const data=await rolesService().getUsersWithThisRole(id)
+            if("err" in data){
+                console.log(data.err)
+                setError(data)
+            }
+            else{
+            setUsers(data)
+            }
+        } 
         
         setState()
     
@@ -25,10 +35,13 @@ export default function UserRoles() {
     return (
 
         <React.Fragment>
-
-<CustomTable labels={userRoleLabels}
+            {
+                error?<p>{error.status} {error.err}</p>:
+                <CustomTable labels={userRoleLabels}
                         addRequest={addRole} editRequest={editRole} deleteRequest={deleteRole}
                         redirectPage="users" rows={users.map(user => [user["Users.id"], user["Users.username"], user["Users.UserRoles.start_date"], user["Users.UserRoles.end_date"], user["Users.UserRoles.updater"]])} />
+            }
+
         </React.Fragment>
     )
 }

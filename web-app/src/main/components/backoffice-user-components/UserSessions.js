@@ -6,23 +6,36 @@ import UserContext from '../../UserContext'
 
 export const UserSessions = () => {
 
-    const sessionLabel = ["User id","Session Id"]
+    const sessionLabel = ["User id","Session Id","Expires"]
     const [sessions, setSessions] = useState([])
+    const [error, setError] = useState(undefined)
     const ctx = useContext(UserContext)
     const id=ctx.user.id
     useEffect(() => {
 
 
-        const setState = async () => setSessions(await sessionService().getSession(id))
+        const setState = async () =>{ 
+            const data=await sessionService().getSession(id)
+            if("err" in data){
+                console.log(data.err)
+                setError(data)
+            }
+            else{
+            setSessions(data)
+            }
+        }
 
         setState()
     }, [])
     return (
 
         <React.Fragment>
+            {
+                error?<p>{error.status} {error.err}</p>:
+                <CustomTable labels={sessionLabel} redirectPage="users" rows={sessions.map(session => [session.UserId, session.sid,session.expires])} />
 
-            <CustomTable labels={sessionLabel} redirectPage="users" rows={sessions.map(session => [session.user_id, session.session_id])} />
-
+            }
+            
         </React.Fragment>
     )
 }

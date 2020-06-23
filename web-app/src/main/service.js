@@ -119,7 +119,8 @@ export function permissionService(optionalPort) {
 export function userRoleService(optionalPort) {
     HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
     return {
-        getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id))
+        getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
+        addUserRole:async(userid,roleid,updater)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:1,updater:updater},'POST')
     }
 }
 

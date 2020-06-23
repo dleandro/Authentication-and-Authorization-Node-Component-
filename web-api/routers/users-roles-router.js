@@ -7,7 +7,6 @@
  * @returns {*|Router}
  */
 module.exports = function (apiUtils, authization) {
-
     const userRoles = authization.userRole
 
     const usersRolesRouter = require('express').Router()

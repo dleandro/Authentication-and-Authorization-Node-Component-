@@ -86,7 +86,11 @@ module.exports = async function (app) {
                     { "resource": "roles-permissions", "action": "POST" },
                     { "resource": "roles-permissions", "action": "GET" },
                     { "resource": "permissions", "action": "GET" },
-                    { "resource": "lists", "action": "GET" }
+                    { "resource": "lists", "action": "GET" },
+                    { "resource": "users-roles", "action": "POST" },
+                    { "resource": "protocols", "action": "POST" },
+                    { "resource": "protocols", "action": "PUT" },
+                    { "resource": "sessions", "action": "GET" },
                 ]
             }
     }

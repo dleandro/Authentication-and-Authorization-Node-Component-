@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { AppBar, Tabs, Tab } from '@material-ui/core'
-import UserRoles from './UserRoles'
-import UserLists from './UserLists'
-import { UserSessions } from './UserSessions'
+import React, { useState } from 'react';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
+import UserRoles from './UserRoles';
+import UserLists from './UserLists';
+import { UserSessions } from './UserSessions';
 
 const components = {
     0: <UserRoles />,

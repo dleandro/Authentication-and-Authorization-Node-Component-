@@ -17,7 +17,7 @@ export default function App() {
 
     const ctx = useContext(UserContext);
     const [state, setState] = useState(ctx.user);
-    useEffect(() => setState(ctx.user));
+    useEffect(() => setState(ctx.user),[ctx.user]);
 
     return (
         <Router>

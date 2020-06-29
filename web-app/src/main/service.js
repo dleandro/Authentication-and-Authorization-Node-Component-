@@ -1,4 +1,4 @@
-var { users_lists,sessions, users, roles, permissions, users_history, users_roles, lists, roles_permissions, configs, protocols, userRoles } = require('./common/links').webApiLinks;
+var { users_lists,sessions, users, roles, permissions,  users_roles, lists, roles_permissions, protocols} = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
 function produceInit(body, met) {
@@ -9,7 +9,7 @@ function handleResponse(resp) {
     if (resp.ok) {
         return resp.json();
     }
-    if (resp.status == 401) {
+    if (resp.status === 401) {
         return createErrObj("Unauthorized:The current user cannot access this resource", 401)
     }
     throw new Error('Network response was not ok');
@@ -61,7 +61,7 @@ export function userService(optionalPort) {
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
         getUserRoles: async (id) => getRequest(users.ROLES_PATH(id)),
-        addUser: async (arr) => makeRequest(users.USER_PATH, { username: arr[1], password: arr[2] }, 'POST'),
+        addUser: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
         deleteUser: async (arr) => {
             makeRequest(users.SPECIFIC_USER_PATH(arr[0]), {}, 'DELETE')

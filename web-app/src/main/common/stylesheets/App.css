@@ -14,7 +14,7 @@
 }
 
 .App-header {
-    background-color: #282c34;
+    background-color: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -54,8 +54,7 @@
 }
 
 .modal-content {
-    background-color: #34495e;
-    opacity: .95;
+    background-color: #D3D3D3;
 }
 
 .user-name {

@@ -14,7 +14,7 @@ const UserLogin = ({ app, setRedirect }) =>
 
         <div className="modal-dialog text-center" >
             <div className="col-sm-8 main-section" >
-                <div className="modal-content" style={{backgroundColor: '#D3D3D3',}}>
+                <div className="modal-content" >
                     <div className="col-12 user-img">
                         <img src="logo.png" alt={""} />
                     </div>

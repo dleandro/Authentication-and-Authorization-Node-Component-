@@ -19,7 +19,7 @@ export default function UserInfo() {
         <React.Fragment>
 
             <AppBar position="static">
-                <Tabs value={componentToBeShown} style={{backgroundColor: "#282c34"}} indicatorColor='primary'  onChange={(_, newValue) => {
+                <Tabs value={componentToBeShown} style={{backgroundColor: '#282c34'}} indicatorColor='primary'  onChange={(_, newValue) => {
                     setComponentToBeShown(newValue)}
                     } aria-label="user tabs">
                     <Tab label="Roles" />
@@ -31,8 +31,6 @@ export default function UserInfo() {
             {
                components[componentToBeShown]
             }
-
-       
         </React.Fragment>
     )
 }

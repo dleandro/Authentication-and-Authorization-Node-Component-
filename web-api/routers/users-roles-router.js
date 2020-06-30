@@ -42,7 +42,7 @@ module.exports = function (apiUtils, authization) {
 
     function addUsersRoles(req, res) {
         userRoles.create(req.body.user, req.body.role, req.body.start_date, req.body.end_date, req.body.updater, req.body.active)
-            .then(answer => apiUtils.setResponse(res, answer, 201))
+            .then(answer => apiUtils.setResponse(res, answer.dataValues, 201))
             .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
     }
 

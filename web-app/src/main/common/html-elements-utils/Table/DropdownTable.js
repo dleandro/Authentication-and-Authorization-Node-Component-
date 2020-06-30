@@ -15,6 +15,7 @@ import {permissionService} from "../../../service"
  * @constructor
  */
 export default function DropdownTable({ labels,dropdown, rows, editRequest, addRequest, deleteRequest, redirectPage }) {
+    const [newRows,setNewRows]=useState(rows)
 
     const renderRows = (rows) => {
         var tRows = rows.map(rowCells => {
@@ -23,6 +24,11 @@ export default function DropdownTable({ labels,dropdown, rows, editRequest, addR
         return tRows
     }
 
+    useEffect(
+        ()=>{
+            setNewRows(rows)
+        }
+    ,[rows])
 
 
     return (
@@ -33,7 +39,7 @@ export default function DropdownTable({ labels,dropdown, rows, editRequest, addR
                 </tr>
             </thead>
             <tbody>
-                {renderRows(rows)}
+                {renderRows(newRows)}
                 <td>
                 </td>
                 <td>

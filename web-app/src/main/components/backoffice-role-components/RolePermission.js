@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { rolesService, rolePermissionService,permissionService } from "../../service";
 import UserContext from '../../UserContext'
 import { useParams } from 'react-router-dom';
-import DropdonwTable from "../../common/html-elements-utils/Table/DropdownTable"
+import DropdownTable from "../../common/html-elements-utils/Table/DropdownTable"
 
 
 export default function RolePermission() {
@@ -16,8 +16,8 @@ export default function RolePermission() {
     const addRolePermission = async (e) => {
 
         const rolePermissionsJoined =  await rolePermissionService().addRolePermission(id, e.target.value.split(" ")[0], e.target.value.split(" ")[1], e.target.value.split(" ")[2])
-
-        setRolePermissions([...rolePermissions, { "Permissions.id": rolePermissionsJoined.permissionId, "Permissions.action": rolePermissionsJoined.action, "Permissions.resource": rolePermissionsJoined.resource }])
+        const permission=await permissionService().getPermission(rolePermissionsJoined.PermissionId)
+        setRolePermissions([...rolePermissions, { "Permissions.id": rolePermissionsJoined.PermissionId, "Permissions.action": permission.action, "Permissions.resource": permission.resource }])
     }
     const editRole = (arr) => this.service.editRole(arr)
     const deleteRole = (arr) => this.service.deleteRole(arr[0])
@@ -47,7 +47,7 @@ export default function RolePermission() {
         <React.Fragment>
             {
                 error ? <p>{error.status} {error.err}</p> :
-                    <DropdonwTable labels={permissionLabels}
+                    <DropdownTable labels={permissionLabels}
                         addRequest={addRolePermission} editRequest={editRole} deleteRequest={deleteRole}
                         dropdown={permissions.map(permission=>
                             <option value={`${permission.id} ${permission.action} ${permission.resource}`}>{permission.action} {permission.resource}</option>)} redirectPage="permissions" rows={rolePermissions.map(permission => [permission["Permissions.id"], permission["Permissions.action"], permission["Permissions.resource"]])} />

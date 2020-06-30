@@ -8,12 +8,21 @@ import DropDownTable from "../../common/html-elements-utils/Table/DropdownTable"
 
 export default function UserRoles() {
     let {id}=useParams()
-    const userRoleLabels = ["User id", "username"]
+    const userRoleLabels = ["User id", "username","Start date","End Date","Updater"]
     const [users, setUsers] = useState([])
     const [dropdown, setDropdown] = useState([])
     const [error, setError] = useState(undefined)
     const ctx = useContext(UserContext)
-    const addUser = (e) => userRoleService().addUserRole(e.target.value.split(" ")[0],id,ctx.user.id)
+    const addUser = async (e) =>{
+        const userRolesJoined=await userRoleService().addUserRole(e.target.value.split(" ")[0],id,ctx.user.id)
+        setUsers([...users,{"Users.id":userRolesJoined.UserId,
+        "Users.username":(await userService().getUserById(userRolesJoined.UserId)).username,
+        "Users.UserRoles.start_date":userRolesJoined.start_date,
+        "Users.UserRoles.end_date":userRolesJoined.end_date,
+        "Users.UserRoles.updater":userRolesJoined.updater
+
+    }])
+    }
     const editRole = (arr) => this.service.editRole(arr)
     const deleteRole = (arr) => this.service.deleteRole(arr[0])
 

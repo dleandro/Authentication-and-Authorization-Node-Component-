@@ -39,6 +39,21 @@ module.exports = {
             }
         }
         return next(errors.Unauthorized)
+    },
+
+    getUserPermissions: async(req,resp,next) => {
+        const user=req.user
+        const permissions=[]
+        var roles=[]
+
+        if(user){
+            roles= await usersDal.getUserRoles(user.id)
+            roles=roles.map(role=>role["Roles.role"])
+        }
+            roles.push("guest")
+
+        roles.map(role=>permissions.push(config.rbac.getScope(role)))
+        return permissions
     }
 
 }

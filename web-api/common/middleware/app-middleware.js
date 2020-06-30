@@ -41,12 +41,12 @@ module.exports = async function (app) {
             { "resource": "roles", "action": "POST" },
             { "resource": "roles", "action": "PUT" },
             { "resource": "roles", "action": "DELETE" },
-            { "resource": "users", "action": "GET" },
+            //{ "resource": "users", "action": "GET" },
             { "resource": "users", "action": "POST" },
             { "resource": "users", "action": "PUT" },
             { "resource": "users", "action": "DELETE" },
             { "resource": "sessions", "action": "GET" },
-            { "resource": "sessions", "action": "POST" },
+          /*  { "resource": "sessions", "action": "POST" },
             { "resource": "sessions", "action": "PUT" },
             { "resource": "sessions", "action": "DELETE" },
             { "resource": "lists", "action": "GET" },
@@ -60,7 +60,7 @@ module.exports = async function (app) {
             { "resource": "users-roles", "action": "GET" },
             { "resource": "users-roles", "action": "POST" },
             { "resource": "users-roles", "action": "PUT" },
-            { "resource": "users-roles", "action": "DELETE" },
+            { "resource": "users-roles", "action": "DELETE" },*/
             { "resource": "authentications", "action": "GET" },
             { "resource": "authentications", "action": "POST" },
             { "resource": "authentications", "action": "PUT" },
@@ -68,14 +68,6 @@ module.exports = async function (app) {
             ],
         "grants": {
              "DbManager": [
-                 { "resource": "roles", "action": "DELETE" },
-                 { "resource": "roles", "action": "PUT" },
-                 { "resource": "permissions", "action": "POST" },
-                 { "resource": "permissions", "action": "DELETE" },
-                 { "resource": "permissions", "action": "PUT" },
-                 { "resource": "users", "action": "GET" }, 
-                 { "resource": "roles", "action": "GET" },
-                 { "resource": "users", "action": "PUT" },
                  { "resource": "users", "action": "DELETE" }
                 ],
                 "guest":[

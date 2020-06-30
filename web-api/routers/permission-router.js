@@ -14,7 +14,7 @@ module.exports = function (apiUtils, authization) {
             throw errors.errorExecutingQuery
         })
         .then(data => {
-            if (Array.isArray(data)){
+        if (Array.isArray(data)){
                 if (data.length) {
                     return apiUtils.setResponse(res, data, 200)
                 }

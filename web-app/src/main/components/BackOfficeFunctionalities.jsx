@@ -1,4 +1,4 @@
-import {listService, permissionService, rolesService, userService} from '../service'
+import {listService, permissionService, rolesService, userRoleService, userService} from '../service'
 import React, {useEffect, useState, useContext, Component} from 'react';
 import CustomTable from "../common/html-elements-utils/Table/CustomTable";
 import Table from "react-bootstrap/Table";
@@ -10,6 +10,8 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import UserContext from "../UserContext";
+import DropDownTable from "../common/html-elements-utils/Table/DropdownTable";
 
 function UserModal({submitListener,labels,child}){
     const [showModal,setModal] = useState(false);
@@ -46,226 +48,146 @@ function UserModal({submitListener,labels,child}){
     </React.Fragment>);
 }
 
-//remover li pa verde ficar com mesmo tamanho que o input
 function UpdatableInput({initialValue,submitListener}){
     const [value,setValue] = useState(initialValue);
-
+    useEffect(()=>{setValue(initialValue)},[initialValue])
     return(<InputGroup className="mb-3">
         <FormControl placeholder={value} onChange={e=>setValue(e.target.value)}/>
         <InputGroup.Append>
 
             <OverlayTrigger overlay={<Tooltip id="edit">Edit!</Tooltip>}>
-                <li className="list-inline-item">
-                    <button className="btn btn-outline-success btn-sm rounded-0" type="button" onClick={e=>submitListener(value)} ><i className="fa fa-edit"/></button>
-                </li>
+                <button className="btn btn-outline-success btn-sm rounded-0" type="button" onClick={e=>submitListener(value)} ><i className="fa fa-edit"/></button>
             </OverlayTrigger>
-            <Button variant="outline-secondary" onClick={e=>submitListener(value)}>Submit</Button>
         </InputGroup.Append>
     </InputGroup>);
 }
 
-export function UserRoles({id}) {
+export function UserRoles() {
+    const {id}=useParams();
+    const fetchData = ()=> userService().getUserRoles(id);
+    const labels = ['Role id', 'role', 'Start Date', 'End Date', 'Updater'];
+    const postUserRole = (roleId,updater)=>userRoleService().addUserRole(id,roleId,updater)
+    const removeRoleFromUser = (roleId) => console.log('Remove Role from user still needs service')
 
-    const userRoleLabels = ['Role id', 'role', 'Start Date', 'End Date', 'Updater'];
-    const [userRoles, setRoles] = useState([]);
-    const [error,setError]=useState(undefined);
-    const userRolesToArray= userRole => [userRole['Roles.id'], userRole['Roles.role'], userRole['Roles.UserRoles.start_date'],
-        userRole['Roles.UserRoles.end_date'], userRole['Roles.UserRoles.updater']];
-
-    useEffect(() => {
-        userService().getUserRoles(id)
-            .then(data=>{
-                if('err' in data){
-                    console.error(data.err);
-                    setError(data);
-                }else{
-                    setRoles(data);
-                }
-            });
-    }, [id]);
-
+    const userRoleToLine = userRole=> <React.Fragment>
+        <td><Link to={`/roles/${userRole['Roles.id']}`}>{`Details of Role: ${userRole['Roles.id']}`}</Link></td>
+        <td >{userRole['Roles.role']}</td>
+        <td >{userRole['Roles.UserRoles.start_date']}</td>
+        <td><UpdatableInput initialValue={userRole['Roles.UserRoles.end_date']} submitListener={val =>console.log('Service of edit endDate still notdone value:',val)}/></td>
+        <td>{userRole['Roles.UserRoles.updater']}</td>
+    </React.Fragment>;
     return (
-        <UserModal child={<React.Fragment>
-            {error?<p>{error.status} {error.err}</p>: <CustomTable labels={userRoleLabels} rows={userRoles.map(userRolesToArray)} />}
-        </React.Fragment>} />
+        <React.Fragment>
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeRoleFromUser} postNewDataCB={(arr)=>postUserRole(arr[0],arr[1])}
+                                  postNewDataFieldLabels={['Id of Role to be assign','Updater']} tableLabels={labels} valueToLineCB={userRoleToLine} />
+        </React.Fragment>
     );
 }
-
-
 
 export function Users(props){
     const labels = ['Id', 'Username', 'Password'];
-    const service = userService();
-    const [users, setUsers] = useState([]);
-    const [error,setError] = useState(undefined);
-    const addUser = (arr) =>  service.addUser(arr).then(data=>setUsers([...users,data]));
-    const removeUser = id => service.deleteUser([id]).then(data=>setUsers(users.filter(item => item.id !== id)));
-    useEffect(()=>{
-        service.getUsers().then(data=>'err' in data?setError(data):setUsers(data));
-    },[]);
-    useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
-    const userToLine = user=> <tr>
+    const {getUsers,addUser,deleteUser,editUsername,} = userService();
+    const postUser = (arr) =>  addUser(arr)
+    const removeUser = user => deleteUser([user.id]);
+    const userToLine = user=> <React.Fragment>
         <td><Link to={`/users/${user.id}`}>{`Details of User: ${user.id}`}</Link></td>
-        <td><UpdatableInput initialValue={user.username} submitListener={val =>service.editUsername([user.id,val])}/></td>
-        <td><input className="form-control border-0 text-white bg-transparent" type="text" value={'****'}/></td>
-        <td><UserRoles id={user.id} /> </td>
-        <td>
-            <OverlayTrigger overlay={<Tooltip id="delete">Delete!</Tooltip>}>
-                <li className="list-inline-item">
-                    <button className="btn btn-outline-danger btn-sm rounded-0" type="button" onClick={()=>removeUser(user.id)}><i className="fa fa-trash"/></button>
-                </li>
-            </OverlayTrigger>
-        </td>
-    </tr>;
-
+        <td><UpdatableInput initialValue={user.username} submitListener={val =>editUsername([user.id,val])}/></td>
+        <td>{'****'}</td>
+    </React.Fragment>;
 
     return (
-        <React.Fragment>
-            {error?<p>{error.status} {error.err}</p>:
-
-                <Table striped bordered hover variant="dark">
-                    <thead>
-                    <tr>
-                        {labels.map(label => <th>{label}</th>)}
-                        <th>
-                            <UserModal submitListener={addUser} labels={['New Username','New Password']}/>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {users.map(userToLine)}
-                    </tbody>
-                </Table>
-            }
-        </React.Fragment>
+        <GenericFunctionality fetchCB={getUsers} deleteDataCB={removeUser} postNewDataCB={postUser}
+                              postNewDataFieldLabels={['New Username','New Password']} tableLabels={labels} valueToLineCB={userToLine} />
     );
 }
-
-
 
 export function Lists(props){
     const labels = ["Id", "List"];
-    const service = listService();
-    const [lists, setLists] = useState([]);
-    const [error,setError] = useState(undefined);
-    useEffect(()=>{
-        service.getLists().then(data=>'err' in data?setError(data):setLists(data));
-    },[]);
-    useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
+    const {getLists,addList,editList,deleteList} = listService();
 
-    const addList = (arr) => service.addList(['',arr[0]]).then(data=>setLists([...lists,data]));
-    const removeList = (id) => service.deleteList(id).then(data=>setLists(lists.filter(item=>item.id !== id)));
+    const postList = (arr) => addList(['',arr[0]]);
+    const removeList = (list) => deleteList(list.id);
 
-    const listsToLine=(list)=> <tr>
+    const listsToLine=(list)=> <React.Fragment>
         <td><Link to={`/lists/${list.id}`}>{`Details of List: ${list.id}`}</Link></td>
-        <td><UpdatableInput initialValue={list.list} submitListener={val =>service.editList([list.id,val])}/></td>
-        <td>
-            <OverlayTrigger overlay={<Tooltip id="delete">Delete!</Tooltip>}>
-                <li className="list-inline-item">
-                    <button className="btn btn-outline-danger btn-sm rounded-0" type="button" onClick={()=>removeList(list.id)}><i className="fa fa-trash"/></button>
-                </li>
-            </OverlayTrigger>
-        </td>
-    </tr>;
+        <td><UpdatableInput initialValue={list.list} submitListener={val =>editList([list.id,val])}/></td>
+    </React.Fragment>;
 
     return (
-        <React.Fragment>
-            {error?<p>{error.status} {error.err}</p>:
-
-                <Table striped bordered hover variant="dark">
-                    <thead>
-                    <tr>
-                        {labels.map(label => <th>{label}</th>)}
-                        <th>
-                            <UserModal submitListener={addList} labels={['New List']}/>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {lists.map(listsToLine)}
-                    </tbody>
-                </Table>
-            }
-        </React.Fragment>
+        <GenericFunctionality fetchCB={getLists} deleteDataCB={removeList} postNewDataCB={postList}
+                              postNewDataFieldLabels={['New List']} valueToLineCB={listsToLine} tableLabels={labels} />
     );
 }
 
-
-
-export function Roles(props){
-    const labels = ["Id", "Role", "Parent Role"];
-    const service = rolesService();
-    const [roles, setRoles] = useState([]);
-    const [error,setError] = useState(undefined);
-    useEffect(()=>{
-        service.getRoles().then(data=>'err' in data?setError(data):setRoles(data));
-    },[]);
-    useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
-    const addRole = async (arr) => service.addRole(['',arr[0],arr[1]]).then(data=>setRoles([...roles,data]));
-    const deleteRole = (id) => service.deleteRole(id).then(data=>setRoles(roles.filter(item=>item.id !== id)));
-
-
-    const rolesToLine=(role)=> <tr>
-        <td><Link to={`/roles/${role.id}`}>{`Details of Role: ${role.id}`}</Link></td>
-        <td><UpdatableInput initialValue={role.role} submitListener={val =>service.editRole([role.id,val,role.parent_role])}/></td>
-        <td><UpdatableInput initialValue={role.parent_role == null ? 'null' : role.parent_role} submitListener={val =>service.editRole([role.id,role.role,val])}/></td>
-        <td>
-            <OverlayTrigger overlay={<Tooltip id="delete">Delete!</Tooltip>}>
-                <li className="list-inline-item">
-                    <button className="btn btn-outline-danger btn-sm rounded-0" type="button" onClick={()=>deleteRole(role.id)}><i className="fa fa-trash"/></button>
-                </li>
-            </OverlayTrigger>
-        </td>
-    </tr>;
-
-    return (
-        <React.Fragment>
-            {error?<p>{error.status} {error.err}</p>:
-
-                <Table striped bordered hover variant="dark">
-                    <thead>
-                    <tr>
-                        {labels.map(label => <th>{label}</th>)}
-                        <th>
-                            <UserModal submitListener={addRole} labels={['New Role','Parent Role']}/>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {roles.map(rolesToLine)}
-                    </tbody>
-                </Table>
-            }
-        </React.Fragment>
-    );
-}
 
 export function Permissions(props){
     const labels = ["Id", "Action", "Resource"];
-    const service = permissionService();
-    const [permissions, setPermissions] = useState([]);
+    const {getPermissions,addPermission,deletePermission,editPermission} = permissionService();
+    const postPermission = (arr) => addPermission(['',arr[0],arr[1]]);
+    const deletePermissionCB = (perm) => deletePermission([perm.id]);
+    const permissionToLine=(permission)=> <React.Fragment>
+        <td><Link to={`/permissions/${permission.id}`}>{`Details of Permission: ${permission.id}`}</Link></td>
+        <td><UpdatableInput initialValue={permission.action} submitListener={val =>editPermission([permission.id,val,permission.resource])}/></td>
+        <td><UpdatableInput initialValue={permission.resource} submitListener={val =>editPermission([permission.id,permission.action,val])}/></td>
+    </React.Fragment>;
+
+    return (
+        <GenericFunctionality fetchCB={getPermissions} postNewDataCB={postPermission}
+                              postNewDataFieldLabels={['New Action','New Resource']} deleteDataCB={deletePermissionCB}
+                              tableLabels={labels} valueToLineCB={permissionToLine} />
+    );
+}
+export function Roles(props){
+    const labels = ["Id", "Role", "Parent Role"];
+    const {getRoles,addRole,deleteRole,editRole} = rolesService();
+    const postRole = (arr) => addRole(['',arr[0],arr[1]]);
+    const deleteRoleCB = (role) => deleteRole(role.id);
+    const rolesToLine=(role)=> <React.Fragment>
+        <td><Link to={`/roles/${role.id}`}>{`Details of Role: ${role.id}`}</Link></td>
+        <td><UpdatableInput initialValue={role.role} submitListener={val =>editRole([role.id,val,role.parent_role])}/></td>
+        <td><UpdatableInput initialValue={role.parent_role == null ? 'null' : role.parent_role} submitListener={val =>editRole([role.id,role.role,val])}/></td>
+    </React.Fragment>;
+
+    return (
+        <GenericFunctionality fetchCB={getRoles} deleteDataCB={deleteRoleCB} postNewDataCB={postRole}
+                              postNewDataFieldLabels={['New Role','Parent Role']} valueToLineCB={rolesToLine} tableLabels={labels} />
+    );
+}
+
+/**
+ * if you're changing something here that's probably wrong
+ * @param fetchCB -should contain an err atribute if an error occured
+ * @param postNewDataCB -should return an object completion equal to the returned in fetchCB and should receive an array
+ * @param postNewDataFieldLabels -labels that describe the array values of the postNewDataCB
+ * @param valueToLineCB -should convert one of the objects returned by fetchCB into a table line
+ * @param tableLabels -main table headers
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function GenericFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,deleteDataCB,valueToLineCB,tableLabels}){
+    const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
     useEffect(()=>{
-        service.getPermissions().then(data=>'err' in data?setError(data):setPermissions(data));
+        fetchCB().then(data=>'err' in data?setError(data):setValues(data));
     },[]);
     useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
-    const addPermission = async (arr) => service.addPermission(['',arr[0],arr[1]]).then(data=>setPermissions([...permissions,data]));
-    const deletePermission = (id) => service.deletePermission([id]).then(data=>setPermissions(permissions.filter(item=>item.id !== id)));
 
+    const deleteValue = (val) => deleteDataCB(val).then(()=>{
+        let newValues = [...values].filter(item=>item.id !==val.id);
+        setValues(newValues);
+    });
 
-    const permissionToLine=(permission)=> <tr>
-        <td><Link to={`/permissions/${permission.id}`}>{`Details of Permission: ${permission.id}`}</Link></td>
-        <td><UpdatableInput initialValue={permission.action} submitListener={val =>service.editPermission([permission.id,val,permission.resource])}/></td>
-        <td><UpdatableInput initialValue={permission.resource} submitListener={val =>service.editPermission([permission.id,permission.action,val])}/></td>
+    const valueToLine = (val) => <tr>
+        {valueToLineCB(val)}
         <td>
             <OverlayTrigger overlay={<Tooltip id="delete">Delete!</Tooltip>}>
                 <li className="list-inline-item">
-                    <button className="btn btn-outline-danger btn-sm rounded-0" type="button" onClick={()=>deletePermission(permission.id)}><i className="fa fa-trash"/></button>
+                    <button className="btn btn-outline-danger btn-sm rounded-0" type="button"
+                            onClick={()=>deleteValue(val)}><i className="fa fa-trash"/></button>
                 </li>
             </OverlayTrigger>
         </td>
     </tr>;
-
     return (
         <React.Fragment>
             {error?<p>{error.status} {error.err}</p>:
@@ -273,20 +195,21 @@ export function Permissions(props){
                 <Table striped bordered hover variant="dark">
                     <thead>
                     <tr>
-                        {labels.map(label => <th>{label}</th>)}
+                        {tableLabels.map(label => <th>{label}</th>)}
                         <th>
-                            <UserModal submitListener={addPermission} labels={['New Action','New Resource']}/>
+                            <UserModal submitListener={(arr)=>postNewDataCB(arr).then(d=>setValues([...values,d]))} labels={postNewDataFieldLabels}/>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    {permissions.map(permissionToLine)}
+                    {values.map(valueToLine)}
                     </tbody>
                 </Table>
             }
         </React.Fragment>
     );
 }
+
 
 
 export default UserModal

@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
-import UserRoles from './UserRoles';
+//import UserRoles from './UserRoles';
+import {UserRoles} from "../BackOfficeFunctionalities";
 import UserLists from './UserLists';
 import { UserSessions } from './UserSessions';
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import {userService} from "../../service";
 
 const components = {
     0: <UserRoles />,
     1: <UserSessions/>,
-    2: <UserLists />
-}
+    2: <UserLists />,
+};
+const labels = ['Roles','Sessions','Roles'];
 
 export default function UserInfo() {
-    const [componentToBeShown, setComponentToBeShown] = useState(0)
-
-    
+    const [componentToBeShown, setComponentToBeShown] = useState(0);
+    const [otherUsers,setUsers] = useState(['']);
+    useEffect(()=>{userService().getUsers().then(users=>setUsers(users.map(user=>user.id)));},[]);
     return (
-
         <React.Fragment>
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand>User Info</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx)}>{comp}</Nav.Link>)}
 
-            <AppBar position="static">
-                <Tabs value={componentToBeShown} style={{backgroundColor: '#282c34'}} indicatorColor='primary'  onChange={(_, newValue) => {
-                    setComponentToBeShown(newValue)}
-                    } aria-label="user tabs">
-                    <Tab label="Roles" />
-                    <Tab label="Sessions" />
-                    <Tab label="Lists" />
-                </Tabs>
-            </AppBar>
-
-            {
-               components[componentToBeShown]
-            }
+                    </Nav>
+                    <Nav>
+                        <NavDropdown title="Change User" id="collasible-nav-dropdown">
+                            <NavDropdown.Item href={'/backoffice'}>Home</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            {otherUsers.map(userId=><NavDropdown.Item href={`/users/${userId}`}>{`View user: ${userId}`}</NavDropdown.Item>)}
+                        </NavDropdown>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+            {components[componentToBeShown]}
         </React.Fragment>
+
     )
 }

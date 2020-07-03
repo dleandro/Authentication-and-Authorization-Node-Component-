@@ -19,6 +19,7 @@ export default function UserRoles() {
                     console.error(data.err);
                     setError(data);
                 }else{
+                    console.log(data)
                     setRoles(data);
                 }
             });

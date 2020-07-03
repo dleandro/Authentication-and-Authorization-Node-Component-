@@ -23,7 +23,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-    authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
+    authenticationRouter.post('/local',authenticate.usingLocal, successCallback)
 
     authenticationRouter.post('/logout', authenticate.logout, successCallback)
 

@@ -1,42 +1,31 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { sessionService } from "../../service";
-import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
-import UserContext from '../../UserContext'
+import React, { useEffect, useState, useContext } from 'react';
+import { sessionService } from '../../service';
+import CustomTable from '../../common/html-elements-utils/Table/CustomTable';
+import UserContext from '../../UserContext';
 
 
 export const UserSessions = () => {
 
-    const sessionLabel = ["User id","Session Id","Expires"]
-    const [sessions, setSessions] = useState([])
-    const [error, setError] = useState(undefined)
-    const ctx = useContext(UserContext)
-    const id=ctx.user.id
+    const sessionLabel = ['User id','Session Id','Expires'];
+    const [sessions, setSessions] = useState([]);
+    const [error, setError] = useState(undefined);
+    const ctx = useContext(UserContext);
+    const id=ctx.user.id;
     useEffect(() => {
-
-
-        const setState = async () =>{ 
-            const data=await sessionService().getSession(id)
-            if("err" in data){
-                console.log(data.err)
-                setError(data)
+        sessionService().getSession(id).then(data=>{
+            if('err' in data){
+                console.error(data.err);
+                setError(data);
+            }else{
+                setSessions(data);
             }
-            else{
-            setSessions(data)
-            }
-        }
-
-        setState()
-    }, [])
+        });
+    }, [id]);
     return (
-
         <React.Fragment>
-            {
-                error?<p>{error.status} {error.err}</p>:
-                <CustomTable labels={sessionLabel} redirectPage="users" rows={sessions.map(session => [session.UserId, session.sid,session.expires])} />
-
-            }
-            
+            {error?<p>{error.status} {error.err}</p>:
+                <CustomTable labels={sessionLabel} redirectPage="users" rows={sessions.map(session => [session.UserId, session.sid,session.expires])} />}
         </React.Fragment>
-    )
-}
+    );
+};
 

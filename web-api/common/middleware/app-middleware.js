@@ -75,20 +75,11 @@ module.exports = async function (app) {
                     { "resource": "authentications", "action": "GET" },
                     { "resource": "authentications", "action": "POST" },
                     { "resource": "users", "action": "POST" }
-                ]
-           /*     "admin": [
+                ],
+               "admin": [
                     { "role": "DbManager" },
-                    { "role": "guest" },
-                    { "resource": "roles-permissions", "action": "POST" },
-                    { "resource": "roles-permissions", "action": "GET" },
-                    { "resource": "permissions", "action": "GET" },
-                    { "resource": "lists", "action": "GET" },
-                    { "resource": "users-roles", "action": "POST" },
-                    { "resource": "protocols", "action": "POST" },
-                    { "resource": "protocols", "action": "PUT" },
-                    { "resource": "sessions", "action": "GET" },
-                    { "resource": "users-lists", "action": "POST" },
-                ]*/
+                    
+                ]
             }
     }
 

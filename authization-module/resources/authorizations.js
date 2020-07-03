@@ -43,7 +43,7 @@ module.exports = {
 
     getUserPermissions: async(req,resp,next) => {
         const user=req.user
-        const permissions=[]
+        let permissions=[]
         var roles=[]
 
         if(user){
@@ -52,7 +52,8 @@ module.exports = {
         }
             roles.push("guest")
 
-        roles.map(role=>permissions.push(config.rbac.getScope(role)))
+        await Promise.all(roles.map( async role=>permissions.push( await config.rbac.getScope(role))))
+        permissions=permissions.flat()
         return permissions
     }
 

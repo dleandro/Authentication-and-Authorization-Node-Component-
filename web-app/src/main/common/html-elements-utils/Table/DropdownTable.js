@@ -1,8 +1,7 @@
-import React, { useState,useEffect } from 'react'
-import Select from '@material-ui/core/Select'
-import Table from "react-bootstrap/Table";
-import TableRow from "./TableRow";
-import {permissionService} from "../../../service"
+import Select from '@material-ui/core/Select';
+import Table from 'react-bootstrap/Table';
+import TableRow from './TableRow';
+import React, { useState, useEffect } from 'react';
 
 /**
  * This represents a table responsible to handle and change data
@@ -30,7 +29,6 @@ export default function DropdownTable({ labels,dropdown, rows, editRequest, addR
         }
     ,[rows])
 
-
     return (
         <Table striped bordered hover variant="dark">
             <thead>
@@ -43,14 +41,9 @@ export default function DropdownTable({ labels,dropdown, rows, editRequest, addR
                 <td>
                 </td>
                 <td>
-                    <Select style={{color:"white"}} onChange={addRequest}>
-                        {
-                            dropdown
-                        }
-
-                    </Select>
+                    <Select style={{color:'white'}} onChange={addRequest}>{dropdown}</Select>
                 </td>
             </tbody>
         </Table>
-    )
+    );
 }

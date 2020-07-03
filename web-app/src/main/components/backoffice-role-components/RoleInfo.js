@@ -1,21 +1,18 @@
-import React, { useEffect, useContext, useState } from 'react'
-import { Redirect, Route, useParams } from 'react-router-dom'
-import { Button, Dropdown } from "react-bootstrap";
-import { userRoleService, rol } from "../../service";
+import React, { useState } from 'react';
+import {  useParams } from 'react-router-dom';
+import { userRoleService } from '../../service';
 import UserRoles from './UserRoles';
-import RolePermission from './RolePermission'
-import { AppBar, Tabs, Tab } from '@material-ui/core';
+import RolePermission from './RolePermission';
+import { Tabs, Tab } from '@material-ui/core';
 
 
 const components = {
     0: <RolePermission/>,
-    1:<UserRoles/>
-}
+    1:<UserRoles/>,
+};
 
 export default function RoleInfo() {
-    const [componentToBeShown, setComponentToBeShown] = useState(0)
-    const service = userRoleService()
-    let { id } = useParams();
+    const [componentToBeShown, setComponentToBeShown] = useState(0);
 
     return (
 

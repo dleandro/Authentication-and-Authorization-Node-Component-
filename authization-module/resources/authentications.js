@@ -3,6 +3,7 @@
 const passport = require('passport')
 const passportUtils = require('../common/util/passport-utils')
 const config = require('../common/config/config')
+const authorization=require('./authorizations')
 
 /*
 function authCallback(err, user, info) {
@@ -24,12 +25,15 @@ module.exports = {
     usingLocal: (req, res, next) => {
         passport.authenticate('local', { failWithError: true }, function (err, user) {
             if (!err && user) {
-                req.logIn(user, function (error) {
+                req.logIn(user, async function (error) {
                     if (error) { return next(error); }
+                    //await authorization.getUserPermissions(req,res,next))
+                    return next()
                 })
-                return next()
             }
+            else{
             next(err)
+            }
         })(req, res, next)
 
     },
@@ -56,6 +60,7 @@ module.exports = {
             }
             req.logIn(user, function (error) {
                 if (error) { return next(error); }
+                return 
             })
             return next();
         })(req, res, next)

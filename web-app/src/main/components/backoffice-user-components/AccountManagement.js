@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AppBar, Tabs, Tab } from '@material-ui/core'
 import { Account } from './Account'
-import {UserSessions}  from './UserSessions'
+import {UserSessions} from '../BackOfficeFunctionalities'
 
 export const AccountManagement = () => {
 
@@ -9,7 +9,7 @@ export const AccountManagement = () => {
 
     const components = {
         0: <Account />,
-        1: <UserSessions />
+        1: <UserSessions />,
     }
 
     return (

@@ -1,9 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-//import UserRoles from './UserRoles';
-import {UserRoles} from "../BackOfficeFunctionalities";
-import UserLists from './UserLists';
-import { UserSessions } from './UserSessions';
+import {UserRoles,UserSessions,UserLists} from "../BackOfficeFunctionalities";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -14,7 +10,7 @@ const components = {
     1: <UserSessions/>,
     2: <UserLists />,
 };
-const labels = ['Roles','Sessions','Roles'];
+const labels = ['Roles','Sessions','Lists'];
 
 export default function UserInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0);

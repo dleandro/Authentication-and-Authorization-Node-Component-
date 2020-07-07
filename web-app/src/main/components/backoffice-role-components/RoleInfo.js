@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import {  useParams } from 'react-router-dom';
-import { userRoleService } from '../../service';
-import UserRoles from './UserRoles';
-import RolePermission from './RolePermission';
+import {RolePermission,RoleUsers} from  '../BackOfficeFunctionalities';
 import { Tabs, Tab } from '@material-ui/core';
 
 
 const components = {
     0: <RolePermission/>,
-    1:<UserRoles/>,
+    1:<RoleUsers/>,
 };
 
 export default function RoleInfo() {

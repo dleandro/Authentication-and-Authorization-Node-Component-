@@ -1,4 +1,12 @@
-import {listService, permissionService, rolesService, userRoleService, userService} from '../service'
+import {
+    listService,
+    permissionService,
+    rolesService,
+    sessionService,
+    userListService,
+    userRoleService,
+    userService
+} from '../service'
 import React, {useEffect, useState, useContext, Component} from 'react';
 import CustomTable from "../common/html-elements-utils/Table/CustomTable";
 import Table from "react-bootstrap/Table";
@@ -61,6 +69,50 @@ function UpdatableInput({initialValue,submitListener}){
         </InputGroup.Append>
     </InputGroup>);
 }
+//TODO: refactor this component to use Modal
+export function RoleUsers() {
+    let {id}=useParams()
+    const userRoleLabels = ["User id", "username"]
+    const [users, setUsers] = useState([])
+    const [dropdown, setDropdown] = useState([])
+    const [error, setError] = useState(undefined)
+    const ctx = useContext(UserContext)
+    const addUser = (e) => userRoleService().addUserRole(e.target.value.split(" ")[0],id,ctx.user.id)
+    const editRole = (arr) => this.service.editRole(arr)
+    const deleteRole = (arr) => this.service.deleteRole(arr[0])
+
+    useEffect(() => {
+
+        const setState = async () => {
+            setDropdown(await userService().getUsers())
+            const data=await rolesService().getUsersWithThisRole(id)
+            if("err" in data){
+                console.log(data.err)
+                setError(data)
+            }
+            else{
+                setUsers(data)
+            }
+        }
+
+        setState()
+
+    }, [])
+
+    return (
+
+        <React.Fragment>
+            {
+                error?<p>{error.status} {error.err}</p>:
+                    <DropDownTable labels={userRoleLabels}
+                                   addRequest={addUser} editRequest={editRole} deleteRequest={deleteRole}
+                                   dropdown={dropdown.map(user=>
+                                       <option value={`${user.id} ${user.username}`}>{user.id} {user.username}</option>)} redirectPage="users" rows={users.map(user => [user["Users.id"], user["Users.username"], user["Users.UserRoles.start_date"], user["Users.UserRoles.end_date"], user["Users.UserRoles.updater"]])} />
+            }
+
+        </React.Fragment>
+    )
+}
 
 export function UserRoles() {
     const {id}=useParams();
@@ -83,6 +135,114 @@ export function UserRoles() {
         </React.Fragment>
     );
 }
+
+export function UserLists() {
+
+    const labels = ['Id', 'Start Date', 'End Date', 'Updater'];
+    const ctx = useContext(UserContext);
+    const fetchData = ()=> listService().getUserActiveLists(ctx.user.id);
+
+
+    const listToLine=(list)=><React.Fragment>
+        <td><Link to={`/lists/${list.ListId}`}>{`Details of List: ${list.ListId}`}</Link></td>
+        <td>{list.start_date}</td>
+        <td><UpdatableInput initialValue={list.end_date} submitListener={val =>console.log('Service still in development but inserted value=',val)}/></td>
+        <td>{list.updater}</td>
+    </React.Fragment>;
+    return (
+        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
+    );
+}
+//TODO: refactor this component to use modal
+export function ListUsers() {
+
+    const listLabels = ["User Id", "Username", "Start Date", "End Date", "Updater"]
+    const [users, setUsers] = useState([])
+    const [error, setError] = useState(undefined)
+    const [dropdown, setDropdown] = useState([])
+    const ctx=useContext(UserContext)
+    const addUser = (e) => userListService().addUserList(id,e.target.value.split(" ")[0],ctx.user.id)
+    let {id}=useParams()
+
+    useEffect(() => {
+        const setState = async () =>{
+            setDropdown(await userService().getUsers())
+            const data=await listService().getUsersInThisList(id)
+            if("err" in data){
+                console.log(data.err)
+                setError(data)
+            }
+            else{
+                setUsers(data)
+            }
+        }
+
+        setState()
+
+    }, [])
+
+    return (
+
+        <React.Fragment>
+            { error?<p>{error.status} {error.err}</p>:
+                <DropDownTable addRequest={addUser} dropdown={dropdown.map(user=>
+                    <option value={`${user.id} ${user.username}`}>{user.id} {user.username}</option>)} labels={listLabels} rows={users.map(user => [user["Users.id"], user["Users.username"], user["Users.UserList.start_date"], user["Users.UserList.end_date"], user["Users.UserList.updater"]])} />
+            }
+        </React.Fragment>
+    )
+}
+export function RolePermission() {
+
+    const labels = ['Role id', 'role','Parent Role'];
+    const {id}=useParams();
+    const fetchData = ()=> permissionService().getRolesWithThisPermission(id);
+
+
+    const rolePermissionToLine = (rolePermission) => <React.Fragment>
+        <td><Link to={`/roles/${rolePermission['Roles.id']}`}>{`Details of Role: ${rolePermission['Roles.id']}`}</Link></td>
+        <td><UpdatableInput initialValue={rolePermission['Roles.role']}
+                            submitListener={val =>rolesService().editRole([rolePermission['Roles.id'],val,rolePermission['Roles.parent_role']])}/></td>
+        <td><UpdatableInput initialValue={rolePermission['Roles.parent_role']}
+                            submitListener={val =>rolesService().editRole([rolePermission['Roles.id'], rolePermission['Roles.role'],val])}/></td>
+    </React.Fragment>;
+
+    return (
+        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+    );
+}
+export function Sessions(){
+
+    const labels = ['User id','Session Id','Expires'];
+    const fetchData = ()=> sessionService().getSessions();
+
+    const sessionToLine = (session)=> <React.Fragment>
+        <td><Link to={`/users/${session.UserId}`}>{`Details of User: ${session.UserId}`}</Link></td>
+        <td>{session.sid}</td>
+        <td>{session.expires}</td>
+    </React.Fragment>;
+    return (
+        <React.Fragment>
+            <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={sessionToLine} />
+        </React.Fragment>
+    );
+}
+export function UserSessions(){
+
+    const labels = ['User id','Session Id','Expires'];
+    const ctx = useContext(UserContext);
+    const id=ctx.user.id;
+    const fetchData = ()=> sessionService().getSession(id);
+
+    const sessionToLine = (session)=> <React.Fragment>
+        <td>{session.UserId}</td>
+        <td>{session.sid}</td>
+        <td>{session.expires}</td>
+    </React.Fragment>;
+    return (
+        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={sessionToLine} />
+    );
+};
+
 
 export function Users(props){
     const labels = ['Id', 'Username', 'Password'];

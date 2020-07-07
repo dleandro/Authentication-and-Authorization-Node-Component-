@@ -28,8 +28,8 @@ const request = (url, init) => fetch(HOME_PATH ? HOME_PATH + url : url, init)
         console.error(`failed to fetch: ${init.method} ${HOME_PATH ? HOME_PATH + url : url}`); console.error(err); return [err]
     })
 
-const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'))
-const makeRequest = (url, body, met) => request(url, produceInit(body, met))
+const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
+const makeRequest = (url, body, met) => request(url, produceInit(body, met));
 
 
 /**

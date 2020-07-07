@@ -1,7 +1,7 @@
+import React from 'react';
 import Select from '@material-ui/core/Select';
 import Table from 'react-bootstrap/Table';
 import TableRow from './TableRow';
-import React, { useState, useEffect } from 'react';
 
 /**
  * This represents a table responsible to handle and change data
@@ -14,20 +14,8 @@ import React, { useState, useEffect } from 'react';
  * @constructor
  */
 export default function DropdownTable({ labels,dropdown, rows, editRequest, addRequest, deleteRequest, redirectPage }) {
-    const [newRows,setNewRows]=useState(rows)
 
-    const renderRows = (rows) => {
-        var tRows = rows.map(rowCells => {
-            return <TableRow redirectPage={redirectPage} editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells} />
-        })
-        return tRows
-    }
-
-    useEffect(
-        ()=>{
-            setNewRows(rows)
-        }
-    ,[rows])
+    const renderRows = rowArr => rowArr.map(rowCells => <TableRow redirectPage={redirectPage} editRequest={editRequest} deleteRequest={deleteRequest} cols={rowCells} />);
 
     return (
         <Table striped bordered hover variant="dark">
@@ -37,7 +25,7 @@ export default function DropdownTable({ labels,dropdown, rows, editRequest, addR
                 </tr>
             </thead>
             <tbody>
-                {renderRows(newRows)}
+                {renderRows(rows)}
                 <td>
                 </td>
                 <td>

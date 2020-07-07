@@ -1,13 +1,10 @@
 
 import React, { useEffect,useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { listService } from "../../service";
-import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-import Users from "./Users"
+import { Tabs, Tab } from '@material-ui/core';
+import {ListUsers} from "../BackOfficeFunctionalities";
 
 const components = {
-    0: <Users/>
+    0: <ListUsers/>
 }
 
 export default function ListInfo() {

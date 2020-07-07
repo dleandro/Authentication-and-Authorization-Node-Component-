@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { permissionService } from "../../service";
 import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
 import { AppBar, Tabs, Tab } from '@material-ui/core';
-import RolePermission from "./RolePermission"
+import {RolePermission} from '../BackOfficeFunctionalities';
 
 const components = {
     0: <RolePermission/>

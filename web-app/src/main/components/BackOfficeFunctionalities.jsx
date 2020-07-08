@@ -69,47 +69,26 @@ function UpdatableInput({initialValue,submitListener}){
         </InputGroup.Append>
     </InputGroup>);
 }
-//TODO: refactor this component to use Modal
 export function RoleUsers() {
     let {id}=useParams()
-    const userRoleLabels = ["User id", "username"]
-    const [users, setUsers] = useState([])
-    const [dropdown, setDropdown] = useState([])
-    const [error, setError] = useState(undefined)
+    const fetchData = () => rolesService().getUsersWithThisRole(id)
     const ctx = useContext(UserContext)
-    const addUser = (e) => userRoleService().addUserRole(e.target.value.split(" ")[0],id,ctx.user.id)
-    const editRole = (arr) => this.service.editRole(arr)
-    const deleteRole = (arr) => this.service.deleteRole(arr[0])
+    const labels = ["User id", "username",'Role Assignment date','Role expiration date','Updater']
+    const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id)
+    const removeUserFromRole = ()=> console.log('Still not implemented');
 
-    useEffect(() => {
-
-        const setState = async () => {
-            setDropdown(await userService().getUsers())
-            const data=await rolesService().getUsersWithThisRole(id)
-            if("err" in data){
-                console.log(data.err)
-                setError(data)
-            }
-            else{
-                setUsers(data)
-            }
-        }
-
-        setState()
-
-    }, [])
-
+    const roleUserToLine = (roleUser) => <React.Fragment>
+        <td><Link to={`/users/${roleUser['Users.id']}`}>{`Details of user: ${roleUser['Users.id']}`}</Link></td>
+        <td >{roleUser['Users.username']}</td>
+        <td >{roleUser['Users.UserRoles.start_date']}</td>
+        <td><UpdatableInput initialValue={roleUser['Users.UserRoles.end_date']} submitListener={val =>console.log('Service of edit endDate still notdone value:',val)}/></td>
+        <td>{roleUser['Users.UserRoles.updater']}</td>
+    </React.Fragment>;
     return (
 
         <React.Fragment>
-            {
-                error?<p>{error.status} {error.err}</p>:
-                    <DropDownTable labels={userRoleLabels}
-                                   addRequest={addUser} editRequest={editRole} deleteRequest={deleteRole}
-                                   dropdown={dropdown.map(user=>
-                                       <option value={`${user.id} ${user.username}`}>{user.id} {user.username}</option>)} redirectPage="users" rows={users.map(user => [user["Users.id"], user["Users.username"], user["Users.UserRoles.start_date"], user["Users.UserRoles.end_date"], user["Users.UserRoles.updater"]])} />
-            }
-
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromRole} postNewDataCB={(arr)=>postUserRole(arr[0])}
+                                  postNewDataFieldLabels={['Id of User to be assign']} tableLabels={labels} valueToLineCB={roleUserToLine} />
         </React.Fragment>
     )
 }
@@ -153,41 +132,26 @@ export function UserLists() {
         <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
     );
 }
-//TODO: refactor this component to use modal
 export function ListUsers() {
 
-    const listLabels = ["User Id", "Username", "Start Date", "End Date", "Updater"]
-    const [users, setUsers] = useState([])
-    const [error, setError] = useState(undefined)
-    const [dropdown, setDropdown] = useState([])
-    const ctx=useContext(UserContext)
-    const addUser = (e) => userListService().addUserList(id,e.target.value.split(" ")[0],ctx.user.id)
+    const labels = ["User Id", "Username", "Start Date", "End Date", "Updater"]
     let {id}=useParams()
-
-    useEffect(() => {
-        const setState = async () =>{
-            setDropdown(await userService().getUsers())
-            const data=await listService().getUsersInThisList(id)
-            if("err" in data){
-                console.log(data.err)
-                setError(data)
-            }
-            else{
-                setUsers(data)
-            }
-        }
-
-        setState()
-
-    }, [])
-
+    const fetchData = ()=>listService().getUsersInThisList(id)
+    const ctx = useContext(UserContext);
+    const addUserToList = (userId)=> userListService().addUserList(id,userId,ctx.user.id)
+    const removeUserFromList = () => console.log('Still not implemented removeUserFromList')
+    const listUserToLine = listUser=> <React.Fragment>
+        <td><Link to={`/users/${listUser['Users.id']}`}>{`Details of User: ${listUser['Users.id']}`}</Link></td>
+        <td >{listUser['Users.username']}</td>
+        <td >{listUser['Users.UserList.start_date']}</td>
+        <td><UpdatableInput initialValue={listUser['Users.UserList.end_date']} submitListener={val =>console.log('Service of edit endDate still notdone value:',val)}/></td>
+        <td>{listUser['Users.UserList.updater']}</td>
+    </React.Fragment>;
     return (
 
         <React.Fragment>
-            { error?<p>{error.status} {error.err}</p>:
-                <DropDownTable addRequest={addUser} dropdown={dropdown.map(user=>
-                    <option value={`${user.id} ${user.username}`}>{user.id} {user.username}</option>)} labels={listLabels} rows={users.map(user => [user["Users.id"], user["Users.username"], user["Users.UserList.start_date"], user["Users.UserList.end_date"], user["Users.UserList.updater"]])} />
-            }
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromList} postNewDataCB={(arr)=>addUserToList(arr[0])}
+                                  postNewDataFieldLabels={['Id of User to add to list']} tableLabels={labels} valueToLineCB={listUserToLine} />
         </React.Fragment>
     )
 }
@@ -317,8 +281,9 @@ export function Roles(props){
 /**
  * if you're changing something here that's probably wrong
  * @param fetchCB -should contain an err atribute if an error occured
- * @param postNewDataCB -should return an object completion equal to the returned in fetchCB and should receive an array
- * @param postNewDataFieldLabels -labels that describe the array values of the postNewDataCB
+ * @param postNewDataCB -should return a promise with an object identical to the returned in fetchCB and should receive an array
+ * @param postNewDataFieldLabels -labels that describe the array values of the postNewDataCB aka the parameters of postNewDataCB
+ * @param deleteDataCB - should receive one of the objects returned by fetchCB which you want to delete
  * @param valueToLineCB -should convert one of the objects returned by fetchCB into a table line
  * @param tableLabels -main table headers
  * @returns {JSX.Element}

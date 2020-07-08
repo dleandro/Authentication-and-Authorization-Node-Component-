@@ -1,38 +1,40 @@
 import React, { useEffect,useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { permissionService } from "../../service";
+import {listService, permissionService} from "../../service";
 import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
 import { AppBar, Tabs, Tab } from '@material-ui/core';
-import {RolePermission} from '../BackOfficeFunctionalities';
+import {ListUsers, RolePermission} from '../BackOfficeFunctionalities';
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 const components = {
     0: <RolePermission/>
 }
-
+const labels = ['Roles'];
 export default function PermissionInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0)
-    let { id } = useParams();
-    
-
-    useEffect(() => {
-
-        const setState = async () => {
-
-            
-        };
-        setState();
-
-    }, [id]);
+    const [otherPermissions,setPermissions] = useState(['']);
+    useEffect(()=>{permissionService().getPermissions().then(values=>setPermissions(values.map(value=>value.id)));},[]);
     return (
         <React.Fragment>
-            <Tabs value={componentToBeShown} indicatorColor='primary'  style={{backgroundColor: "#282c34"}} onChange={(_, newValue) => {
-                    setComponentToBeShown(newValue)}
-                    } aria-label="user tabs">
-                    <Tab label="Roles" style={{color: 'white'}} />
-                </Tabs>
-                {
-               components[componentToBeShown]
-            }
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand>Permission Info</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx)}>{comp}</Nav.Link>)}
+                    </Nav>
+                    <Nav>
+                        <NavDropdown title="Change Permission" id="collasible-nav-dropdown">
+                            <NavDropdown.Item href={'/backoffice'}>Home</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            {otherPermissions.map(id=><NavDropdown.Item href={`/permissions/${id}`}>{`View Permission: ${id}`}</NavDropdown.Item>)}
+                        </NavDropdown>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+            {components[componentToBeShown]}
        </React.Fragment>
     )
 }

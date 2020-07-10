@@ -1,15 +1,13 @@
 import React, { useEffect,useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {listService, permissionService} from "../../service";
-import CustomTable from "../../common/html-elements-utils/Table/CustomTable";
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-import {ListUsers, RolePermission} from '../BackOfficeFunctionalities';
+import {ListUsers, PermissionRoles} from '../BackOfficeFunctionalities';
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
 const components = {
-    0: <RolePermission/>
+    0: <PermissionRoles/>
 }
 const labels = ['Roles'];
 export default function PermissionInfo() {

@@ -27,9 +27,7 @@ const imgBtns = {
 export default function LoginForm({ id }) {
 
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
-
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
-
     const ctx = useContext(AuthTypeContext)
 
     var loginLocalStrat = () =>

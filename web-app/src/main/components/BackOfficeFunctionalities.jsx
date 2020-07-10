@@ -1,6 +1,7 @@
 import {
     listService,
     permissionService,
+    rolePermissionService,
     rolesService,
     sessionService,
     userListService,
@@ -8,8 +9,8 @@ import {
     userService
 } from '../service'
 import React, {useEffect, useState, useContext, Component} from 'react';
-import CustomTable from "../common/html-elements-utils/Table/CustomTable";
-import Table from "react-bootstrap/Table";
+import { useHistory } from "react-router-dom";
+import Table from 'react-bootstrap/Table';
 import {Link, useParams} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
@@ -19,41 +20,70 @@ import Tooltip from "react-bootstrap/Tooltip";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserContext from "../UserContext";
-import DropDownTable from "../common/html-elements-utils/Table/DropdownTable";
 
-function UserModal({submitListener,labels,child}){
+
+/**
+ * This is not supposed to be changed, instead make a new component which implements this
+ * @param tooltipText
+ * @param childButton
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export const ToolTipButtonConstructor = ({tooltipText,childButton}) => (
+    <OverlayTrigger overlay={<Tooltip id="tooltipbutton">{tooltipText}</Tooltip>}>
+            {childButton}
+    </OverlayTrigger>
+);
+
+export const GenericTooltipButton = ({icon='fa fa-table',onClick,tooltipText='Open',bootstrapColor='primary'}) => (
+    <ToolTipButtonConstructor tooltipText={tooltipText} childButton={
+        <button className={`btn btn-outline-${bootstrapColor} btn-sm rounded-0`} type="button" onClick={onClick}><i className={icon}/></button>
+    }/>
+);
+
+/**
+ * This is not supposed to be changed, instead make a new component which implements this
+ * @param submitListener
+ * @param buttonTooltipText
+ * @param child
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function GenericModal({submitListener,buttonTooltipText,child,openButtonIcon='fa fa-table'}){
     const [showModal,setModal] = useState(false);
-    const [value,setValue] = useState(labels?labels.map(t=>''):undefined);
 
-    const changeValue = (i,newValue)=> setValue(value.map((elem, index) => index===i?newValue:elem));
     const submit = ()=>{
-        submitListener(value);
+        submitListener();
         setModal(false);
     };
 
     return(<React.Fragment>
-        <OverlayTrigger overlay={<Tooltip id="add">Add new User</Tooltip>}>
-            <li className="list-inline-item">
-                <button className="btn btn-outline-primary btn-sm rounded-0" type="button" onClick={()=>setModal(true)} ><i className="fa fa-table"/></button>
-            </li>
-        </OverlayTrigger>
-
+        <GenericTooltipButton onClick={()=>setModal(true)} tooltipText={buttonTooltipText} icon={openButtonIcon}/>
         <Modal show={showModal} onHide={()=>setModal(false)}>
             <Modal.Header closeButton>
-                <Modal.Title>Add new User</Modal.Title>
+                <Modal.Title>{buttonTooltipText}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                {labels?labels.map((currElement, index) => <FormControl placeholder={currElement} onChange={e=>changeValue(index,e.target.value)}/>):undefined}
-                {child}
-            </Modal.Body>
+            <Modal.Body>{child}</Modal.Body>
             <Modal.Footer>
                 <Button variant="outline-secondary" onClick={()=>setModal(false)}>
                     Close
                 </Button>
-                {labels?<Button variant="outline-primary" onClick={submit}>Save Changes</Button>:undefined}
+                {child?<Button variant="outline-primary" onClick={submit}>Save Changes</Button>:undefined}
             </Modal.Footer>
         </Modal>
     </React.Fragment>);
+}
+
+function SubmitValuesModal({submitListener,labels,child,openButtonIcon='fa fa-table',buttonTooltipText='Add new Value'}){
+    const [value,setValue] = useState(labels?labels.map(t=>''):undefined);
+
+    const changeValue = (i,newValue)=> setValue(value.map((elem, index) => index===i?newValue:elem));
+    const body = () => <React.Fragment>
+        {labels?labels.map((currElement, index) => <FormControl placeholder={currElement} onChange={e=>changeValue(index,e.target.value)}/>):undefined}
+        {child}
+    </React.Fragment>;
+
+    return(<GenericModal buttonTooltipText={buttonTooltipText} openButtonIcon={openButtonIcon} submitListener={()=>submitListener(value)} child={body()} />);
 }
 
 function UpdatableInput({initialValue,submitListener}){
@@ -62,10 +92,7 @@ function UpdatableInput({initialValue,submitListener}){
     return(<InputGroup className="mb-3">
         <FormControl placeholder={value} onChange={e=>setValue(e.target.value)}/>
         <InputGroup.Append>
-
-            <OverlayTrigger overlay={<Tooltip id="edit">Edit!</Tooltip>}>
-                <button className="btn btn-outline-success btn-sm rounded-0" type="button" onClick={e=>submitListener(value)} ><i className="fa fa-edit"/></button>
-            </OverlayTrigger>
+            <GenericTooltipButton icon={'fa fa-edit'} tooltipText={'Edit!'} bootstrapColor={'success'} onClick={e=>submitListener(value)} />
         </InputGroup.Append>
     </InputGroup>);
 }
@@ -157,21 +184,53 @@ export function ListUsers() {
 }
 export function RolePermission() {
 
-    const labels = ['Role id', 'role','Parent Role'];
+    const labels = ['Role id', 'role','Parent Role','Permission Id','Action','Resource'];
     const {id}=useParams();
-    const fetchData = ()=> permissionService().getRolesWithThisPermission(id);
+    const fetchData = ()=> rolesService().getPermissionsWithThisRole(id).then(t=>{
+        console.log(t);
+        return t;
+    });
+    const postData = (arr)=> rolePermissionService().addRolePermission(id,arr[0],arr[1],arr[2])
 
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
-        <td><Link to={`/roles/${rolePermission['Roles.id']}`}>{`Details of Role: ${rolePermission['Roles.id']}`}</Link></td>
-        <td><UpdatableInput initialValue={rolePermission['Roles.role']}
-                            submitListener={val =>rolesService().editRole([rolePermission['Roles.id'],val,rolePermission['Roles.parent_role']])}/></td>
-        <td><UpdatableInput initialValue={rolePermission['Roles.parent_role']}
-                            submitListener={val =>rolesService().editRole([rolePermission['Roles.id'], rolePermission['Roles.role'],val])}/></td>
+        <td>{id}</td>
+        <td>{rolePermission.role}</td>
+        <td>{rolePermission.parent_role}</td>
+        <td><Link to={`/permissions/${rolePermission['Permissions.id']}`}>{`Details of Permission: ${rolePermission['Permissions.id']}`}</Link></td>
+        <td>{rolePermission['Permissions.action']}</td>
+        <td>{rolePermission['Permissions.resource']}</td>
     </React.Fragment>;
 
     return (
-        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={['Permission Id','Action','Resource']} postNewDataCB={postData}
+                              tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+    );
+}
+
+export function PermissionRoles() {
+
+    const labels = ['Permission Id','Action','Resource','Role id', 'role','Parent Role'];
+    const {id}=useParams();
+    const fetchData = ()=> permissionService().getRolesWithThisPermission(id).then(t=>{
+        console.log(t);
+        return t;
+    });
+    const postData = (arr)=> rolePermissionService().addRolePermission(arr[0],id,arr[1],arr[2])
+
+
+    const rolePermissionToLine = (rolePermission) => <React.Fragment>
+        <td>{id}</td>
+        <td>{rolePermission.action}</td>
+        <td>{rolePermission.resource}</td>
+        <td><Link to={`/roles/${rolePermission['Roles.id']}`}>{`Details of Roles: ${rolePermission['Roles.id']}`}</Link></td>
+        <td>{rolePermission['Roles.role']}</td>
+        <td>{rolePermission['Roles.parent_role']}</td>
+    </React.Fragment>;
+
+    return (
+        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={['Role Id','Action','Resource']} postNewDataCB={postData}
+                              tableLabels={labels} valueToLineCB={rolePermissionToLine} />
     );
 }
 export function Sessions(){
@@ -211,12 +270,15 @@ export function UserSessions(){
 export function Users(props){
     const labels = ['Id', 'Username', 'Password'];
     const {getUsers,addUser,deleteUser,editUsername,} = userService();
+    let history = useHistory();
     const postUser = (arr) =>  addUser(arr)
     const removeUser = user => deleteUser([user.id]);
     const userToLine = user=> <React.Fragment>
         <td><Link to={`/users/${user.id}`}>{`Details of User: ${user.id}`}</Link></td>
-        <td><UpdatableInput initialValue={user.username} submitListener={val =>editUsername([user.id,val])}/></td>
+        <td>{user.username}</td>
         <td>{'****'}</td>
+        <td><SubmitValuesModal submitListener={val =>editUsername([user.id,val[0]]).then(t=>history.push(`/users/${user.id}`))} openButtonIcon={'fa fa-edit'}
+                               buttonTooltipText={'Edit Username'} labels={['New Username']} /> </td>
     </React.Fragment>;
 
     return (
@@ -305,12 +367,7 @@ function GenericFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,dele
     const valueToLine = (val) => <tr>
         {valueToLineCB(val)}
         <td>
-            <OverlayTrigger overlay={<Tooltip id="delete">Delete!</Tooltip>}>
-                <li className="list-inline-item">
-                    <button className="btn btn-outline-danger btn-sm rounded-0" type="button"
-                            onClick={()=>deleteValue(val)}><i className="fa fa-trash"/></button>
-                </li>
-            </OverlayTrigger>
+            <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={()=>deleteValue(val)} />
         </td>
     </tr>;
     return (
@@ -322,7 +379,7 @@ function GenericFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,dele
                     <tr>
                         {tableLabels.map(label => <th>{label}</th>)}
                         <th>
-                            <UserModal submitListener={(arr)=>postNewDataCB(arr).then(d=>setValues([...values,d]))} labels={postNewDataFieldLabels}/>
+                            <SubmitValuesModal submitListener={(arr)=>postNewDataCB(arr).then(d=>setValues([...values,d]))} labels={postNewDataFieldLabels}/>
                         </th>
                     </tr>
                     </thead>
@@ -337,4 +394,4 @@ function GenericFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,dele
 
 
 
-export default UserModal
+export default SubmitValuesModal

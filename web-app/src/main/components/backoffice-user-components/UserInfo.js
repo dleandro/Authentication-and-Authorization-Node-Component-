@@ -1,19 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {UserRoles,UserSessions,UserLists} from "../BackOfficeFunctionalities";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import {authenticationService, userService} from "../../service";
-import Button from "react-bootstrap/Button";
-import {useHistory} from "react-router-dom";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import GoogleButton from "react-google-button";
-import AuthTypeContext from "../login-components/AuthTypeContext";
-import Card from "react-bootstrap/Card";
+import {Link, useParams,useHistory} from 'react-router-dom';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import {listService, sessionService, userRoleService, userService} from '../../service';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
+import Form from 'react-bootstrap/Form';
+import GenericFunctionality from '../../common/html-elements-utils/generics/GenericFunctionality';
+import UserContext from "../../UserContext";
+import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 
 function SpecificUserInfo(){
     const {id} = useParams();
@@ -22,27 +19,86 @@ function SpecificUserInfo(){
 
     return  (
         <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-        <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
-            <Card.Header>{`Profile:  ${user.username}`}</Card.Header>
-            <Card.Body>
-                <Card.Title>{`Details of user num: ${user.id}`}</Card.Title>
-                <Card.Text>
-                   This page and all his sections displays all information relative to this User.
-                </Card.Text>
-                <Form.Group>
-                    {Object.keys(user).map(key=><React.Fragment>
-                        <br />
-                        <Form.Row>
-                            <Form.Label column lg={2}>{key}</Form.Label>
-                            <Col><Form.Control type="text" value={user[key]} /></Col>
-                        </Form.Row>
-                    </React.Fragment>)}
-                </Form.Group>
+            <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
+                <Card.Header>{`Profile:  ${user.username}`}</Card.Header>
+                <Card.Body>
+                    <Card.Title>{`Details of user num: ${user.id}`}</Card.Title>
+                    <Card.Text>
+                        This page and all his sections displays all information relative to this User.
+                    </Card.Text>
+                    <Form.Group>
+                        {Object.keys(user).map(key=><React.Fragment>
+                            <br />
+                            <Form.Row>
+                                <Form.Label column lg={2}>{key}</Form.Label>
+                                <Col><Form.Control type="text" value={user[key]} /></Col>
+                            </Form.Row>
+                        </React.Fragment>)}
+                    </Form.Group>
 
 
-            </Card.Body>
-        </Card>
+                </Card.Body>
+            </Card>
         </div>
+    );
+}
+
+function UserRoles() {
+    const {id}=useParams();
+    const fetchData = ()=> userService().getUserRoles(id);
+    const labels = ['Role id', 'role', 'Start Date', 'End Date', 'Updater'];
+    const postUserRole = (roleId,updater)=>userRoleService().addUserRole(id,roleId,updater)
+    const removeRoleFromUser = (roleId) => console.log('Remove Role from user still needs service')
+
+    const userRoleToLine = userRole=> <React.Fragment>
+        <td><Link to={`/roles/${userRole['Roles.id']}`}>{`Details of Role: ${userRole['Roles.id']}`}</Link></td>
+        <td >{userRole['Roles.role']}</td>
+        <td >{userRole['Roles.UserRoles.start_date']}</td>
+        <td>{userRole['Roles.UserRoles.end_date']}</td>
+        <td>{userRole['Roles.UserRoles.updater']}</td>
+        <td><SubmitValuesModal submitListener={val =>console.log('Service of edit endDate still notdone value:',val)} openButtonIcon={'fa fa-calendar'}
+                               buttonTooltipText={'Edit End Date'} labels={['New End date']} /> </td>
+    </React.Fragment>;
+    return (
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeRoleFromUser} postNewDataCB={(arr)=>postUserRole(arr[0],arr[1])}
+                                  postNewDataFieldLabels={['Id of Role to be assign','Updater']} tableLabels={labels} valueToLineCB={userRoleToLine} />
+    );
+}
+
+export function UserSessions(){
+
+    const labels = ['User id','Session Id','Expires'];
+    const ctx = useContext(UserContext);
+    const id=ctx.user.id;
+    const fetchData = ()=> sessionService().getSession(id);
+
+    const sessionToLine = (session)=> <React.Fragment>
+        <td>{session.UserId}</td>
+        <td>{session.sid}</td>
+        <td>{session.expires}</td>
+    </React.Fragment>;
+    return (
+        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={sessionToLine} />
+    );
+};
+
+function UserLists() {
+
+    const labels = ['Id', 'Start Date', 'End Date', 'Updater'];
+    const ctx = useContext(UserContext);
+    const fetchData = ()=> listService().getUserActiveLists(ctx.user.id);
+
+
+    const listToLine=(list)=><React.Fragment>
+        <td><Link to={`/lists/${list.ListId}`}>{`Details of List: ${list.ListId}`}</Link></td>
+        <td>{list.start_date}</td>
+        <td>{list.end_date}</td>
+        <td>{list.updater}</td>
+        <td><SubmitValuesModal submitListener={val =>console.log('Service of edit endDate still not done value:',val)} openButtonIcon={'fa fa-calendar'}
+                               buttonTooltipText={'Edit End Date'} labels={['New End date']} /> </td>
+    </React.Fragment>;
+    return (
+        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
     );
 }
 

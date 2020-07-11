@@ -1,13 +1,16 @@
 'use strict'
-const
-    SUCCESS_MSG = "login successful",
-    UNSUCCESSFUL_MSG = "login unsuccessful"
 
 module.exports = function (apiUtils, authization) {
 
-    const successCallback = (req, res) => req.isAuthenticated() ?
-        res.redirect("http://localhost:3000/backoffice") :
-        res.redirect("http://localhost:3000/") 
+    const successCallback = async (req, res,next) =>{ 
+        
+            if(req.isAuthenticated()){
+            res.redirect("http://localhost:3000/backoffice")
+            }
+            else{
+             res.redirect("http://localhost:3000/") 
+            }
+    }
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
 

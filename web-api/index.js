@@ -6,6 +6,10 @@
 
 const
     PORT = 8082,
-    app = require('./server')
+    express = require('express'),
+    app = express()
+
+// Setup app's middleware
+require('./common/middleware/app-middleware')(app)
 
 app.listen(PORT, () => console.log(`Listening on Port: ${PORT}`))

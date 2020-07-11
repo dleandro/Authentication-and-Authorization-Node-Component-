@@ -1,5 +1,6 @@
 'use strict'
 
+
 /**
  * this module contains all role's permissions related endpoints
  * @param apiUtils
@@ -7,28 +8,10 @@
  * @returns {*|Router}
  */
 module.exports = function (apiUtils, authization) {
+    
+    const routerUtils=require('./router-utils')
     const rolePermission = authization.rolePermission
     const rolesPermissionRouter = require('express').Router()
-
-    const promiseDataToResponse = (res, dataPromise) => dataPromise
-        .catch(err => {
-            throw errors.errorExecutingQuery
-        })
-        .then(data => {
-            if (Array.isArray(data)){
-                if (data.length) {
-                    return apiUtils.setResponse(res, data, 200)
-                }
-            } else {
-               if (data){
-                   return apiUtils.setResponse(res, data, 200)
-               }
-            }
-            throw errors.noResponseFound
-        })
-        .catch(err => {
-            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
-        });
 
     rolesPermissionRouter.route('/')
         .post(addRolesPermission)
@@ -43,7 +26,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteRolesPermission(req, res) {
-        promiseDataToResponse(res, rolePermission.delete(req.body.role, req.body.permission))
+        routerUtils.promiseDataToResponse(res, rolePermission.delete(req.body.role, req.body.permission),apiUtils)
     }
 
     return rolesPermissionRouter

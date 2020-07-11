@@ -4,26 +4,9 @@
 module.exports = function (apiUtils, authization) {
 
     const errors = require('../common/errors/app-errors')
-
-    const promiseDataToResponse = (res, dataPromise) => dataPromise
-        .catch(err => {
-            throw errors.errorExecutingQuery
-        })
-        .then(data => {
-            if (Array.isArray(data)){
-                if (data.length) {
-                    return apiUtils.setResponse(res, data, 200)
-                }
-            } else {
-            if (data){
-                   return apiUtils.setResponse(res, data, 200)
-               }
-            }
-            throw errors.noResponseFound
-        })
-        .catch(err => {
-            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
-        });
+    
+    const routerUtils=require('./router-utils')
+    
     const roles = authization.role
     const roleRouter = require('express').Router()
 
@@ -56,24 +39,24 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteRole(req, res) {
-        promiseDataToResponse(res, roles.delete(req.params.id))
+        routerUtils.promiseDataToResponse(res, roles.delete(req.params.id),apiUtils)
     }
 
 
     function getRoles(req, res) {
-        promiseDataToResponse(res, roles.getAll())
+        routerUtils.promiseDataToResponse(res, roles.getAll(),apiUtils)
     }
 
     function getRoleById(req, res) {
-        promiseDataToResponse(res, roles.getSpecificById(req.params.id))
+        routerUtils.promiseDataToResponse(res, roles.getSpecificById(req.params.id),apiUtils)
     }
 
     function getUsersWithThisRole(req,res){
-        promiseDataToResponse(res,roles.getUsersWithThisRole(req.params.id))
+        routerUtils.promiseDataToResponse(res,roles.getUsersWithThisRole(req.params.id),apiUtils)
     }
 
     function getPermissionsWithThisRole(req,res){
-        promiseDataToResponse(res,roles.getPermissionsWithThisRole(req.params.id))
+        routerUtils.promiseDataToResponse(res,roles.getPermissionsWithThisRole(req.params.id),apiUtils)
     }
 
     return roleRouter

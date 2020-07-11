@@ -1,5 +1,7 @@
 'use strict'
 
+
+
 /**
  * this module contains all user related endpoints
  * @param apiUtils
@@ -8,31 +10,14 @@
  */
 module.exports = function (apiUtils, authization) {
 
+    const routerUtils=require('./router-utils')
+
     const users = authization.user,
         idps = authization.idp,
         userRouter = require('express').Router(),
         rbac = require('../../authization-module/common/middleware/rbac'),
         errors = require('../common/errors/app-errors')
 
-    const promiseDataToResponse = (res, dataPromise) => dataPromise
-        .catch(err => {
-            throw errors.errorExecutingQuery
-        })
-        .then(data => {
-            if (Array.isArray(data)) {
-                if (data.length) {
-                    return apiUtils.setResponse(res, data, 200)
-                }
-            } else {
-                if (data) {
-                    return apiUtils.setResponse(res, data, 200)
-                }
-            }
-            throw errors.noResponseFound
-        })
-        .catch(err => {
-            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
-        });
 
     userRouter.route('/')
         .get(getAllUsers)
@@ -48,7 +33,7 @@ module.exports = function (apiUtils, authization) {
     userRouter.get('/byUsername/:username', getUserByUsername)
 
 
-    userRouter.get('/:id/roles', (req,res)=>promiseDataToResponse(res, users.getUserRoles(req.params.id)))
+    userRouter.get('/:id/roles', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserRoles(req.params.id),apiUtils))
 
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
@@ -58,7 +43,7 @@ module.exports = function (apiUtils, authization) {
     userRouter.put('/:id/password', updatePassword)
 
     async function getAllUsers(req, res) {
-        promiseDataToResponse(res, users.getAll())
+        routerUtils.promiseDataToResponse(res, users.getAll(),apiUtils)
     }
 
     function createUser(req, res) {
@@ -70,23 +55,23 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getSpecificUser(req, res) {
-        promiseDataToResponse(res, users.getById(req.params.id))
+        routerUtils.promiseDataToResponse(res, users.getById(req.params.id),apiUtils)
     }
 
     function deleteUser(req, res) {
-        promiseDataToResponse(res, users.delete(req.params.id))
+        routerUtils.promiseDataToResponse(res, users.delete(req.params.id),apiUtils)
     }
 
     function getUserFromIdp(req, res) {
-        promiseDataToResponse(res, users.getByIdp(req.params.id))
+        routerUtils.promiseDataToResponse(res, users.getByIdp(req.params.id),apiUtils)
     }
 
     function getUserByUsername(req, res) {
-        promiseDataToResponse(res, users.getByUsername(req.params.username))
+        routerUtils.promiseDataToResponse(res, users.getByUsername(req.params.username),apiUtils)
     }
 
     function createIdpUser(req, res) {
-        promiseDataToResponse(res, idps.create(req.body.idpId, req.body.idpName, req.body.userId))
+        routerUtils.promiseDataToResponse(res, idps.create(req.body.idpId, req.body.idpName, req.body.userId),apiUtils)
     }
 
     function updatePassword(req, res) {

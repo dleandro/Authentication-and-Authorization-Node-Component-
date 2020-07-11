@@ -8,26 +8,10 @@
  * @returns {*|Router}
  */
 module.exports = function (apiUtils, authization) {
-
-    const promiseDataToResponse = (res, dataPromise) => dataPromise
-        .catch(err => {
-            throw errors.errorExecutingQuery
-        })
-        .then(data => {
-        if (Array.isArray(data)){
-                if (data.length) {
-                    return apiUtils.setResponse(res, data, 200)
-                }
-            } else {
-               if (data){
-                   return apiUtils.setResponse(res, data, 200)
-               }
-            }
-            throw errors.noResponseFound
-        })
-        .catch(err => {
-            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
-        });
+    
+    
+    
+    const routerUtils=require('./router-utils')
     const permissionRouter = require('express').Router()
     const permissions = authization.permission
 
@@ -46,12 +30,12 @@ module.exports = function (apiUtils, authization) {
 
 
     function getRolesByPermission(req,res){
-        promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id))
+        routerUtils.promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id),apiUtils)
     }
     
 
     function getPermissions(req, res) {
-        promiseDataToResponse(res, permissions.getAll())
+        routerUtils.promiseDataToResponse(res, permissions.getAll(),apiUtils)
     }
 
     function addPermission(req, res) {
@@ -68,11 +52,11 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deletePermission(req, res) {
-        promiseDataToResponse(res,permissions.delete(req.params.id))
+        routerUtils.promiseDataToResponse(res,permissions.delete(req.params.id),apiUtils)
     }
 
     function getPermissionById(req, res) {
-        promiseDataToResponse(res,permissions.getSpecificById(req.params.id))
+        routerUtils.promiseDataToResponse(res,permissions.getSpecificById(req.params.id),apiUtils)
     }
 
     return permissionRouter

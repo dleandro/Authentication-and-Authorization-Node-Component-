@@ -9,27 +9,9 @@ const { update } = require('../../authization-module/resources/dals/permissions-
  * @returns {*|Router}
  */
 module.exports = function (apiUtils, authization) {
-
-    const promiseDataToResponse = (res, dataPromise) => dataPromise
-        .catch(err => {
-            throw errors.errorExecutingQuery
-        })
-        .then(data => {
-            if (Array.isArray(data)){
-                if (data.length) {
-                    return apiUtils.setResponse(res, data, 200)
-                }
-            } else {
-               if (data){
-                   return apiUtils.setResponse(res, data, 200)
-               }
-            }
-            throw errors.noResponseFound
-        })
-        .catch(err => {
-            apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
-        });
-
+    
+    
+    const routerUtils=require('./router-utils')
     const lists = authization.list
     const listRouter = require('express').Router()
 
@@ -70,31 +52,31 @@ module.exports = function (apiUtils, authization) {
     }*/
 
     function deleteList(req, res) {
-        promiseDataToResponse(res, lists.delete(req.params.id))
+        routerUtils.promiseDataToResponse(res, lists.delete(req.params.id),apiUtils)
     }
 
     function getUsersInThisList(req,res){
-        promiseDataToResponse(res, lists.getUsersInThisList(req.params.id))
+        routerUtils.promiseDataToResponse(res, lists.getUsersInThisList(req.params.id),apiUtils)
     }
 
     function getLists(req, res) {
-        promiseDataToResponse(res, lists.getAll())
+        routerUtils.promiseDataToResponse(res, lists.getAll(),apiUtils)
     }
 
     function getActiveLists(req, res) {
-        promiseDataToResponse(res, lists.getAllActive())
+        routerUtils.promiseDataToResponse(res, lists.getAllActive(),apiUtils)
     }
 
     function getUserActiveList(req, res) {
-        promiseDataToResponse(res, lists.getUsersActive(req.params.id))
+        routerUtils.promiseDataToResponse(res, lists.getUsersActive(req.params.id),apiUtils)
     }
 
     function deactivateList(req, res) {
-        promiseDataToResponse(res, lists.deactivate(req.params.id))
+        routerUtils.promiseDataToResponse(res, lists.deactivate(req.params.id),apiUtils)
     }
 
     function getList(req, res) {
-        promiseDataToResponse(res, lists.get(req.params.id))
+        routerUtils.promiseDataToResponse(res, lists.get(req.params.id),routerUtils)
     }
 
     function updateList(req, res) {

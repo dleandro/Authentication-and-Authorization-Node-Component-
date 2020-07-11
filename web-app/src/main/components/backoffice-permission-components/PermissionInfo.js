@@ -1,10 +1,36 @@
 import React, { useEffect,useState } from 'react'
-import { useParams } from 'react-router-dom'
-import {listService, permissionService} from "../../service";
-import {ListUsers, PermissionRoles} from '../BackOfficeFunctionalities';
+import {Link, useParams} from 'react-router-dom'
+import {listService, permissionService, rolePermissionService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import GenericFunctionality from "../../common/html-elements-utils/generics/GenericFunctionality";
+
+function PermissionRoles() {
+
+    const labels = ['Permission Id','Action','Resource','Role id', 'role','Parent Role'];
+    const {id}=useParams();
+    const fetchData = ()=> permissionService().getRolesWithThisPermission(id).then(t=>{
+        console.log(t);
+        return t;
+    });
+    const postData = (arr)=> rolePermissionService().addRolePermission(arr[0],id,arr[1],arr[2])
+
+
+    const rolePermissionToLine = (rolePermission) => <React.Fragment>
+        <td>{id}</td>
+        <td>{rolePermission.action}</td>
+        <td>{rolePermission.resource}</td>
+        <td><Link to={`/roles/${rolePermission['Roles.id']}`}>{`Details of Roles: ${rolePermission['Roles.id']}`}</Link></td>
+        <td>{rolePermission['Roles.role']}</td>
+        <td>{rolePermission['Roles.parent_role']}</td>
+    </React.Fragment>;
+
+    return (
+        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={['Role Id','Action','Resource']} postNewDataCB={postData}
+                              tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+    );
+}
 
 const components = {
     0: <PermissionRoles/>

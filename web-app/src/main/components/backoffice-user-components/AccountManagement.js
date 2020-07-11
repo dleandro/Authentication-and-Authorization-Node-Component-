@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AppBar, Tabs, Tab } from '@material-ui/core'
 import { Account } from './Account'
-import {UserSessions} from '../BackOfficeFunctionalities'
+import {UserSessions} from './UserInfo';
 
 export const AccountManagement = () => {
 

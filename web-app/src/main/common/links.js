@@ -13,7 +13,8 @@ const
     CONFIG_PATH = "/api/configs",
     SESSION_PATH="/api/sessions",
     PROTOCOLS_PATH = "/api/protocols",
-    USERS_LIST_PATH="/api/users-lists"
+    USERS_LIST_PATH="/api/users-lists",
+    HISTORY_PATH="/api/users-history"
 
 const WEB_API_HOME_PATH = 'http://localhost:8082'
 
@@ -93,6 +94,9 @@ export const webApiLinks =
     sessions:{
         SESSION_PATH,
         SPECIFIC_SESSION_PATH:id=>`${SESSION_PATH}/${id}`
+    },
+    history:{
+        HISTORY_PATH
     }
 }
 

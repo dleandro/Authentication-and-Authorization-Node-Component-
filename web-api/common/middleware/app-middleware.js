@@ -24,7 +24,7 @@ module.exports = async function (app) {
     app.use('/api', require("../../web-api")(authization))
 
     app.use((err,req,res,next)=>{
-        apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status)
+        apiUtils.setResponse(res,err.message,err.status)
     })
 
 }

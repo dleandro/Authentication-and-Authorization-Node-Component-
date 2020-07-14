@@ -20,7 +20,7 @@ protocolRouter.get('/active', getActiveProtocols)
 protocolRouter.put('/active',changeActive)
 
 function getProtocols(req, res) {
-    promiseDataToResponse(res, protocols.getAll())
+    routerUtils.promiseDataToResponse(res, protocols.getAll(),apiUtils)
 }
 
 function getActiveProtocols(req, res) {

@@ -5,8 +5,6 @@ const
     cookieParser = require('cookie-parser'),
     authorization = require('../../resources/authorizations');
 
-
-
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = function (app, session) {
 
@@ -22,5 +20,6 @@ module.exports = function (app, session) {
     app.use(passport.session());
 
     //Interceptor that checks for authorization
-   app.use(authorization.check);
+    app.use(authorization.check);
+    
 };

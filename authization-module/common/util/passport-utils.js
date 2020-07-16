@@ -86,7 +86,7 @@ module.exports = {
         await Session.update({UserId:userId},{where:{sid:sessionId}})
     },
     checkProtocol: async (protocolName) => {
-        const result = await protocol.get(protocolName)
+        const result = await protocol.getByName(protocolName)
         return result!=null
     },
     deleteUserSession : async(userId,sessionId)=>{

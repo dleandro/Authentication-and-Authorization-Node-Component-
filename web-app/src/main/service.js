@@ -1,4 +1,4 @@
-var { users_lists,sessions, users, roles, permissions,  users_roles, lists, roles_permissions, protocols} = require('./common/links').webApiLinks;
+var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
 function produceInit(body, met) {
@@ -65,7 +65,8 @@ export function userService(optionalPort) {
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
         deleteUser: async (arr) => {
             makeRequest(users.SPECIFIC_USER_PATH(arr[0]), {}, 'DELETE')
-        }
+        },
+        getUserAuthorizations: async () => getRequest(users.GET_USER_AUTHORIZATIONS_PATH)
     }
 }
 
@@ -120,7 +121,7 @@ export function userRoleService(optionalPort) {
     HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
     return {
         getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
-        addUserRole:async(userid,roleid,updater)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:1,updater:updater},'POST')
+        addUserRole: async (userid, roleid, updater) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater }, 'POST')
     }
 }
 
@@ -136,19 +137,19 @@ export function rolePermissionService(optionalPort) {
     HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
     return {
         addRolePermission: async (roleId, permissionId, action, resource) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, action: action, resource: resource, roleId: roleId }, 'POST')
-        
+
     }
 }
 
-    export function userListService(optionalPort) {
-        HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
-        return {
-            addUserList: async (listId, userId,updater) => {
-                console.log(listId)
-                makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId,active:1,updater:updater}, 'POST')
-            }
-            
+export function userListService(optionalPort) {
+    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+    return {
+        addUserList: async (listId, userId, updater) => {
+            console.log(listId)
+            makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId, active: 1, updater: updater }, 'POST')
         }
+
+    }
 }
 
 

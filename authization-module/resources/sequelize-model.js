@@ -4,17 +4,13 @@ const { Sequelize, DataTypes } = require('sequelize'),
     bcrypt = require('bcrypt')
 
 const { STRING, DATE, BOOLEAN, INTEGER, TEXT } = Sequelize
-const NonNullDate = { type: DATE, allowNull: false } //only used 1 time considering remove this const
-const NonNullString = { type: STRING, allowNull: false }
-const NonNullUniqueString = { ...NonNullString, unique: true } //only used 1 time considering remove this const
-const NonNullStringPK = { ...NonNullString, primaryKey: true } //only used 1 time considering remove this const
 
 /**
  * @param modelName
  * @param attributes
  * @returns {Model}
  */
-const defineTable = (modelName, attributes,timestamps) => sequelize.define(modelName, attributes, { timestamps: timestamps, freezeTableName: true });
+const defineTable = (modelName, attributes, timestamps) => sequelize.define(modelName, attributes, { timestamps: timestamps, freezeTableName: true });
 
 /**
  * Permission(
@@ -23,29 +19,29 @@ const defineTable = (modelName, attributes,timestamps) => sequelize.define(model
  * - description: DefaultString)
  * @type {Model}
  */
-const Permission = defineTable('Permission', { action: STRING, resource: STRING },false);
+const Permission = defineTable('Permission', { action: { type: STRING, allowNull: false }, resource: { type: STRING, allowNull: false } }, false);
 /**
  * Protocols(
  * - protocol: NonNullStringPK,
  * - active:DefaultBool)
  * @type {Model}
  */
-const Protocols = defineTable('Protocols', { protocol: NonNullStringPK, active: BOOLEAN },false);
+const Protocols = defineTable('Protocols', { protocol: { type: STRING, allowNull: false, primaryKey: true }, active: BOOLEAN }, false);
 /**
  Role(
  * - role: NonNullString,
  * - parent_role: DefaultInt)
  * @type {Model}
  */
-const Role = defineTable('Role', { role: NonNullUniqueString, parent_role: INTEGER },false);
+const Role = defineTable('Role', { role: { type: STRING, allowNull: false, unique: true }, parent_role: INTEGER }, false);
 /**
  * RolePermission(
  * - role: NonNullAutoIncIntPK,
  * - permission: NonNullIntPK)
  * @type {Model}
  */
-Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false },false);
-Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false },false);
+Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false }, false);
+Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false }, false);
 /**
  * User(
  * - username: NonNullString,
@@ -55,14 +51,11 @@ Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false },
 const User = defineTable('User', {
     username: { type: STRING, allowNull: false, unique: true },
     password: { type: STRING, get() { return () => this.getDataValue('password') } }
-},false);
+}, false);
 
-// TODO: password encryption is this secure??
 User.encryptPassword = async (password) => await bcrypt.hash(password, await bcrypt.genSalt(10))
 
-User.correctPassword = async function (enteredPassword, user) {
-    return await bcrypt.compare(enteredPassword, user.password)
-}
+User.correctPassword = async (enteredPassword, user) => await bcrypt.compare(enteredPassword, user.password)
 
 const setSaltHashAndPassword = async user => {
     if (user.changed('password')) {
@@ -73,6 +66,9 @@ const setSaltHashAndPassword = async user => {
 User.beforeCreate(setSaltHashAndPassword)
 User.beforeUpdate(setSaltHashAndPassword)
 
+
+
+
 /**
  * User_History(
  * - user_id: NonNullAutoIncIntPK,
@@ -80,7 +76,7 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: NonNullDate, description: STRING },false);
+const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, description: STRING }, false);
 User.hasMany(UserHistory, { foreignKey: 'user_id' })
 
 /**
@@ -89,10 +85,12 @@ User.hasMany(UserHistory, { foreignKey: 'user_id' })
  * - list: DefaultString)
  * @type {Model}
  */
-const List = defineTable('List', { list: { type: STRING, unique: true } },false);
+const List = defineTable('List', { list: { type: STRING, allowNull: false, unique: true } }, false);
 
-
-const UserAssociation = (associationName) => defineTable(associationName, { start_date: DATE, end_date: DATE, updater: INTEGER, active: BOOLEAN },false);
+const UserAssociation = (associationName) => defineTable(associationName, {
+    start_date: { type: DATE, allowNull: false }, end_date: DATE,
+    updater: { model: 'User', key: 'id', type: INTEGER, allowNull: false }, active: BOOLEAN
+}, false);
 
 const UserList = UserAssociation('UserList');
 List.belongsToMany(User, { through: UserList });
@@ -104,7 +102,7 @@ User.belongsToMany(List, { through: UserList });
  * - idpname: DefaultString)
  * @type {Model}
  */
-const Idp = defineTable('Idp', { idp_id: STRING(1234, false), idpname: STRING },false);
+const Idp = defineTable('Idp', { idp_id: STRING(1234, false), idpname: STRING }, false);
 User.hasOne(Idp, { foreignKey: 'user_id' })
 /**
  * UserRoles(
@@ -116,17 +114,25 @@ User.hasOne(Idp, { foreignKey: 'user_id' })
  * - active: DefaultBool)
  * @type {Model}
  */
+
+// TODO: updater should be a foreign key
 const UserRoles = UserAssociation('UserRoles');
 Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
 
-const Session=defineTable('Sessions',{sid:{type:STRING(36),primaryKey:true},expires:DATE,data:TEXT},true)
+const setGuestRole = async user => {
+    const guestRole = await Role.create({ role: 'guest' })
+    await UserRoles.create({
+        RoleId: guestRole.id, UserId: user.id, start_date: moment().format(), updater: user.id, active: true
+    })
+}
+
+User.afterCreate(setGuestRole)
+
+const Session = defineTable('Sessions', { sid: { type: STRING(36), primaryKey: true }, expires: DATE, data: TEXT }, true)
 
 User.hasMany(Session)
 Session.belongsTo(User)
-
-
-
 
 exports.Permission = Permission
 exports.Protocols = Protocols
@@ -138,4 +144,4 @@ exports.List = List
 exports.Idp = Idp
 exports.UserList = sequelize.models.UserList
 exports.UserRoles = UserRoles
-exports.Session=Session
+exports.Session = Session

@@ -2,9 +2,8 @@
 
 const Role = require('../sequelize-model').Role,
     { Permission, User } = require('../sequelize-model'),
-    sequelize = require('../../common/util/db'),
-    config = require('../../common/config/config')
-
+    config = require('../../common/config/config'),
+    w = require('../../common/util/with')
 
 module.exports = {
 
@@ -13,53 +12,51 @@ module.exports = {
          * @param role
          * @returns {Promise<void>}
          */
-    create: async (role) => {
+    create: w((role) => {
         config.rbac.createRole(role, true)
         return Role.findOrCreate({
-            where:{
-            role: role
+            where: {
+                role: role
             }
         })
-    },
-    update: (id, role,parent_role) =>Role.update({role: role,parent_role:parent_role}, {where: {id: id}}),
+    }),
+    update: w((id, role, parent_role) => Role.update({ role: role, parent_role: parent_role }, { where: { id: id } })),
 
     /**
      *
      * @param roleId
      * @returns {Promise<*>}
      */
-    getSpecificById: async (roleId) =>
-        Role.findByPk(roleId),
+    getSpecificById: w((roleId) =>
+        Role.findByPk(roleId)),
 
-    getByName: async (roleName) => Role.findOne({ where: { role: roleName } }),
+    getByName: w((roleName) => Role.findOne({ where: { role: roleName } })),
     /**
      *
      * @param roleId
      * @returns {Promise<void>}
      */
-    delete: (roleId) =>
+    delete: w((roleId) =>
         Role.destroy({
             where: {
                 id: roleId
             }
-        }),
+        })),
     /**
      *
      * @returns {Promise<void>}
      */
-    getAll: () => Role.findAll({ raw: true }),
+    get: w(() => Role.findAll({ raw: true })),
 
-    getRolePermissions: (roleId) => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true }),
+    getRolePermissions: w((roleId) => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
 
-    getRolesWithParents: () => sequelize.query(
-        "SELECT id, role, parent_role FROM Role WHERE parent_role IS NOT NULL",
-        { type: sequelize.QueryTypes.SELECT }
-    ),
-    getUsersWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [User],raw:true}),
-    getPermissionsWithThisRole: (roleId) => Role.findAll({ where: { id: roleId }, include: [Permission],raw:true}),
-    addParentRole: async (role, parentRole) =>{ 
-        config.rbac.grant(await config.rbac.getRole(parentRole.role),await config.rbac.getRole(role.role))
-        Role.update({ parent_role: parentRole.id }, { where: { id: role.id} })
-    }
+    getUsersWithThisRole: w((roleId) => Role.findAll({ where: { id: roleId }, include: [User], raw: true })),
+
+    getPermissionsWithThisRole: w((roleId) => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
+
+    addParentRole: w(async (role, parentRole) => {
+        config.rbac.grant(await config.rbac.getRole(parentRole.role), await config.rbac.getRole(role.role))
+        Role.update({ parent_role: parentRole.id }, { where: { id: role.id } })
+    })
 
 }

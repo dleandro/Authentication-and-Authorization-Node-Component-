@@ -1,8 +1,10 @@
-const { Session } = require('../sequelize-model')
+const { Session } = require('../sequelize-model'),
+    w = require('../../common/util/with')
+
 
 module.exports = {
-        getAll:() => Session.findAll(),
-        getUserSessions:(id)=>Session.findAll({
-            where:{UserId:id}
-        })
+    get: w(() => Session.findAll()),
+    getUserSessions: w((id) => Session.findAll({
+        where: { UserId: id }
+    }))
 }

@@ -3,8 +3,11 @@
 // This file is the entry point for our authentication and autorization nodejs module
 // it also calls the setup file
 
+// this should be a superclass to the functionalities classes...
+
 const
-    config = require('./common/config/config')
+    config = require('./common/config/config'),
+    sequelizeErrorsMapper = require('./common/errors/sequelize-errors-mapper')
 
 const getFunctionalities = () => {
 
@@ -72,7 +75,7 @@ const getFunctionalities = () => {
 
             sessions: require('./resources/dals/user-session-dal'),
 
-            userList:require('./resources/dals/user-list-dal')
+            userList: require('./resources/dals/user-list-dal')
 
         }
 
@@ -85,7 +88,7 @@ const getFunctionalities = () => {
 
 module.exports = {
 
-    setup: async (app, db, rbac_opts) => {
+    setup: async ({ app, db, rbac_opts }) => {
 
         if (app && db) {
 
@@ -94,8 +97,8 @@ module.exports = {
 
             config.database_opts = db;
 
-            // setup db entities and db connection
-            await require('./common/util/db')(rbac_opts)
+            // setup db entities, db connection and rbac policy
+            await require('./common/db')(rbac_opts)
 
             function extendDefaultFields(defaults, session) {
                 return {
@@ -104,8 +107,6 @@ module.exports = {
                     UserId: session.passport.user
                 };
             }
-
-
 
             const
                 SessionStore = require('connect-session-sequelize')(expressSession.Store),
@@ -124,8 +125,6 @@ module.exports = {
                         maxAge: 1000 * 60 * 60 * 24
                     }
                 }
-
-            sequelizeSessionStore.sync()
 
             // setup required middleware
             require('./common/middleware/setup-middleware')(app, expressSession(session_opts))

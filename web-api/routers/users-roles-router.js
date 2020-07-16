@@ -6,12 +6,9 @@
  * @param authization
  * @returns {*|Router}
  */
-
- 
-
 module.exports = function (apiUtils, authization) {
-    
-    const routerUtils=require('./router-utils')
+
+    const routerUtils = require('../common/util/router-utils')
     const userRoles = authization.userRole
 
     const usersRolesRouter = require('express').Router()
@@ -27,30 +24,30 @@ module.exports = function (apiUtils, authization) {
     usersRolesRouter.put('/deactivate/:userRoleId', deactivateUserRole)
 
     function addUsersRoles(req, res) {
-        userRoles.create(req.body.user, req.body.role, req.body.start_date, req.body.end_date, req.body.updater, req.body.active)
+        userRoles.create.with(req.body.user, req.body.role, req.body.start_date, req.body.end_date, req.body.updater, req.body.active)
             .then(answer => apiUtils.setResponse(res, answer.dataValues, 201))
-            .catch(err => apiUtils.setResponse(res, JSON.parse(err.message), JSON.parse(err.message).status))
-    }
+            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        }
 
     function getUsersRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getAll(),apiUtils)
+        routerUtils.promiseDataToResponse(res, userRoles.get.all(), apiUtils)
     }
 
     function getActiveRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getAllActive(),apiUtils)
+        routerUtils.promiseDataToResponse(res, userRoles.getActive.all(), apiUtils)
     }
 
     function getUserActiveRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getUserActiveRoles(req.params.id),apiUtils)
+        routerUtils.promiseDataToResponse(res, userRoles.getUserActiveRoles.with(req.params.id), apiUtils)
     }
 
 
     function getUserRolesById(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getById(req.params.id),apiUtils)
+        routerUtils.promiseDataToResponse(res, userRoles.getById.with(req.params.id), apiUtils)
     }
 
     function deactivateUserRole(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.deactivate(req.params.id),apiUtils)
+        routerUtils.promiseDataToResponse(res, userRoles.deactivate.with(req.params.id), apiUtils)
     }
 
     return usersRolesRouter

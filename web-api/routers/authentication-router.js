@@ -1,15 +1,17 @@
 'use strict'
 
+const errors = require('../common/errors/app-errors')
+
 module.exports = function (apiUtils, authization) {
 
-    const successCallback = async (req, res,next) =>{ 
-        
-            if(req.isAuthenticated()){
+    const successCallback = async (req, res, next) => {
+
+        if (req.isAuthenticated()) {
             res.redirect("http://localhost:3000/backoffice")
-            }
-            else{
-             res.redirect("http://localhost:3000/") 
-            }
+        }
+        else {
+            res.redirect("http://localhost:3000/")
+        }
     }
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
@@ -26,7 +28,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-    authenticationRouter.post('/local',authenticate.usingLocal, successCallback)
+    authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
 
     authenticationRouter.post('/logout', authenticate.logout, successCallback)
 
@@ -34,8 +36,10 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback, successCallback)
 
-    authenticationRouter.get('/authenticated-user', (req, res) => apiUtils.setResponse(res, req.user || {}, 200)
-)
+    authenticationRouter.get('/authenticated-user', (req, res) => req.user ?
+        apiUtils.setResponse(res, req.user, 200) :
+        apiUtils.setResponse(res, errors.userNotAuthenticated.message, errors.userNotAuthenticated.status)
+    )
 
 
 

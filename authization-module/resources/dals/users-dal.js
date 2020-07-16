@@ -1,33 +1,35 @@
 'use strict'
 
 const Users = require('../sequelize-model').User,
-Idp=require('../sequelize-model').Idp,
-    Role= require('../sequelize-model').Role
+    Idp = require('../sequelize-model').Idp,
+    Role = require('../sequelize-model').Role,
+    w = require('../../common/util/with')
 
-function getById(id){ return Users.findByPk(id)}
+const getById = w((id) => Users.findByPk(id))
+
 module.exports = {
     /**
      *
      * @param idp
      * @returns {Promise<void>}
      */
-    getByIdp: async (idp) => {
-        const result=await Idp.findAll({where:{idp_id:idp}})
-        return result[0] == null ? null : await getById(result[0].user_id)
-    },
+    getByIdp: w(async (idp) => {
+        const result = await Idp.findAll({ where: { idp_id: idp } })
+        return result[0] == null ? null : getById(result[0].user_id)
+    }),
     /**
      * Requests the database for a user with given id
      * @param id
      * @returns {Promise<*>}
      */
-    getById:getById,
+    getById: getById,
 
     /**
      *
      * @param username
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    getByUsername: (username) => Users.findOne({where: {username: username}}),
+    getByUsername: w((username) => Users.findOne({ where: { username: username } })),
 
 
     /**
@@ -37,13 +39,13 @@ module.exports = {
      * @param password
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    get: async (username, password) => Users.findOne({where: {username: username, password: password}}),
+    getByUsernameAndPassword: w((username, password) => Users.findOne({ where: { username: username, password: password } })),
 
     /**
      * Requests the database for all existing users
      * @returns {Promise<*>}
      */
-    getAll: async () => Users.findAll({raw: true}),
+    get: w(() => Users.findAll({ raw: true })),
 
     /**
      * Requests the database for a new entry in the table users
@@ -52,7 +54,7 @@ module.exports = {
      * @param password
      * @returns {Promise<void>}
      */
-    create: (username, password) =>Users.create({username: username,password: password}),
+    create: w((username, password) => Users.create({ username: username, password: password })),
 
 
     /**
@@ -61,7 +63,7 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updateUsername: (username, id) =>Users.update({username: username}, {where: {id: id}}),
+    updateUsername: w((username, id) => Users.update({ username: username }, { where: { id: id } })),
 
     /**
      * update specific user's password
@@ -69,16 +71,16 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updatePassword: (password, id) =>Users.update({password: password}, {where: {id: id}}),
+    updatePassword: w((password, id) => Users.update({ password: password }, { where: { id: id } })),
 
     /**
      *delete user in the database with given id
      * @param userId
      * @returns {Promise<void>}
      */
-    delete:  (userId) =>Users.destroy({where: {id: userId}}),
+    delete: w((userId) => Users.destroy({ where: { id: userId } })),
 
-    getUserRoles: (userId) => Users.findAll({ where: { id:userId}, include: [Role],raw:true})
+    getUserRoles: w((userId) => Users.findAll({ where: { id: userId }, include: [Role], raw: true }))
 
 
 }

@@ -12,13 +12,13 @@ export default function AuthenticationProtocol() {
 
     var idxToChange = state.indexOf(state
       .find(authType => authType.protocol === event.target.name))
-    
+
     state[idxToChange] = { protocol: event.target.name, active: event.target.checked ? 1 : 0 }
 
     setState([...state])
 
   };
-
+  
   useEffect(() => {
     setState(ctx.allowedProtocolsAndIdps)
   }, [ctx.allowedProtocolsAndIdps])
@@ -30,23 +30,23 @@ export default function AuthenticationProtocol() {
 
   return (
     <div style={{ paddingLeft: "30px", paddingTop: "30px" }}>
-       
+
       {
-        ctx.error?<p>{ctx.error.status} {ctx.error.err}</p>:
-        <React.Fragment>
-        <h2>Select Supported Identity Providers</h2>
-      <FormGroup>
-        {
-          state
-            .map(authType =>
-              <FormControlLabel key={authType.protocol} control={<Checkbox checked={authType.active === 1} onChange={handleChange} name={authType.protocol} color="primary" />} label={authType.protocol} />)
-        }
-      </FormGroup>
-      <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={() => saveAuthTypesAllowed()}> Save</button>
-      </React.Fragment>
+        ctx.error ? <p>{ctx.error.status} {ctx.error.err}</p> :
+          <React.Fragment>
+            <h2>Select Supported Identity Providers</h2>
+            <FormGroup>
+              {
+                state
+                  .map(authType =>
+                    <FormControlLabel key={authType.protocol} control={<Checkbox checked={authType.active === 1} onChange={handleChange} name={authType.protocol} color="primary" />} label={authType.protocol} />)
+              }
+            </FormGroup>
+            <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={() => saveAuthTypesAllowed()}> Save</button>
+          </React.Fragment>
       }
-      
-      
+
+
     </div>
   )
 

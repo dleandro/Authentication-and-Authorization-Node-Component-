@@ -5,7 +5,10 @@ const sequelizeErrorsMapper = require('../errors/sequelize-errors-mapper')
 const simpleTryCatchAndRunFunctionFn = async (fnToRun, args) => {
 
     try {
-        return Promise.resolve(await fnToRun(...args))
+        if (args) {
+            return Promise.resolve(await fnToRun(...args))
+        }
+        return Promise.resolve(await fnToRun())
     } catch (error) {
         throw sequelizeErrorsMapper(error)
     }

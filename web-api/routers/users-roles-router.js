@@ -8,7 +8,6 @@
  */
 module.exports = function (apiUtils, authization) {
 
-    const routerUtils = require('../common/util/router-utils')
     const userRoles = authization.userRole
 
     const usersRolesRouter = require('express').Router()
@@ -30,24 +29,24 @@ module.exports = function (apiUtils, authization) {
         }
 
     function getUsersRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.get.all(), apiUtils)
+        apiUtils.promiseDataToResponse(res, userRoles.get.all(), apiUtils)
     }
 
     function getActiveRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getActive.all(), apiUtils)
+        apiUtils.promiseDataToResponse(res, userRoles.getActive.all(), apiUtils)
     }
 
     function getUserActiveRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getUserActiveRoles.with(req.params.id), apiUtils)
+        apiUtils.promiseDataToResponse(res, userRoles.getUserActiveRoles.with(req.params.id), apiUtils)
     }
 
 
     function getUserRolesById(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.getById.with(req.params.id), apiUtils)
+        apiUtils.promiseDataToResponse(res, userRoles.getById.with(req.params.id), apiUtils)
     }
 
     function deactivateUserRole(req, res) {
-        routerUtils.promiseDataToResponse(res, userRoles.deactivate.with(req.params.id), apiUtils)
+        apiUtils.promiseDataToResponse(res, userRoles.deactivate.with(req.params.id), apiUtils)
     }
 
     return usersRolesRouter

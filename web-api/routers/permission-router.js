@@ -9,7 +9,6 @@
  */
 module.exports = function (apiUtils, authization) {
     
-    const routerUtils=require('../common/util/router-utils')
     const permissionRouter = require('express').Router()
     const permissions = authization.permission
 
@@ -26,11 +25,11 @@ module.exports = function (apiUtils, authization) {
     permissionRouter.route('/:id/roles').get(getRolesByPermission)
 
     function getRolesByPermission(req,res){
-        routerUtils.promiseDataToResponse(res, permissions.getRolesByPermission.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, permissions.getRolesByPermission.with(req.params.id))
     }
 
     function getPermissions(req, res) {
-        routerUtils.promiseDataToResponse(res, permissions.get.all())
+        apiUtils.promiseDataToResponse(res, permissions.get.all())
     }
 
     function addPermission(req, res) {
@@ -48,11 +47,11 @@ module.exports = function (apiUtils, authization) {
         }
 
     function deletePermission(req, res) {
-        routerUtils.promiseDataToResponse(res,permissions.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res,permissions.delete.with(req.params.id))
     }
 
     function getPermissionById(req, res) {
-        routerUtils.promiseDataToResponse(res,permissions.getSpecificById.with(req.params.id))
+        apiUtils.promiseDataToResponse(res,permissions.getSpecificById.with(req.params.id))
     }
 
     return permissionRouter

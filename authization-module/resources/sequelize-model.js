@@ -124,15 +124,6 @@ const UserRoles = UserAssociation('UserRoles');
 Role.belongsToMany(User, { through: UserRoles });
 User.belongsToMany(Role, { through: UserRoles });
 
-const setGuestRole = async user => {
-    const guestRole = await Role.create({ role: 'guest' })
-    await UserRoles.create({
-        RoleId: guestRole.id, UserId: user.id, start_date: moment().format(), updater: user.id, active: true
-    })
-}
-
-User.afterCreate(setGuestRole)
-
 const Session = defineTable('Sessions', { sid: { type: STRING(36), primaryKey: true }, expires: DATE, data: TEXT }, true)
 
 User.hasMany(Session)

@@ -1,11 +1,11 @@
-const db2={
-    "host":"localhost",
-    "port":"5432",
-    "user":"postgres",
-    "password":"1234",
+const db2 = {
+    "host": "localhost",
+    "port": "5432",
+    "user": "postgres",
+    "password": "1234",
     "connectionLimit": 5,
     "database": "postgres",
-    "sgbd" :"postgres"
+    "sgbd": "postgres"
 }
 
 const db = {
@@ -19,7 +19,7 @@ const db = {
 }
 
 const rbac_opts = {
-    "roles": ["admin", "DbManager", "Developer","guest"],
+    "roles": ["admin", "DbManager", "Developer", "guest"],
     "permissions": [
         { "resource": "users-lists", "action": "GET" },
         { "resource": "users-lists", "action": "POST" },
@@ -42,43 +42,43 @@ const rbac_opts = {
         { "resource": "users", "action": "PUT" },
         { "resource": "users", "action": "DELETE" },
         { "resource": "sessions", "action": "GET" },
-      /*  { "resource": "sessions", "action": "POST" },
-        { "resource": "sessions", "action": "PUT" },
-        { "resource": "sessions", "action": "DELETE" },
-        { "resource": "lists", "action": "GET" },
-        { "resource": "lists", "action": "POST" },
-        { "resource": "lists", "action": "PUT" },
-        { "resource": "lists", "action": "DELETE" },
-        { "resource": "roles-permissions", "action": "GET" },
-        { "resource": "roles-permissions", "action": "POST" },
-        { "resource": "roles-permissions", "action": "PUT" },
-        { "resource": "roles-permissions", "action": "DELETE" },
-        { "resource": "users-roles", "action": "GET" },
-        { "resource": "users-roles", "action": "POST" },
-        { "resource": "users-roles", "action": "PUT" },
-        { "resource": "users-roles", "action": "DELETE" },*/
+        /*  { "resource": "sessions", "action": "POST" },
+          { "resource": "sessions", "action": "PUT" },
+          { "resource": "sessions", "action": "DELETE" },
+          { "resource": "lists", "action": "GET" },
+          { "resource": "lists", "action": "POST" },
+          { "resource": "lists", "action": "PUT" },
+          { "resource": "lists", "action": "DELETE" },
+          { "resource": "roles-permissions", "action": "GET" },
+          { "resource": "roles-permissions", "action": "POST" },
+          { "resource": "roles-permissions", "action": "PUT" },
+          { "resource": "roles-permissions", "action": "DELETE" },
+          { "resource": "users-roles", "action": "GET" },
+          { "resource": "users-roles", "action": "POST" },
+          { "resource": "users-roles", "action": "PUT" },
+          { "resource": "users-roles", "action": "DELETE" },*/
         { "resource": "authentications", "action": "GET" },
         { "resource": "authentications", "action": "POST" },
         { "resource": "authentications", "action": "PUT" },
         { "resource": "authentications", "action": "DELETE" }
-        ],
+    ],
     "grants": {
-         "DbManager": [
-             { "resource": "users", "action": "DELETE" }
-            ],
-            "guest":[
-                { "resource": "protocols", "action": "GET" },
-                { "resource": "authentications", "action": "GET" },
-                { "resource": "authentications", "action": "POST" },
-                { "resource": "users", "action": "POST" }
-            ],
-           "admin": [
-                { "role": "DbManager" },
-                
-            ]
-        }
+        "DbManager": [
+            { "resource": "users", "action": "DELETE" }
+        ],
+        "guest": [
+            { "resource": "protocols", "action": "GET" },
+            { "resource": "authentications", "action": "GET" },
+            { "resource": "authentications", "action": "POST" },
+            { "resource": "users", "action": "POST" }
+        ],
+        "admin": [
+            { "role": "DbManager" },
+
+        ]
+    }
 }
 
-exports.db2=db2
-exports.db=db
-exports.rbac_opts=rbac_opts
+exports.db2 = db2
+exports.db = db
+exports.rbac_opts = rbac_opts

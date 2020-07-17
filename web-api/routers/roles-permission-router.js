@@ -9,7 +9,6 @@
  */
 module.exports = function (apiUtils, authization) {
 
-    const routerUtils = require('../common/util/router-utils')
     const rolePermission = authization.rolePermission
     const rolesPermissionRouter = require('express').Router()
 
@@ -26,7 +25,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteRolesPermission(req, res) {
-        routerUtils.promiseDataToResponse(res, rolePermission.delete.with(req.body.role, req.body.permission))
+        apiUtils.promiseDataToResponse(res, rolePermission.delete.with(req.body.role, req.body.permission))
     }
 
     return rolesPermissionRouter

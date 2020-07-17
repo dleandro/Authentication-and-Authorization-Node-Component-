@@ -3,7 +3,6 @@
 // this module contains all role related endpoints
 module.exports = function (apiUtils, authization) {
 
-    const routerUtils = require('../common/util/router-utils')
     const roles = authization.role
     const roleRouter = require('express').Router()
 
@@ -36,24 +35,24 @@ module.exports = function (apiUtils, authization) {
         }
 
     function deleteRole(req, res) {
-        routerUtils.promiseDataToResponse(res, roles.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, roles.delete.with(req.params.id))
     }
 
 
     function getRoles(req, res) {
-        routerUtils.promiseDataToResponse(res, roles.get.all())
+        apiUtils.promiseDataToResponse(res, roles.get.all())
     }
 
     function getRoleById(req, res) {
-        routerUtils.promiseDataToResponse(res, roles.getSpecificById.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, roles.getSpecificById.with(req.params.id))
     }
 
     function getUsersWithThisRole(req, res) {
-        routerUtils.promiseDataToResponse(res, roles.getUsersWithThisRole.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, roles.getUsersWithThisRole.with(req.params.id))
     }
 
     function getPermissionsWithThisRole(req, res) {
-        routerUtils.promiseDataToResponse(res, roles.getPermissionsWithThisRole.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, roles.getPermissionsWithThisRole.with(req.params.id))
     }
 
     return roleRouter

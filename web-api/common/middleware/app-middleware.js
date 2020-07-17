@@ -26,6 +26,7 @@ module.exports = async function (app) {
 
     // error handler
     app.use((err, req, res, next) => {
+        console.log(err)
         apiUtils.setResponse(res, err.message, err.status || 400)
     })
 

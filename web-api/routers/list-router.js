@@ -10,8 +10,6 @@ const { update } = require('../../authization-module/resources/dals/permissions-
  */
 module.exports = function (apiUtils, authization) {
 
-
-    const routerUtils = require('../common/util/router-utils')
     const lists = authization.list
     const listRouter = require('express').Router()
 
@@ -42,31 +40,31 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteList(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.delete.with(req.params.id))
     }
 
     function getUsersInThisList(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.getUsersInThisList.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.getUsersInThisList.with(req.params.id))
     }
 
     function getLists(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.get.all())
+        apiUtils.promiseDataToResponse(res, lists.get.all())
     }
 
     function getActiveLists(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.getActive.all())
+        apiUtils.promiseDataToResponse(res, lists.getActive.all())
     }
 
     function getUserActiveList(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.getUsersActive.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.getUsersActive.with(req.params.id))
     }
 
     function deactivateList(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.deactivate.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.deactivate.with(req.params.id))
     }
 
     function getList(req, res) {
-        routerUtils.promiseDataToResponse(res, lists.getById.with(req.params.id), routerUtils)
+        apiUtils.promiseDataToResponse(res, lists.getById.with(req.params.id))
     }
 
     function updateList(req, res) {

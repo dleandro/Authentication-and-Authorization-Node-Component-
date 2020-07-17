@@ -12,8 +12,6 @@ const { getUserAuthorizationInfo } = require('../../authization-module/resources
  */
 module.exports = function (apiUtils, authization) {
 
-    const routerUtils = require('../common/util/router-utils')
-
     const users = authization.user,
         idps = authization.idp,
         userRouter = require('express').Router()
@@ -32,7 +30,7 @@ module.exports = function (apiUtils, authization) {
     userRouter.get('/byUsername/:username', getUserByUsername)
 
 
-    userRouter.get('/:id/roles', (req, res) => routerUtils.promiseDataToResponse(res, users.getUserRoles.with(req.params.id)))
+    userRouter.get('/:id/roles', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserRoles.with(req.params.id)))
 
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
@@ -44,11 +42,11 @@ module.exports = function (apiUtils, authization) {
     userRouter.get('/authorizations', getUsersAuthorizations)
 
     function getUsersAuthorizations(req, res) {
-        routerUtils.promiseDataToResponse(res, authization.authorization.authorizationInfo(req))
+        apiUtils.promiseDataToResponse(res, authization.authorization.authorizationInfo(req))
     }
 
     function getAllUsers(req, res) {
-        routerUtils.promiseDataToResponse(res, users.get.all(), apiUtils)
+        apiUtils.promiseDataToResponse(res, users.get.all(), apiUtils)
     }
 
     function createUser(req, res) {
@@ -60,23 +58,23 @@ module.exports = function (apiUtils, authization) {
         }
 
     function getSpecificUser(req, res) {
-        routerUtils.promiseDataToResponse(res, users.getById.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, users.getById.with(req.params.id))
     }
 
     function deleteUser(req, res) {
-        routerUtils.promiseDataToResponse(res, users.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, users.delete.with(req.params.id))
     }
 
     function getUserFromIdp(req, res) {
-        routerUtils.promiseDataToResponse(res, users.getByIdp.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, users.getByIdp.with(req.params.id))
     }
 
     function getUserByUsername(req, res) {
-        routerUtils.promiseDataToResponse(res, users.getByUsername.with(req.params.username))
+        apiUtils.promiseDataToResponse(res, users.getByUsername.with(req.params.username))
     }
 
     function createIdpUser(req, res) {
-        routerUtils.promiseDataToResponse(res, idps.create.with(req.body.idpId, req.body.idpName, req.body.userId))
+        apiUtils.promiseDataToResponse(res, idps.create.with(req.body.idpId, req.body.idpName, req.body.userId))
     }
 
     function updatePassword(req, res) {

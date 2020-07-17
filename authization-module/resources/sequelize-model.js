@@ -4,6 +4,10 @@ const { Sequelize, DataTypes } = require('sequelize'),
     bcrypt = require('bcrypt')
 
 const { STRING, DATE, BOOLEAN, INTEGER, TEXT } = Sequelize
+const NonNullDate = { type: DATE, allowNull: false } //only used 1 time considering remove this const
+const NonNullString = { type: STRING, allowNull: false }
+const NonNullUniqueString = { ...NonNullString, unique: true } //only used 1 time considering remove this const
+const NonNullStringPK = { ...NonNullString, primaryKey: true } //only used 1 time considering remove this const
 
 /**
  * @param modelName
@@ -19,21 +23,21 @@ const defineTable = (modelName, attributes, timestamps) => sequelize.define(mode
  * - description: DefaultString)
  * @type {Model}
  */
-const Permission = defineTable('Permission', { action: { type: STRING, allowNull: false }, resource: { type: STRING, allowNull: false } }, false);
+const Permission = defineTable('Permission', { action: {...NonNullString}, resource: {...NonNullString} }, false);
 /**
  * Protocols(
  * - protocol: NonNullStringPK,
  * - active:DefaultBool)
  * @type {Model}
  */
-const Protocols = defineTable('Protocols', { protocol: { type: STRING, allowNull: false, primaryKey: true }, active: BOOLEAN }, false);
+const Protocols = defineTable('Protocols', { protocol: { ...NonNullStringPK }, active: BOOLEAN }, false);
 /**
  Role(
  * - role: NonNullString,
  * - parent_role: DefaultInt)
  * @type {Model}
  */
-const Role = defineTable('Role', { role: { type: STRING, allowNull: false, unique: true }, parent_role: INTEGER }, false);
+const Role = defineTable('Role', { role: {...NonNullUniqueString}, parent_role: INTEGER }, false);
 /**
  * RolePermission(
  * - role: NonNullAutoIncIntPK,
@@ -49,7 +53,7 @@ Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false },
  * @type {Model}
  */
 const User = defineTable('User', {
-    username: { type: STRING, allowNull: false, unique: true },
+    username: {...NonNullUniqueString},
     password: { type: STRING, get() { return () => this.getDataValue('password') } }
 }, false);
 
@@ -76,7 +80,7 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, description: STRING }, false);
+const UserHistory = defineTable('User_History', { date: { ...NonNullDate }, description: STRING }, false);
 User.hasMany(UserHistory, { foreignKey: 'user_id' })
 
 /**
@@ -85,10 +89,10 @@ User.hasMany(UserHistory, { foreignKey: 'user_id' })
  * - list: DefaultString)
  * @type {Model}
  */
-const List = defineTable('List', { list: { type: STRING, allowNull: false, unique: true } }, false);
+const List = defineTable('List', { list: {...NonNullUniqueString} }, false);
 
 const UserAssociation = (associationName) => defineTable(associationName, {
-    start_date: { type: DATE, allowNull: false }, end_date: DATE,
+    start_date: { ...NonNullDate }, end_date: DATE,
     updater: { model: 'User', key: 'id', type: INTEGER, allowNull: false }, active: BOOLEAN
 }, false);
 

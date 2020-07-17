@@ -13,7 +13,7 @@ export default function BackOffice() {
         {title:'Roles',desc:'Create, Update and Delete Roles. Associate these roles with different sets of Permissions and Users.',link:'/roles'}];
     const backOfficeFunctionalitiesRow2 = [
         {title:'Lists',desc:'Manage Lists and associate them with Users.',link:'/lists'},
-        {title:'Authentication Types',desc:'Choose the allowed authentication types for the application.',link:'/protocols'},
+        {title:'Backoffice Configs',desc:'Choose the allowed authentication types for the application.',link:'/protocols'},
         {title:'Sessions',desc:'Manage User Sessions.',link:'/sessions'}];
 
     const functionalityToCard = func =>

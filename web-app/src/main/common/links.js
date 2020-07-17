@@ -35,8 +35,7 @@ export const webApiLinks =
         LOCAL_LOGIN_PATH: `${AUTHENTICATION_PATH}/local`,
         LOGOUT_PATH: `${AUTHENTICATION_PATH}/logout`,
         GET_AUTHENTICATED_USER_PATH: `${AUTHENTICATION_PATH}/authenticated-user`,
-        ROLES_PATH: id => `${USER_PATH}/${id}/roles`,
-        GET_USER_AUTHORIZATIONS_PATH: `${USER_PATH}/authorizations`
+        ROLES_PATH: id => `${USER_PATH}/${id}/roles`
     },
 
     roles: {

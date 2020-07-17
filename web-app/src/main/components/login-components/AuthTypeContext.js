@@ -13,17 +13,11 @@ const AuthTypeProvider = (props) => {
 
     // get allowed protocols and push them to state
     useEffect(() => {
-        const fetchAllowedProtocolsAndIdps = async () => {
-            const authTypes = await protocolService().getPossibleAuthTypes()
-            if(authTypes[0])setAllowedProtocolsAndIdps(authTypes)
-        }
-
         if (!authTypesWereChangedByUser) {
-
-            fetchAllowedProtocolsAndIdps()
-
+            protocolService().getPossibleAuthTypes().then(authTypes=>{
+                if(authTypes[0])setAllowedProtocolsAndIdps(authTypes)
+            })
         }
-
     },[authTypesWereChangedByUser])
 
     // State was changes by the user so we need to update the database so that it will remain consistent with state

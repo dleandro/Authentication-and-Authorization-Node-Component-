@@ -9,18 +9,16 @@ class UserProvider extends Component {
         selectedProtocol: "/",
         redirect: { should: false, link: "/" },
         user: { id: undefined, username: undefined },
-        setUser: (data) => this.setState(prevState => ({ user: data })),
-        rbac: undefined
+        setUser: (data) => this.setState(prevState => ({ user: data }))
     };
 
     async componentDidMount() {
 
-        try {
-            const user = await userService().getAuthenticatedUser()            
+        const user = await userService().getAuthenticatedUser()
+
+
+        if (user.username) {
             this.state.setUser(user)
-            this.setState({rbac: await userService().getUserAuthorizations()})
-        } catch (error) {
-            // no user is authenticated so there is no need to change state
         }
 
     }

@@ -41,8 +41,6 @@ module.exports = function (apiUtils, authization) {
         apiUtils.setResponse(res, errors.userNotAuthenticated.message, errors.userNotAuthenticated.status)
     )
 
-
-
     return authenticationRouter
 
 }

@@ -1,10 +1,9 @@
-<<<<<<< HEAD
-var { users_lists,sessions, users, roles, permissions,  users_roles, lists, roles_permissions, protocols,configs} = require('./common/links').webApiLinks;
-=======
-var { users_lists,sessions, users, roles, permissions,  users_roles, lists, roles_permissions, protocols,history} = require('./common/links').webApiLinks;
->>>>>>> 6ccca311c53095ad8d556381d9ac41c9806568e1
+
+var { users_lists,sessions, users, roles, permissions,  users_roles, lists, roles_permissions, protocols,history, configs} = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
+//var HOME_PATH = 'http://35.233.44.226:80'
+
 function produceInit(body, met) {
     return { ...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true };
 }
@@ -39,8 +38,7 @@ const makeRequest = (url, body, met) => request(url, produceInit(body, met));
 /**
  * Function used to make login logout
  */
-export function authenticationService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function authenticationService() {
     return {
         login: async (user, pass) => makeRequest(users.LOCAL_LOGIN_PATH, { username: user, password: pass }, 'POST'),
 
@@ -48,18 +46,7 @@ export function authenticationService(optionalPort) {
     }
 }
 
-export function configService(optionalPort) {
-    return {
-        changeDatabaseOptions: async (newSgbd) => makeRequest(configs.DATABASE_CONFIG_PATH, { sgbd: newSgbd }, 'PUT'),
-        changeGoogleAuthenticationOptions: async (clientId,clientSecret,callbackURL) => makeRequest(configs.GOOGLE_CONFIG_PATH,
-            { google: {google_client_id: clientId, google_client_secret: clientSecret, callbackURL: callbackURL}}, 'PUT'),
-        changeAzureADAuthenticationOptions: async (clientId,clientSecret,callbackURL,tenant) => makeRequest(configs.AZUREAD_CONFIG_PATH,
-            { azureAD: {azure_client_id: clientId,azure_client_secret: clientSecret, callbackURL: callbackURL, tenant: tenant}}, 'PUT'),
-    }
-}
-
-export function protocolService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function protocolService() {
 
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
@@ -67,14 +54,17 @@ export function protocolService(optionalPort) {
     }
 }
 
-export function userService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function userService() {
     return {
         getAuthenticatedUser: async () => getRequest(users.GET_AUTHENTICATED_USER_PATH),
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
         getUserRoles: async (id) => getRequest(users.ROLES_PATH(id)),
+        getUserSessions:async(id)=>getRequest(users.SESSION_PATH(id)),
+        getUserLists:async(id)=>getRequest(users.LIST_PATH(id)),
+        getUserHistory:async(id)=>getRequest(users.HISTORY_PATH(id)),
+        getAuthenticatedUserPermissions:async()=>getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
         addUser: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
         deleteUser: async (arr) => {
@@ -83,8 +73,9 @@ export function userService(optionalPort) {
     }
 }
 
-export function listService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+
+
+export function listService() {
     return {
         getLists: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
@@ -99,8 +90,7 @@ export function listService(optionalPort) {
     }
 }
 
-export function rolesService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function rolesService() {
     return {
         getRoles: async () => getRequest(roles.ROLE_PATH),
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
@@ -108,69 +98,70 @@ export function rolesService(optionalPort) {
         getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
         addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2] }, 'POST'),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
-        deleteRole: async (id) => {
-            makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
-        }
+        deleteRole: async (id) =>  makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
 
     }
 }
 
-export function permissionService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function permissionService() {
     return {
         getPermissions: async () => getRequest(permissions.PERMISSION_PATH),
         getPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id)),
-        getUserPermission: async (userId) => { console.log('getUserPermission needs to be done'); return { action: 'mock', resource: 'all' } },
         addPermission: async (arr) => makeRequest(permissions.PERMISSION_PATH, { action: arr[1], resource: arr[2] }, 'POST'),
         editPermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), { action: arr[1], resource: arr[2] }, 'PUT'),
-        deletePermission: async (arr) => {
-            makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {}, 'DELETE')
-        },
+        deletePermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {}, 'DELETE'),
         getRolesWithThisPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id) + '/roles')
     }
 }
 
-export function userRoleService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function userRoleService() {
     return {
         getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
-        addUserRole:async(userid,roleid,updater)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:1,updater:updater},'POST')
+        addUserRole:async(userid,roleid,updater)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:1,updater:updater},'POST'),
+        deactivateUserRole:async(userid,roleid)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:0},'PUT'),
+        deleteUserRole:async(userId,RoleId)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userId,role:RoleId},'DELETE')
     }
 }
 
-export function sessionService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function sessionService() {
     return {
         getSessions: async () => getRequest(sessions.SESSION_PATH),
-        getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id))
+        getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id)),
+        deleteSession:async(id)=>makeRequest(sessions.SESSION_PATH,{sid:id},'DELETE'),
+        changeSessionData:async(data,id)=>makeRequest(sessions.SPECIFIC_SESSION_PATH,{sid:id,data:data},'PUT')
     }
 }
 
-export function rolePermissionService(optionalPort) {
-    HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+export function rolePermissionService() {
     return {
-        addRolePermission: async (roleId, permissionId, action, resource) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, action: action, resource: resource, roleId: roleId }, 'POST')
-        
+        addRolePermission: async (roleId, permissionId, action, resource) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, action: action, resource: resource, roleId: roleId }, 'POST'),
+        deleteRolePermission:async (roleId,permissionId)=>makeRequest(roles_permissions.ROLES_PERMISSION_PATH,{permissionId: permissionId, roleId: roleId },'DELETE')
     }
 }
 
-    export function userListService(optionalPort) {
-        HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+    export function userListService() {
         return {
-            addUserList: async (listId, userId,updater) => {
-                console.log(listId)
-                makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId,active:1,updater:updater}, 'POST')
-            }
-            
+            addUserList: async (listId, userId,updater) => makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId,active:1,updater:updater}, 'POST'),
+            deactivateList:async(listId,userId) =>makeRequest(users_lists.USERS_LIST_PATH,{active:0},'PUT'),
+            deleteUserList: async(listId,userId)=> makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId}, 'DELETE')
         }
     }
 
-        export function historyService(optionalPort){
-            HOME_PATH = optionalPort ? `http://localhost:${optionalPort}` : undefined;
+        export function historyService(){
             return {
                 getUserHistory: async (userId) =>  getRequest(history.HISTORY_PATH)
         }
-}
+    }
+
+
+        export function configService(){
+            return{
+                changeDatabaseOptions:async(database_opts)=>makeRequest(configs.DATABASE_CONFIG_PATH,{database_opts:database_opts},'POST'),
+                changeDatabaseType:async(dbType)=>makeRequest(configs.DATABASE_CONFIG_PATH,{type:dbType},'PUT'),
+                changeGoogleAuthenticationOptions:async(google_opts)=>makeRequest(configs.GOOGLE_CONFIG_PATH,{google_opts:google_opts},'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+                changeAzureADAuthenticationOptions:async(azure_opts)=>makeRequest(configs.AZUREAD_CONFIG_PATH,{azure_opts:azure_opts},'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+            }
+        }
 
 
 

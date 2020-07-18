@@ -1,11 +1,10 @@
 'use strict'
 
-const Users = require('../sequelize-model').User,
-    Idp = require('../sequelize-model').Idp,
-    Role = require('../sequelize-model').Role,
+
+const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
-const getById = (id) => tryCatch(() => Users.findByPk(id))
+const getById = (id) => tryCatch(() => User.findByPk(id))
 
 module.exports = {
     /**
@@ -23,15 +22,14 @@ module.exports = {
      * @param id
      * @returns {Promise<*>}
      */
-    getById: getById,
+    getById,
 
     /**
      *
      * @param username
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    getByUsername: (username) => tryCatch(() => Users.findOne({ where: { username: username } })),
-
+    getByUsername: (username) => tryCatch(() => User.findOne({ where: { username: username } })),
 
     /**
      * Requests the database to return user's that match username and password parameters
@@ -40,13 +38,13 @@ module.exports = {
      * @param password
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    getByUsernameAndPassword: (username, password) => tryCatch(() => Users.findOne({ where: { username: username, password: password } })),
+    getByUsernameAndPassword: (username, password) => tryCatch(() => User.findOne({ where: { username: username, password: password } })),
 
     /**
      * Requests the database for all existing users
      * @returns {Promise<*>}
      */
-    get: () => tryCatch(() => Users.findAll({ raw: true })),
+    get: () => tryCatch(() => User.findAll({ raw: true })),
 
     /**
      * Requests the database for a new entry in the table users
@@ -55,7 +53,7 @@ module.exports = {
      * @param password
      * @returns {Promise<void>}
      */
-    create: (username, password) => tryCatch(() => Users.create({ username: username, password: password })),
+    create: (username, password) => tryCatch(() => User.create({ username: username, password: password })),
 
 
     /**
@@ -64,7 +62,7 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updateUsername: (username, id) => tryCatch(() => Users.update({ username: username }, { where: { id: id } })),
+    updateUsername: (username, id) => tryCatch(() => User.update({ username: username }, { where: { id: id } })),
 
     /**
      * update specific user's password
@@ -72,16 +70,16 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updatePassword: (password, id) => tryCatch(() => Users.update({ password: password }, { where: { id: id } })),
+    updatePassword: (password, id) => tryCatch(() => User.update({ password: password }, { where: { id: id } })),
 
     /**
      *delete user in the database with given id
      * @param userId
      * @returns {Promise<void>}
      */
-    delete: (userId) => tryCatch(() => Users.destroy({ where: { id: userId } })),
+    delete: (userId) => tryCatch(() => User.destroy({ where: { id: userId } })),
 
-    getUserRoles: (userId) => tryCatch(() => Users.findAll({ where: { id: userId }, include: [Role], raw: true }))
+    getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true }))
 
 
 }

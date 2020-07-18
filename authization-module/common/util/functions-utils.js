@@ -2,11 +2,10 @@
 
 const sequelizeErrorsMapper = require('../errors/sequelize-errors-mapper')
 
-module.exports = (fnToRun) => {
+module.exports = async (fnToRun) => {
 
     try {
-        const res = fnToRun()
-        return res
+        return await fnToRun()
     } catch (error) {
         throw sequelizeErrorsMapper(error)
     }

@@ -14,6 +14,7 @@ module.exports = function (apiUtils, authization) {
 
     const users = authization.user,
         idps = authization.idp,
+        authorization=authization.authorization,
         userRouter = require('express').Router()
 
     userRouter.route('/')
@@ -29,8 +30,11 @@ module.exports = function (apiUtils, authization) {
     // get user by username
     userRouter.get('/byUsername/:username', getUserByUsername)
 
-
-    userRouter.get('/:id/roles', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserRoles(req.params.id)))
+    userRouter.get('/:id/roles', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserRoles(req.params.id),apiUtils))
+    userRouter.get('/:id/lists', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserLists(req.params.id),apiUtils))
+    userRouter.get('/:id/history', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserHistory(req.params.id),apiUtils))
+    userRouter.get('/:id/sessions', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserSessions(req.params.id),apiUtils))
+    userRouter.get('/currentUser/permissions',(req,res,next)=>routerUtils.promiseDataToResponse(res, authorization.getUserPermissions(req,res,next),apiUtils))
 
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
@@ -52,7 +56,7 @@ module.exports = function (apiUtils, authization) {
     function createUser(req, res) {
         users.create(req.body.username, req.body.password)
             .then(answer => {
-                apiUtils.setResponse(res, answer, 201)
+                apiUtils.setResponse(res, answer.dataValues, 201)
             })
             .catch(err => apiUtils.setResponse(res, err.message, err.status))
         }

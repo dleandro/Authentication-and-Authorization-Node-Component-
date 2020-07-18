@@ -53,26 +53,26 @@ async function setupSuperuser() {
 function createRoles(roles) {
     return Promise.all(
         roles
-            .map(role => roleDal.create.with(role))
+            .map(role => roleDal.create(role))
     );
 }
 
 function createPermissions(permissions) {
     return Promise.all(
         permissions
-            .map(permission => permissionsDal.create.with(permission.action, permission.resource))
+            .map(permission => permissionsDal.create(permission.action, permission.resource))
     );
 }
 
 function createGrants(grants) {
     return Promise.all(Object.keys(grants).map(async function (key, index) {
         const permissions = grants[key];
-        const role = await roleDal.getByName.with(key);
+        const role = await roleDal.getByName(key);
         return permissions.map(permission => {
             if ('role' in permission) {
-                return roleDal.getByName.with(permission.role).then(childRole => roleDal.addParentRole.with(childRole, role));
+                return roleDal.getByName(permission.role).then(childRole => roleDal.addParentRole(childRole, role));
             } else {
-                return permissionsDal.getSpecific.with(permission.action, permission.resource).then(p => rolesPermissionsDal.create.with(role.id, p));
+                return permissionsDal.getSpecific(permission.action, permission.resource).then(p => rolesPermissionsDal.create(role.id, p));
             }
         });
     }));

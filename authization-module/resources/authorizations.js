@@ -23,7 +23,7 @@ module.exports = {
         var roles = []
 
         if (user) {
-            roles = await usersDal.getUserRoles.with(user.id)
+            roles = await usersDal.getUserRoles(user.id)
             roles = roles.map(role => role["Roles.role"])
             if (roles.includes('admin')) {
                 return next()
@@ -46,7 +46,7 @@ module.exports = {
         var roles = []
 
         if (user) {
-            roles = await usersDal.getUserRoles.with(user.id)
+            roles = await usersDal.getUserRoles(user.id)
             roles = roles.map(role => role["Roles.role"])
         }
 
@@ -58,7 +58,7 @@ module.exports = {
     },
 
     authorizationInfo: async (req) => {
-        const roles = userRoleDal.getUserActiveRoles.with(req.user.id)
+        const roles = userRoleDal.getUserActiveRoles(req.user.id)
 
         roles.push("guest")
         

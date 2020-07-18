@@ -3,7 +3,7 @@
 const { Role } = require('../sequelize-model')
 
 const UserRole = require('../sequelize-model').UserRoles,
-    w = require('../../common/util/with')
+    tryCatch = require('../../common/util/functions-utils')
 
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
      * @param active
      * @returns {Promise<void>}
      */
-    create: w((user, role, startDate, endDate, updater, active) => UserRole.create({
+    create: (user, role, startDate, endDate, updater, active) => tryCatch( () =>UserRole.create({
         UserId: user,
         RoleId: role,
         start_date: startDate,
@@ -31,27 +31,27 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    deactivate: w((id) => UserRole.update({ active: 0 }, { where: { UserId: id } })),
+    deactivate: (id) => tryCatch(() => UserRole.update({ active: 0 }, { where: { UserId: id } })),
     /**
      * checks if all User roles are active
      * @returns {Promise<*>}
      */
-    getActive: w(() => UserRole.findAll({ where: { active: 1 } })),
+    getActive: tryCatch(() => UserRole.findAll({ where: { active: 1 } })),
     /**
      *
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: w((id) => UserRole.findAll({ where: { UserId: id, active: 1 } })),
+    getUserActiveRoles: (id) => tryCatch(() => UserRole.findAll({ where: { UserId: id, active: 1 } })),
     /**
      *
      * @returns {Promise<void>}
      */
-    get: w(() => UserRole.findAll({ raw: true })),
+    get: () => tryCatch(() => UserRole.findAll({ raw: true })),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getById: w((id) => UserRole.findByPk(id))
+    getById: (id) => tryCatch(() => UserRole.findByPk(id))
 }

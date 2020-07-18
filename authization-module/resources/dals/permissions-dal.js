@@ -1,11 +1,8 @@
 'use strict'
 
 const { Role } = require('../sequelize-model'),
-w = require('../../common/util/with')
-
-
-
-const Permission = require('../sequelize-model').Permission,
+    tryCatch = require('../../common/util/functions-utils'),
+    Permission = require('../sequelize-model').Permission,
     config = require('../../common/config/config')
 
 module.exports = {
@@ -17,15 +14,16 @@ module.exports = {
   * @param description
   * @returns {Promise<void>}
   */
-    create: w((action, resource) => {
-        config.rbac.createPermission(action, resource, true)
-        return Permission.findOrCreate({
-            where: {
-                action: action,
-                resource: resource
-            }
-        })
-    }),
+    create: (action, resource) =>
+        tryCatch(() => {
+            config.rbac.createPermission(action, resource, true)
+            return Permission.findOrCreate({
+                where: {
+                    action: action,
+                    resource: resource
+                }
+            })
+        }),
 
     /**
      *
@@ -33,40 +31,42 @@ module.exports = {
      * @param path
      * @returns {Promise<void>}
      */
-    delete: w((id) =>
-        Permission.destroy({
-            where: {
-                id: id
-            }
-        })),
+    delete: (id) =>
+        tryCatch(() =>
+            Permission.destroy({
+                where: {
+                    id: id
+                }
+            })),
     /**
      *
      * @returns {Promise<void>}
      */
-    get: w(() =>
-        Permission.findAll({ raw: true })),
+    get: () =>
+        tryCatch(() => Permission.findAll({ raw: true })),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getSpecificById: w((id) => Permission.findByPk(id)),
+    getSpecificById: (id) => tryCatch(() => Permission.findByPk(id)),
     /**
      *
      * @param method
      * @param path
      * @returns {Promise<*>}
      */
-    getSpecific: w((action, resource) =>
-        Permission.findOne({
-            where: {
-                action: action,
-                resource: resource
-            }
-        })),
+    getSpecific: (action, resource) =>
+        tryCatch(() =>
+            Permission.findOne({
+                where: {
+                    action: action,
+                    resource: resource
+                }
+            })),
 
-    update: w((id, action, resource) => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
-    getRolesByPermission: w((id) => Permission.findAll({ where: { id: id }, include: [Role], raw: true }))
+    update: (id, action, resource) => tryCatch(() => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
+    getRolesByPermission: (id) => tryCatch(() => Permission.findAll({ where: { id: id }, include: [Role], raw: true }))
 
 }
 

@@ -1,5 +1,16 @@
 'use strict'
 
+const errors = require('../errors/app-errors')
+
+const setResponse = (res, answer, statusCode) => {
+    console.log(answer)
+    res.headers = {
+        'Content-type': 'application/json'
+    }
+    res.status(statusCode)
+    res.send(JSON.stringify(answer))
+}
+
 module.exports = {
     /**
      * set a basic response if request was executed succesfully
@@ -7,14 +18,7 @@ module.exports = {
      * @param answer
      * @param statusCode
      */
-    setResponse: (res, answer, statusCode) => {
-        console.log(answer)
-        res.headers = {
-            'Content-type': 'application/json'
-        }
-        res.status(statusCode)
-        res.send(JSON.stringify(answer))
-    },
+    setResponse,
 
     promiseDataToResponse: (res, dataPromise) => dataPromise
         .then(data => {
@@ -25,11 +29,11 @@ module.exports = {
 
             }
 
-            return apiUtils.setResponse(res, data, 200)
+            return setResponse(res, data, 200)
 
         })
         .catch(err => {
-            apiUtils.setResponse(res, err.message, err.status)
+            setResponse(res, err.message, err.status)
         })
 
 

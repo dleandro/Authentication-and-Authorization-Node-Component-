@@ -9,7 +9,7 @@ module.exports = function (apiUtils, authization) {
 
 
     function createUserList(req, res) {
-        userList.create.with(req.body.ListId, req.body.UserId, req.body.updater, req.body.active)
+        userList.create(req.body.ListId, req.body.UserId, req.body.updater, req.body.active)
             .then(answer => {
                 apiUtils.setResponse(res, answer[0].dataValues, 201)
             })

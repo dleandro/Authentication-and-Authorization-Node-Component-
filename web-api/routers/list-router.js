@@ -32,7 +32,7 @@ module.exports = function (apiUtils, authization) {
     listRouter.put('/deactivate/:id', deactivateList)
 
     function addList(req, res) {
-        lists.create.with(req.body.list)
+        lists.create(req.body.list)
             .then(answer => {
                 apiUtils.setResponse(res, answer.dataValues, 201)
             })
@@ -40,35 +40,35 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.delete(req.params.id))
     }
 
     function getUsersInThisList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.getUsersInThisList.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.getUsersInThisList(req.params.id))
     }
 
     function getLists(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.get.all())
+        apiUtils.promiseDataToResponse(res, lists.get())
     }
 
     function getActiveLists(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.getActive.all())
+        apiUtils.promiseDataToResponse(res, lists.getActive())
     }
 
     function getUserActiveList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.getUsersActive.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.getUsersActive(req.params.id))
     }
 
     function deactivateList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.deactivate.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.deactivate(req.params.id))
     }
 
     function getList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.getById.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, lists.getById(req.params.id))
     }
 
     function updateList(req, res) {
-        lists.update.with(req.params.id, req.body.list)
+        lists.update(req.params.id, req.body.list)
             .then(answer => apiUtils.setResponse(res, req.body, 201))
             .catch(err => apiUtils.setResponse(res, err.message, err.status))
     }

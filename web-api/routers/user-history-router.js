@@ -14,11 +14,11 @@ module.exports = function (apiUtils, authization) {
         .get('/:userId', getAllHistoriesFromSpecificUser)
 
     function getAllHistories(req, res) {
-        apiUtils.promiseDataToResponse(res, userHistory.get.all())
+        apiUtils.promiseDataToResponse(res, userHistory.get())
     }
 
     function getAllHistoriesFromSpecificUser(req, res) {
-        apiUtils.promiseDataToResponse(res, userHistory.getAllFromUser.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, userHistory.getAllFromUser(req.params.id))
     }
 
     return userHistoryRouter

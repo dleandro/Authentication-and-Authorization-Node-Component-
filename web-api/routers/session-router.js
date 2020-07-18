@@ -7,8 +7,8 @@ module.exports = function (apiUtils, authization) {
         sessions = authization.sessions
 
 
-    sessionRouter.get('/', (req, res) => apiUtils.promiseDataToResponse(res, sessions.get.all()))
-    sessionRouter.get('/:id', (req, res) => apiUtils.promiseDataToResponse(res, sessions.getUserSessions.with(req.params.id)))
+    sessionRouter.get('/', (req, res) => apiUtils.promiseDataToResponse(res, sessions.get()))
+    sessionRouter.get('/:id', (req, res) => apiUtils.promiseDataToResponse(res, sessions.getUserSessions(req.params.id)))
 
 
 

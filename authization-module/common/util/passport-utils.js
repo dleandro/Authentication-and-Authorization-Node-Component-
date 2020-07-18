@@ -2,7 +2,6 @@
 
 const
     users = require('../../resources/dals/users-dal'),
-    lists = require('../../resources/dals/lists-dal'),
     userList=require('../../resources/dals/user-list-dal'),
     idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
@@ -19,7 +18,7 @@ module.exports = {
      * @param userId
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    findUser: (userId) => users.getById.with(userId),
+    findUser: (userId) => users.getById(userId),
     /**
      *
      * @param idp
@@ -27,7 +26,7 @@ module.exports = {
      */
     findUserByIdp: async (idp) => {
         // needs endpoint
-        const user = await users.getByIdp.with(idp)
+        const user = await users.getByIdp(idp)
         return user ? {id: user.id, idp: idp, username: user.username} : null
     },
     /**
@@ -37,7 +36,7 @@ module.exports = {
      */
     findCorrespondingUser: async (username) => {
         try {
-            return await users.getByUsername.with(username)
+            return await users.getByUsername(username)
         } catch (error) {
             return null
         }
@@ -54,9 +53,9 @@ module.exports = {
      */
     createUser: async (idpId, idpName, username, password) => {
 
-        const userId = await users.create.with(username, password)
+        const userId = await users.create(username, password)
 
-        await idps.create.with(idpId, idpName, userId.id)
+        await idps.create(idpId, idpName, userId.id)
 
         return {
             id: userId.id,
@@ -70,7 +69,7 @@ module.exports = {
      * @returns {Promise<boolean>}
      */
     isBlackListed: async (userId)=>{
-        let result=await userList.isUserBlackListed.with(userId)
+        let result=await userList.isUserBlackListed(userId)
         result=result.filter(obj=>obj["Lists.list"]==='BLACK')
         return result.length > 0
     },
@@ -80,16 +79,16 @@ module.exports = {
      * @returns {Promise<void>}
      */
     addNotification: async (userId) => {
-        await userHistories.create.with(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
+        await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
     },
     updateSession: async (userId, sessionId) => {
-        await Session.update.with({UserId:userId},{where:{sid:sessionId}})
+        await Session.update({UserId:userId},{where:{sid:sessionId}})
     },
     checkProtocol: async (protocolName) => {
-        const result = await protocol.getByName.with(protocolName)
+        const result = await protocol.getByName(protocolName)
         return result!=null
     },
     deleteUserSession : async(userId,sessionId)=>{
-        await userSession.delete.with(userId,sessionId)
+        await userSession.delete(userId,sessionId)
     }
 }

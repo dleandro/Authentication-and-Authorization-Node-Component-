@@ -3,7 +3,7 @@
 const Role = require('../sequelize-model').Role,
     { Permission, User } = require('../sequelize-model'),
     config = require('../../common/config/config'),
-    w = require('../../common/util/with')
+    tryCatch = require('../../common/util/functions-utils')
 
 module.exports = {
 
@@ -12,51 +12,56 @@ module.exports = {
          * @param role
          * @returns {Promise<void>}
          */
-    create: w((role) => {
-        config.rbac.createRole(role, true)
-        return Role.findOrCreate({
-            where: {
-                role: role
-            }
-        })
-    }),
-    update: w((id, role, parent_role) => Role.update({ role: role, parent_role: parent_role }, { where: { id: id } })),
+    create: (role) =>
+        tryCatch(() => {
+            config.rbac.createRole(role, true)
+            return Role.findOrCreate({
+                where: {
+                    role: role
+                }
+            })
+        }),
+
+    update: (id, role, parent_role) => tryCatch(() => Role.update({ role: role, parent_role: parent_role }, { where: { id: id } })),
 
     /**
      *
      * @param roleId
      * @returns {Promise<*>}
      */
-    getSpecificById: w((roleId) =>
-        Role.findByPk(roleId)),
+    getSpecificById: (roleId) =>
+        tryCatch(() => Role.findByPk(roleId)),
 
-    getByName: w((roleName) => Role.findOne({ where: { role: roleName } })),
+    getByName: (roleName) => tryCatch(() => Role.findOne({ where: { role: roleName } })),
     /**
      *
      * @param roleId
      * @returns {Promise<void>}
      */
-    delete: w((roleId) =>
-        Role.destroy({
-            where: {
-                id: roleId
-            }
-        })),
+    delete: (roleId) =>
+        tryCatch(() => 
+            Role.destroy({
+                where: {
+                    id: roleId
+                }
+            })
+        ),
     /**
      *
      * @returns {Promise<void>}
      */
-    get: w(() => Role.findAll({ raw: true })),
+    get: () => tryCatch(() => Role.findAll({ raw: true })),
 
-    getRolePermissions: w((roleId) => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
+    getRolePermissions: (roleId) => tryCatch(() => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
 
-    getUsersWithThisRole: w((roleId) => Role.findAll({ where: { id: roleId }, include: [User], raw: true })),
+    getUsersWithThisRole: (roleId) => tryCatch(() => Role.findAll({ where: { id: roleId }, include: [User], raw: true })),
 
-    getPermissionsWithThisRole: w((roleId) => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
+    getPermissionsWithThisRole: (roleId) => tryCatch(() => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
 
-    addParentRole: w(async (role, parentRole) => {
-        config.rbac.grant(await config.rbac.getRole(parentRole.role), await config.rbac.getRole(role.role))
-        Role.update({ parent_role: parentRole.id }, { where: { id: role.id } })
-    })
+    addParentRole: (role, parentRole) =>
+        tryCatch(async () => {
+            config.rbac.grant(await config.rbac.getRole(parentRole.role), await config.rbac.getRole(role.role))
+            return Role.update({ parent_role: parentRole.id }, { where: { id: role.id } })
+        })
 
 }

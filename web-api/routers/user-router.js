@@ -30,7 +30,7 @@ module.exports = function (apiUtils, authization) {
     userRouter.get('/byUsername/:username', getUserByUsername)
 
 
-    userRouter.get('/:id/roles', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserRoles.with(req.params.id)))
+    userRouter.get('/:id/roles', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserRoles(req.params.id)))
 
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
@@ -46,11 +46,11 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getAllUsers(req, res) {
-        apiUtils.promiseDataToResponse(res, users.get.all(), apiUtils)
+        apiUtils.promiseDataToResponse(res, users.get(), apiUtils)
     }
 
     function createUser(req, res) {
-        users.create.with(req.body.username, req.body.password)
+        users.create(req.body.username, req.body.password)
             .then(answer => {
                 apiUtils.setResponse(res, answer, 201)
             })
@@ -58,33 +58,33 @@ module.exports = function (apiUtils, authization) {
         }
 
     function getSpecificUser(req, res) {
-        apiUtils.promiseDataToResponse(res, users.getById.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, users.getById(req.params.id))
     }
 
     function deleteUser(req, res) {
-        apiUtils.promiseDataToResponse(res, users.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, users.delete(req.params.id))
     }
 
     function getUserFromIdp(req, res) {
-        apiUtils.promiseDataToResponse(res, users.getByIdp.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, users.getByIdp(req.params.id))
     }
 
     function getUserByUsername(req, res) {
-        apiUtils.promiseDataToResponse(res, users.getByUsername.with(req.params.username))
+        apiUtils.promiseDataToResponse(res, users.getByUsername(req.params.username))
     }
 
     function createIdpUser(req, res) {
-        apiUtils.promiseDataToResponse(res, idps.create.with(req.body.idpId, req.body.idpName, req.body.userId))
+        apiUtils.promiseDataToResponse(res, idps.create(req.body.idpId, req.body.idpName, req.body.userId))
     }
 
     function updatePassword(req, res) {
-        users.updatePassword.with(req.body.password, req.params.id)
+        users.updatePassword(req.body.password, req.params.id)
             .then(answer => apiUtils.setResponse(res, req.body, 201))
             .catch(err => apiUtils.setResponse(res, err.message, err.status))
         }
 
     function updateUsername(req, res) {
-        users.updateUsername.with(req.body.username, req.params.id)
+        users.updateUsername(req.body.username, req.params.id)
             .then(answer => apiUtils.setResponse(res, req.body, 201))
             .catch(err => apiUtils.setResponse(res, err.message, err.status))
         }

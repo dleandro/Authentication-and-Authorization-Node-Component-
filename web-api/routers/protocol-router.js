@@ -18,15 +18,15 @@ module.exports = function (apiUtils, authization) {
     protocolRouter.put('/active', changeActive)
 
     function getProtocols(req, res) {
-        apiUtils.promiseDataToResponse(res, protocols.get.all())
+        apiUtils.promiseDataToResponse(res, protocols.get())
     }
 
     function getActiveProtocols(req, res) {
-        apiUtils.promiseDataToResponse(res, protocols.getActive.all())
+        apiUtils.promiseDataToResponse(res, protocols.getActive())
     }
 
     function changeActive(req, res) {
-        apiUtils.promiseDataToResponse(res, protocols.changeActive.with(req.body.protocol, req.body.active))
+        apiUtils.promiseDataToResponse(res, protocols.changeActive(req.body.protocol, req.body.active))
     }
 
     return protocolRouter

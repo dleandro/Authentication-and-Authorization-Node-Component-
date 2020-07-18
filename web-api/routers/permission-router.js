@@ -25,15 +25,15 @@ module.exports = function (apiUtils, authization) {
     permissionRouter.route('/:id/roles').get(getRolesByPermission)
 
     function getRolesByPermission(req,res){
-        apiUtils.promiseDataToResponse(res, permissions.getRolesByPermission.with(req.params.id))
+        apiUtils.promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id))
     }
 
     function getPermissions(req, res) {
-        apiUtils.promiseDataToResponse(res, permissions.get.all())
+        apiUtils.promiseDataToResponse(res, permissions.get())
     }
 
     function addPermission(req, res) {
-        permissions.create.with(req.body.action,req.body.resource)
+        permissions.create(req.body.action,req.body.resource)
             .then(answer => {
                 apiUtils.setResponse(res, answer[0].dataValues, 201)
             })
@@ -41,17 +41,17 @@ module.exports = function (apiUtils, authization) {
         }
 
     function updatePermission(req, res) {
-        permissions.update.with(req.params.id,req.body.action, req.body.resource)
+        permissions.update(req.params.id,req.body.action, req.body.resource)
             .then(answer => apiUtils.setResponse(res, req.body, 201))
             .catch(err => apiUtils.setResponse(res, err.message, err.status))
         }
 
     function deletePermission(req, res) {
-        apiUtils.promiseDataToResponse(res,permissions.delete.with(req.params.id))
+        apiUtils.promiseDataToResponse(res,permissions.delete(req.params.id))
     }
 
     function getPermissionById(req, res) {
-        apiUtils.promiseDataToResponse(res,permissions.getSpecificById.with(req.params.id))
+        apiUtils.promiseDataToResponse(res,permissions.getSpecificById(req.params.id))
     }
 
     return permissionRouter

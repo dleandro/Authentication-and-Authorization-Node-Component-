@@ -103,16 +103,19 @@ function UserLists() {
 }
 
 function UserHistory(){
-    const labels = ['Id','UserId', 'Date', 'Description', 'Updater'];
+    const labels = ['Id','UserId', 'Date', 'Success','Action','Resource','IP'];
     const ctx = useContext(UserContext);
     const fetchData = ()=> historyService().getUserHistory(ctx.user.id);
 
 
     const listToLine=(history)=><React.Fragment>
-        <td><Link to={`/lists/${history.id}`}>{`Details of List: ${history.id}`}</Link></td>
+        <td>{history.id}</td>
         <td>{history.user_id}</td>
         <td>{history.date}</td>
-        <td>{history.description}</td>
+        <td>{history.success}</td>
+        <td>{history.action}</td>
+        <td>{history.resource}</td>
+        <td>{history.from}</td>
     </React.Fragment>;
     return (
         <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />

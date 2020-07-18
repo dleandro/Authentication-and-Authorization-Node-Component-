@@ -7,6 +7,7 @@ handlers:
   # Catch all handler to index.html
   - url: /.*
     static_files: build/index.html
-    upload: build/index.html
-vpc_access_connector:
-  name: "projects/auth-authorization/locations/europe-west1/connectors/authization-connector"
+    upload: build/index.htmlgcloud 
+
+#vpc_access_connector:
+ # name: "projects/auth-authorization/locations/europe-west1/connectors/vpc-vm"

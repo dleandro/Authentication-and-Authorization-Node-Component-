@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
+import {userService, protocolService, listService, rolesService,configService} from '../service'
 
 export default function BackOffice() {
 
@@ -26,7 +27,14 @@ export default function BackOffice() {
             </Card.Body>
         </Card>;
 
+    function myFunc(){
+        configService().changeAzureADAuthenticationOptions({})
+        .then(data=>console.log(data))
+    }
+
     return (
+        <React.Fragment>
+        <button onClick={myFunc}>Click Me</button>
 
         <CardColumns style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '30px'}}>
 
@@ -39,6 +47,7 @@ export default function BackOffice() {
                 </div>
             </div>
         </CardColumns>
+        </React.Fragment>
     );
 }
 

@@ -34,8 +34,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/azureAD/callback', authenticate.usingOffice365Callback, successCallback)
 
-    authenticationRouter.get('/authenticated-user', (req, res) => apiUtils.setResponse(res, req.user || {}, 200)
-)
+    authenticationRouter.get('/authenticated-user', (req, res) => apiUtils.setResponse(res, req.user || {}, 200))
 
 
 

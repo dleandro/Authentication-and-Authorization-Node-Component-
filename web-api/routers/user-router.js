@@ -14,6 +14,7 @@ module.exports = function (apiUtils, authization) {
 
     const users = authization.user,
         idps = authization.idp,
+        authorization=authization.authorization,
         userRouter = require('express').Router(),
         rbac = require('../../authization-module/common/middleware/rbac'),
         errors = require('../common/errors/app-errors')
@@ -34,6 +35,10 @@ module.exports = function (apiUtils, authization) {
 
 
     userRouter.get('/:id/roles', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserRoles(req.params.id),apiUtils))
+    userRouter.get('/:id/lists', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserLists(req.params.id),apiUtils))
+    userRouter.get('/:id/history', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserHistory(req.params.id),apiUtils))
+    userRouter.get('/:id/sessions', (req,res)=>routerUtils.promiseDataToResponse(res, users.getUserSessions(req.params.id),apiUtils))
+    userRouter.get('/currentUser/permissions',(req,res,next)=>routerUtils.promiseDataToResponse(res, authorization.getUserPermissions(req,res,next),apiUtils))
 
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)

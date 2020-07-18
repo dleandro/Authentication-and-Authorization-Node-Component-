@@ -38,7 +38,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/authenticated-user', (req, res) => req.user ?
         apiUtils.setResponse(res, req.user, 200) :
-        apiUtils.setResponse(res, errors.noResponseFound.message, errors.noResponseFound.status)
+        apiUtils.setResponse(res, errors.userNotAuthenticated.message, errors.userNotAuthenticated.status)
     )
 
 

@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 import GenericFunctionality from '../../common/html-elements-utils/generics/GenericFunctionality';
 import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
+import Jumbotron from "react-bootstrap/Jumbotron";
 
 function SpecificUserInfo(){
     const {id} = useParams();
@@ -19,7 +20,7 @@ function SpecificUserInfo(){
 
     return  (
         <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-            <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
+            <Card border="white" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
                 <Card.Header>{`Profile:  ${user.username}`}</Card.Header>
                 <Card.Body>
                     <Card.Title>{`Details of user num: ${user.id}`}</Card.Title>
@@ -139,24 +140,32 @@ export default function UserInfo() {
 
     return (
         <React.Fragment>
-            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                <Navbar.Brand onClick={()=>setComponentToBeShown(0)}>User Info</Navbar.Brand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mr-auto">
-                        {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx+1)}>{comp}</Nav.Link>)}
-                    </Nav>
-                    <Nav>
-                        <NavDropdown title="Change User" id="collasible-nav-dropdown">
-                            <NavDropdown.Item href={'/backoffice'}>Home</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            {otherUsers.map(userId=><NavDropdown.Item href={`/users/${userId}`}>{`View user: ${userId}`}</NavDropdown.Item>)}
-                        </NavDropdown>
-                        <Button variant="outline-secondary" onClick={()=>history.push('/users')}>View All</Button>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            {components[componentToBeShown]}
+
+                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                    <Navbar.Brand onClick={()=>setComponentToBeShown(0)}>User Info</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        <Nav className="mr-auto">
+                            {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx+1)}>{comp}</Nav.Link>)}
+                        </Nav>
+                        <Nav>
+                            <NavDropdown title="Change User" id="collasible-nav-dropdown">
+                                <NavDropdown.Item href={'/backoffice'}>Home</NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                {otherUsers.map(userId=><NavDropdown.Item href={`/users/${userId}`}>{`View user: ${userId}`}</NavDropdown.Item>)}
+                            </NavDropdown>
+                            <Button variant="outline-secondary" onClick={()=>history.push('/users')}>View All</Button>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+            <Jumbotron style={{
+                backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                height: '90vh'
+            }}>
+                {components[componentToBeShown]}
+            </Jumbotron>
         </React.Fragment>
 
     )

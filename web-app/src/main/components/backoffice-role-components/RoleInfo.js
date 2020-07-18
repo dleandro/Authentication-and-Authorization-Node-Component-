@@ -7,6 +7,48 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import {Link, useParams} from "react-router-dom";
 import GenericFunctionality from "../../common/html-elements-utils/generics/GenericFunctionality";
 import UserContext from "../../UserContext";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
+import Jumbotron from "react-bootstrap/Jumbotron";
+
+function SpecificRoleInfo(){
+    const {id} = useParams();
+    const [role, setRole] = useState({ username: undefined, password: undefined })
+    useEffect(()=>{rolesService().getRole(id).then(setRole)},[id])
+
+    return  (
+        <Jumbotron style={{
+            backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            height: '90vh'
+        }}>
+            <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
+                <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
+                    <Card.Body>
+                        <Card.Title>{`Details of Role num: ${role.id}`}</Card.Title>
+                        <Card.Text>
+                            This page and all his sections displays all information relative to this Role.
+                        </Card.Text>
+                        <Form.Group>
+                            {Object.keys(role).map(key=><React.Fragment>
+                                <br />
+                                <Form.Row>
+                                    <Form.Label column lg={2}>{key}</Form.Label>
+                                    <Col><Form.Control type="text" value={role[key]} /></Col>
+                                </Form.Row>
+                            </React.Fragment>)}
+                        </Form.Group>
+
+
+                    </Card.Body>
+                </Card>
+            </div>
+        </Jumbotron>
+    );
+}
 
 function RolePermission() {
 
@@ -46,8 +88,10 @@ export function RoleUsers() {
         <td><Link to={`/users/${roleUser['Users.id']}`}>{`Details of user: ${roleUser['Users.id']}`}</Link></td>
         <td >{roleUser['Users.username']}</td>
         <td >{roleUser['Users.UserRoles.start_date']}</td>
-        <td><UpdatableInput initialValue={roleUser['Users.UserRoles.end_date']} submitListener={val =>console.log('Service of edit endDate still notdone value:',val)}/></td>
+        <td>{roleUser['Users.UserRoles.end_date']}</td>
         <td>{roleUser['Users.UserRoles.updater']}</td>
+        <td><SubmitValuesModal submitListener={val =>console.log('Service not Done yet',val)} openButtonIcon={'fa fa-edit'}
+                              buttonTooltipText={'Edit End date'} labels={['New End Date']} /> </td>
     </React.Fragment>;
     return (
 
@@ -59,8 +103,9 @@ export function RoleUsers() {
 }
 
 const components = {
-    0: <RolePermission/>,
-    1:<RoleUsers/>,
+    0: <SpecificRoleInfo />,
+    1: <RolePermission/>,
+    2:<RoleUsers/>,
 };
 const labels = ['Permissions','Users'];
 export default function RoleInfo() {
@@ -70,11 +115,11 @@ export default function RoleInfo() {
     return (
         <React.Fragment>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                <Navbar.Brand>Role Info</Navbar.Brand>
+                <Navbar.Brand onClick={()=>setComponentToBeShown(0)} >Role Info</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
-                        {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx)}>{comp}</Nav.Link>)}
+                        {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx+1)}>{comp}</Nav.Link>)}
                     </Nav>
                     <Nav>
                         <NavDropdown title="Change Roles" id="collasible-nav-dropdown">

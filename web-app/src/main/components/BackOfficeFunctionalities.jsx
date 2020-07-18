@@ -29,6 +29,8 @@ export function Sessions(){
         <td><Link to={`/users/${session.UserId}`}>{`Details of User: ${session.UserId}`}</Link></td>
         <td>{session.sid}</td>
         <td>{session.expires}</td>
+        <td><SubmitValuesModal submitListener={val =>console.log('Service not done yet',val)} openButtonIcon={'fa fa-edit'}
+                               buttonTooltipText={'Edit Expiration Date'} labels={['New Expiration Date']} /> </td>
     </React.Fragment>;
     return (
         <React.Fragment>
@@ -60,13 +62,25 @@ export function Users(props){
 export function Lists(props){
     const labels = ["Id", "List"];
     const {getLists,addList,editList,deleteList} = listService();
+    let history = useHistory();
 
     const postList = (arr) => addList(['',arr[0]]);
     const removeList = (list) => deleteList(list.id);
 
+    const currentValues=(permission)=><InputGroup>
+            {['list'].map(field=><React.Fragment>
+                <InputGroup.Prepend>
+                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl value={permission[field]} />
+            </React.Fragment>)}
+        </InputGroup>
+
     const listsToLine=(list)=> <React.Fragment>
         <td><Link to={`/lists/${list.id}`}>{`Details of List: ${list.id}`}</Link></td>
-        <td><UpdatableInput initialValue={list.list} submitListener={val =>editList([list.id,val])}/></td>
+        <td>{list.list}</td>
+        <td><SubmitValuesModal submitListener={val =>editList([list.id,val[0]]).then(t=>history.push(`/lists/${list.id}`))} openButtonIcon={'fa fa-edit'}
+                               child={currentValues(list)} buttonTooltipText={'Edit List'} labels={['New List Name']} /> </td>
     </React.Fragment>;
 
     return (
@@ -77,13 +91,29 @@ export function Lists(props){
 
 export function Permissions(props){
     const labels = ["Id", "Action", "Resource"];
+    let history = useHistory();
+
     const {getPermissions,addPermission,deletePermission,editPermission} = permissionService();
     const postPermission = (arr) => addPermission(['',arr[0],arr[1]]);
     const deletePermissionCB = (perm) => deletePermission([perm.id]);
+
+    const currentValues=(permission)=><React.Fragment>
+        <InputGroup>
+            {['action','resource'].map(field=><React.Fragment>
+                <InputGroup.Prepend>
+                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl value={permission[field]} />
+            </React.Fragment>)}
+        </InputGroup>
+        </React.Fragment>
+
     const permissionToLine=(permission)=> <React.Fragment>
         <td><Link to={`/permissions/${permission.id}`}>{`Details of Permission: ${permission.id}`}</Link></td>
-        <td><UpdatableInput initialValue={permission.action} submitListener={val =>editPermission([permission.id,val,permission.resource])}/></td>
-        <td><UpdatableInput initialValue={permission.resource} submitListener={val =>editPermission([permission.id,permission.action,val])}/></td>
+        <td>{permission.action}</td>
+        <td>{permission.resource}</td>
+        <td><SubmitValuesModal submitListener={val =>editPermission([permission.id,val[0],val[1]]).then(t=>history.push(`/permissions/${permission.id}`))} openButtonIcon={'fa fa-edit'}
+                               child={currentValues(permission)} buttonTooltipText={'Edit Permission'} labels={['New Action','New Resource']} /> </td>
     </React.Fragment>;
 
     return (
@@ -95,13 +125,29 @@ export function Permissions(props){
 
 export function Roles(props){
     const labels = ["Id", "Role", "Parent Role"];
+    let history = useHistory();
     const {getRoles,addRole,deleteRole,editRole} = rolesService();
     const postRole = (arr) => addRole(['',arr[0],arr[1]]);
     const deleteRoleCB = (role) => deleteRole(role.id);
+
+
+    const currentValues=(role)=><React.Fragment>
+        <InputGroup>
+            {['role','parent_role'].map(field=><React.Fragment>
+                <InputGroup.Prepend>
+                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl value={role[field]} />
+            </React.Fragment>)}
+        </InputGroup>
+    </React.Fragment>
+
     const rolesToLine=(role)=> <React.Fragment>
         <td><Link to={`/roles/${role.id}`}>{`Details of Role: ${role.id}`}</Link></td>
-        <td><UpdatableInput initialValue={role.role} submitListener={val =>editRole([role.id,val,role.parent_role])}/></td>
-        <td><UpdatableInput initialValue={role.parent_role == null ? 'null' : role.parent_role} submitListener={val =>editRole([role.id,role.role,val])}/></td>
+        <td>{role.role}</td>
+        <td>{role.parent_role == null ? 'null' : role.parent_role}</td>
+        <td><SubmitValuesModal submitListener={val =>editRole([role.id,val[0],val[1]]).then(t=>history.push(`/roles/${role.id}`))} openButtonIcon={'fa fa-edit'}
+                               child={currentValues(role)} buttonTooltipText={'Edit Role'} labels={['New Role','New Parent Role']} /> </td>
     </React.Fragment>;
 
     return (

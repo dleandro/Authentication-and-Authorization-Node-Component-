@@ -3,7 +3,7 @@ import {Link, useParams,useHistory} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {listService, sessionService, userRoleService, userService} from '../../service';
+import {listService, sessionService, userRoleService, userService,historyService} from '../../service';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from "react-bootstrap/Col";
@@ -102,13 +102,31 @@ function UserLists() {
     );
 }
 
+function UserHistory(){
+    const labels = ['Id','UserId', 'Date', 'Description', 'Updater'];
+    const ctx = useContext(UserContext);
+    const fetchData = ()=> historyService().getUserHistory(ctx.user.id);
+
+
+    const listToLine=(history)=><React.Fragment>
+        <td><Link to={`/lists/${history.id}`}>{`Details of List: ${history.id}`}</Link></td>
+        <td>{history.user_id}</td>
+        <td>{history.date}</td>
+        <td>{history.description}</td>
+    </React.Fragment>;
+    return (
+        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
+    );
+}
+
 const components = {
     0: <SpecificUserInfo />,
     1: <UserRoles />,
     2: <UserSessions/>,
     3: <UserLists />,
+    4:<UserHistory/>
 };
-const labels = ['Roles','Sessions','Lists'];
+const labels = ['Roles','Sessions','Lists','History'];
 
 export default function UserInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0);

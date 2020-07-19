@@ -15,7 +15,7 @@ class UserProvider extends Component {
     async componentDidMount() {
 
         const user = await userService().getAuthenticatedUser()
-
+        console.log(user)
 
         if (user.username) {
             this.state.setUser(user)

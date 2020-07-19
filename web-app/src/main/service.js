@@ -1,5 +1,5 @@
 
-var { users_lists,sessions, users, roles, permissions,  users_roles, lists, roles_permissions, protocols,history, configs} = require('./common/links').webApiLinks;
+var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
 //var HOME_PATH = 'http://35.233.44.226:80'
@@ -61,10 +61,10 @@ export function userService() {
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
         getUserRoles: async (id) => getRequest(users.ROLES_PATH(id)),
-        getUserSessions:async(id)=>getRequest(users.SESSION_PATH(id)),
-        getUserLists:async(id)=>getRequest(users.LIST_PATH(id)),
-        getUserHistory:async(id)=>getRequest(users.HISTORY_PATH(id)),
-        getAuthenticatedUserPermissions:async()=>getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
+        getUserSessions: async (id) => getRequest(users.SESSION_PATH(id)),
+        getUserLists: async (id) => getRequest(users.LIST_PATH(id)),
+        getUserHistory: async (id) => getRequest(users.HISTORY_PATH(id)),
+        getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
         addUser: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
         deleteUser: async (arr) => {
@@ -98,7 +98,7 @@ export function rolesService() {
         getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
         addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2] }, 'POST'),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
-        deleteRole: async (id) =>  makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
+        deleteRole: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
 
     }
 }
@@ -117,9 +117,9 @@ export function permissionService() {
 export function userRoleService() {
     return {
         getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
-        addUserRole:async(userid,roleid,updater)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:1,updater:updater},'POST'),
-        deactivateUserRole:async(userid,roleid)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userid,role:roleid,active:0},'PUT'),
-        deleteUserRole:async(userId,RoleId)=>makeRequest(users_roles.USERS_ROLES_PATH,{user:userId,role:RoleId},'DELETE')
+        addUserRole: async (userid, roleid, updater) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater }, 'POST'),
+        deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT'),
+        deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE')
     }
 }
 
@@ -127,41 +127,41 @@ export function sessionService() {
     return {
         getSessions: async () => getRequest(sessions.SESSION_PATH),
         getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id)),
-        deleteSession:async(id)=>makeRequest(sessions.SESSION_PATH,{sid:id},'DELETE'),
-        changeSessionData:async(data,id)=>makeRequest(sessions.SPECIFIC_SESSION_PATH,{sid:id,data:data},'PUT')
+        deleteSession: async (id) => makeRequest(sessions.SESSION_PATH, { sid: id }, 'DELETE'),
+        changeSessionData: async (data, id) => makeRequest(sessions.SPECIFIC_SESSION_PATH, { sid: id, data: data }, 'PUT')
     }
 }
 
 export function rolePermissionService() {
     return {
         addRolePermission: async (roleId, permissionId, action, resource) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, action: action, resource: resource, roleId: roleId }, 'POST'),
-        deleteRolePermission:async (roleId,permissionId)=>makeRequest(roles_permissions.ROLES_PERMISSION_PATH,{permissionId: permissionId, roleId: roleId },'DELETE')
+        deleteRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'DELETE')
     }
 }
 
-    export function userListService() {
-        return {
-            addUserList: async (listId, userId,updater) => makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId,active:1,updater:updater}, 'POST'),
-            deactivateList:async(listId,userId) =>makeRequest(users_lists.USERS_LIST_PATH,{active:0},'PUT'),
-            deleteUserList: async(listId,userId)=> makeRequest(users_lists.USERS_LIST_PATH ,{ListId:listId,UserId:userId}, 'DELETE')
-        }
+export function userListService() {
+    return {
+        addUserList: async (listId, userId, updater) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId, active: 1, updater: updater }, 'POST'),
+        deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT'),
+        deleteUserList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId }, 'DELETE')
     }
+}
 
-        export function historyService(){
-            return {
-                getUserHistory: async (userId) =>  getRequest(history.HISTORY_PATH)
-        }
+export function historyService() {
+    return {
+        getUserHistory: async (userId) => getRequest(history.HISTORY_PATH)
     }
+}
 
 
-        export function configService(){
-            return{
-                changeDatabaseOptions:async(database_opts)=>makeRequest(configs.DATABASE_CONFIG_PATH,{database_opts:database_opts},'POST'),
-                changeDatabaseType:async(dbType)=>makeRequest(configs.DATABASE_CONFIG_PATH,{type:dbType},'PUT'),
-                changeGoogleAuthenticationOptions:async(google_opts)=>makeRequest(configs.GOOGLE_CONFIG_PATH,{google_opts:google_opts},'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
-                changeAzureADAuthenticationOptions:async(azure_opts)=>makeRequest(configs.AZUREAD_CONFIG_PATH,{azure_opts:azure_opts},'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
-            }
-        }
+export function configService() {
+    return {
+        changeDatabaseOptions: async (database_opts) => makeRequest(configs.DATABASE_CONFIG_PATH, { database_opts: database_opts }, 'POST'),
+        changeDatabaseType: async (dbType) => makeRequest(configs.DATABASE_CONFIG_PATH, { type: dbType }, 'PUT'),
+        changeGoogleAuthenticationOptions: async (google_opts) => makeRequest(configs.GOOGLE_CONFIG_PATH, { google_opts: google_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+        changeAzureADAuthenticationOptions: async (azure_opts) => makeRequest(configs.AZUREAD_CONFIG_PATH, { azure_opts: azure_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+    }
+}
 
 
 

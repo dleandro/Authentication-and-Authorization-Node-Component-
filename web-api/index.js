@@ -10,6 +10,6 @@ const
     app = express()
 
 // Setup app's middleware
-require('./common/middleware/app-middleware')(app)
+require('./common/middleware/app-middleware')(app, express)
 
 app.listen(PORT, () => console.log(`Listening on Port: ${PORT}`))

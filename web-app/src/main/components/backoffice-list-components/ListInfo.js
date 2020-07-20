@@ -12,6 +12,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import DatePicker from "../../common/html-elements-utils/DatePicker";
 
 function SpecificListInfo(){
     const {id} = useParams();
@@ -64,8 +65,8 @@ function ListUsers() {
         <td >{listUser['Users.UserList.start_date']}</td>
         <td>{listUser['Users.UserList.end_date']}</td>
         <td>{listUser['Users.UserList.updater']}</td>
-        <td><SubmitValuesModal submitListener={val =>console.log('Service not Done yet',val)} openButtonIcon={'fa fa-edit'}
-                               buttonTooltipText={'Edit End date'} labels={['New End Date']} /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>}
+                               openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} /> </td>
     </React.Fragment>;
     return (
 

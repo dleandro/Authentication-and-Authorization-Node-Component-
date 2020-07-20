@@ -12,6 +12,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import DatePicker from "../../common/html-elements-utils/DatePicker";
 
 function SpecificRoleInfo(){
     const {id} = useParams();
@@ -84,14 +85,15 @@ export function RoleUsers() {
     const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id)
     const removeUserFromRole = ()=> console.log('Still not implemented');
 
+
     const roleUserToLine = (roleUser) => <React.Fragment>
         <td><Link to={`/users/${roleUser['Users.id']}`}>{`Details of user: ${roleUser['Users.id']}`}</Link></td>
         <td >{roleUser['Users.username']}</td>
         <td >{roleUser['Users.UserRoles.start_date']}</td>
         <td>{roleUser['Users.UserRoles.end_date']}</td>
         <td>{roleUser['Users.UserRoles.updater']}</td>
-        <td><SubmitValuesModal submitListener={val =>console.log('Service not Done yet',val)} openButtonIcon={'fa fa-edit'}
-                              buttonTooltipText={'Edit End date'} labels={['New End Date']} /> </td>
+        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'}
+                               child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} /> </td>
     </React.Fragment>;
     return (
 

@@ -8,35 +8,32 @@ import './common/stylesheets/App.css';
 import UserContext, { UserProvider } from './UserContext';
 import Upperbar from './common/html-elements-utils/UpperBar';
 
-
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 
-const sidebarCollapsedSize = '75px';
+const sidebarCollapsedSize = '60px';
 
 export default function App() {
 
     const ctx = useContext(UserContext);
     const [state, setState] = useState(ctx.user);
     useEffect(() => setState(ctx.user),[ctx.user]);
-
     return (
         <Router>
             <UserProvider>
                 <React.Fragment>
-
                     {state.username ?
                         <React.Fragment>
-                            <Upperbar />
                             <SideBar navWidthCollapsed={sidebarCollapsedSize} />
-                            <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
+                            <main>
+                                <Upperbar />
+                                <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
+                            </main>
                         </React.Fragment> :
                         <AuthenticationRoutes />
                     }
-
                 </React.Fragment>
             </UserProvider>
         </Router>
-
     );
 }
 

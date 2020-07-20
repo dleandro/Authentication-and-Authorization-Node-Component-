@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import SideNav, { NavIcon, NavItem, NavText } from '@trendmicro/react-sidenav';
 import { Link } from 'react-router-dom';
 const fontSize = { fontSize: '1.75em'/*,color: '#1cc4e6'*/ }
+
 
 
 function SubItem ({subItem}){
@@ -50,21 +51,13 @@ export default function Sidebar({ navWidthCollapsed }) {
 
     const [expand, setexpand] = useState(false);
 
-    /**
-     * Opens or closes the Side Bar
-     */
-    async function toggleListener() {
-        setexpand(!expand);
-        console.log('set Expanded');
-        document.getElementById('sidebar').style.width = expand ? navWidthExpanded : navWidthCollapsed;
-        document.getElementById('main').style.marginLeft = expand ? navWidthCollapsed : navWidthExpanded;
-    }
+    React.useEffect(()=>{document.getElementById('main').style.marginLeft = expand ? navWidthExpanded : navWidthCollapsed;},[expand])
 
     return (
         <SideNav id={"sidebar"}
-                 style={{'backgroundColor': '#282c34', width: expand ? navWidthExpanded : navWidthCollapsed}}
-                 onToggle={(selected) => toggleListener()}>
-            <SideNav.Toggle/>
+                 style={{'backgroundColor': '#282c34', width: expand ? navWidthExpanded : navWidthCollapsed,position: 'fixed',height: '100%'}}
+                 onToggle={(selected) => setexpand(!expand)}>
+            <SideNav.Toggle />
             <SideNav.Nav defaultSelected="home">
                 {mainItems.map(item =>
                     <NavItem key={item.key} eventKey={item.key}>

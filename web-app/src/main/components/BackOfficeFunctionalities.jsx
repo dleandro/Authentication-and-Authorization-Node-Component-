@@ -140,7 +140,7 @@ export function Roles(props){
                 <FormControl value={role[field]} />
             </React.Fragment>)}
         </InputGroup>
-    </React.Fragment>
+    </React.Fragment>;
 
     const rolesToLine=(role)=> <React.Fragment>
         <td><Link to={`/roles/${role.id}`}>{`Details of Role: ${role.id}`}</Link></td>

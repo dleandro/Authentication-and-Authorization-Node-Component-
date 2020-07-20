@@ -33,8 +33,10 @@ export default function Upperbar({ setRedirect }) {
         return username !== "" && <React.Fragment>
             <Dropdown.Item eventKey="1" onClick={() => history.push(`/account`)}><i
                 className="fa fa-vcard" /> Profile </Dropdown.Item>
-            <Dropdown.Item eventKey="2" onClick={logoutAndRedirect}><i
-                className="fa fa-sign-out fa-fw" /> Logout</Dropdown.Item> </React.Fragment>
+            <Dropdown.Item eventKey="2" onClick={logoutAndRedirect}>
+                <i className="fa fa-sign-out fa-fw" /> Logout
+            </Dropdown.Item>
+        </React.Fragment>;
     }
 
     return (

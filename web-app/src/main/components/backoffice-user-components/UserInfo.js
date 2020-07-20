@@ -12,6 +12,7 @@ import GenericFunctionality from '../../common/html-elements-utils/generics/Gene
 import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import DatePicker from "../../common/html-elements-utils/DatePicker";
 
 function SpecificUserInfo(){
     const {id} = useParams();
@@ -57,8 +58,8 @@ function UserRoles() {
         <td >{userRole['Roles.UserRoles.start_date']}</td>
         <td>{userRole['Roles.UserRoles.end_date']}</td>
         <td>{userRole['Roles.UserRoles.updater']}</td>
-        <td><SubmitValuesModal submitListener={val =>console.log('Service of edit endDate still notdone value:',val)} openButtonIcon={'fa fa-calendar'}
-                               buttonTooltipText={'Edit End Date'} labels={['New End date']} /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
+                               buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;
     return (
             <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeRoleFromUser} postNewDataCB={(arr)=>postUserRole(arr[0],arr[1])}
@@ -95,8 +96,8 @@ function UserLists() {
         <td>{list.start_date}</td>
         <td>{list.end_date}</td>
         <td>{list.updater}</td>
-        <td><SubmitValuesModal submitListener={val =>console.log('Service of edit endDate still not done value:',val)} openButtonIcon={'fa fa-calendar'}
-                               buttonTooltipText={'Edit End Date'} labels={['New End date']} /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>}
+                               openButtonIcon={'fa fa-calendar'} buttonTooltipText={'Edit End Date'} /> </td>
     </React.Fragment>;
     return (
         <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
@@ -158,14 +159,8 @@ export default function UserInfo() {
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-            <Jumbotron style={{
-                backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                height: '90vh'
-            }}>
+
                 {components[componentToBeShown]}
-            </Jumbotron>
         </React.Fragment>
 
     )

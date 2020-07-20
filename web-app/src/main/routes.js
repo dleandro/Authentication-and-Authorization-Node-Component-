@@ -19,8 +19,8 @@ class Routes extends Component {
         return (
             <Switch id={'switch'}>
                 <React.Fragment>
-                    <div id={'main'} style={{backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
-                        backgroundSize: 'auto', backgroundRepeat: 'no-repeat',height:'94.4vh',overflow: 'auto', marginLeft: this.props.sidebarCollapsedSize }} >
+                    <div id={'main'} style={{ marginLeft: this.props.sidebarCollapsedSize }} >
+
                         <Route path={'/backoffice'} exact component={BackOffice} />
 
                         <Route path={'/users'} exact component={Users} />

@@ -4,13 +4,21 @@ const
     morgan = require('morgan'),
     apiUtils = require('../util/api-utils'),
     middlewareConifg = require('./middleware_config'),
-    path = require('path')
+    path = require('path'),
+    cors=require('cors')
 
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = async function (app, express) {
 
-    // app configurations
 
+    var corsOptions = {
+        origin: ['http://localhost:3000','https://webapp-dot-auth-authorization.ew.r.appspot.com'],
+        optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204,
+        credentials:true
+      }
+
+    // app configurations
+    app.use(cors(corsOptions))
     // For request logging
     app.use(morgan('tiny'))
 

@@ -1,7 +1,6 @@
 'use strict'
 
 const errors = require('../common/errors/app-errors');
-const { update } = require('../../authization-module/resources/dals/permissions-dal');
 /**
  * this module contains all list related endpoints
  * @param apiUtils

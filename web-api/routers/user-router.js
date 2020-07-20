@@ -1,6 +1,5 @@
 'use strict'
 
-const { getUserAuthorizationInfo } = require('../../authization-module/resources/authorizations')
 
 
 

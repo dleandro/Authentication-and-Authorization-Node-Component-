@@ -60,7 +60,6 @@ export function userService() {
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUsers: async () => getRequest(users.USER_PATH),
-        getUserRoles: async (id) => getRequest(users.ROLES_PATH(id)),
         getUserSessions: async (id) => getRequest(users.SESSION_PATH(id)),
         getUserLists: async (id) => getRequest(users.LIST_PATH(id)),
         getUserHistory: async (id) => getRequest(users.HISTORY_PATH(id)),
@@ -116,7 +115,8 @@ export function permissionService() {
 
 export function userRoleService() {
     return {
-        getUserRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
+        getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
+        getUsersRoles: async (id) => getRequest(users.ROLES_PATH(id)),
         addUserRole: async (userid, roleid, updater) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater }, 'POST'),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT'),
         deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE')

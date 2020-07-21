@@ -47,17 +47,17 @@ function SpecificUserInfo(){
 
 function UserRoles() {
     const {id}=useParams();
-    const fetchData = ()=> userService().getUserRoles(id);
+    const fetchData = ()=> userRoleService().getUsersRoles(id);
     const labels = ['Role id', 'role', 'Start Date', 'End Date', 'Updater'];
     const postUserRole = (roleId,updater)=>userRoleService().addUserRole(id,roleId,updater)
     const removeRoleFromUser = (roleId) => console.log('Remove Role from user still needs service')
 
     const userRoleToLine = userRole=> <React.Fragment>
         <td><Link to={`/roles/${userRole['Roles.id']}`}>{`Details of Role: ${userRole['Roles.id']}`}</Link></td>
-        <td >{userRole['Roles.role']}</td>
-        <td >{userRole['Roles.UserRoles.start_date']}</td>
-        <td>{userRole['Roles.UserRoles.end_date']}</td>
-        <td>{userRole['Roles.UserRoles.updater']}</td>
+        <td >{userRole["Role.role"]}</td>
+        <td >{userRole.start_date}</td>
+        <td>{userRole.end_date}</td>
+        <td>{userRole.updater}</td>
         <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
                                buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;

@@ -18,7 +18,7 @@ export default function GenericFunctionality({fetchCB,postNewDataCB,postNewDataF
     const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
     useEffect(()=>{
-        fetchCB().then(data=>'err' in data?setError(data):setValues(data));
+        fetchCB().then(data=>{console.log(data); return 'err' in data?setError(data):setValues(data)});
     },[]);
     useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
 

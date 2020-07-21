@@ -21,20 +21,8 @@ module.exports = {
     setResponse,
 
     promiseDataToResponse: (res, dataPromise) => dataPromise
-        .then(data => {
-
-            if (!data || Array.isArray(data) && !data.length) {
-
-                throw errors.noResponseFound
-
-            }
-
-            return setResponse(res, data, 200)
-
-        })
-        .catch(err => {
-            setResponse(res, err.message, err.status)
-        })
+        .then(data => setResponse(res, data, 200))
+        .catch(err => setResponse(res, err.message, err.status))
 
 
 }

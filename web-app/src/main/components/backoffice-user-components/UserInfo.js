@@ -3,7 +3,7 @@ import {Link, useParams,useHistory} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {listService, sessionService, userRoleService, userService,historyService} from '../../service';
+import {listService, sessionService, userRoleService, userService, historyService, rolesService} from '../../service';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from "react-bootstrap/Col";
@@ -11,7 +11,6 @@ import Form from 'react-bootstrap/Form';
 import GenericFunctionality from '../../common/html-elements-utils/generics/GenericFunctionality';
 import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import DatePicker from "../../common/html-elements-utils/DatePicker";
 
 function SpecificUserInfo(){
@@ -48,6 +47,7 @@ function SpecificUserInfo(){
 function UserRoles() {
     const {id}=useParams();
     const fetchData = ()=> userRoleService().getUsersRoles(id);
+    const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})))
     const labels = ['Role id', 'role', 'Start Date', 'End Date', 'Updater'];
     const postUserRole = (roleId,updater)=>userRoleService().addUserRole(id,roleId,updater)
     const removeRoleFromUser = (roleId) => console.log('Remove Role from user still needs service')
@@ -63,7 +63,8 @@ function UserRoles() {
     </React.Fragment>;
     return (
             <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeRoleFromUser} postNewDataCB={(arr)=>postUserRole(arr[0],arr[1])}
-                                  postNewDataFieldLabels={['Id of Role to be assign','Updater']} tableLabels={labels} valueToLineCB={userRoleToLine} />
+                                  postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher},'Updater']}
+                                  tableLabels={labels} valueToLineCB={userRoleToLine} />
     );
 }
 

@@ -1,4 +1,4 @@
-
+const fetch = require('node-fetch')
 var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 var HOME_PATH = undefined
@@ -38,7 +38,8 @@ const makeRequest = (url, body, met) => request(url, produceInit(body, met));
 /**
  * Function used to make login logout
  */
-export function authenticationService() {
+export function authenticationService(test) {
+
     return {
         login: async (user, pass) => makeRequest(users.LOCAL_LOGIN_PATH, { username: user, password: pass }, 'POST'),
 
@@ -74,7 +75,10 @@ export function userService() {
 
 
 
-export function listService() {
+export function listService(test) {
+    if (test){
+        HOME_PATH='http://localhost:3000';
+    }
     return {
         getLists: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),

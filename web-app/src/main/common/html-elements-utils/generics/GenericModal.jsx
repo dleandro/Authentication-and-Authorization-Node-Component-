@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import GenericTooltipButton from "./GenericTooltipButton";
+import InputWithDropDown from '../InputWithDropDown';
 
 /**
  * This is not supposed to be changed, instead make a new component which implements this
@@ -42,7 +43,8 @@ export function SubmitValuesModal({submitListener,labels,child,openButtonIcon='f
 
     const changeValue = (i,newValue)=> setValue(value.map((elem, index) => index===i?newValue:elem));
     const body = () => <React.Fragment>
-        {labels?labels.map((currElement, index) => <FormControl placeholder={currElement} onChange={e=>changeValue(index,e.target.value)}/>):undefined}
+        {labels?labels.map((currElement, index) => currElement.DropdownOptionsFetcher?<InputWithDropDown onChange={e=>changeValue(index,e)} label={currElement.text} fetchData={currElement.DropdownOptionsFetcher}/>
+        :<FormControl placeholder={currElement} onChange={e=>changeValue(index,e.target.value)}/>):undefined}
         {child}
     </React.Fragment>;
 

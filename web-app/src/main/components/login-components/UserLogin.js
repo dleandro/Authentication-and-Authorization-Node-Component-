@@ -1,6 +1,6 @@
 import React from 'react'
 import LoginForm from "./LoginForm";
-import Jumbotron from 'react-bootstrap/Jumbotron'
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 const UserLogin = ({ app, setRedirect }) =>
 

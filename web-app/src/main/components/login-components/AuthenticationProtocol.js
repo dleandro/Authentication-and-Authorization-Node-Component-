@@ -3,6 +3,9 @@ import AuthTypeContext from './AuthTypeContext'
 import Form from "react-bootstrap/Form";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import {configService} from "../../service";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import CardColumns from "react-bootstrap/CardColumns";
 
 export default function AuthenticationProtocol() {
 
@@ -26,27 +29,31 @@ export default function AuthenticationProtocol() {
   }
 
   return (
-      <div style={{ paddingLeft: '30px', paddingTop: '30px' }}>
-
+      <React.Fragment >
         {ctx.error?<p>{ctx.error.status} {ctx.error.err}</p>:
-            <React.Fragment>
-              <h2>Select Supported Identity Providers</h2>
+            <CardColumns style={{display: 'flex', justifyContent: 'center', paddingTop: '100px'}}>
 
-              { state.map((authType,idx) => <React.Fragment><Form inline>
-                <Form.Check id={`${authType.protocol} switch`} checked={authType.active === 1} onChange={()=>switchValue(idx)} label={authType.protocol} type={'switch'} />
-                &nbsp;&nbsp;
-                <SubmitValuesModal submitListener={val =>authType.changeConfigs?authType.changeConfigs(val):alert('AuthTypeContext doesnt have an editListener')}
-                                   openButtonIcon={'fa fa-edit'} buttonTooltipText={`Edit ${authType.protocol}`} labels={Object.keys(authType)} />
+            <Card style={{ width: '24rem'}} key={'AuthProtocolCard'} border="info" className='ml-2 mr-2'>
+                <Card.Body>
+                  <Card.Title>{'Select Supported Identity Providers'}</Card.Title>
+                  { state.map((authType,idx) => <React.Fragment><Form inline>
+                    <Form.Check id={`${authType.protocol} switch`} checked={authType.active === 1} onChange={()=>switchValue(idx)} label={authType.protocol} type={'switch'} />
+                    &nbsp;&nbsp;
+                    <SubmitValuesModal submitListener={val =>authType.changeConfigs?authType.changeConfigs(val):alert('AuthTypeContext doesnt have an editListener')}
+                                       openButtonIcon={'fa fa-edit'} buttonTooltipText={`Edit ${authType.protocol}`} labels={Object.keys(authType)} />
 
-              </Form><br/></React.Fragment>)}
-              <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={saveAuthTypesAllowed}> Save</button>
+                  </Form><br/></React.Fragment>)}
+                  <br />
+                  <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={saveAuthTypesAllowed}> Save</button>
 
-              <br/>
-              <SubmitValuesModal submitListener={val =>configService().changeDatabaseOptions(val[0])}
-                                 openButtonIcon={'fa fa-database'} buttonTooltipText={`Edit SGDB`} labels={['Edit SGBD']} />
-            </React.Fragment>
+                  <br/>
+                  <SubmitValuesModal submitListener={val =>configService().changeDatabaseOptions(val[0])}
+                                     openButtonIcon={'fa fa-database'} buttonTooltipText={`Edit SGDB`} labels={['Edit SGBD']} />
+                </Card.Body>
+              </Card>
+            </CardColumns>
         }
-      </div>
+      </React.Fragment>
   )
 
 }

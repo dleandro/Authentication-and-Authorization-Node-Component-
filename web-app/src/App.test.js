@@ -1,7 +1,9 @@
-import {listService,userService} from './components/javascript/service';
+import {listService,userService,rolesService} from "./main/service";
+
 const PORT = 8082;
-const listServ = listService(PORT);
-const userServ = userService(PORT);
+const listServ = listService(true);
+const userServ = userService(true);
+const roleServ = rolesService(true);
 
 /**
  * @jest-environment node
@@ -27,6 +29,21 @@ describe('List Service tests', () => {
         await listServ.getLists().then(lists=>expect(lists).not.toContainEqual(inserted));
     });
 
+});
+
+describe('Role Service tests',()=>{
+    test('Create/Get/Update/GetByID/Delete/GetById Role:', async ()=>{
+        const inserted=await roleServ.addRole(['testRoleName','Testparentrole']);
+        await roleServ.getRoles().then(roles=>expect(roles).toContainEqual(inserted));
+        const updated= await roleServ.editRole([inserted.id,'changedTestingName','changedTestingParentName'])
+        await roleServ.getRole(updated.id).then(role=>expect(role.role).toEqual(updated.role));
+        const deleted = await roleServ.deleteRole(inserted.id);
+        console.log('Inserted: ',inserted,'Updated: ',updated,'Deleted: ',deleted);
+        inserted.role=updated.role;
+        //checking role was deleted
+        await roleServ.getRole(inserted.id).then(role=>expect(role).not.toEqual(inserted));
+        await roleServ.getRoles().then(role=>expect(role).not.toContainEqual(inserted));
+    });
 });
 
 describe('User Service tests',()=>{

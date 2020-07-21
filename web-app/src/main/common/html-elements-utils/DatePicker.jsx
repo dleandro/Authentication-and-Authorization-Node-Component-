@@ -1,10 +1,5 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import { Form } from 'react-bootstrap';
-import {Link, useParams} from "react-router-dom";
-import {rolesService, userRoleService} from "../../service";
-import UserContext from "../../UserContext";
-import {SubmitValuesModal} from "./generics/GenericModal";
-import GenericFunctionality from "./generics/GenericFunctionality";
 
 export default function DatePicker({onChange,text = 'Choose Date ...'}) {
     return (

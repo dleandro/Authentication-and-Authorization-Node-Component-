@@ -12,37 +12,9 @@ import GenericFunctionality from '../../common/html-elements-utils/generics/Gene
 import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import DatePicker from "../../common/html-elements-utils/DatePicker";
+import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
 
-function SpecificUserInfo(){
-    const {id} = useParams();
-    const [user, setUser] = useState({ username: undefined, password: undefined })
-    useEffect(()=>{userService().getUserById(id).then(setUser)},[id])
-
-    return  (
-        <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-            <Card border="white" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
-                <Card.Header>{`Profile:  ${user.username}`}</Card.Header>
-                <Card.Body>
-                    <Card.Title>{`Details of user num: ${user.id}`}</Card.Title>
-                    <Card.Text>
-                        This page and all his sections displays all information relative to this User.
-                    </Card.Text>
-                    <Form.Group>
-                        {Object.keys(user).map(key=><React.Fragment>
-                            <br />
-                            <Form.Row>
-                                <Form.Label column lg={2}>{key}</Form.Label>
-                                <Col><Form.Control type="text" value={user[key]} /></Col>
-                            </Form.Row>
-                        </React.Fragment>)}
-                    </Form.Group>
-
-
-                </Card.Body>
-            </Card>
-        </div>
-    );
-}
+const SpecificUserInfo=()=><GenericInfoCard label={'User'} fetchValueById={userService().getUserById} />;
 
 function UserRoles() {
     const {id}=useParams();
@@ -63,7 +35,7 @@ function UserRoles() {
     </React.Fragment>;
     return (
             <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeRoleFromUser} postNewDataCB={(arr)=>postUserRole(arr[0],arr[1])}
-                                  postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher},'Updater']}
+                                  postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
                                   tableLabels={labels} valueToLineCB={userRoleToLine} />
     );
 }
@@ -79,9 +51,11 @@ export function UserSessions(){
         <td>{session.UserId}</td>
         <td>{session.sid}</td>
         <td>{session.expires}</td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
+                               buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;
     return (
-        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={sessionToLine} />
+        <GenericFunctionality fetchCB={fetchData} deleteDataCB={val =>console.log('Service not Done yet',val)} tableLabels={labels} valueToLineCB={sessionToLine} />
     );
 };
 
@@ -90,7 +64,7 @@ function UserLists() {
     const labels = ['Id', 'Start Date', 'End Date', 'Updater'];
     const ctx = useContext(UserContext);
     const fetchData = ()=> listService().getUserActiveLists(ctx.user.id);
-
+    const postOptionsFetcher = () => listService().getLists().then(data=>data.map(value=>({eventKey:value.id,text:value.list})));
 
     const listToLine=(list)=><React.Fragment>
         <td><Link to={`/lists/${list.ListId}`}>{`Details of List: ${list.ListId}`}</Link></td>
@@ -101,7 +75,9 @@ function UserLists() {
                                openButtonIcon={'fa fa-calendar'} buttonTooltipText={'Edit End Date'} /> </td>
     </React.Fragment>;
     return (
-        <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
+        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of List to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
+                              tableLabels={labels} deleteDataCB={val =>console.log('Service not Done yet',val)}
+                              postNewDataCB={val =>console.log('Service not Done yet',val)} valueToLineCB={listToLine} />
     );
 }
 
@@ -109,7 +85,6 @@ function UserHistory(){
     const labels = ['Id','UserId', 'Date', 'Success','Action','Resource','IP'];
     const ctx = useContext(UserContext);
     const fetchData = ()=> historyService().getUserHistory(ctx.user.id);
-
 
     const listToLine=(history)=><React.Fragment>
         <td>{history.id}</td>

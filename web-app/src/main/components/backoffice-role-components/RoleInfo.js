@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import UpdatableInput from  '../BackOfficeFunctionalities';
-import {permissionService, rolePermissionService, rolesService, userRoleService} from "../../service";
+import {permissionService, rolePermissionService, rolesService, userRoleService, userService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -13,43 +13,9 @@ import Col from "react-bootstrap/Col";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import DatePicker from "../../common/html-elements-utils/DatePicker";
+import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
 
-function SpecificRoleInfo(){
-    const {id} = useParams();
-    const [role, setRole] = useState({ username: undefined, password: undefined })
-    useEffect(()=>{rolesService().getRole(id).then(setRole)},[id])
-
-    return  (
-        <Jumbotron style={{
-            backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            height: '90vh'
-        }}>
-            <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-                <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
-                    <Card.Body>
-                        <Card.Title>{`Details of Role num: ${role.id}`}</Card.Title>
-                        <Card.Text>
-                            This page and all his sections displays all information relative to this Role.
-                        </Card.Text>
-                        <Form.Group>
-                            {Object.keys(role).map(key=><React.Fragment>
-                                <br />
-                                <Form.Row>
-                                    <Form.Label column lg={2}>{key}</Form.Label>
-                                    <Col><Form.Control type="text" value={role[key]} /></Col>
-                                </Form.Row>
-                            </React.Fragment>)}
-                        </Form.Group>
-
-
-                    </Card.Body>
-                </Card>
-            </div>
-        </Jumbotron>
-    );
-}
+const SpecificRoleInfo=()=><GenericInfoCard label={'Role'} fetchValueById={rolesService().getRole} />;
 
 function RolePermission() {
 
@@ -60,6 +26,7 @@ function RolePermission() {
         return t;
     });
     const postData = (arr)=> rolePermissionService().addRolePermission(id,arr[0],arr[1],arr[2])
+    const postOptionsFetcher = () => permissionService().getPermissions().then(data=>data.map(value=>({eventKey:value.id,text:`${value.action} ${value.resource}`})));
 
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
@@ -72,8 +39,8 @@ function RolePermission() {
     </React.Fragment>;
 
     return (
-        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={['Permission Id','Action','Resource']} postNewDataCB={postData}
-                              tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Permission to be assign', DropdownOptionsFetcher:postOptionsFetcher}]} postNewDataCB={postData}
+                              deleteDataCB={val =>console.log('Service not Done yet',val)} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
     );
 }
 
@@ -84,7 +51,7 @@ export function RoleUsers() {
     const labels = ["User id", "username",'Role Assignment date','Role expiration date','Updater']
     const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id)
     const removeUserFromRole = ()=> console.log('Still not implemented');
-
+    const postOptionsFetcher = () => userService().getUsers().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
 
     const roleUserToLine = (roleUser) => <React.Fragment>
         <td><Link to={`/users/${roleUser['Users.id']}`}>{`Details of user: ${roleUser['Users.id']}`}</Link></td>
@@ -98,8 +65,8 @@ export function RoleUsers() {
     return (
 
         <React.Fragment>
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromRole} postNewDataCB={(arr)=>postUserRole(arr[0])}
-                                  postNewDataFieldLabels={['Id of User to be assign']} tableLabels={labels} valueToLineCB={roleUserToLine} />
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromRole} postNewDataCB={(arr)=>postUserRole(arr[0])} tableLabels={labels}
+                                  postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={roleUserToLine} />
         </React.Fragment>
     )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import {Link, useParams} from 'react-router-dom'
-import {listService, permissionService, rolePermissionService, userService} from "../../service";
+import {listService, permissionService, rolePermissionService, rolesService, userService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -9,43 +9,9 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
 
-function SpecificPermissionInfo(){
-    const {id} = useParams();
-    const [permission, setPermission] = useState({ username: undefined, password: undefined })
-    useEffect(()=>{permissionService().getPermission(id).then(setPermission)},[id])
-
-    return  (
-        <Jumbotron style={{
-            backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            height: '90vh'
-        }}>
-            <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-                <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
-                    <Card.Body>
-                        <Card.Title>{`Details of permission num: ${permission.id}`}</Card.Title>
-                        <Card.Text>
-                            This page and all his sections displays all information relative to this Permission.
-                        </Card.Text>
-                        <Form.Group>
-                            {Object.keys(permission).map(key=><React.Fragment>
-                                <br />
-                                <Form.Row>
-                                    <Form.Label column lg={2}>{key}</Form.Label>
-                                    <Col><Form.Control type="text" value={permission[key]} /></Col>
-                                </Form.Row>
-                            </React.Fragment>)}
-                        </Form.Group>
-
-
-                    </Card.Body>
-                </Card>
-            </div>
-        </Jumbotron>
-    );
-}
+const SpecificPermissionInfo=()=><GenericInfoCard label={'Permission'} fetchValueById={permissionService().getPermission}/>;
 
 function PermissionRoles() {
 
@@ -56,6 +22,7 @@ function PermissionRoles() {
         return t;
     });
     const postData = (arr)=> rolePermissionService().addRolePermission(arr[0],id,arr[1],arr[2])
+    const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
 
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
@@ -68,8 +35,9 @@ function PermissionRoles() {
     </React.Fragment>;
 
     return (
-        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={['Role Id','Action','Resource']} postNewDataCB={postData}
-                              tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
+                              postNewDataCB={postData} tableLabels={labels} valueToLineCB={rolePermissionToLine}
+                              deleteDataCB={val =>console.log('Service not Done yet',val)}/>
     );
 }
 

@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {SubmitValuesModal} from "../common/html-elements-utils/generics/GenericModal";
 import GenericTooltipButton from "../common/html-elements-utils/generics/GenericTooltipButton";
 import GenericFunctionality from "../common/html-elements-utils/generics/GenericFunctionality";
+import DatePicker from "../common/html-elements-utils/DatePicker";
 
 function UpdatableInput({initialValue,submitListener}){
     const [value,setValue] = useState(initialValue);
@@ -29,8 +30,8 @@ export function Sessions(){
         <td><Link to={`/users/${session.UserId}`}>{`Details of User: ${session.UserId}`}</Link></td>
         <td>{session.sid}</td>
         <td>{session.expires}</td>
-        <td><SubmitValuesModal submitListener={val =>console.log('Service not done yet',val)} openButtonIcon={'fa fa-edit'}
-                               buttonTooltipText={'Edit Expiration Date'} labels={['New Expiration Date']} /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
+                               buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;
     return (
         <React.Fragment>
@@ -129,7 +130,7 @@ export function Roles(props){
     const {getRoles,addRole,deleteRole,editRole} = rolesService();
     const postRole = (arr) => addRole(['',arr[0],arr[1]]);
     const deleteRoleCB = (role) => deleteRole(role.id);
-
+    const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
 
     const currentValues=(role)=><React.Fragment>
         <InputGroup>
@@ -147,12 +148,14 @@ export function Roles(props){
         <td>{role.role}</td>
         <td>{role.parent_role == null ? 'null' : role.parent_role}</td>
         <td><SubmitValuesModal submitListener={val =>editRole([role.id,val[0],val[1]]).then(t=>history.push(`/roles/${role.id}`))} openButtonIcon={'fa fa-edit'}
-                               child={currentValues(role)} buttonTooltipText={'Edit Role'} labels={['New Role','New Parent Role']} /> </td>
+                               child={currentValues(role)} buttonTooltipText={'Edit Role'}
+                               labels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]} /> </td>
     </React.Fragment>;
 
     return (
         <GenericFunctionality fetchCB={getRoles} deleteDataCB={deleteRoleCB} postNewDataCB={postRole}
-                              postNewDataFieldLabels={['New Role','Parent Role']} valueToLineCB={rolesToLine} tableLabels={labels} />
+                              postNewDataFieldLabels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]} valueToLineCB={rolesToLine}
+                              tableLabels={labels} />
     );
 }
 

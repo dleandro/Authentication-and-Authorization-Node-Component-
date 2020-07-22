@@ -33,7 +33,7 @@ export default function AuthenticationProtocol() {
         {ctx.error?<p>{ctx.error.status} {ctx.error.err}</p>:
             <CardColumns style={{display: 'flex', justifyContent: 'center', paddingTop: '100px'}}>
 
-            <Card style={{ width: '24rem'}} key={'AuthProtocolCard'} border="info" className='ml-2 mr-2'>
+              <Card style={{ width: '24rem'}} key={'AuthProtocolCard'} border="info" className='ml-2 mr-2'>
                 <Card.Body>
                   <Card.Title>{'Select Supported Identity Providers'}</Card.Title>
                   { state.map((authType,idx) => <React.Fragment><Form inline>
@@ -43,12 +43,15 @@ export default function AuthenticationProtocol() {
                                        openButtonIcon={'fa fa-edit'} buttonTooltipText={`Edit ${authType.protocol}`} labels={Object.keys(authType)} />
 
                   </Form><br/></React.Fragment>)}
-                  <br />
-                  <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={saveAuthTypesAllowed}> Save</button>
-
-                  <br/>
-                  <SubmitValuesModal submitListener={val =>configService().changeDatabaseOptions(val[0])}
-                                     openButtonIcon={'fa fa-database'} buttonTooltipText={`Edit SGDB`} labels={['Edit SGBD']} />
+                  <Form inline>
+                    <div className="col-sm"><button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={saveAuthTypesAllowed}> Save</button> </div>
+                    <div className="col-sm">
+                      <SubmitValuesModal submitListener={val =>configService().changeSGDB(val[0])}
+                                         openButtonIcon={'fa fa-database'} buttonTooltipText={`Edit SGDB`} labels={['Edit SGBD']} />
+                      <SubmitValuesModal submitListener={val =>configService().changeDatabaseOptions(val[0])} buttonTooltipText={`Edit Database Options`}
+                                         openButtonIcon={'fa fa-database'} labels={['new Host','new Port','new User','new Password','new ConnectionLimit','New Database']} />
+                    </div>
+                  </Form>
                 </Card.Body>
               </Card>
             </CardColumns>

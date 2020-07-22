@@ -17,32 +17,28 @@ import {SubmitValuesModal} from "./GenericModal";
 export default function GenericFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,deleteDataCB,valueToLineCB,tableLabels}){
     const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
-    useEffect(()=>{
-        fetchCB().then(data=>{console.log(data); return 'err' in data?setError(data):setValues(data)});
-    },[]);
-    useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
+    const postData = arr => postNewDataCB(arr).then(d=>setValues([...values,d]));
+    const deleteValue = val => deleteDataCB(val).then(()=>setValues([...values].filter(item=>item.id !==val.id)));
 
-    const deleteValue = (val) => deleteDataCB(val).then(()=>{
-        let newValues = [...values].filter(item=>item.id !==val.id);
-        setValues(newValues);
-    });
+    useEffect(()=>{fetchCB().then(data=>{console.log(data); return 'err' in data?setError(data):setValues(data)});},[]);
+    useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
 
     const valueToLine = (val) => <tr>
         {valueToLineCB(val)}
+        {deleteDataCB?
         <td>
             <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={()=>deleteValue(val)} />
-        </td>
+        </td>:undefined}
     </tr>;
     return (
         <React.Fragment>
             {error?<p>{error.status} {error.err}</p>:
-
                 <Table striped bordered hover variant="dark">
                     <thead>
                     <tr>
                         {tableLabels.map(label => <th>{label}</th>)}
                         <th>
-                            <SubmitValuesModal submitListener={(arr)=>postNewDataCB(arr).then(d=>setValues([...values,d]))} labels={postNewDataFieldLabels}/>
+                            {postNewDataCB?<SubmitValuesModal submitListener={postData} labels={postNewDataFieldLabels}/>:undefined}
                         </th>
                     </tr>
                     </thead>

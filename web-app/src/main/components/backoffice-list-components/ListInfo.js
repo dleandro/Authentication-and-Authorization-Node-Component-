@@ -13,43 +13,10 @@ import Col from "react-bootstrap/Col";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import DatePicker from "../../common/html-elements-utils/DatePicker";
-
-function SpecificListInfo(){
-    const {id} = useParams();
-    const [list, setList] = useState({ username: undefined, password: undefined })
-    useEffect(()=>{listService().getList(id).then(setList)},[id])
-
-    return  (
-        <Jumbotron style={{
-            backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            height: '90vh'
-        }}>
-            <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-                <Card border="primary" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
-                    <Card.Body>
-                        <Card.Title>{`Details of List num: ${list.id}`}</Card.Title>
-                        <Card.Text>
-                            This page and all his sections displays all information relative to this List.
-                        </Card.Text>
-                        <Form.Group>
-                            {Object.keys(list).map(key=><React.Fragment>
-                                <br />
-                                <Form.Row>
-                                    <Form.Label column lg={2}>{key}</Form.Label>
-                                    <Col><Form.Control type="text" value={list[key]} /></Col>
-                                </Form.Row>
-                            </React.Fragment>)}
-                        </Form.Group>
+import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
 
 
-                    </Card.Body>
-                </Card>
-            </div>
-        </Jumbotron>
-    );
-}
+const SpecificListInfo = () => <GenericInfoCard label={'User'} fetchValueById={listService().getList} />;
 
 function ListUsers() {
 
@@ -59,6 +26,8 @@ function ListUsers() {
     const ctx = useContext(UserContext);
     const addUserToList = (userId)=> userListService().addUserList(id,userId,ctx.user.id)
     const removeUserFromList = () => console.log('Still not implemented removeUserFromList')
+    const postOptionsFetcher = () => userService().getUsers().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+
     const listUserToLine = listUser=> <React.Fragment>
         <td><Link to={`/users/${listUser['Users.id']}`}>{`Details of User: ${listUser['Users.id']}`}</Link></td>
         <td >{listUser['Users.username']}</td>
@@ -71,8 +40,8 @@ function ListUsers() {
     return (
 
         <React.Fragment>
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromList} postNewDataCB={(arr)=>addUserToList(arr[0])}
-                                  postNewDataFieldLabels={['Id of User to add to list']} tableLabels={labels} valueToLineCB={listUserToLine} />
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromList} postNewDataCB={(arr)=>addUserToList(arr[0])} tableLabels={labels}
+                                  postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={listUserToLine} />
         </React.Fragment>
     )
 }

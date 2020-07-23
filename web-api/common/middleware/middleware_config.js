@@ -18,6 +18,16 @@ const db = {
     "sgbd": "mariadb"
 }
 
+const cloud_db={
+    "host": "35.197.222.252",
+    "port": 3306,
+    "user": "authization",
+    "password": "hwwuq1PAAmmejOEk",
+    "connectionLimit": 5,
+    "database": "authization",
+    "sgbd": "mysql"
+}
+
 const rbac_opts = {
     "roles": ["admin", "DbManager", "Developer", "guest"],
     "permissions": [
@@ -81,4 +91,5 @@ const rbac_opts = {
 
 exports.db2 = db2
 exports.db = db
+exports.cloud_db = cloud_db
 exports.rbac_opts = rbac_opts

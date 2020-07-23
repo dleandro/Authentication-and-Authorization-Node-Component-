@@ -20,20 +20,21 @@ const SpecificListInfo = () => <GenericInfoCard label={'User'} fetchValueById={l
 
 function ListUsers() {
 
-    const labels = ["User Id", "Username", "Start Date", "End Date", "Updater"]
+    const labels = ["User Id", "Username", "Start Date", "End Date","Active", "Updater"]
     let {id}=useParams()
     const fetchData = ()=>listService().getUsersInThisList(id)
     const ctx = useContext(UserContext);
-    const addUserToList = (userId)=> userListService().addUserList(id,userId,ctx.user.id)
+    const addUserToList =(userId)=>userListService().addUserList(id,userId,ctx.user.id,new Date())
     const removeUserFromList = () => console.log('Still not implemented removeUserFromList')
     const postOptionsFetcher = () => userService().getUsers().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
 
     const listUserToLine = listUser=> <React.Fragment>
-        <td><Link to={`/users/${listUser['Users.id']}`}>{`Details of User: ${listUser['Users.id']}`}</Link></td>
-        <td >{listUser['Users.username']}</td>
-        <td >{listUser['Users.UserList.start_date']}</td>
-        <td>{listUser['Users.UserList.end_date']}</td>
-        <td>{listUser['Users.UserList.updater']}</td>
+        <td><Link to={`/users/${listUser.UserId}`}>{`Details of User: ${listUser.UserId}`}</Link></td>
+        <td >{listUser['User.username']}</td>
+        <td >{listUser.start_date}</td>
+        <td>{listUser.end_date}</td>
+        <td>{listUser.active}</td>
+        <td>{listUser.updater}</td>
         <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>}
                                openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} /> </td>
     </React.Fragment>;

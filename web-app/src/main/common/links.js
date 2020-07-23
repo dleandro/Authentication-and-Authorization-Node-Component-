@@ -16,9 +16,8 @@ const
     USERS_LIST_PATH="/api/users-lists",
     HISTORY_PATH="/api/users-history"
 
-const WEB_API_HOME_PATH = 'http://localhost:8082'
-
-const WEB_APP_HOME_PATH = 'http://localhost:3000'
+const WEB_API_HOME_PATH = process.env.REACT_APP_WEBAPI?`http://localhost:${process.env.REACT_APP_WEBAPI}`:'https://webapi-dot-auth-authorization.ew.r.appspot.com'
+const WEB_APP_HOME_PATH = process.env.REACT_APP_WEBAPP?`http://localhost:${process.env.REACT_APP_WEBAPP}`:'https://webapp-dot-auth-authorization.ew.r.appspot.com'
 
 export const webApiLinks =
 {

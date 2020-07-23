@@ -44,7 +44,7 @@ export default function LoginForm({ id }) {
     }
 
     var loginIdp = async (idp) => {
-        console.log(`${webApiLinks.WEB_API_HOME_PATH}/${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
+        console.log(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
         window.location.assign(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
     }
 
@@ -82,7 +82,7 @@ export default function LoginForm({ id }) {
                 {checkIfSpecificAuthTypeIsActive('AzureAD') && <Button style={imgBtns} onClick={() => loginIdp("azureAD")} >
                     <img src="ms-symbollockup_signin_dark.png" alt="microsoft" /></Button>}
 
-                {checkIfSpecificAuthTypeIsActive('Saml') && <Button style={imgBtns} onClick={() => loginIdp("saml")} >
+                {checkIfSpecificAuthTypeIsActive('Auth0') && <Button style={imgBtns} onClick={() => loginIdp("saml")} >
                     <img style={authStyle} src="https://www.drupal.org/files/project-images/auth0-logo-whitebg.png" /></Button>}
 
             </div>

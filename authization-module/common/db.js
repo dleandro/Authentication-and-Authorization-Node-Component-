@@ -34,7 +34,7 @@ async function databasesetup(rbac_opts) {
         List.findOrCreate({ where: { "list": "RED" } }),
         Protocols.findOrCreate({ where: { "protocol": "Google" }, defaults: { "active": 1 } }),
         Protocols.findOrCreate({ where: { "protocol": "AzureAD" }, defaults: { "active": 1 } }),
-        Protocols.findOrCreate({ where: { "protocol": "Auth0" }, defaults: { "active": 1 } }),
+        Protocols.findOrCreate({ where: { "protocol": "Saml" }, defaults: { "active": 1 } }),
         require('./rbac')(rbac_opts)
     ]
 

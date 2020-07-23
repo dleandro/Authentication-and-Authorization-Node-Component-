@@ -4,8 +4,9 @@
   "description": "",
   "main": "./server/index.js",
   "dependencies": {
-    "@authization/authization": "^1.0.0",
+    "@authization/authization": "^1.0.9",
     "connect-session-sequelize": "^6.1.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.4",
     "morgan": "^1.10.0"

@@ -1,8 +1,7 @@
 const fetch = require('node-fetch')
 var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
-var HOME_PATH = undefined
-//var HOME_PATH = 'http://35.233.44.226:80'
+var HOME_PATH = process.env.REACT_APP_WEBAPP?undefined:'https://webapi-dot-auth-authorization.ew.r.appspot.com'
 
 function produceInit(body, met) {
     return { ...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true };
@@ -76,9 +75,6 @@ export function userService() {
 
 
 export function listService(test) {
-    if (test){
-        HOME_PATH='http://localhost:3000';
-    }
     return {
         getLists: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
@@ -121,7 +117,7 @@ export function userRoleService() {
     return {
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         getUsersRoles: async (id) => getRequest(users.ROLES_PATH(id)),
-        addUserRole: async (userid, roleid, updater) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater }, 'POST'),
+        addUserRole: async (userid, roleid, updater,start_date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater,start_date:start_date }, 'POST'),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT'),
         deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE')
     }
@@ -145,7 +141,7 @@ export function rolePermissionService() {
 
 export function userListService() {
     return {
-        addUserList: async (listId, userId, updater) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId, active: 1, updater: updater }, 'POST'),
+        addUserList: async (listId, userId, updater,start_date) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId, active: 1,start_date:start_date, updater: updater }, 'POST'),
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT'),
         deleteUserList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId }, 'DELETE')
     }

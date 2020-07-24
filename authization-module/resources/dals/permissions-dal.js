@@ -14,16 +14,15 @@ module.exports = {
   * @param description
   * @returns {Promise<void>}
   */
-    create: (action, resource) =>
-        tryCatch(() => {
-            config.rbac.createPermission(action, resource, true)
-            return Permission.findOrCreate({
-                where: {
-                    action: action,
-                    resource: resource
-                }
-            })
-        }),
+    create: async (action, resource) => tryCatch(async () => {
+        await config.rbac.createPermission(action, resource, true)
+        return Permission.findOrCreate({
+            where: {
+                action: action,
+                resource: resource
+            }
+        })
+    }),
 
     /**
      *
@@ -65,7 +64,13 @@ module.exports = {
                 }
             })),
 
-    update: (id, action, resource) => tryCatch(() => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
+    update: async (id, action, resource) => Promise.resolve(
+        {
+            insertedRows: await tryCatch(() => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
+            action,
+            resource
+        }),
+
     getRolesByPermission: (id) => tryCatch(() => Permission.findAll({ where: { id: id }, include: [Role], raw: true }))
 
 }

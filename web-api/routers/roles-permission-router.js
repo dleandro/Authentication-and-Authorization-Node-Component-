@@ -17,11 +17,11 @@ module.exports = function (apiUtils, authization) {
         .delete(deleteRolesPermission)
 
     function addRolesPermission(req, res) {
-        rolePermission.create(req.body.roleId, { id: req.body.permissionId, action: req.body.action, resource: req.body.resource })
-            .then(answer => {
-                apiUtils.setResponse(res, answer[0].dataValues, 201)
-            })
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        apiUtils.promiseDataToResponse(
+            res,
+            rolePermission.create(req.body.roleId, { id: req.body.permissionId, action: req.body.action, resource: req.body.resource }),
+            201
+        )
     }
 
     function deleteRolesPermission(req, res) {

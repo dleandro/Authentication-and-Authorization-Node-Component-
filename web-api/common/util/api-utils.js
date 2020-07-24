@@ -1,7 +1,5 @@
 'use strict'
 
-const errors = require('../errors/app-errors')
-
 const setResponse = (res, answer, statusCode) => {
     console.log(answer)
     res.headers = {
@@ -20,8 +18,8 @@ module.exports = {
      */
     setResponse,
 
-    promiseDataToResponse: (res, dataPromise) => dataPromise
-        .then(data => setResponse(res, data, 200))
+    promiseDataToResponse: (res, dataPromise, statusCode) => dataPromise
+        .then(data => setResponse(res, data, statusCode || 200))
         .catch(err => setResponse(res, err.message, err.status))
 
 

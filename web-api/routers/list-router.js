@@ -31,11 +31,7 @@ module.exports = function (apiUtils, authization) {
     listRouter.put('/deactivate/:id', deactivateList)
 
     function addList(req, res) {
-        lists.create(req.body.list)
-            .then(answer => {
-                apiUtils.setResponse(res, answer.dataValues, 201)
-            })
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        apiUtils.promiseDataToResponse(res, lists.create(req.body.list), 201)
     }
 
     function deleteList(req, res) {
@@ -67,11 +63,8 @@ module.exports = function (apiUtils, authization) {
     }
 
     function updateList(req, res) {
-        lists.update(req.params.id, req.body.list)
-            .then(answer => apiUtils.setResponse(res, req.body, 201))
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        apiUtils.promiseDataToResponse(res, lists.update(req.params.id, req.body.list), 201)
     }
-
 
     return listRouter
 

@@ -30,7 +30,7 @@ module.exports = {
         delete passport._strategies.google
 
         const strat = require('../common/middleware/authentication-middleware/strategies/google-strategy')()
-        
+
         passport.use('google', strat)
     },
     /**
@@ -39,5 +39,39 @@ module.exports = {
      */
     changeAzureADAuthenticationOptions: (newConfiguration) => {
         config.azureAD = newConfiguration
+    },
+
+    getRbacOptions: async () => {
+
+        const
+            rolesDal = require('./dals/roles-dal'),
+            permissionsDal = require('./dals/permissions-dal')
+
+        const roles = (await rolesDal.get()).map(role => role.role)
+
+        var permissions = await permissionsDal.get()
+        const resources = []
+
+        // save unique resources on the array "resources"
+        permissions.forEach(permission => !resources.includes(permission.resource) && resources.push(permission.resource))
+
+        // map each permission to its resource and respective array of possible actions
+        var formattedPermissions = {}
+        resources
+            .forEach(resource => formattedPermissions[resource] = permissions
+                .filter(permission => permission.resource === resource)
+                .map(permission => permission.action))
+
+        var formattedGrants = {}
+
+        await Promise.all(roles
+            .map(async role => {
+                var grant = await config.rbac.getScope(role)
+                formattedGrants[role] = grant
+                return grant
+            }))
+
+        return { roles, formattedPermissions, formattedGrants }
     }
+
 }

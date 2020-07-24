@@ -14,16 +14,19 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    create: (RoleId, permission) =>
-        tryCatch(async () => {
-            rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
-            return RolePermission.findOrCreate({
-                where: {
-                    RoleId: RoleId,
-                    PermissionId: permission.id
-                }
+    create: async (RoleId, permission) =>
+        Promise.resolve(
+            (await tryCatch(async () => {
+                await rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
+                return RolePermission.findOrCreate({
+                    where: {
+                        RoleId: RoleId,
+                        PermissionId: permission.id
+                    }
+                })
             })
-        }),
+            )
+        )[0],
 
     /**
      *

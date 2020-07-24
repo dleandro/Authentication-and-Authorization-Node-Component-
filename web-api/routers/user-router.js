@@ -27,11 +27,11 @@ module.exports = function (apiUtils, authization) {
     // get user by username
     userRouter.get('/byUsername/:username', getUserByUsername)
 
-    userRouter.get('/:id/roles', (req, res) => apiUtils.promiseDataToResponse(res, userRoles.getUserRoles(req.params.id), apiUtils))
-    userRouter.get('/:id/lists', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserLists(req.params.id), apiUtils))
-    userRouter.get('/:id/history', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserHistory(req.params.id), apiUtils))
-    userRouter.get('/:id/sessions', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserSessions(req.params.id), apiUtils))
-    userRouter.get('/currentUser/permissions', (req, res, next) => apiUtils.promiseDataToResponse(res, authorization.getUserPermissions(req, res, next), apiUtils))
+    userRouter.get('/:id/roles', (req, res) => apiUtils.promiseDataToResponse(res, userRoles.getUserRoles(req.params.id)))
+    userRouter.get('/:id/lists', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserLists(req.params.id)))
+    userRouter.get('/:id/history', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserHistory(req.params.id)))
+    userRouter.get('/:id/sessions', (req, res) => apiUtils.promiseDataToResponse(res, users.getUserSessions(req.params.id)))
+    userRouter.get('/currentUser/permissions', (req, res, next) => apiUtils.promiseDataToResponse(res, authorization.getUserPermissions(req, res, next)))
 
     // create an entry on the idp users table
     userRouter.post('/idp', createIdpUser)
@@ -47,15 +47,11 @@ module.exports = function (apiUtils, authization) {
     }
 
     function getAllUsers(req, res) {
-        apiUtils.promiseDataToResponse(res, users.get(), apiUtils)
+        apiUtils.promiseDataToResponse(res, users.get())
     }
 
     function createUser(req, res) {
-        users.create(req.body.username, req.body.password)
-            .then(answer => {
-                apiUtils.setResponse(res, answer.dataValues, 201)
-            })
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        apiUtils.promiseDataToResponse(res, users.create(req.body.username, req.body.password), 201)
     }
 
     function getSpecificUser(req, res) {
@@ -79,15 +75,11 @@ module.exports = function (apiUtils, authization) {
     }
 
     function updatePassword(req, res) {
-        users.updatePassword(req.body.password, req.params.id)
-            .then(answer => apiUtils.setResponse(res, req.body, 201))
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        apiUtils.promiseDataToResponse(res, users.updatePassword(req.body.password, req.params.id), 201)
     }
 
     function updateUsername(req, res) {
-        users.updateUsername(req.body.username, req.params.id)
-            .then(answer => apiUtils.setResponse(res, req.body, 201))
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
+        apiUtils.promiseDataToResponse(res,  users.updateUsername(req.body.username, req.params.id), 201)
     }
 
     return userRouter

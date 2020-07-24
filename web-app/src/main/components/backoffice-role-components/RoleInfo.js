@@ -19,7 +19,7 @@ const SpecificRoleInfo=()=><GenericInfoCard label={'Role'} fetchValueById={roles
 
 function RolePermission() {
 
-    const labels = ['Role id', 'role','Parent Role','Permission Id','Action','Resource'];
+    const labels = ['Permission Id','Action','Resource'];
     const {id}=useParams();
     const fetchData = ()=> rolesService().getPermissionsWithThisRole(id).then(t=>{
         console.log(t);
@@ -30,12 +30,9 @@ function RolePermission() {
 
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
-        <td>{id}</td>
-        <td>{rolePermission.role}</td>
-        <td>{rolePermission.parent_role}</td>
-        <td><Link to={`/permissions/${rolePermission['Permissions.id']}`}>{`Details of Permission: ${rolePermission['Permissions.id']}`}</Link></td>
-        <td>{rolePermission['Permissions.action']}</td>
-        <td>{rolePermission['Permissions.resource']}</td>
+        <td><Link to={`/permissions/${rolePermission.PermissionId}`}>{`Details of Permission: ${rolePermission.PermissionId}`}</Link></td>
+        <td>{rolePermission['Permission.action']}</td>
+        <td>{rolePermission['Permission.resource']}</td>
     </React.Fragment>;
 
     return (
@@ -48,17 +45,18 @@ export function RoleUsers() {
     let {id}=useParams()
     const fetchData = () => rolesService().getUsersWithThisRole(id)
     const ctx = useContext(UserContext)
-    const labels = ["User id", "username",'Role Assignment date','Role expiration date','Updater']
-    const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id)
+    const labels = ["User id", "username",'Role Assignment date','Role expiration date','Active','Updater']
+    const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id,new Date())
     const removeUserFromRole = ()=> console.log('Still not implemented');
     const postOptionsFetcher = () => userService().getUsers().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
 
     const roleUserToLine = (roleUser) => <React.Fragment>
-        <td><Link to={`/users/${roleUser['Users.id']}`}>{`Details of user: ${roleUser['Users.id']}`}</Link></td>
-        <td >{roleUser['Users.username']}</td>
-        <td >{roleUser['Users.UserRoles.start_date']}</td>
-        <td>{roleUser['Users.UserRoles.end_date']}</td>
-        <td>{roleUser['Users.UserRoles.updater']}</td>
+        <td><Link to={`/users/${roleUser.UserId}`}>{`Details of user: ${roleUser.UserId}`}</Link></td>
+        <td >{roleUser['User.username']}</td>
+        <td >{roleUser.start_date}</td>
+        <td>{roleUser.end_date}</td>
+        <td>{roleUser.active}</td>
+        <td>{roleUser.updater}</td>
         <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'}
                                child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} /> </td>
     </React.Fragment>;

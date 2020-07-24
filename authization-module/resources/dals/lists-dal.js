@@ -86,7 +86,7 @@ module.exports = {
             list
         }),
 
-    getUsersInThisList: (id) => tryCatch(() => List.findAll({ where: { id: id }, include: [User], raw: true })),
+    getUsersInThisList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
 
     isUserBlackListed: (userId) =>
         tryCatch(() =>

@@ -15,7 +15,7 @@ const SpecificPermissionInfo=()=><GenericInfoCard label={'Permission'} fetchValu
 
 function PermissionRoles() {
 
-    const labels = ['Permission Id','Action','Resource','Role id', 'role','Parent Role'];
+    const labels = ['Role id', 'role','Parent Role'];
     const {id}=useParams();
     const fetchData = ()=> permissionService().getRolesWithThisPermission(id).then(t=>{
         console.log(t);
@@ -26,12 +26,9 @@ function PermissionRoles() {
 
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
-        <td>{id}</td>
-        <td>{rolePermission.action}</td>
-        <td>{rolePermission.resource}</td>
-        <td><Link to={`/roles/${rolePermission['Roles.id']}`}>{`Details of Roles: ${rolePermission['Roles.id']}`}</Link></td>
-        <td>{rolePermission['Roles.role']}</td>
-        <td>{rolePermission['Roles.parent_role']}</td>
+        <td><Link to={`/roles/${rolePermission.RoleId}`}>{`Details of Roles: ${rolePermission.RoleId}`}</Link></td>
+        <td>{rolePermission['Role.role']}</td>
+        <td>{rolePermission['Role.parent_role']}</td>
     </React.Fragment>;
 
     return (

@@ -3,7 +3,7 @@ const
     passport = require('./authentication-middleware/passport'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    authorization = require('../../resources/authorizations');
+    userHistory = require('../../resources/dals/users-history-dal');
 
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = function (app, session) {
@@ -18,6 +18,9 @@ module.exports = function (app, session) {
     app.use(session);
     app.use(passport.initialize());
     app.use(passport.session());
+
+
+    app.use((req,res,next)=>userHistory.saveHistory(req,res,next))
 
     //Interceptor that checks for authorization
     //app.use((req, res, next) => req.path.includes('api') ? authorization.check(req, res, next) : next());

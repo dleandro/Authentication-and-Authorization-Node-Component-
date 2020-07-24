@@ -7,10 +7,11 @@ module.exports = function (apiUtils, authization) {
     const successCallback = async (req, res, next) => {
 
         if (req.isAuthenticated()) {
-            res.redirect("http://localhost:3000/backoffice")
+
+            process.env.WEBAPP?res.redirect("http://localhost:3000/backoffice"):res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com/backoffice")
         }
         else {
-            res.redirect("http://localhost:3000/")
+            process.env.WEBAPP?res.redirect("http://localhost:3000"):res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com")
         }
     }
     const authenticate = authization.authenticate

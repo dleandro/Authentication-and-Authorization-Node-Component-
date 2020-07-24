@@ -1,6 +1,6 @@
 'use strict'
 
-const { Role } = require('../sequelize-model'),
+const { Role, RolePermission } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils'),
     Permission = require('../sequelize-model').Permission,
     config = require('../../common/config/config')
@@ -71,7 +71,7 @@ module.exports = {
             resource
         }),
 
-    getRolesByPermission: (id) => tryCatch(() => Permission.findAll({ where: { id: id }, include: [Role], raw: true }))
+    getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true }))
 
 }
 

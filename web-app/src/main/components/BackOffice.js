@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
-import {userService, protocolService, listService, rolesService,configService} from '../service'
+import {userService, protocolService, listService, rolesService,configService,permissionService} from '../service'
 
 export default function BackOffice() {
 
@@ -28,8 +28,8 @@ export default function BackOffice() {
         </Card>;
 
     function myFunc(){
-        configService().changeAzureADAuthenticationOptions({})
-        .then(data=>console.log(data))
+        /*rolesService().getPermissionsWithThisRole(1)
+        .then(data=>console.log(data))*/
     }
 
     return (

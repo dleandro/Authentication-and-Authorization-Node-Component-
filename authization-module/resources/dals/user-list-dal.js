@@ -8,8 +8,7 @@ module.exports = {
 
     isUserBlackListed: (user_id) => tryCatch(() => User.findAll({ where: { id: user_id }, include: [List], raw: true })),
 
-    create: async (listId, userId, updater, active) =>
-        Promise.resolve(
-            (await tryCatch(() => UserList.create({ ListId: listId, UserId: userId, active: active, updater: updater }))
-            ).dataValues)
+    create: (listId, userId, updater, start_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date: start_date, active: active, updater: updater })),
+
+    delete: (listId, userId) => tryCatch(() => UserList.destroy({ where: { ListId: listId, UserId: userId } }))
 }

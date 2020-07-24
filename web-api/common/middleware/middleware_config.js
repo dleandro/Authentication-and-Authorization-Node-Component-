@@ -91,5 +91,10 @@ const rbac_opts = {
 
 exports.db2 = db2
 exports.db = db
+<<<<<<< HEAD
 exports.rbac_opts = rbac_opts
 exports.cloud_db = cloud_db
+=======
+exports.cloud_db = cloud_db
+exports.rbac_opts = rbac_opts
+>>>>>>> d56a46302172a148a292b2d8cfcd873fb25a3dab

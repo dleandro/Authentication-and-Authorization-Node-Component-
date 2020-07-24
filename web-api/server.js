@@ -7,6 +7,7 @@ const
     app = express(),
     path = require('path')
 
+require('dotenv').config()
 // Setup app's middleware
 require('./common/middleware/app-middleware')(app)
 

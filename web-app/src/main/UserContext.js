@@ -9,6 +9,8 @@ class UserProvider extends Component {
         selectedProtocol: "/",
         redirect: { should: false, link: "/" },
         user: { id: undefined, username: undefined },
+        userPermissions: undefined,
+        setPermissions: (data) => this.setState(prevState => ({ userPermissions: data })),
         setUser: (data) => this.setState(prevState => ({ user: data }))
     };
 

@@ -7,7 +7,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {SubmitValuesModal} from "../common/html-elements-utils/generics/GenericModal";
 import GenericTooltipButton from "../common/html-elements-utils/generics/GenericTooltipButton";
-import GenericFunctionality from "../common/html-elements-utils/generics/GenericFunctionality";
+import GenericFunctionality, {BasicFunctionality} from "../common/html-elements-utils/generics/GenericFunctionality";
 import DatePicker from "../common/html-elements-utils/DatePicker";
 
 function UpdatableInput({initialValue,submitListener}){
@@ -41,91 +41,70 @@ export function Sessions(){
 }
 
 export function Users(props){
-    const labels = ['Id', 'Username', 'Password'];
-    const {getUsers,addUser,deleteUser,editUsername,} = userService();
+    const {get,post,destroy,editUsername,} = userService();
     let history = useHistory();
-    const postUser = (arr) =>  addUser(arr)
-    const removeUser = user => deleteUser([user.id]);
-    const userToLine = user=> <React.Fragment>
-        <td><Link to={`/users/${user.id}`}>{`Details of User: ${user.id}`}</Link></td>
-        <td>{user.username}</td>
-        <td>{'****'}</td>
-        <td><SubmitValuesModal submitListener={val =>editUsername([user.id,val[0]]).then(t=>history.push(`/users/${user.id}`))} openButtonIcon={'fa fa-edit'}
-                               buttonTooltipText={'Edit Username'} labels={['New Username']} /> </td>
-    </React.Fragment>;
+    const removeUser = user => destroy([user.id]);
+    const editUserRenderer = user => <td><SubmitValuesModal
+        submitListener={val =>editUsername([user.id,val[0]]).then(t=>history.push(`/users/${user.id}`))} openButtonIcon={'fa fa-edit'}
+        buttonTooltipText={'Edit Username'} labels={['New Username']} /> </td>;
 
     return (
-        <GenericFunctionality fetchCB={getUsers} deleteDataCB={removeUser} postNewDataCB={postUser}
-                              postNewDataFieldLabels={['New Username','New Password']} tableLabels={labels} valueToLineCB={userToLine} />
+        <BasicFunctionality fetchCB={get} deleteDataCB={removeUser} postNewDataCB={post} editDataRenderer={editUserRenderer}
+                            postNewDataFieldLabels={['New Username','New Password']} resource={'users'} />
     );
 }
 
 export function Lists(props){
-    const labels = ["Id", "List"];
     const {getLists,addList,editList,deleteList} = listService();
     let history = useHistory();
-
     const postList = (arr) => addList(['',arr[0]]);
     const removeList = (list) => deleteList(list.id);
 
-    const currentValues=(permission)=><InputGroup>
+    const currentValues=(list)=><InputGroup>
             {['list'].map(field=><React.Fragment>
                 <InputGroup.Prepend>
                     <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl value={permission[field]} />
+                <FormControl value={list[field]} />
             </React.Fragment>)}
-        </InputGroup>
-
-    const listsToLine=(list)=> <React.Fragment>
-        <td><Link to={`/lists/${list.id}`}>{`Details of List: ${list.id}`}</Link></td>
-        <td>{list.list}</td>
-        <td><SubmitValuesModal submitListener={val =>editList([list.id,val[0]]).then(t=>history.push(`/lists/${list.id}`))} openButtonIcon={'fa fa-edit'}
-                               child={currentValues(list)} buttonTooltipText={'Edit List'} labels={['New List Name']} /> </td>
-    </React.Fragment>;
+        </InputGroup>;
+    const editListRenderer = list =>  <td><SubmitValuesModal
+        submitListener={val =>editList([list.id,val[0]]).then(t=>history.push(`/lists/${list.id}`))} openButtonIcon={'fa fa-edit'}
+        child={currentValues(list)} buttonTooltipText={'Edit List'} labels={['New List Name']} /> </td>;
 
     return (
-        <GenericFunctionality fetchCB={getLists} deleteDataCB={removeList} postNewDataCB={postList}
-                              postNewDataFieldLabels={['New List']} valueToLineCB={listsToLine} tableLabels={labels} />
+        <BasicFunctionality fetchCB={getLists} resource={'lists'} editDataRenderer={editListRenderer} deleteDataCB={removeList} postNewDataCB={postList}
+                            postNewDataFieldLabels={['New List']}  />
     );
 }
 
 export function Permissions(props){
-    const labels = ["Id", "Action", "Resource"];
     let history = useHistory();
 
     const {getPermissions,addPermission,deletePermission,editPermission} = permissionService();
     const postPermission = (arr) => addPermission(['',arr[0],arr[1]]);
     const deletePermissionCB = (perm) => deletePermission([perm.id]);
 
-    const currentValues=(permission)=><React.Fragment>
-        <InputGroup>
+    const currentValues=(permission)=> <InputGroup>
             {['action','resource'].map(field=><React.Fragment>
                 <InputGroup.Prepend>
                     <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl value={permission[field]} />
             </React.Fragment>)}
-        </InputGroup>
-        </React.Fragment>
+        </InputGroup>;
 
-    const permissionToLine=(permission)=> <React.Fragment>
-        <td><Link to={`/permissions/${permission.id}`}>{`Details of Permission: ${permission.id}`}</Link></td>
-        <td>{permission.action}</td>
-        <td>{permission.resource}</td>
-        <td><SubmitValuesModal submitListener={val =>editPermission([permission.id,val[0],val[1]]).then(t=>history.push(`/permissions/${permission.id}`))} openButtonIcon={'fa fa-edit'}
-                               child={currentValues(permission)} buttonTooltipText={'Edit Permission'} labels={['New Action','New Resource']} /> </td>
-    </React.Fragment>;
+    const editPermissionRenderer = permission =>  <td><SubmitValuesModal
+        submitListener={val =>editPermission([permission.id,val[0],val[1]]).then(t=>history.push(`/permissions/${permission.id}`))} openButtonIcon={'fa fa-edit'}
+        child={currentValues(permission)} buttonTooltipText={'Edit Permission'} labels={['New Action','New Resource']} /> </td>;
 
     return (
-        <GenericFunctionality fetchCB={getPermissions} postNewDataCB={postPermission}
-                              postNewDataFieldLabels={['New Action','New Resource']} deleteDataCB={deletePermissionCB}
-                              tableLabels={labels} valueToLineCB={permissionToLine} />
+        <BasicFunctionality fetchCB={getPermissions} postNewDataCB={postPermission} resource={'permissions'} editDataRenderer={editPermissionRenderer}
+                            postNewDataFieldLabels={['New Action','New Resource']} deleteDataCB={deletePermissionCB} />
     );
 }
 
 export function Roles(props){
-    const labels = ["Id", "Role", "Parent Role"];
     let history = useHistory();
     const {getRoles,addRole,deleteRole,editRole} = rolesService();
     const postRole = (arr) => addRole(['',arr[0],arr[1]]);
@@ -143,19 +122,13 @@ export function Roles(props){
         </InputGroup>
     </React.Fragment>;
 
-    const rolesToLine=(role)=> <React.Fragment>
-        <td><Link to={`/roles/${role.id}`}>{`Details of Role: ${role.id}`}</Link></td>
-        <td>{role.role}</td>
-        <td>{role.parent_role == null ? 'null' : role.parent_role}</td>
-        <td><SubmitValuesModal submitListener={val =>editRole([role.id,val[0],val[1]]).then(t=>history.push(`/roles/${role.id}`))} openButtonIcon={'fa fa-edit'}
-                               child={currentValues(role)} buttonTooltipText={'Edit Role'}
-                               labels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]} /> </td>
-    </React.Fragment>;
+    const editRoleRenderer = role => <td><SubmitValuesModal labels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]}
+        submitListener={val =>editRole([role.id,val[0],val[1]]).then(t=>history.push(`/roles/${role.id}`))}
+        openButtonIcon={'fa fa-edit'} child={currentValues(role)} buttonTooltipText={'Edit Role'}/> </td>;
 
     return (
-        <GenericFunctionality fetchCB={getRoles} deleteDataCB={deleteRoleCB} postNewDataCB={postRole}
-                              postNewDataFieldLabels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]} valueToLineCB={rolesToLine}
-                              tableLabels={labels} />
+        <BasicFunctionality fetchCB={getRoles} deleteDataCB={deleteRoleCB} postNewDataCB={postRole} resource={'roles'} editDataRenderer={editRoleRenderer}
+                              postNewDataFieldLabels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]}/>
     );
 }
 

@@ -26,7 +26,8 @@ function ListUsers() {
     const ctx = useContext(UserContext);
     const addUserToList =(userId)=>userListService().addUserList(id,userId,ctx.user.id,new Date())
     const removeUserFromList = () => console.log('Still not implemented removeUserFromList')
-    const postOptionsFetcher = () => userService().getUsers().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    let date = '';
 
     const listUserToLine = listUser=> <React.Fragment>
         <td><Link to={`/users/${listUser.UserId}`}>{`Details of User: ${listUser.UserId}`}</Link></td>
@@ -35,8 +36,8 @@ function ListUsers() {
         <td>{listUser.end_date}</td>
         <td>{listUser.active}</td>
         <td>{listUser.updater}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>}
-                               openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>date=val}/>}
+                               openButtonIcon={'fa fa-edit'} submitListener={val=>console.log('Service not done: ',date)} buttonTooltipText={'Edit End date'} /> </td>
     </React.Fragment>;
     return (
 

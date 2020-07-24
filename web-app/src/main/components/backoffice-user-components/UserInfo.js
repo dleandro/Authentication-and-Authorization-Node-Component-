@@ -115,7 +115,7 @@ const labels = ['Roles','Sessions','Lists','History'];
 export default function UserInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0);
     const [otherUsers,setUsers] = useState(['']);
-    useEffect(()=>{userService().getUsers().then(users=>setUsers(users.map(user=>user.id)));},[]);
+    useEffect(()=>{userService().get().then(users=>setUsers(users.map(user=>user.id)));},[]);
     const history = useHistory();
 
     return (

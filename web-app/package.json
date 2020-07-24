@@ -22,9 +22,9 @@
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "set PORT=8082 && craco start",
     "build": "react-scripts build",
-    "test": "craco test --env=node",
+    "test": "set PORT=8082 && craco test --env=node",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

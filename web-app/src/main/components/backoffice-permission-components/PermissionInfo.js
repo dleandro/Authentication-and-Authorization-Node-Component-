@@ -5,10 +5,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import GenericFunctionality from "../../common/html-elements-utils/generics/GenericFunctionality";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
 
 const SpecificPermissionInfo=()=><GenericInfoCard label={'Permission'} fetchValueById={permissionService().getPermission}/>;

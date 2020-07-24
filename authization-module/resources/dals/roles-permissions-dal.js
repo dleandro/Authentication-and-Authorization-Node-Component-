@@ -14,8 +14,9 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    create: (RoleId, permission) =>
+    create: (RoleId, id) =>
         tryCatch(async () => {
+            const permission = await require('./permissions-dal').getSpecificById(id)
             rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
             return RolePermission.findOrCreate({
                 where: {

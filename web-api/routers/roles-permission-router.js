@@ -17,7 +17,7 @@ module.exports = function (apiUtils, authization) {
         .delete(deleteRolesPermission)
 
     function addRolesPermission(req, res) {
-        rolePermission.create(req.body.roleId, { id: req.body.permissionId, action: req.body.action, resource: req.body.resource })
+        rolePermission.create(req.body.roleId,  req.body.permissionId)
             .then(answer => {
                 apiUtils.setResponse(res, answer[0].dataValues, 201)
             })

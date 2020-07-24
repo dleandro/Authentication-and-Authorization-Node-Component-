@@ -48,8 +48,8 @@ export function RoleUsers() {
     const labels = ["User id", "username",'Role Assignment date','Role expiration date','Active','Updater']
     const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id,new Date())
     const removeUserFromRole = ()=> console.log('Still not implemented');
-    const postOptionsFetcher = () => userService().getUsers().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
-
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    let date='';
     const roleUserToLine = (roleUser) => <React.Fragment>
         <td><Link to={`/users/${roleUser.UserId}`}>{`Details of user: ${roleUser.UserId}`}</Link></td>
         <td >{roleUser['User.username']}</td>
@@ -57,8 +57,8 @@ export function RoleUsers() {
         <td>{roleUser.end_date}</td>
         <td>{roleUser.active}</td>
         <td>{roleUser.updater}</td>
-        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'}
-                               child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} /> </td>
+        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} submitListener={val=>console.log('Service not done',date)}
+                               child={<DatePicker text={'New date'} onChange={val =>date=val}/>} /> </td>
     </React.Fragment>;
     return (
 

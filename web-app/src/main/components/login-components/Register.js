@@ -8,7 +8,7 @@ export default function Register() {
 
     const history = useHistory();
 
-    const register =  () => userService().addUser([user,pass])
+    const register =  () => userService().post([user,pass])
         .then( ()=> authenticationService().login(user,pass))
         .then(()=>{
             history.push('/backoffice');

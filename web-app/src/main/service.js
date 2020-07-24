@@ -38,7 +38,9 @@ const makeRequest = (url, body, met) => request(url, produceInit(body, met));
  * Function used to make login logout
  */
 export function authenticationService(test) {
-
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         login: async (user, pass) => makeRequest(users.LOCAL_LOGIN_PATH, { username: user, password: pass }, 'POST'),
 
@@ -46,27 +48,32 @@ export function authenticationService(test) {
     }
 }
 
-export function protocolService() {
-
+export function protocolService(test) {
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
         getPossibleAuthTypes: async () => getRequest(protocols.PROTOCOLS_PATH)
     }
 }
 
-export function userService() {
+export function userService(test) {
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         getAuthenticatedUser: async () => getRequest(users.GET_AUTHENTICATED_USER_PATH),
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
-        getUsers: async () => getRequest(users.USER_PATH),
+        get: async () => getRequest(users.USER_PATH),
         getUserSessions: async (id) => getRequest(users.SESSION_PATH(id)),
         getUserLists: async (id) => getRequest(users.LIST_PATH(id)),
         getUserHistory: async (id) => getRequest(users.HISTORY_PATH(id)),
         getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
-        addUser: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
+        post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
-        deleteUser: async (arr) => {
+        destroy: async (arr) => {
             makeRequest(users.SPECIFIC_USER_PATH(arr[0]), {}, 'DELETE')
         }
     }
@@ -75,6 +82,9 @@ export function userService() {
 
 
 export function listService(test) {
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         getLists: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
@@ -89,7 +99,10 @@ export function listService(test) {
     }
 }
 
-export function rolesService() {
+export function rolesService(test) {
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         getRoles: async () => getRequest(roles.ROLE_PATH),
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
@@ -123,7 +136,10 @@ export function userRoleService() {
     }
 }
 
-export function sessionService() {
+export function sessionService(test) {
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         getSessions: async () => getRequest(sessions.SESSION_PATH),
         getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id)),
@@ -134,7 +150,7 @@ export function sessionService() {
 
 export function rolePermissionService() {
     return {
-        addRolePermission: async (roleId, permissionId, action, resource) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, action: action, resource: resource, roleId: roleId }, 'POST'),
+        addRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'POST'),
         deleteRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'DELETE')
     }
 }
@@ -147,7 +163,10 @@ export function userListService() {
     }
 }
 
-export function historyService() {
+export function historyService(test) {
+    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+        HOME_PATH=`http://localhost:8082`;
+    }
     return {
         getUserHistory: async (userId) => getRequest(history.HISTORY_PATH)
     }

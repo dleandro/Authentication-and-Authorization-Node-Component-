@@ -1,13 +1,19 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import {userService, protocolService, listService, rolesService,configService,permissionService} from '../service'
+import UserContext from "../UserContext";
 
 export default function BackOffice() {
 
     const history = useHistory();
+    const ctx = useContext(UserContext)
+    useEffect(()=>{userService().getAuthenticatedUserPermissions().then(d=>{
+        console.log('finished fetch user perms: ', d)
+        ctx.setPermissions(d)
+    })},[])
 
     const backOfficeFunctionalitiesRow1 = [{title:'Users',desc:'Manage User configurations and associate them with Roles.',link:'/users'},
         {title:'Permissions',desc:'Create, Update and Delete Permissions. Associate these Permissions to Roles.',link:'/permissions'},

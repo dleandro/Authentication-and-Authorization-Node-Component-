@@ -18,7 +18,7 @@ module.exports = {
      * @param active
      * @returns {Promise<void>}
      */
-    create: (user, role, startDate, endDate, updater, active) => tryCatch( () =>UserRole.create({
+    create: async (user, role, startDate, endDate, updater, active) => tryCatch(() => UserRole.create({
         UserId: user,
         RoleId: role,
         start_date: startDate,

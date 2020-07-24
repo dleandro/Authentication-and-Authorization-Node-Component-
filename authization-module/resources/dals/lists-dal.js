@@ -20,12 +20,11 @@ module.exports = {
      * @param active
      * @returns {Promise<CustomError>}
      */
-    create: (list) =>
-        tryCatch(() =>
-            List.create({
-                list: list
-            })
-        ),
+    create: async (list) => tryCatch(() =>
+        List.create({
+            list: list
+        })
+    ),
 
 
     /**
@@ -80,7 +79,12 @@ module.exports = {
             })
         ),
 
-    update: (id, list) => tryCatch(() => List.update({ list: list }, { where: { id: id } })),
+    // update query doesn't return the updated resource for some reason
+    update: async (id, list) => Promise.resolve(
+        {
+            insertedRows: await tryCatch(() => List.update({ list: list }, { where: { id: id } })),
+            list
+        }),
 
     getUsersInThisList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
 

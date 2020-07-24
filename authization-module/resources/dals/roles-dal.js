@@ -12,17 +12,21 @@ module.exports = {
          * @param role
          * @returns {Promise<void>}
          */
-    create: (role) =>
-        tryCatch(() => {
-            config.rbac.createRole(role, true)
-            return Role.findOrCreate({
-                where: {
-                    role: role
-                }
-            })
-        }),
+    create: async (role) => tryCatch(async () => {
+        await config.rbac.createRole(role, true)
+        return Role.findOrCreate({
+            where: {
+                role: role
+            }
+        })
+    }),
 
-    update: (id, role, parent_role) => tryCatch(() => Role.update({ role: role, parent_role: parent_role }, { where: { id: id } })),
+    update: async (id, role, parent_role) => Promise.resolve(
+        {
+            insertedRows: await tryCatch(() => Role.update({ role: role, parent_role: parent_role }, { where: { id: id } })),
+            role,
+            parent_role
+        }),
 
     /**
      *
@@ -39,7 +43,7 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: (roleId) =>
-        tryCatch(() => 
+        tryCatch(() =>
             Role.destroy({
                 where: {
                     id: roleId

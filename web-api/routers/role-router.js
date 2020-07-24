@@ -21,18 +21,12 @@ module.exports = function (apiUtils, authization) {
     roleRouter.route('/:id/permissions').get((req, res) => promiseDataToResponse(res, roles.getRolePermissions(req.params.id)))
 
     function updateRole(req, res) {
-        roles.update(req.params.id, req.body.role, req.body.parent_role)
-            .then(answer => apiUtils.setResponse(res, req.body, 201))
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
-        }
+        apiUtils.promiseDataToResponse(res, roles.update(req.params.id, req.body.role, req.body.parent_role), 201)
+    }
 
     function addRole(req, res) {
-        roles.create(req.body.role)
-            .then(answer => {
-                apiUtils.setResponse(res, answer[0].dataValues, 201)
-            })
-            .catch(err => apiUtils.setResponse(res, err.message, err.status))
-        }
+        apiUtils.promiseDataToResponse(res, roles.create(req.body.role), 201)
+    }
 
     function deleteRole(req, res) {
         apiUtils.promiseDataToResponse(res, roles.delete(req.params.id))

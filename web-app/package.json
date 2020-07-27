@@ -22,7 +22,7 @@
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "start": "set PORT=8082 && craco start",
+    "start": "craco start",
     "build": "react-scripts build",
     "test": "set PORT=8082 && craco test --env=node",
     "eject": "react-scripts eject"

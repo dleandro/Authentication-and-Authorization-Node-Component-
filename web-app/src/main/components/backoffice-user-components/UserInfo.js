@@ -24,7 +24,7 @@ function UserRoles() {
     const labels = ['Role id', 'role', 'Start Date', 'End Date','Active', 'Updater'];
     const postUserRole = (roleId)=>userRoleService().addUserRole(id,roleId,ctx.user.id,new Date())
     const removeUserRole = (roleId) => userRoleService().deleteUserRole(ctx.user.id,roleId)
-
+    let date=''
     const userRoleToLine = userRole=> <React.Fragment>
         <td><Link to={`/roles/${userRole['Role.id']}`}>{`Details of Role: ${userRole['Role.id']}`}</Link></td>
         <td >{userRole["Role.role"]}</td>
@@ -32,7 +32,7 @@ function UserRoles() {
         <td>{userRole.end_date}</td>
         <td>{userRole.active}</td>
         <td>{userRole.updater}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>date=val}/>} submitListener={_=>userRoleService().editUserRole(id,userRole.RoleId,date,1)} openButtonIcon={'fa fa-calendar'}
                                buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;
     return (
@@ -69,12 +69,13 @@ function UserLists() {
     const postOptionsFetcher = () => listService().getLists().then(data=>data.map(value=>({eventKey:value.id,text:value.list})));
     const postUserList = (listId)=>userListService().addUserList(listId,id,ctx.user.id,new Date())
     const removeUserList = (listId) => userListService().deleteUserList(listId,ctx.user.id)
+    let date=''
     const listToLine=(list)=><React.Fragment>
         <td><Link to={`/lists/${list.ListId}`}>{`Details of List: ${list.ListId}`}</Link></td>
         <td>{list.start_date}</td>
         <td>{list.end_date}</td>
         <td>{list.updater}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>}
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val=>date=val}/>} submitListener={_=>userListService().editUserList(ctx.user.id,list.ListId,date,1)}
                                openButtonIcon={'fa fa-calendar'} buttonTooltipText={'Edit End Date'} /> </td>
     </React.Fragment>;
     return (

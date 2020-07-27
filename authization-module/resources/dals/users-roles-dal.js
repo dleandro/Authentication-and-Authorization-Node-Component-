@@ -59,5 +59,11 @@ module.exports = {
 
     delete: (UserId,RoleId) => tryCatch(() => UserRole.destroy({ where: { UserId: UserId,RoleId:RoleId } })),
 
+    update: async (user, role, endDate, active) => tryCatch(() => UserRole.update({ 
+        end_date: endDate,
+        active: active
+    },
+    {where:{UserId:user,RoleId:role}}))
+
 
 }

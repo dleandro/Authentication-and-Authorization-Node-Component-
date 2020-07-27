@@ -132,7 +132,8 @@ export function userRoleService() {
         getUsersRoles: async (id) => getRequest(users.ROLES_PATH(id)),
         addUserRole: async (userid, roleid, updater,start_date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater,start_date:start_date }, 'POST'),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT'),
-        deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE')
+        deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE'),
+        editUserRole: async(userId,roleId,date,active)=>makeRequest(users_roles.USERS_ROLES_PATH,{ user: userId, role: roleId,end_date:new Date(date.date + 'T'+date.time), active: active },'PUT')
     }
 }
 
@@ -159,7 +160,8 @@ export function userListService() {
     return {
         addUserList: async (listId, userId, updater,start_date) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId, active: 1,start_date:start_date, updater: updater }, 'POST'),
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT'),
-        deleteUserList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId }, 'DELETE')
+        deleteUserList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId }, 'DELETE'),
+        editUserList: async(userId,listId,date,active)=>makeRequest(users_lists.USERS_LIST_PATH,{ user: userId, list: listId,end_date:new Date(date.date + 'T'+date.time), active: active },'PUT')
     }
 }
 

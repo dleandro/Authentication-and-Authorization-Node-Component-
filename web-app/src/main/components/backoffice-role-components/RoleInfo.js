@@ -57,7 +57,7 @@ export function RoleUsers() {
         <td>{roleUser.end_date}</td>
         <td>{roleUser.active}</td>
         <td>{roleUser.updater}</td>
-        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} submitListener={val=>console.log('Service not done',date)}
+        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} submitListener={_=>userRoleService().editUserRole(roleUser.UserId,id,date,1)}
                                child={<DatePicker text={'New date'} onChange={val =>date=val}/>} /> </td>
     </React.Fragment>;
     return (

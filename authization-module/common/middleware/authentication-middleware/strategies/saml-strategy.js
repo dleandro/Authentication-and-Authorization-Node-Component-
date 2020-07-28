@@ -5,8 +5,12 @@ const
     fs = require('fs'),
     path = require('path'),
     passportUtils = require('../../../util/passport-utils'),
-    protocolName = 'Saml',
-    SamlStrategy = new (require('passport-saml').Strategy)({
+    protocolName = 'Saml'
+
+
+     module.exports = () => { 
+         
+        return new (require('passport-saml').Strategy)({
 
         callbackUrl: config.saml.callbackUrl,
         entryPoint: config.saml.entryPoint,
@@ -36,4 +40,4 @@ const
         done(null, user);
     });
 
-module.exports = SamlStrategy;
+}

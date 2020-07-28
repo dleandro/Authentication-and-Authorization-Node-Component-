@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { protocolService } from '../../service'
+import { protocolService,configService } from '../../service'
 
 const AuthTypeContext = React.createContext()
 
@@ -11,11 +11,15 @@ const AuthTypeProvider = (props) => {
 
     const [error,setError]=useState(undefined)
 
+
     // get allowed protocols and push them to state
     useEffect(() => {
         if (!authTypesWereChangedByUser) {
+            const arr=[]
             protocolService().getPossibleAuthTypes().then(authTypes=>{
-                if(authTypes[0])setAllowedProtocolsAndIdps(authTypes)
+                console.log(authTypes)
+                Promise.all(authTypes.map(authType=>configService().getOptions(authType.protocol).then(resp=>arr.push({protocol:authType.protocol,active:authType.active,parameters:resp}))))
+                .then(_=>setAllowedProtocolsAndIdps(arr))
             })
         }
     },[authTypesWereChangedByUser])

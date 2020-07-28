@@ -54,7 +54,8 @@ export function protocolService(test) {
     }
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
-        getPossibleAuthTypes: async () => getRequest(protocols.PROTOCOLS_PATH)
+        getPossibleAuthTypes: async () =>  getRequest(protocols.PROTOCOLS_PATH)
+     
     }
 }
 
@@ -167,6 +168,7 @@ export function userListService() {
 
 export function historyService(test) {
     if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+                //aia cum crl calma matias
         HOME_PATH=`http://localhost:8082`;
     }
     return {
@@ -181,6 +183,10 @@ export function configService() {
         changeDatabaseType: async (dbType) => makeRequest(configs.DATABASE_CONFIG_PATH, { type: dbType }, 'PUT'),
         changeGoogleAuthenticationOptions: async (google_opts) => makeRequest(configs.GOOGLE_CONFIG_PATH, { google_opts: google_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
         changeAzureADAuthenticationOptions: async (azure_opts) => makeRequest(configs.AZUREAD_CONFIG_PATH, { azure_opts: azure_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+        getGoogleOptions:async()=>getRequest(configs.GOOGLE_CONFIG_PATH+'/options'),
+        getAzureOptions:async()=>getRequest(configs.AZUREAD_CONFIG_PATH+'/options'),
+        getSamlOptions:async()=>getRequest(configs.SAML_CONFIG_PATH+'/options'),
+        getOptions:async(protocol)=>getRequest(configs.SPECIFIC_PATH(protocol)+'/options')
     }
 }
 

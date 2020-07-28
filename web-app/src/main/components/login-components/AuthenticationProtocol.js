@@ -39,8 +39,13 @@ export default function AuthenticationProtocol() {
                   { state.map((authType,idx) => <React.Fragment><Form inline>
                     <Form.Check id={`${authType.protocol} switch`} checked={authType.active === 1} onChange={()=>switchValue(idx)} label={authType.protocol} type={'switch'} />
                     &nbsp;&nbsp;
-                    <SubmitValuesModal submitListener={val =>authType.changeConfigs?authType.changeConfigs(val):alert('AuthTypeContext doesnt have an editListener')}
-                                       openButtonIcon={'fa fa-edit'} buttonTooltipText={`Edit ${authType.protocol}`} labels={Object.keys(authType)} />
+                    <SubmitValuesModal submitListener={val =>{
+                      let config={}
+                      authType.parameters.map((param,idx)=>config[param]=val[idx])
+                      return configService()[`change${authType.protocol}AuthenticationOptions`](config)
+
+                    }}
+                                       openButtonIcon={'fa fa-edit'} buttonTooltipText={`Edit ${authType.protocol}`} labels={authType.parameters} />
 
                   </Form><br/></React.Fragment>)}
                   <Form inline>

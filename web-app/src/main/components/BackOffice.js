@@ -9,18 +9,13 @@ import UserContext from "../UserContext";
 export default function BackOffice() {
 
     const history = useHistory();
-    const ctx = useContext(UserContext)
-    useEffect(()=>{userService().getAuthenticatedUserPermissions().then(d=>{
-        console.log('finished fetch user perms: ', d)
-        ctx.setPermissions(d)
-    })},[])
 
     const backOfficeFunctionalitiesRow1 = [{title:'Users',desc:'Manage User configurations and associate them with Roles.',link:'/users'},
         {title:'Permissions',desc:'Create, Update and Delete Permissions. Associate these Permissions to Roles.',link:'/permissions'},
         {title:'Roles',desc:'Create, Update and Delete Roles. Associate these roles with different sets of Permissions and Users.',link:'/roles'}];
     const backOfficeFunctionalitiesRow2 = [
         {title:'Lists',desc:'Manage Lists and associate them with Users.',link:'/lists'},
-        {title:'Backoffice Configs',desc:'Choose the allowed authentication types for the application.',link:'/protocols'},
+        {title:'Backoffice Configs',desc:'Choose the allowed authentication types for the application.',link:'/configs'},
         {title:'Sessions',desc:'Manage User Sessions.',link:'/sessions'}];
 
     const functionalityToCard = func =>

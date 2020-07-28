@@ -19,7 +19,7 @@ const SpecificUserInfo=()=><GenericInfoCard label={'User'} fetchValueById={userS
 function UserRoles() {
     const ctx = useContext(UserContext)
     const {id}=useParams();
-    const fetchData = ()=> userRoleService().getUsersRoles(id);
+    let fetchData = ()=> userRoleService().getUsersRoles(id);
     const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})))
     const labels = ['Role id', 'role', 'Start Date', 'End Date','Active', 'Updater'];
     const postUserRole = (roleId)=>userRoleService().addUserRole(id,roleId,ctx.user.id,new Date())
@@ -32,8 +32,8 @@ function UserRoles() {
         <td>{userRole.end_date}</td>
         <td>{userRole.active}</td>
         <td>{userRole.updater}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>date=val}/>} submitListener={_=>userRoleService().editUserRole(id,userRole.RoleId,date,1)} openButtonIcon={'fa fa-calendar'}
-                               buttonTooltipText={'Edit End Date'}  /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>date=val}/>}  buttonTooltipText={'Edit End Date'} openButtonIcon={'fa fa-calendar'}
+                               submitListener={_=>userRoleService().editUserRole(id,userRole.RoleId,date,1).then(d=>{window.location.reload(false)})} /> </td>
     </React.Fragment>;
     return (
             <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserRole(obj.RoleId)} postNewDataCB={(arr)=>postUserRole(arr[0])}

@@ -109,7 +109,7 @@ export function rolesService(test) {
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id) => getRequest(roles.ROLE_USERS_PATH(id)),
         getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
-        addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2]===''?null:arr[2] }, 'POST'),
+        addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2]===''?null:arr[2] }, 'POST').then(vals=>vals[0]),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
         deleteRole: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
 
@@ -120,7 +120,7 @@ export function permissionService() {
     return {
         getPermissions: async () => getRequest(permissions.PERMISSION_PATH),
         getPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id)),
-        addPermission: async (arr) => makeRequest(permissions.PERMISSION_PATH, { action: arr[1], resource: arr[2] }, 'POST'),
+        addPermission: async (arr) => makeRequest(permissions.PERMISSION_PATH, { action: arr[1], resource: arr[2] }, 'POST').then(array=>array[0]),
         editPermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), { action: arr[1], resource: arr[2] }, 'PUT'),
         deletePermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {}, 'DELETE'),
         getRolesWithThisPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id) + '/roles')
@@ -131,7 +131,13 @@ export function userRoleService() {
     return {
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         getUsersRoles: async (id) => getRequest(users.ROLES_PATH(id)),
-        addUserRole: async (userid, roleid, updater,start_date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater,start_date:start_date }, 'POST'),
+        addUserRole: async (userid, roleid, updater,start_date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater,start_date:start_date }, 'POST')
+            .then(async data=>{
+                let res={start_date:data.start_date,end_date:'',active:data.active?1:0,updater:data.updater};
+                res['Role.id'] = data.RoleId;
+                res['Role.role'] = await rolesService().getRole(data.RoleId).then(role=>role.role);
+                return res;
+            }),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT'),
         deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE'),
         editUserRole: async(userId,roleId,date,active)=>makeRequest(users_roles.USERS_ROLES_PATH,{ user: userId, role: roleId,end_date:new Date(date.date + 'T'+date.time), active: active },'PUT')
@@ -152,7 +158,13 @@ export function sessionService(test) {
 
 export function rolePermissionService() {
     return {
-        addRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'POST'),
+        addRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'POST')
+            .then(data=>permissionService().getPermission(data[0].PermissionId)).then(permission=>{
+                let result ={PermissionId: permission.id};
+                result['Permission.action']=permission.action;
+                result['Permission.resource']=permission.resource;
+                return result;
+            }),
         deleteRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'DELETE')
     }
 }

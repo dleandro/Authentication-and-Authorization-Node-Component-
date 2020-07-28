@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "set PORT=8080 && node index.js"
+    "start": "set PORT=8082 && node index.js"
   },
   "keywords": [],
   "author": "",

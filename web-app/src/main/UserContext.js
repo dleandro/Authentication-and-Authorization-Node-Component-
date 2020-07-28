@@ -19,6 +19,11 @@ class UserProvider extends Component {
         const user = await userService().getAuthenticatedUser()
         console.log(user)
 
+        const permission = await userService().getAuthenticatedUserPermissions()
+
+        if (permission.length){
+            this.state.setPermissions(permission)
+        }
         if (user.username) {
             this.state.setUser(user)
         }

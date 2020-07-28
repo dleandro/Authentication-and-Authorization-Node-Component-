@@ -4,6 +4,7 @@ import GenericTooltipButton from "./GenericTooltipButton";
 import {SubmitValuesModal} from "./GenericModal";
 import {Link} from "react-router-dom";
 import UserContext from "../../../UserContext";
+import {Button} from "react-bootstrap";
 
 /**
  * if you're changing something here that's probably wrong
@@ -19,17 +20,17 @@ import UserContext from "../../../UserContext";
 export default function GenericFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,deleteDataCB,valueToLineCB,tableLabels,resource}){
     const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
-    const postData = arr => postNewDataCB(arr).then(d=>setValues([...values,d]));
-    const deleteValue = val => deleteDataCB(val).then(()=>setValues([...values].filter(item=>item.id !==val.id)));
+    const postData = arr => postNewDataCB(arr).then(d=>{console.log('post returned with: ',d);return d}).then(d=>setValues([...values,d]));
+    const deleteValue =( val,idx) => deleteDataCB(val).then(()=>setValues([...values].filter((item,index)=>index !==idx)));
 
-    useEffect(()=>{fetchCB().then(data=>{console.log(data); return 'err' in data?setError(data):setValues(data)});},[]);
+    useEffect(()=>{fetchCB().then(data=>{console.log(data); return 'err' in data?setError(data):setValues(data)});},[fetchCB]);
     useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
 
-    const valueToLine = (val) => <tr>
+    const valueToLine = (val,idx) => <tr>
         {valueToLineCB(val)}
         {deleteDataCB?
         <td>
-            <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={()=>deleteValue(val)} />
+            <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={()=>deleteValue(val,idx)} />
         </td>:undefined}
     </tr>;
     return (
@@ -56,7 +57,7 @@ export default function GenericFunctionality({fetchCB,postNewDataCB,postNewDataF
 export function BasicFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels,deleteDataCB,resource,editDataRenderer}){
     const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
-    const postData = arr => postNewDataCB(arr).then(d=>setValues([...values,d]));
+    const postData = arr => postNewDataCB(arr).then(d=>{console.log('post returned with: ',d);return d}).then(d=>setValues([...values,d]));
     const deleteValue = val => deleteDataCB(val).then(()=>setValues([...values].filter(item=>item.id !==val.id)));
     const ctx = useContext(UserContext);
 

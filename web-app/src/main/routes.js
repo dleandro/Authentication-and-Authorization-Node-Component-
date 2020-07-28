@@ -39,7 +39,7 @@ class Routes extends Component {
                         <Route path={'/sessions'} exact component={Sessions} />
 
                         <AuthTypeProvider>
-                            <Route path={'/protocols'} exact component={() => <AuthenticationProtocol />} />
+                            <Route path={'/configs'} exact component={() => <AuthenticationProtocol />} />
                         </AuthTypeProvider>
                     </div>
                 </React.Fragment>

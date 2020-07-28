@@ -22,7 +22,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function deleteRolesPermission(req, res) {
-        apiUtils.promiseDataToResponse(res, rolePermission.delete(req.body.role, req.body.permission))
+        apiUtils.promiseDataToResponse(res, rolePermission.delete(req.body.roleId, req.body.permissionId))
     }
 
     return rolesPermissionRouter

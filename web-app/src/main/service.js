@@ -94,7 +94,7 @@ export function listService(test) {
         editList: async (arr) => makeRequest(lists.SPECIFIC_LIST_PATH(arr[0]), { list: arr[1] }, 'PUT'),
         deleteList: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
         getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH),
-        getUserActiveLists: async (id) => getRequest(lists.USERS_ACTIVE_LISTS_PATH(id)),
+        getUserLists: async (id) => getRequest(lists.USERS_LISTS_PATH(id)),
         getUsersInThisList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id) + "/users")
     }
 }
@@ -108,7 +108,7 @@ export function rolesService(test) {
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id) => getRequest(roles.ROLE_USERS_PATH(id)),
         getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
-        addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2] }, 'POST'),
+        addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2]===''?null:arr[2] }, 'POST'),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
         deleteRole: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
 
@@ -145,7 +145,7 @@ export function sessionService(test) {
         getSessions: async () => getRequest(sessions.SESSION_PATH),
         getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id)),
         deleteSession: async (id) => makeRequest(sessions.SESSION_PATH, { sid: id }, 'DELETE'),
-        changeSessionData: async (data, id) => makeRequest(sessions.SPECIFIC_SESSION_PATH, { sid: id, data: data }, 'PUT')
+        editSession: async (date, sid) => makeRequest(sessions.SPECIFIC_SESSION_PATH(sid), { sid: sid, date:new Date(date.date + 'T'+date.time) }, 'PUT')
     }
 }
 
@@ -170,7 +170,7 @@ export function historyService(test) {
         HOME_PATH=`http://localhost:8082`;
     }
     return {
-        getUserHistory: async (userId) => getRequest(history.HISTORY_PATH)
+        getUserHistory: async (userId) => getRequest(users.HISTORY_PATH(userId))
     }
 }
 

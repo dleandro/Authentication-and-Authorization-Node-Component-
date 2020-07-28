@@ -1,5 +1,7 @@
 'use strict'
 
+const { Role, Permission } = require('../sequelize-model')
+
 const RolePermission = require('../sequelize-model').RolePermission,
     rolesDal = require('./roles-dal'),
     config = require('../../common/config/config'),
@@ -32,13 +34,16 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    delete: (role, permission) =>
-        tryCatch(() =>
-            RolePermission.destroy({
+    delete: (roleId, permissionId) =>
+        tryCatch(async () =>{
+        const permission = await require('./permissions-dal').getSpecificById(permissionId)
+        const role = await rolesDal.getSpecificById(roleId)
+        await rbac.revokeByName(role.role,permission.action + '_' + permission.resource)
+            return RolePermission.destroy({
                 where: {
-                    RoleId: role, PermissionId: permission
+                    RoleId: roleId, PermissionId: permissionId
                 }
-            })),
+        })}),
 
     /**
      *
@@ -52,6 +57,15 @@ module.exports = {
                     PermissionId: permission
                 }
             })
-        )
+        ),
+
+get:() =>
+tryCatch(() =>
+    RolePermission.findAll({
+        include:[Role,Permission],
+        raw:true
+    })
+)
 
 }
+

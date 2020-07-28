@@ -75,7 +75,7 @@ export const webApiLinks =
         LIST_PATH,
         SPECIFIC_LIST_PATH: listId => `${LIST_PATH}/${listId}`,
         ACTIVE_LISTS_PATH: `${LIST_PATH}/active`,
-        USERS_ACTIVE_LISTS_PATH: userId => `${LIST_PATH}/active/user/${userId}`,
+        USERS_LISTS_PATH: userId => `${LIST_PATH}/user/${userId}`,
         LIST_DEACTIVATION_PATH: listId => `${LIST_PATH}/deactivate/${listId}`
     },
 

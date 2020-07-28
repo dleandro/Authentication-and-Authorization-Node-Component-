@@ -36,7 +36,7 @@ function UserRoles() {
                                buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;
     return (
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={arr=>removeUserRole(arr[0])} postNewDataCB={(arr)=>postUserRole(arr[0])}
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserRole(obj.RoleId)} postNewDataCB={(arr)=>postUserRole(arr[0])}
                                   postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
                                   tableLabels={labels} valueToLineCB={userRoleToLine} />
     );
@@ -48,24 +48,24 @@ export function UserSessions(){
     const ctx = useContext(UserContext);
     const id=ctx.user.id;
     const fetchData = ()=> sessionService().getSession(id);
-
+    let date=''
     const sessionToLine = (session)=> <React.Fragment>
         <td>{session.UserId}</td>
         <td>{session.sid}</td>
         <td>{session.expires}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
-                               buttonTooltipText={'Edit End Date'}  /> </td>
+        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val=>date=val}/>}  openButtonIcon={'fa fa-calendar'}
+                submitListener={_=>sessionService().editSession(date,session.sid)} buttonTooltipText={'Edit End Date'}  /> </td>
     </React.Fragment>;
     return (
-        <GenericFunctionality fetchCB={fetchData} deleteDataCB={val =>console.log('Service not Done yet',val)} tableLabels={labels} valueToLineCB={sessionToLine} />
+        <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj =>sessionService().deleteSession(obj.sid)} tableLabels={labels} valueToLineCB={sessionToLine} />
     );
 };
 
 function UserLists() {
     const {id}=useParams()
-    const labels = ['Id', 'Start Date', 'End Date', 'Updater'];
+    const labels = ['Id', 'Start Date', 'End Date','Active', 'Updater'];
     const ctx = useContext(UserContext);
-    const fetchData = ()=> listService().getUserActiveLists(ctx.user.id);
+    const fetchData = ()=> listService().getUserLists(ctx.user.id);
     const postOptionsFetcher = () => listService().getLists().then(data=>data.map(value=>({eventKey:value.id,text:value.list})));
     const postUserList = (listId)=>userListService().addUserList(listId,id,ctx.user.id,new Date())
     const removeUserList = (listId) => userListService().deleteUserList(listId,ctx.user.id)
@@ -74,13 +74,14 @@ function UserLists() {
         <td><Link to={`/lists/${list.ListId}`}>{`Details of List: ${list.ListId}`}</Link></td>
         <td>{list.start_date}</td>
         <td>{list.end_date}</td>
+        <td>{list.active}</td>
         <td>{list.updater}</td>
         <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val=>date=val}/>} submitListener={_=>userListService().editUserList(ctx.user.id,list.ListId,date,1)}
                                openButtonIcon={'fa fa-calendar'} buttonTooltipText={'Edit End Date'} /> </td>
     </React.Fragment>;
     return (
         <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of List to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
-                              tableLabels={labels} deleteDataCB={arr=>removeUserList(arr[0])}
+                              tableLabels={labels} deleteDataCB={obj=>removeUserList(obj.ListId)}
                               postNewDataCB={(arr)=>postUserList(arr[0])} valueToLineCB={listToLine} />
     );
 }

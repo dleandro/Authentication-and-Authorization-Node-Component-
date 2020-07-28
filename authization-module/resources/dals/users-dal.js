@@ -83,7 +83,9 @@ module.exports = {
      */
     delete: (userId) => tryCatch(() => User.destroy({ where: { id: userId } })),
 
-    getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true }))
+    getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true })),
+
+    getUserHistory :(userId)=>tryCatch(() => UserHistory.findAll({ where: { user_id: userId }}))
 
 
 }

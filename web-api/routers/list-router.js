@@ -26,7 +26,7 @@ module.exports = function (apiUtils, authization) {
 
     listRouter.get('/active', getActiveLists)
 
-    listRouter.get('/active/user/:id', getUserActiveList)
+    listRouter.get('/user/:id', getUserList)
 
     listRouter.put('/deactivate/:id', deactivateList)
 
@@ -50,8 +50,8 @@ module.exports = function (apiUtils, authization) {
         apiUtils.promiseDataToResponse(res, lists.getActive())
     }
 
-    function getUserActiveList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.getUsersActive(req.params.id))
+    function getUserList(req, res) {
+        apiUtils.promiseDataToResponse(res, lists.getUsersLists(req.params.id))
     }
 
     function deactivateList(req, res) {

@@ -10,7 +10,7 @@ module.exports = function (apiUtils, authization) {
     userListRouter.put('/', editUserList)
 
     function createUserList(req, res) {
-        apiUtils.promiseDataToResponse(res, userList.create(req.body.ListId, req.body.UserId, req.body.updater, req.body.active), 201)
+        apiUtils.promiseDataToResponse(res, userList.create(req.body.ListId, req.body.UserId, req.body.updater,req.body.start_date, req.body.active), 201)
     }
 
     function deleteUserList(req, res) {

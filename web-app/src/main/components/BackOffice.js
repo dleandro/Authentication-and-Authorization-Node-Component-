@@ -35,7 +35,6 @@ export default function BackOffice() {
 
     return (
         <React.Fragment>
-        <button onClick={myFunc}>Click Me</button>
 
         <CardColumns style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '30px'}}>
 

@@ -23,7 +23,7 @@ function UserRoles() {
     const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})))
     const labels = ['Role id', 'role', 'Start Date', 'End Date','Active', 'Updater'];
     const postUserRole = (roleId)=>userRoleService().addUserRole(id,roleId,ctx.user.id,new Date())
-    const removeUserRole = (roleId) => userRoleService().deleteUserRole(ctx.user.id,roleId)
+    const removeUserRole = (roleId) => userRoleService().deleteUserRole(id,roleId)
     let date=''
     const userRoleToLine = userRole=> <React.Fragment>
         <td><Link to={`/roles/${userRole['Role.id']}`}>{`Details of Role: ${userRole['Role.id']}`}</Link></td>

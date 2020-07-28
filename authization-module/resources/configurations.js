@@ -49,6 +49,17 @@ module.exports = {
         passport.use('azure_ad_oauth2', strat)
     },
 
+    changeSamlAuthenticationOptions: (newConfiguration) => {
+        newConfiguration.saml_opts.callbackUrl=config.saml.callbackUrl
+        config.saml = newConfiguration.saml_opts
+
+        delete passport._strategies.saml
+
+        const strat = require('../common/middleware/authentication-middleware/strategies/saml-strategy')()
+
+        passport.use('saml', strat)
+    },
+
     getRbacOptions: async () => {
 
         const

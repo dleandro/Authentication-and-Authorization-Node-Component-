@@ -50,7 +50,7 @@ module.exports = {
      */
     delete: (roleId) =>
         tryCatch(async () =>{
-            const role = await rolesDal.getSpecificById(role)
+            const role = await getSpecificById(roleId)
             config.rbac.removeByName(role.role)
             return Role.destroy({
                 where: {

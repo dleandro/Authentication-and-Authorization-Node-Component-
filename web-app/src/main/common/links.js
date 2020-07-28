@@ -88,7 +88,7 @@ export const webApiLinks =
         GOOGLE_CONFIG_PATH: `${CONFIG_PATH}/google`,
         AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/azureAD`,
         DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`,
-        SAML_CONFIG_PATH: `${CONFIG_PATH}/saml`,
+        SAML_CONFIG_PATH: `${CONFIG_PATH}/Saml`,
         SPECIFIC_PATH:protocol=>`${CONFIG_PATH}/${protocol}`
     },
 

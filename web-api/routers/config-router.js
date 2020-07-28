@@ -14,6 +14,7 @@ module.exports = function (apiUtils, authization) {
     configRouter.put('/database', (req, res) => successCallback(req, res, authization.configurations.changeDatabaseOptions))
     configRouter.put('/Google', (req, res) => successCallback(req, res, authization.configurations.changeGoogleAuthenticationOptions))
     configRouter.put('/AzureAD', (req, res) => successCallback(req, res, authization.configurations.changeAzureADAuthenticationOptions))
+    configRouter.put('/Saml', (req, res) => successCallback(req, res, authization.configurations.changeSamlAuthenticationOptions))
     configRouter.get('/rbac-opts', (req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getRbacOptions()))
     configRouter.get('/Google/options',(req,res)=>apiUtils.promiseDataToResponse(res, authization.configurations.getGoogleOptions()))
     configRouter.get('/AzureAD/options',(req,res)=>apiUtils.promiseDataToResponse(res, authization.configurations.getAzureAdOptions()))

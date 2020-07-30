@@ -88,7 +88,7 @@ export function BasicFunctionality({fetchCB,postNewDataCB,postNewDataFieldLabels
 
     return (
         <React.Fragment>
-            {error?<p>{error.status} {error.err}</p>: values.length && Array.isArray(values) ? render() : undefined}
+            {error?<p className="display-1 text-white">{error.status} {error.err}</p>: values.length && Array.isArray(values) ? render() : undefined}
         </React.Fragment>
     );
 }

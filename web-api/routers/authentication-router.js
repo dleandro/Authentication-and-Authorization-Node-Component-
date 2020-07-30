@@ -14,6 +14,17 @@ module.exports = function (apiUtils, authization) {
             process.env.WEBAPP?res.redirect("http://localhost:3000"):res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com")
         }
     }
+    const LocalsuccessCallback = async (req, res, next) => {
+
+        if (req.isAuthenticated()) {
+
+            apiUtils.setResponse(res,'Success',200)
+        }
+        else {
+           apiUtils.setResponse(res,'The User Is Not Authenticated',200)
+        }
+    }
+
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');
 
@@ -29,7 +40,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-    authenticationRouter.post('/local', authenticate.usingLocal, successCallback)
+    authenticationRouter.post('/local', authenticate.usingLocal, LocalsuccessCallback)
 
     authenticationRouter.post('/logout', authenticate.logout, successCallback)
 

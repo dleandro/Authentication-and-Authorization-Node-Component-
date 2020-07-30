@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
-var HOME_PATH = process.env.REACT_APP_WEBAPP?undefined:'https://webapi-dot-auth-authorization.ew.r.appspot.com'
+var HOME_PATH = process.env.REACT_APP_WEBAPP?`http://localhost:${process.env.REACT_APP_WEBAPI}`:'https://webapi-dot-auth-authorization.ew.r.appspot.com'
 
 function produceInit(body, met) {
     return { ...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true };

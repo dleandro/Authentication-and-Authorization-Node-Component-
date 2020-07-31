@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import {userService, protocolService, listService, rolesService,configService,permissionService} from '../service'
 import UserContext from "../UserContext";
+import TablePage from "../common/html-elements-utils/TablePage";
 
 export default function BackOffice() {
 
@@ -40,20 +41,20 @@ export default function BackOffice() {
 
     return (
         <React.Fragment>
-        <button onClick={myFunc}>Click Me</button>
+            <button onClick={myFunc}>Click Me</button>
 
-        <CardColumns style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '30px'}}>
+            <CardColumns style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '30px'}}>
 
-            <div className="d-flex flex-column">
-                <div className="d-flex flex-row">
-                    {backOfficeFunctionalitiesRow1.map(functionalityToCard)}
+                <div className="d-flex flex-column">
+                    <div className="d-flex flex-row">
+                        {backOfficeFunctionalitiesRow1.map(functionalityToCard)}
+                    </div>
+                    <div className="d-flex flex-row">
+                        {backOfficeFunctionalitiesRow2.map(functionalityToCard)}
+                    </div>
                 </div>
-                <div className="d-flex flex-row">
-                    {backOfficeFunctionalitiesRow2.map(functionalityToCard)}
-                </div>
-            </div>
-        </CardColumns>
+            </CardColumns>
+            <TablePage service={userService()} />
         </React.Fragment>
     );
 }
-

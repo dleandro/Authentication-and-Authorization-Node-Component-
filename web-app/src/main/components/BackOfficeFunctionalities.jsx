@@ -9,6 +9,7 @@ import {SubmitValuesModal} from "../common/html-elements-utils/generics/GenericM
 import GenericTooltipButton from "../common/html-elements-utils/generics/GenericTooltipButton";
 import GenericFunctionality, {BasicFunctionality} from "../common/html-elements-utils/generics/GenericFunctionality";
 import DatePicker from "../common/html-elements-utils/DatePicker";
+import TablePage from "../common/html-elements-utils/TablePage";
 
 function UpdatableInput({initialValue,submitListener}){
     const [value,setValue] = useState(initialValue);
@@ -41,94 +42,56 @@ export function Sessions(){
 }
 
 export function Users(props){
-    const {get,post,destroy,editUsername,} = userService();
-    let history = useHistory();
-    const removeUser = user => destroy([user.id]);
-    const editUserRenderer = user => <td><SubmitValuesModal
-        submitListener={val =>editUsername([user.id,val[0]]).then(t=>history.push(`/users/${user.id}`))} openButtonIcon={'fa fa-edit'}
-        buttonTooltipText={'Edit Username'} labels={['New Username']} /> </td>;
+    const customService = {...userService()};
+    customService.editFields = ['New Username','New Password'];
+    customService.postFields = ['New Username','New Password'];
+    customService.afterUpdateRedirectUrl = id=>`/users/${id}`;
+    customService.detailsUrl = id=>`/users/${id}`;
 
     return (
-        <BasicFunctionality fetchCB={get} deleteDataCB={removeUser} postNewDataCB={post} editDataRenderer={editUserRenderer}
-                            postNewDataFieldLabels={['New Username','New Password']} resource={'users'} />
+        <TablePage service={customService} resource={'users'} />
     );
 }
 
 export function Lists(props){
-    const {getLists,addList,editList,deleteList} = listService();
-    let history = useHistory();
-    const postList = (arr) => addList(['',arr[0]]);
-    const removeList = (list) => deleteList(list.id);
-
-    const currentValues=(list)=><InputGroup>
-            {['list'].map(field=><React.Fragment>
-                <InputGroup.Prepend>
-                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl value={list[field]} />
-            </React.Fragment>)}
-        </InputGroup>;
-    const editListRenderer = list =>  <td><SubmitValuesModal
-        submitListener={val =>editList([list.id,val[0]]).then(t=>history.push(`/lists/${list.id}`))} openButtonIcon={'fa fa-edit'}
-        child={currentValues(list)} buttonTooltipText={'Edit List'} labels={['New List Name']} /> </td>;
+    const customService = {...listService()};
+    customService.post= arr=>listService().post(['',arr[0]]);
+    customService.update= (list,arr)=>listService().editList([list.id,arr[0]]);
+    customService.editFields = ['New List'];
+    customService.postFields = ['New List'];
+    customService.afterUpdateRedirectUrl = id=>`/lists/${id}`;
+    customService.detailsUrl = id=>`/lists/${id}`;
 
     return (
-        <BasicFunctionality fetchCB={getLists} resource={'lists'} editDataRenderer={editListRenderer} deleteDataCB={removeList} postNewDataCB={postList}
-                            postNewDataFieldLabels={['New List']}  />
+        <TablePage service={customService} resource={'lists'} />
     );
 }
 
 export function Permissions(props){
-    let history = useHistory();
-
-    const {getPermissions,addPermission,deletePermission,editPermission} = permissionService();
-    const postPermission = (arr) => addPermission(['',arr[0],arr[1]]);
-    const deletePermissionCB = (perm) => deletePermission([perm.id]);
-
-    const currentValues=(permission)=> <InputGroup>
-            {['action','resource'].map(field=><React.Fragment>
-                <InputGroup.Prepend>
-                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl value={permission[field]} />
-            </React.Fragment>)}
-        </InputGroup>;
-
-    const editPermissionRenderer = permission =>  <td><SubmitValuesModal
-        submitListener={val =>editPermission([permission.id,val[0],val[1]]).then(t=>history.push(`/permissions/${permission.id}`))} openButtonIcon={'fa fa-edit'}
-        child={currentValues(permission)} buttonTooltipText={'Edit Permission'} labels={['New Action','New Resource']} /> </td>;
-
+    const customService = {...permissionService()};
+    customService.post= (arr) => permissionService().addPermission(['',arr[0],arr[1]]);
+    customService.destroy= (id) => permissionService().deletePermission([id]);
+    customService.update= (perm,arr)=>permissionService().editPermission([perm.id,arr[0],arr[1]]);
+    customService.editFields = ['New Action','New Resource'];
+    customService.postFields = ['New Action','New Resource'];
+    customService.afterUpdateRedirectUrl = id=>`/permissions/${id}`;
+    customService.detailsUrl = id=>`/permissions/${id}`;
     return (
-        <BasicFunctionality fetchCB={getPermissions} postNewDataCB={postPermission} resource={'permissions'} editDataRenderer={editPermissionRenderer}
-                            postNewDataFieldLabels={['New Action','New Resource']} deleteDataCB={deletePermissionCB} />
+        <TablePage service={customService} resource={'permissions'} />
     );
 }
 
 export function Roles(props){
-    let history = useHistory();
-    const {getRoles,addRole,deleteRole,editRole} = rolesService();
-    const postRole = (arr) => addRole(['',arr[0],arr[1]]);
-    const deleteRoleCB = (role) => deleteRole(role.id);
-    const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
-
-    const currentValues=(role)=><React.Fragment>
-        <InputGroup>
-            {['role','parent_role'].map(field=><React.Fragment>
-                <InputGroup.Prepend>
-                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl value={role[field]} />
-            </React.Fragment>)}
-        </InputGroup>
-    </React.Fragment>;
-
-    const editRoleRenderer = role => <td><SubmitValuesModal labels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]}
-        submitListener={val =>editRole([role.id,val[0],val[1]]).then(t=>history.push(`/roles/${role.id}`))}
-        openButtonIcon={'fa fa-edit'} child={currentValues(role)} buttonTooltipText={'Edit Role'}/> </td>;
-
+    const postOptionsFetcher = () => rolesService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
+    const customService = {...rolesService()};
+    customService.post= (arr) => rolesService().post(['',arr[0],arr[1]]);
+    customService.update= (perm,arr)=>permissionService().editPermission([perm.id,arr[0],arr[1]]);
+    customService.editFields = ['New Role',{text:'Id of the Parent Role (dropdown) ', DropdownOptionsFetcher:postOptionsFetcher}];
+    customService.postFields = customService.editFields;
+    customService.afterUpdateRedirectUrl = id=>`/roles/${id}`;
+    customService.detailsUrl = id=>`/roles/${id}`;
     return (
-        <BasicFunctionality fetchCB={getRoles} deleteDataCB={deleteRoleCB} postNewDataCB={postRole} resource={'roles'} editDataRenderer={editRoleRenderer}
-                              postNewDataFieldLabels={['New Role',{text:'Id of the Parent Role', DropdownOptionsFetcher:postOptionsFetcher}]}/>
+        <TablePage service={customService} resource={'roles'} />
     );
 }
 

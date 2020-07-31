@@ -15,9 +15,9 @@ export const ToolTipButtonConstructor = ({tooltipText,childButton}) => (
     </OverlayTrigger>
 );
 
-const GenericTooltipButton = ({icon='fa fa-table',onClick,tooltipText='Open',bootstrapColor='primary'}) => (
+const GenericTooltipButton = ({icon='fa fa-table',disabled=false,onClick,tooltipText='Open',bootstrapColor='primary'}) => (
     <ToolTipButtonConstructor tooltipText={tooltipText} childButton={
-        <button className={`btn btn-outline-${bootstrapColor} btn-sm rounded-0`} type="button" onClick={onClick}><i className={icon}/></button>
+        <button disabled={disabled} className={`btn btn-outline-${bootstrapColor} btn-sm rounded-0`} type="button" onClick={onClick}><i className={icon}/></button>
     }/>
 );
 export default GenericTooltipButton;

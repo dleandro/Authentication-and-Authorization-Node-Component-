@@ -38,7 +38,7 @@ const makeRequest = (url, body, met) => request(url, produceInit(body, met));
  * Function used to make login logout
  */
 export function authenticationService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {
@@ -49,7 +49,7 @@ export function authenticationService(test) {
 }
 
 export function protocolService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {
@@ -59,7 +59,7 @@ export function protocolService(test) {
 }
 
 export function userService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {
@@ -73,8 +73,8 @@ export function userService(test) {
         getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
         post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
-        destroy: async (arr) => {
-            makeRequest(users.SPECIFIC_USER_PATH(arr[0]), {}, 'DELETE')
+        destroy: async (id) => {
+            makeRequest(users.SPECIFIC_USER_PATH(id), {}, 'DELETE')
         }
     }
 }
@@ -82,17 +82,17 @@ export function userService(test) {
 
 
 export function listService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {
-        getLists: async () => getRequest(lists.LIST_PATH),
+        get: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
-        addList: async (arr) => makeRequest(lists.LIST_PATH, {
+        post: async (arr) => makeRequest(lists.LIST_PATH, {
             list: arr[1]
         }, 'POST'),
         editList: async (arr) => makeRequest(lists.SPECIFIC_LIST_PATH(arr[0]), { list: arr[1] }, 'PUT'),
-        deleteList: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
+        destroy: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
         getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH),
         getUserActiveLists: async (id) => getRequest(lists.USERS_ACTIVE_LISTS_PATH(id)),
         getUsersInThisList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id) + "/users")
@@ -100,17 +100,17 @@ export function listService(test) {
 }
 
 export function rolesService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {
-        getRoles: async () => getRequest(roles.ROLE_PATH),
+        get: async () => getRequest(roles.ROLE_PATH),
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id) => getRequest(roles.ROLE_USERS_PATH(id)),
         getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
-        addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2] }, 'POST'),
+        post: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[0], parent_role: arr[1] }, 'POST'),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
-        deleteRole: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
+        destroy: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
 
     }
 }
@@ -137,7 +137,7 @@ export function userRoleService() {
 }
 
 export function sessionService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {
@@ -164,7 +164,7 @@ export function userListService() {
 }
 
 export function historyService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
+    if (test){
         HOME_PATH=`http://localhost:8082`;
     }
     return {

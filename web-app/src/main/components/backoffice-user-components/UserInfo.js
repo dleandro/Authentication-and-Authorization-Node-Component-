@@ -3,7 +3,16 @@ import {Link, useParams,useHistory} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {listService, sessionService, userRoleService, userService, historyService, rolesService,userListService} from '../../service';
+import {
+    listService,
+    sessionService,
+    userRoleService,
+    userService,
+    historyService,
+    rolesService,
+    userListService,
+    permissionService
+} from '../../service';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from "react-bootstrap/Col";
@@ -13,32 +22,28 @@ import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
 import DatePicker from "../../common/html-elements-utils/DatePicker";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
+import TablePage from "../../common/html-elements-utils/TablePage";
 
 const SpecificUserInfo=()=><GenericInfoCard label={'User'} fetchValueById={userService().getUserById} />;
 
 function UserRoles() {
-    const ctx = useContext(UserContext)
+    const postOptionsFetcher = () => rolesService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
     const {id}=useParams();
+    const ctx = useContext(UserContext)
     const fetchData = ()=> userRoleService().getUsersRoles(id);
-    const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})))
-    const labels = ['Role id', 'role', 'Start Date', 'End Date','Active', 'Updater'];
-    const postUserRole = (roleId)=>userRoleService().addUserRole(id,roleId,ctx.user.id,new Date())
-    const removeUserRole = (roleId) => userRoleService().deleteUserRole(ctx.user.id,roleId)
 
-    const userRoleToLine = userRole=> <React.Fragment>
-        <td><Link to={`/roles/${userRole['Role.id']}`}>{`Details of Role: ${userRole['Role.id']}`}</Link></td>
-        <td >{userRole["Role.role"]}</td>
-        <td >{userRole.start_date}</td>
-        <td>{userRole.end_date}</td>
-        <td>{userRole.active}</td>
-        <td>{userRole.updater}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>console.log('Service not Done yet',val)}/>} openButtonIcon={'fa fa-calendar'}
-                               buttonTooltipText={'Edit End Date'}  /> </td>
-    </React.Fragment>;
+    const customService = {...userRoleService()};
+    customService.get = fetchData;
+    customService.post= (arr)=>userRoleService().addUserRole(id,arr[0],ctx.user.id,new Date());
+    customService.destroy = id => userRoleService().deleteUserRole(ctx.user.id,id);
+    customService.update= (perm,arr)=>permissionService().editPermission([perm.id,arr[0],arr[1]]);
+    customService.editFields = [{text:'New Date (date)'}];
+    customService.postFields = [{text:'Id of Role to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}];
+    customService.afterUpdateRedirectUrl = ids=>`/roles/${ids}`;
+    customService.detailsUrl = ids=>`/roles/${ids}`;
+
     return (
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={arr=>removeUserRole(arr[0])} postNewDataCB={(arr)=>postUserRole(arr[0])}
-                                  postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
-                                  tableLabels={labels} valueToLineCB={userRoleToLine} />
+        <TablePage resource={'user-role'} service={customService}/>
     );
 }
 
@@ -66,7 +71,7 @@ function UserLists() {
     const labels = ['Id', 'Start Date', 'End Date', 'Updater'];
     const ctx = useContext(UserContext);
     const fetchData = ()=> listService().getUserActiveLists(ctx.user.id);
-    const postOptionsFetcher = () => listService().getLists().then(data=>data.map(value=>({eventKey:value.id,text:value.list})));
+    const postOptionsFetcher = () => listService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.list})));
     const postUserList = (listId)=>userListService().addUserList(listId,id,ctx.user.id,new Date())
     const removeUserList = (listId) => userListService().deleteUserList(listId,ctx.user.id)
     const listToLine=(list)=><React.Fragment>

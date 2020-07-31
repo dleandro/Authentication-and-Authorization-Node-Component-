@@ -16,7 +16,7 @@ module.exports = function (apiUtils, authization) {
         .post(addUsersRoles)
         .get(getUsersRoles)
         .delete(deleteUsersRoles)
-
+        .put(editUserRole)
 
     usersRolesRouter.get('/active', getActiveRoles)
     usersRolesRouter.get('/active/user/:id', getUserActiveRoles)
@@ -53,6 +53,10 @@ module.exports = function (apiUtils, authization) {
 
     function deactivateUserRole(req, res) {
         apiUtils.promiseDataToResponse(res, userRoles.deactivate(req.params.id))
+    }
+
+    function editUserRole(req, res) {
+        apiUtils.promiseDataToResponse(res, userRoles.update(req.body.user,req.body.role,req.body.end_date,req.body.active))
     }
 
     return usersRolesRouter

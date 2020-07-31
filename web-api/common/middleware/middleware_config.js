@@ -47,12 +47,12 @@ const rbac_opts = {
         { "resource": "roles", "action": "POST" },
         { "resource": "roles", "action": "PUT" },
         { "resource": "roles", "action": "DELETE" },
-        //{ "resource": "users", "action": "GET" },
+        { "resource": "users", "action": "GET" },
         { "resource": "users", "action": "POST" },
         { "resource": "users", "action": "PUT" },
         { "resource": "users", "action": "DELETE" },
         { "resource": "sessions", "action": "GET" },
-        /*  { "resource": "sessions", "action": "POST" },
+          { "resource": "sessions", "action": "POST" },
           { "resource": "sessions", "action": "PUT" },
           { "resource": "sessions", "action": "DELETE" },
           { "resource": "lists", "action": "GET" },
@@ -66,7 +66,7 @@ const rbac_opts = {
           { "resource": "users-roles", "action": "GET" },
           { "resource": "users-roles", "action": "POST" },
           { "resource": "users-roles", "action": "PUT" },
-          { "resource": "users-roles", "action": "DELETE" },*/
+          { "resource": "users-roles", "action": "DELETE" },
         { "resource": "authentications", "action": "GET" },
         { "resource": "authentications", "action": "POST" },
         { "resource": "authentications", "action": "PUT" },
@@ -74,7 +74,10 @@ const rbac_opts = {
     ],
     "grants": {
         "DbManager": [
-            { "resource": "users", "action": "DELETE" }
+            { "resource": "users", "action": "DELETE" },
+            { "resource": "users", "action": "GET" },
+            { "resource": "users", "action": "POST" },
+            { "resource": "users", "action": "PUT" },
         ],
         "guest": [
             { "resource": "protocols", "action": "GET" },
@@ -83,7 +86,46 @@ const rbac_opts = {
             { "resource": "users", "action": "POST" }
         ],
         "admin": [
-            { "role": "DbManager" },
+            { "resource": "users-lists", "action": "GET" },
+        { "resource": "users-lists", "action": "POST" },
+        { "resource": "users-lists", "action": "PUT" },
+        { "resource": "users-lists", "action": "DELETE" },
+        { "resource": "protocols", "action": "GET" },
+        { "resource": "protocols", "action": "POST" },
+        { "resource": "protocols", "action": "PUT" },
+        { "resource": "protocols", "action": "DELETE" },
+        { "resource": "permissions", "action": "GET" },
+        { "resource": "permissions", "action": "POST" },
+        { "resource": "permissions", "action": "PUT" },
+        { "resource": "permissions", "action": "DELETE" },
+        { "resource": "roles", "action": "GET" },
+        { "resource": "roles", "action": "POST" },
+        { "resource": "roles", "action": "PUT" },
+        { "resource": "roles", "action": "DELETE" },
+        { "resource": "users", "action": "GET" },
+        { "resource": "users", "action": "POST" },
+        { "resource": "users", "action": "PUT" },
+        { "resource": "users", "action": "DELETE" },
+        { "resource": "sessions", "action": "GET" },
+          { "resource": "sessions", "action": "POST" },
+          { "resource": "sessions", "action": "PUT" },
+          { "resource": "sessions", "action": "DELETE" },
+          { "resource": "lists", "action": "GET" },
+          { "resource": "lists", "action": "POST" },
+          { "resource": "lists", "action": "PUT" },
+          { "resource": "lists", "action": "DELETE" },
+          { "resource": "roles-permissions", "action": "GET" },
+          { "resource": "roles-permissions", "action": "POST" },
+          { "resource": "roles-permissions", "action": "PUT" },
+          { "resource": "roles-permissions", "action": "DELETE" },
+          { "resource": "users-roles", "action": "GET" },
+          { "resource": "users-roles", "action": "POST" },
+          { "resource": "users-roles", "action": "PUT" },
+          { "resource": "users-roles", "action": "DELETE" },
+        { "resource": "authentications", "action": "GET" },
+        { "resource": "authentications", "action": "POST" },
+        { "resource": "authentications", "action": "PUT" },
+        { "resource": "authentications", "action": "DELETE" }
 
         ]
     }
@@ -91,5 +133,5 @@ const rbac_opts = {
 
 exports.db2 = db2
 exports.db = db
-exports.cloud_db = cloud_db
 exports.rbac_opts = rbac_opts
+exports.cloud_db = cloud_db

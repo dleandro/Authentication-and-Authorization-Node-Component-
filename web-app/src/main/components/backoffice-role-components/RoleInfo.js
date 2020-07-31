@@ -27,7 +27,7 @@ function RolePermission() {
     });
     const postData = (arr)=> rolePermissionService().addRolePermission(id,arr[0],arr[1],arr[2])
     const postOptionsFetcher = () => permissionService().getPermissions().then(data=>data.map(value=>({eventKey:value.id,text:`${value.action} ${value.resource}`})));
-
+    const deleteRolePermission= (permissionId)=>rolePermissionService().deleteRolePermission(id,permissionId)
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
         <td><Link to={`/permissions/${rolePermission.PermissionId}`}>{`Details of Permission: ${rolePermission.PermissionId}`}</Link></td>
@@ -37,7 +37,7 @@ function RolePermission() {
 
     return (
         <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Permission to be assign', DropdownOptionsFetcher:postOptionsFetcher}]} postNewDataCB={postData}
-                              deleteDataCB={val =>console.log('Service not Done yet',val)} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
+                              deleteDataCB={val =>deleteRolePermission(val.PermissionId)} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
     );
 }
 
@@ -47,7 +47,7 @@ export function RoleUsers() {
     const ctx = useContext(UserContext)
     const labels = ["User id", "username",'Role Assignment date','Role expiration date','Active','Updater']
     const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id,new Date())
-    const removeUserFromRole = ()=> console.log('Still not implemented');
+    const removeUserFromRole =(userId) => userRoleService().deleteUserRole(userId,id)
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
     let date='';
     const roleUserToLine = (roleUser) => <React.Fragment>
@@ -57,13 +57,13 @@ export function RoleUsers() {
         <td>{roleUser.end_date}</td>
         <td>{roleUser.active}</td>
         <td>{roleUser.updater}</td>
-        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} submitListener={val=>console.log('Service not done',date)}
+        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} submitListener={_=>userRoleService().editUserRole(roleUser.UserId,id,date,1)}
                                child={<DatePicker text={'New date'} onChange={val =>date=val}/>} /> </td>
     </React.Fragment>;
     return (
 
         <React.Fragment>
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromRole} postNewDataCB={(arr)=>postUserRole(arr[0])} tableLabels={labels}
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserFromRole(obj.UserId)} postNewDataCB={(arr)=>postUserRole(arr[0])} tableLabels={labels}
                                   postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={roleUserToLine} />
         </React.Fragment>
     )

@@ -75,7 +75,7 @@ export const webApiLinks =
         LIST_PATH,
         SPECIFIC_LIST_PATH: listId => `${LIST_PATH}/${listId}`,
         ACTIVE_LISTS_PATH: `${LIST_PATH}/active`,
-        USERS_ACTIVE_LISTS_PATH: userId => `${LIST_PATH}/active/user/${userId}`,
+        USERS_LISTS_PATH: userId => `${LIST_PATH}/user/${userId}`,
         LIST_DEACTIVATION_PATH: listId => `${LIST_PATH}/deactivate/${listId}`
     },
 
@@ -87,7 +87,9 @@ export const webApiLinks =
         CONFIG_PATH,
         GOOGLE_CONFIG_PATH: `${CONFIG_PATH}/google`,
         AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/azureAD`,
-        DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`
+        DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`,
+        SAML_CONFIG_PATH: `${CONFIG_PATH}/Saml`,
+        SPECIFIC_PATH:protocol=>`${CONFIG_PATH}/${protocol}`
     },
 
     protocols: {

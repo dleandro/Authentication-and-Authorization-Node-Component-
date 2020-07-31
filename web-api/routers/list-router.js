@@ -18,7 +18,7 @@ module.exports = function (apiUtils, authization) {
         {endpoint:'/:id',dataPromise:(req)=>lists.getById(req.params.id)},
         {endpoint:'/:id/users',dataPromise:(req)=>lists.getUsersInThisList(req.params.id)},
         {endpoint:'/active',dataPromise:(req)=>lists.getActive()},
-        {endpoint:'/active/user/:id',dataPromise:(req)=>lists.getUsersActive(req.params.id)},
+        {endpoint:'/user/:id',dataPromise:(req)=>lists.getUsersLists(req.params.id)},
     ]
 
     getters.forEach(getter=> listRouter.get(getter.endpoint,getResponseCallback(getter.dataPromise)));
@@ -37,7 +37,8 @@ module.exports = function (apiUtils, authization) {
 
     //listRouter.get('/active', getActiveLists)
 
-    //listRouter.get('/active/user/:id', getUserActiveList)
+    //listRouter.get('/user/:idd', getUserList)
+
 
     listRouter.put('/deactivate/:id', deactivateList)
 
@@ -61,8 +62,8 @@ module.exports = function (apiUtils, authization) {
         apiUtils.promiseDataToResponse(res, lists.getActive())
     }
 
-    function getUserActiveList(req, res) {
-        apiUtils.promiseDataToResponse(res, lists.getUsersActive(req.params.id))
+    function getUserList(req, res) {
+        apiUtils.promiseDataToResponse(res, lists.getUsersLists(req.params.id))
     }
 
     function deactivateList(req, res) {

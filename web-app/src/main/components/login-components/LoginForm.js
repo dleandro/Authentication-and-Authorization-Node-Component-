@@ -82,7 +82,7 @@ export default function LoginForm({ id }) {
                 {checkIfSpecificAuthTypeIsActive('AzureAD') && <Button style={imgBtns} onClick={() => loginIdp("azureAD")} >
                     <img src="ms-symbollockup_signin_dark.png" alt="microsoft" /></Button>}
 
-                {checkIfSpecificAuthTypeIsActive('Auth0') && <Button style={imgBtns} onClick={() => loginIdp("saml")} >
+                {checkIfSpecificAuthTypeIsActive('Saml') && <Button style={imgBtns} onClick={() => loginIdp("saml")} >
                     <img style={authStyle} src="https://www.drupal.org/files/project-images/auth0-logo-whitebg.png" /></Button>}
 
             </div>

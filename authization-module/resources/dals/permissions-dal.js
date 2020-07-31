@@ -31,12 +31,14 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: (id) =>
-        tryCatch(() =>
-            Permission.destroy({
+        tryCatch(async () =>{
+            const permission=await require('./permissions-dal').getSpecificById(id)
+            config.rbac.removeByName(permission.action + '_' + permission.resource)
+            return Permission.destroy({
                 where: {
                     id: id
                 }
-            })),
+            })}),
     /**
      *
      * @returns {Promise<void>}

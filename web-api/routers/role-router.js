@@ -25,7 +25,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function addRole(req, res) {
-        apiUtils.promiseDataToResponse(res, roles.create(req.body.role), 201)
+        apiUtils.promiseDataToResponse(res, roles.create(req.body.role,req.body.parent_role), 201)
     }
 
     function deleteRole(req, res) {

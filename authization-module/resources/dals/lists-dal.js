@@ -69,11 +69,10 @@ module.exports = {
     * @param userId
     * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
     */
-    getUsersActive: (userId) =>
+    getUsersLists: (userId) =>
         tryCatch(() =>
             UserList.findAll({
                 where: {
-                    active: 1,
                     UserId: userId
                 }
             })

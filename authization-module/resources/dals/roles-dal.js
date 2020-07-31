@@ -5,6 +5,9 @@ const {Role,UserRoles}= require('../sequelize-model'),
     config = require('../../common/config/config'),
     tryCatch = require('../../common/util/functions-utils')
 
+    const getSpecificById= (roleId) =>
+    tryCatch(() => Role.findByPk(roleId))
+
 module.exports = {
 
     /**
@@ -12,9 +15,13 @@ module.exports = {
          * @param role
          * @returns {Promise<void>}
          */
-    create: async (role) => tryCatch(async () => {
+    create: async (role,parent_role) => tryCatch(async () => {
         await config.rbac.createRole(role, true)
+        if(parent_role){
+            await config.rbac.grantByName((await getSpecificById(parent_role)).role,role)
+        }
         return Role.findOrCreate({
+            defaults: { parent_role: parent_role},
             where: {
                 role: role
             }
@@ -33,8 +40,7 @@ module.exports = {
      * @param roleId
      * @returns {Promise<*>}
      */
-    getSpecificById: (roleId) =>
-        tryCatch(() => Role.findByPk(roleId)),
+    getSpecificById,
 
     getByName: (roleName) => tryCatch(() => Role.findOne({ where: { role: roleName } })),
     /**
@@ -43,13 +49,15 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: (roleId) =>
-        tryCatch(() =>
-            Role.destroy({
+        tryCatch(async () =>{
+            const role = await getSpecificById(roleId)
+            config.rbac.removeByName(role.role)
+            return Role.destroy({
                 where: {
                     id: roleId
                 }
             })
-        ),
+        }),
     /**
      *
      * @returns {Promise<void>}

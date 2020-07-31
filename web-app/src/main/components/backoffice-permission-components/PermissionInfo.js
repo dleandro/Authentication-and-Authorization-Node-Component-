@@ -19,7 +19,7 @@ function PermissionRoles() {
     });
     const postData = (arr)=> rolePermissionService().addRolePermission(arr[0],id,arr[1],arr[2])
     const postOptionsFetcher = () => rolesService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
-
+    const deleteRolePermission= (roleId)=>rolePermissionService().deleteRolePermission(roleId,id)
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>
         <td><Link to={`/roles/${rolePermission.RoleId}`}>{`Details of Roles: ${rolePermission.RoleId}`}</Link></td>
@@ -30,7 +30,7 @@ function PermissionRoles() {
     return (
         <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
                               postNewDataCB={postData} tableLabels={labels} valueToLineCB={rolePermissionToLine}
-                              deleteDataCB={val =>console.log('Service not Done yet',val)}/>
+                              deleteDataCB={val =>deleteRolePermission(val.RoleId)}/>
     );
 }
 

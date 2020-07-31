@@ -25,10 +25,9 @@ function ListUsers() {
     const fetchData = ()=>listService().getUsersInThisList(id)
     const ctx = useContext(UserContext);
     const addUserToList =(userId)=>userListService().addUserList(id,userId,ctx.user.id,new Date())
-    const removeUserFromList = () => console.log('Still not implemented removeUserFromList')
+    const removeUserList = (userId) => userListService().deleteUserList(id,userId)
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
     let date = '';
-
     const listUserToLine = listUser=> <React.Fragment>
         <td><Link to={`/users/${listUser.UserId}`}>{`Details of User: ${listUser.UserId}`}</Link></td>
         <td >{listUser['User.username']}</td>
@@ -37,12 +36,12 @@ function ListUsers() {
         <td>{listUser.active}</td>
         <td>{listUser.updater}</td>
         <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>date=val}/>}
-                               openButtonIcon={'fa fa-edit'} submitListener={val=>console.log('Service not done: ',date)} buttonTooltipText={'Edit End date'} /> </td>
+                               openButtonIcon={'fa fa-edit'} submitListener={_=>userListService().editUserList(listUser.UserId,id,date,1)} buttonTooltipText={'Edit End date'} /> </td>
     </React.Fragment>;
     return (
 
         <React.Fragment>
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={removeUserFromList} postNewDataCB={(arr)=>addUserToList(arr[0])} tableLabels={labels}
+            <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserList(obj.UserId)} postNewDataCB={(arr)=>addUserToList(arr[0])} tableLabels={labels}
                                   postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={listUserToLine} />
         </React.Fragment>
     )

@@ -1,17 +1,17 @@
 
-const config = require('../../../config/config');
-
-const
+const config = require('../../../config/config'),
+ SamlStrategy = require('passport-saml').Strategy,
     fs = require('fs'),
     path = require('path'),
     passportUtils = require('../../../util/passport-utils'),
-    protocolName = 'Saml',
-    SamlStrategy = new (require('passport-saml').Strategy)({
+    protocolName = 'Saml'
 
+module.exports=()=>{
+    return new SamlStrategy({
         callbackUrl: config.saml.callbackUrl,
         entryPoint: config.saml.entryPoint,
         issuer: config.saml.issuer,
-        cert: fs.readFileSync(path.join(__dirname, '../../../certificates/AuthizationApplication.cer'), 'utf-8'),
+        cert: config.saml.certificate,
         signatureAlgorithm:'sha256'
 
     }, async function (profile, done) {
@@ -36,4 +36,4 @@ const
         done(null, user);
     });
 
-module.exports = SamlStrategy;
+}

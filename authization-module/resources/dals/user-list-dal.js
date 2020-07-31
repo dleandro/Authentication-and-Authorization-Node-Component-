@@ -10,5 +10,11 @@ module.exports = {
 
     create: (listId, userId, updater, start_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date: start_date, active: active, updater: updater })),
 
-    delete: (listId, userId) => tryCatch(() => UserList.destroy({ where: { ListId: listId, UserId: userId } }))
+    delete: (listId, userId) => tryCatch(() => UserList.destroy({ where: { ListId: listId, UserId: userId } })),
+    
+    update: async (user, list, endDate, active) => tryCatch(() => UserList.update({ 
+        end_date: endDate,
+        active: active
+    },
+    {where:{UserId:user,ListId:list}}))
 }

@@ -26,13 +26,14 @@ const imgBtns = {
 
 export default function LoginForm({ id }) {
 
+
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
     const ctx = useContext(AuthTypeContext)
 
     var loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
-            authenticationService().login(userToLogin.username, userToLogin.password).then(() => window.location.assign('/backoffice')) :
+            authenticationService().login(userToLogin.username, userToLogin.password).then((resp) => console.log(`the response is ${resp}`)) :
             setError({ errorMessage: "Please insert username and password first", shouldShow: true })
 
     const handlePassword = event => {

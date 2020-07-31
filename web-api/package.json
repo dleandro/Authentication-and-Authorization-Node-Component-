@@ -4,7 +4,7 @@
   "description": "",
   "main": "./server/index.js",
   "dependencies": {
-    "@authization/authization": "^1.0.11",
+    "@authization/authization": "^1.0.18",
     "connect-session-sequelize": "^6.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node index.js"
+    "start": "set WEBAPP=3000 && node index.js"
   },
   "keywords": [],
   "author": "",

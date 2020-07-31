@@ -72,7 +72,7 @@ function createGrants(grants) {
             if ('role' in permission) {
                 return roleDal.getByName(permission.role).then(childRole => roleDal.addParentRole(childRole, role));
             } else {
-                return permissionsDal.getSpecific(permission.action, permission.resource).then(p => rolesPermissionsDal.create(role.id, p));
+                return permissionsDal.getSpecific(permission.action, permission.resource).then(p => rolesPermissionsDal.create(role.id, p.id));
             }
         });
     }));

@@ -6,8 +6,7 @@
 // this should be a superclass to the functionalities classes...
 
 const
-    config = require('./common/config/config'),
-    sequelizeErrorsMapper = require('./common/errors/sequelize-errors-mapper')
+    config = require('./common/config/config')
 
 const getFunctionalities = () => {
 

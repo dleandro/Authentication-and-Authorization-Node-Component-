@@ -55,7 +55,7 @@ const labels = ['Users'];
 export default function ListInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0)
     const [otherLists,setLists] = useState(['']);
-    useEffect(()=>{listService().getLists().then(lists=>setLists(lists.map(list=>list.id)));},[]);
+    useEffect(()=>{listService().get().then(lists=>setLists(lists.map(list=>list.id)));},[]);
     return (
         <React.Fragment>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">

@@ -21,39 +21,84 @@ const histServ = historyService(true)
  */
 describe('List Service tests', () => {
     test('Create/Get/Delete list:', async ()=>{
-        const inserted=await listServ.addList('testingList');
-        await listServ.getLists().then(lists=>expect(lists).toContainEqual(inserted));
-        const deleted = await listServ.deleteList(inserted.id);
+        const inserted=await listServ.post('testingList');
+        await listServ.get().then(lists=>expect(lists).toContainEqual(inserted));
+        const deleted = await listServ.destroy(inserted.id);
         console.log('Inserted: ',inserted,'\tDeleted: ',deleted);
-        await listServ.getLists().then(lists=>expect(lists).not.toContainEqual(inserted));
+        await listServ.get().then(lists=>expect(lists).not.toContainEqual(inserted));
     });
 
     test('Create and check list:', async ()=>{
-        const inserted=await listServ.addList('testingList2');
+        const inserted=await listServ.post('testingList2');
         await listServ.getActiveLists().then(lists=>expect(lists).toContainEqual(inserted));
         await listServ.getList(inserted.id).then(list=>expect(list).toEqual(inserted));
         const deactivated = await listServ.deactivateList(inserted.id);
         await listServ.getActiveLists().then(lists=>expect(lists).not.toContainEqual(inserted));
         await listServ.getList(inserted.id).then(list=>expect(list).toEqual(inserted));
-        const deleted = await listServ.deleteList(inserted.id);
+        const deleted = await listServ.destroy(inserted.id);
         console.log('Inserted: ',inserted,'\tDeactivated: ',deactivated,'\tDeleted: ',deleted);
-        await listServ.getLists().then(lists=>expect(lists).not.toContainEqual(inserted));
+        await listServ.get().then(lists=>expect(lists).not.toContainEqual(inserted));
     });
 
 });
 
 describe('Role Service tests',()=>{
-    test('Create/Get/Update/GetByID/Delete/GetById Role:', async ()=>{
-        const inserted=await roleServ.addRole(['testRoleName','Testparentrole']);
-        await roleServ.getRoles().then(roles=>expect(roles).toContainEqual(inserted));
-        const updated= await roleServ.editRole([inserted.id,'changedTestingName','changedTestingParentName'])
-        await roleServ.getRole(updated.id).then(role=>expect(role.role).toEqual(updated.role));
-        const deleted = await roleServ.deleteRole(inserted.id);
-        console.log('Inserted: ',inserted,'Updated: ',updated,'Deleted: ',deleted);
-        inserted.role=updated.role;
-        //checking role was deleted
-        await roleServ.getRole(inserted.id).then(role=>expect(role).not.toEqual(inserted));
-        await roleServ.getRoles().then(role=>expect(role).not.toContainEqual(inserted));
+    test('Testing :\n post/update/delete role,\n post/update date/delete user from role,\n post/delete permission from role', async ()=>{
+        //inserting new role and checking if returned value is correct
+        let expected = {id:undefined,role:'testRoleName',parent_role:1};
+        let inserted=await roleServ.post(['testRoleName',1]);
+        expected.id = inserted.id;
+        expect(inserted).toEqual(expected);
+        //updating role and checking if returned value is correct and if parameters are being checked
+        expected.role = 'updatedRoleName';
+        roleServ.editRole([expected.id,expected.role,undefined]).then(role=>expect(role).toEqual(expected))
+        expected.parent_role = 'updatedParentRole';
+        roleServ.editRole([expected.id,undefined,expected.parent_role]).then(role=>expect(role).toEqual(expected))
+        //adding role to user checking if returned value is correct and operation was sucessfull
+        let expectedUserRole =  { id: 2,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:1 };
+        let insertedUserRole= await roleServ.addUserToRole(expected.id,2)
+        expectedUserRole.start_date=insertedUserRole.start_date
+        expectedUserRole.updater=insertedUserRole.updater
+        expect(insertedUserRole).toEqual(expectedUserRole)
+
+        await roleServ.getUsersWithThisRole(expected.id).then(userRoles=>expect(userRoles).toContainEqual(expectedUserRole)).catch(err=>{
+            console.error('RolesUser array doesnt contain expected value: ',expectedUserRole);
+            throw err
+        });
+        //changing role end date and checking if operation was sucessfull and returned value is correct
+        let expectedDate ={date: "2020-07-10", time: "18:12"};
+        let updatedRoleUser= await roleServ.changeUserRoleEndDate(expectedDate,expectedUserRole.id,expected.id);
+        expectedUserRole.end_date = updatedRoleUser.end_date;
+        expect(updatedRoleUser).toEqual(expectedUserRole)
+        await roleServ.getUsersWithThisRole(expected.id).then(userRoles=>expect(userRoles).toContainEqual(expectedUserRole)).catch(err=>{
+            console.error('RolesUser array doesnt contain expected value: ',expectedUserRole);
+            throw err
+        });
+        //removing role from user checking if operation was sucessfull
+        await roleServ.removeUserFromRole(expectedUserRole.id,expected.id)
+        await roleServ.getUsersWithThisRole(expected.id).then(userRoles=>expect(userRoles).not.toContainEqual(expectedUserRole)).catch(err=>{
+            console.error('RolesUser array shouldnt contain value: ',expectedUserRole);
+            throw err
+        });
+        //considering add reactivate userrole
+        //inserting permission on role and checking if operation was sucessfull and returned value is correct
+        let insertedPerm= await roleServ.addPermissionToRole(expected.id,1);
+        await roleServ.getPermissionsWithThisRole(expected.id).then(rolePerms=>expect(rolePerms).toContainEqual(insertedPerm)).catch(err=>{
+            console.error('RolesPermissions array doesnt contain expected value: ',insertedPerm);
+            throw err
+        });
+        //deleting permission from role and checking if operation was sucessfull
+        await roleServ.removePermissionFromRole(expected.id,insertedPerm.id);
+        await roleServ.getPermissionsWithThisRole(expected.id).then(rolePerms=>expect(rolePerms).not.toContainEqual(insertedPerm)).catch(err=>{
+            console.error('RolesPermissions array shouldnt contain value: ',insertedPerm);
+            throw err
+        });
+        //deleting role and checking if operation was sucessfull
+        await roleServ.destroy(expected.id)
+        await roleServ.get().then(roles=>expect(roles).not.toContainEqual(expected)).catch(err=>{
+            console.error('Roles array shouldnt contain value: ',expected);
+            throw err
+        });
     });
 });
 
@@ -179,5 +224,5 @@ describe('User Service tests',()=>{
             console.error('Users array shouldnt contain value: ',expected);
             throw err
         });
-    })
+    });
 });

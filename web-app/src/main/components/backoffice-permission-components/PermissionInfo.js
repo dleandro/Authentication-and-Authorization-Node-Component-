@@ -18,7 +18,7 @@ function PermissionRoles() {
         return t;
     });
     const postData = (arr)=> rolePermissionService().addRolePermission(arr[0],id,arr[1],arr[2])
-    const postOptionsFetcher = () => rolesService().getRoles().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
+    const postOptionsFetcher = () => rolesService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
     const deleteRolePermission= (roleId)=>rolePermissionService().deleteRolePermission(roleId,id)
 
     const rolePermissionToLine = (rolePermission) => <React.Fragment>

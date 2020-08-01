@@ -15,20 +15,16 @@ module.exports = function (apiUtils, authization) {
         }
         next()
     }
-
     const LocalsuccessCallback = async (req, res, next) => {
 
         if (req.isAuthenticated()) {
 
-            //process.env.WEBAPP?
             apiUtils.setResponse(res,'Success',200)
         }
         else {
-            process.env.WEBAPP?res.end():res.end()
+           apiUtils.setResponse(res,'The User Is Not Authenticated',200)
         }
-        next()
     }
-
 
     const authenticate = authization.authenticate
     const bodyParser = require('body-parser');

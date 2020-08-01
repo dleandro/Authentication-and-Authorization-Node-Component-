@@ -1,7 +1,6 @@
-var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs } = require('./common/links').webApiLinks;
+var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs,WEB_API_HOME_PATH } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
-console.log(process.env.REACT_APP_WEB_API_PORT) 
-var HOME_PATH = process.env.REACT_APP_WEB_API_PORT?`http://localhost:${process.env.REACT_APP_WEB_API_PORT}`:'https://webapi-dot-auth-authorization.ew.r.appspot.com'
+
 
 
 function produceInit(body, met) {
@@ -23,12 +22,12 @@ function createErrObj(msg, status) {
 }
 
 
-const request = (url, init) => fetch(HOME_PATH ? HOME_PATH + url : url, init)
+const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url, init)
     .then(resp =>
         handleResponse(resp)
     )
     .catch(err => {
-        console.error(`failed to fetch: ${init.method} ${HOME_PATH ? HOME_PATH + url : url}`); console.error(err); return [err]
+        console.error(`failed to fetch: ${init.method} ${WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url}`); console.error(err); return [err]
     })
 
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
@@ -39,8 +38,8 @@ const makeRequest = (url, body, met) => request(url, produceInit(body, met));
  * Function used to make login logout
  */
 export function authenticationService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
         login: async (user, pass) => makeRequest(users.LOCAL_LOGIN_PATH, { username: user, password: pass }, 'POST'),
@@ -50,8 +49,8 @@ export function authenticationService(test) {
 }
 
 export function protocolService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
@@ -61,8 +60,8 @@ export function protocolService(test) {
 }
 
 export function userService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
         getAuthenticatedUser: async () => getRequest(users.GET_AUTHENTICATED_USER_PATH),
@@ -75,8 +74,8 @@ export function userService(test) {
         getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
         post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
         editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
-        destroy: async (arr) => {
-            makeRequest(users.SPECIFIC_USER_PATH(arr[0]), {}, 'DELETE')
+        destroy: async (id) => {
+            makeRequest(users.SPECIFIC_USER_PATH(id), {}, 'DELETE')
         }
     }
 }
@@ -84,17 +83,17 @@ export function userService(test) {
 
 
 export function listService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
-        getLists: async () => getRequest(lists.LIST_PATH),
+        get: async () => getRequest(lists.LIST_PATH),
         getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
-        addList: async (arr) => makeRequest(lists.LIST_PATH, {
+        post: async (arr) => makeRequest(lists.LIST_PATH, {
             list: arr[1]
         }, 'POST'),
         editList: async (arr) => makeRequest(lists.SPECIFIC_LIST_PATH(arr[0]), { list: arr[1] }, 'PUT'),
-        deleteList: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
+        destroy: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
         getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH),
         getUserLists: async (id) => getRequest(lists.USERS_LISTS_PATH(id)),
         getUsersInThisList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id) + "/users")
@@ -102,17 +101,17 @@ export function listService(test) {
 }
 
 export function rolesService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
-        getRoles: async () => getRequest(roles.ROLE_PATH),
+        get: async () => getRequest(roles.ROLE_PATH),
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id) => getRequest(roles.ROLE_USERS_PATH(id)),
         getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
-        addRole: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2]===''?null:arr[2] }, 'POST').then(vals=>vals[0]),
+        post: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2]===''?null:arr[2] }, 'POST').then(vals=>vals[0]),
         editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
-        deleteRole: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
+        destroy: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
 
     }
 }
@@ -146,8 +145,8 @@ export function userRoleService() {
 }
 
 export function sessionService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
         getSessions: async () => getRequest(sessions.SESSION_PATH),
@@ -180,9 +179,8 @@ export function userListService() {
 }
 
 export function historyService(test) {
-    if (test){ //se me apagas isto outra vez vou ai ao barreiro partir-te os cornos
-                //aia cum crl calma matias
-        HOME_PATH=`http://localhost:8082`;
+    if (test){
+        WEB_API_HOME_PATH=`http://localhost:8082`;
     }
     return {
         getUserHistory: async (userId) => getRequest(users.HISTORY_PATH(userId))

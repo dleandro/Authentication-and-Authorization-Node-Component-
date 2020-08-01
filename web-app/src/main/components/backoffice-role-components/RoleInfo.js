@@ -78,7 +78,7 @@ const labels = ['Permissions','Users'];
 export default function RoleInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0);
     const [otherRoles,setRoles] = useState(['']);
-    useEffect(()=>{rolesService().getRoles().then(values=>setRoles(values.map(value=>value.id)));},[]);
+    useEffect(()=>{rolesService().get().then(values=>setRoles(values.map(value=>value.id)));},[]);
     return (
         <React.Fragment>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">

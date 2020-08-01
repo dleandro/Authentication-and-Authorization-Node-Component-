@@ -22,7 +22,7 @@ module.exports = function (apiUtils, authization) {
             apiUtils.setResponse(res,'Success',200)
         }
         else {
-           apiUtils.setResponse(res,'The User Is Not Authenticated',200)
+           apiUtils.setResponse(res,'The User Is Not Authenticated',401)
         }
     }
 

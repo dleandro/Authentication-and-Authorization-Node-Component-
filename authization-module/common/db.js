@@ -7,8 +7,19 @@ const
 
 
 // setup database connection with sequelize
-const sequelize = new Sequelize(config.database_opts.database, config.database_opts.user, config.database_opts.password, {
-    host: config.database_opts.host,
+let sequelize
+process.env.INSTANCE_CONNECTION_NAME?
+    sequelize = new Sequelize(config.database_opts.database, config.database_opts.user, config.database_opts.password, {
+    host:process.env.INSTANCE_CONNECTION_NAME,
+    dialect: config.database_opts.sgbd,
+    query: { raw: true },
+    dialectOptions:{
+            socketPath: process.env.INSTANCE_CONNECTION_NAME
+    }
+})
+:
+ sequelize = new Sequelize(config.database_opts.database, config.database_opts.user, config.database_opts.password, {
+    host:config.database_opts.host,
     dialect: config.database_opts.sgbd,
     query: { raw: true }
 })

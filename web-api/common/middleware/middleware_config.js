@@ -28,6 +28,9 @@ const cloud_db={
     "sgbd": "mysql"
 }
 
+
+
+
 const rbac_opts = {
     "roles": ["admin", "DbManager", "Developer", "guest"],
     "permissions": [

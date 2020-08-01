@@ -8,6 +8,7 @@ import { webApiLinks } from '../../common/links'
 import '../../common/stylesheets/App.css'
 import Alert from 'react-bootstrap/Alert'
 import AuthTypeContext from './AuthTypeContext'
+import {useHistory} from 'react-router-dom'
 
 const authStyle = {
     width: '100px',
@@ -30,10 +31,11 @@ export default function LoginForm({ id }) {
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
     const ctx = useContext(AuthTypeContext)
+    const history=useHistory()
 
     var loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
-            authenticationService().login(userToLogin.username, userToLogin.password).then((resp) => console.log(`the response is ${resp}`)) :
+            authenticationService().login(userToLogin.username, userToLogin.password).then(history.push('/backoffice')):
             setError({ errorMessage: "Please insert username and password first", shouldShow: true })
 
     const handlePassword = event => {

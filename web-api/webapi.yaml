@@ -1,2 +1,7 @@
 runtime: nodejs12
 service: webapi
+env_variables:
+  INSTANCE_CONNECTION_NAME: /cloudsql/auth-authorization:europe-west2:authization-database
+beta_settings:
+  cloud_sql_instances: auth-authorization:europe-west2:authization-database
+

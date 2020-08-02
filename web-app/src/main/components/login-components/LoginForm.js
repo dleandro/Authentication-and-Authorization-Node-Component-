@@ -31,11 +31,10 @@ export default function LoginForm({ id }) {
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
     const ctx = useContext(AuthTypeContext)
-    const history=useHistory()
 
     var loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
-            authenticationService().login(userToLogin.username, userToLogin.password).then(history.push('/backoffice')):
+            authenticationService().login(userToLogin.username, userToLogin.password).then((_)=>window.location.assign('/backoffice')):
             setError({ errorMessage: "Please insert username and password first", shouldShow: true })
 
     const handlePassword = event => {

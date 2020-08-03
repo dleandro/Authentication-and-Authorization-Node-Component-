@@ -6,14 +6,6 @@ import UserContext from "../../UserContext";
 const fontSize = { fontSize: '1.75em'/*,color: '#1cc4e6'*/ }
 
 
-
-function SubItem ({subItem}){
-    return (<NavItem key={subItem.key}>
-        <NavText >
-            <Link to={subItem.link}> {subItem.text}</Link>
-        </NavText>
-    </NavItem>);
-}
 /**
  * Receives the width of the sidebar when collapsed or expanded
  * @param navWidthCollapsed
@@ -25,7 +17,7 @@ function SubItem ({subItem}){
 export default function Sidebar({ navWidthCollapsed }) {
     const ctx = useContext(UserContext);
 
-    const checkShouldHideItem = permission => (!ctx.userPermissions.includes('GET_'+permission)) && (!ctx.userPermissions.includes('POST_'+permission));
+    const checkShouldHideItem = permission => ctx.userPermissions?(!ctx.userPermissions.includes('GET_'+permission)) && (!ctx.userPermissions.includes('POST_'+permission)):undefined;
     const subItemToLink = subItem => checkShouldHideItem(subItem.key)?undefined:<NavItem key={subItem.key}>
         <NavText >
             <Link to={subItem.link}> {subItem.text}</Link>

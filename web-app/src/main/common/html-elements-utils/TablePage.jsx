@@ -1,10 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Card,Table,Form} from "react-bootstrap";
 import GenericTooltipButton from "./generics/GenericTooltipButton";
 import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "./generics/GenericModal";
 import {useHistory} from "react-router-dom";
-import TableFilter from "./TableFilter";
+import FilterablePageTable from "./Table/FilterablePageTable";
 
 
 /**
@@ -50,39 +49,26 @@ const TablePage = ({service,resource}) => {
     const buildTable = ()=> {
         let labels=Object.keys(values[0]);
         const headers = <tr>
-            {labels.map(label => <th>{label}</th>)}
+            {labels.map(label => <th key={label}>{label}</th>)}
+            <th><SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData}
+                                   labels={service.postFields}/></th>
         </tr>;
-        const body = values.map(val => <tr>
-            {labels.map(label=><td>{val[label]}</td>)}
+        const valueToLine = val => <tr key={JSON.stringify(val)}>
+            {labels.map(label=><td key={val[label]}>{val[label]}</td>)}
             <td><SubmitValuesModal labels={service.editFields} submitListener={newValuesArr=>editValue(newValuesArr,val)} openButtonIcon={'fa fa-edit'}
                                    initialValues={val}  bootstrapColor={'warning'} buttonTooltipText={'Edit!'}/></td>
             <td><GenericTooltipButton icon={'fa fa-info-circle'} onClick={t=>history.push(service.detailsUrl(val))}
                                       tooltipText={'More Info!'} bootstrapColor={'primary'} /></td>
             <td><GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={()=>deleteValue(val)}/></td>
-            </tr>);
-        //return checkForPermission('GET')?<Table striped bordered hover variant="dark"><thead>{headers}</thead><tbody>{body}</tbody></Table>
-          //  : <h1 className="display-1 text-white">Im sorry you dont have enough permissions</h1>;
-        return <Table striped bordered hover variant="dark"><thead>{headers}</thead><tbody>{body}</tbody></Table>;
+        </tr>;
+        return <FilterablePageTable labels={headers} rowsValues={values} valueToLineConverter={valueToLine} />;
     };
 
-    return(
-        <div className={`d-flex justify-content-center pt-10 align-content-center mx-auto align-items-center`} id={'tabpage'}>
-            <Card bg={'dark'} className="mb-2 " text={'light'} >
-                <Card.Header className="view view-cascade gradient-card-header blue-gradient d-flex justify-content-between align-items-center py-2 mx-4 mb-3">
-                    <div>
-                    </div>
-                        <TableFilter initialData={initialValues} dataDisplayerCB={setValues} />
-                    <div>
-                        <SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData}
-                                           labels={service.postFields}/>
-                    </div>
-                </Card.Header>
-                <Card.Body >
-                    {error?<p>{error.status} {error.err}</p>: values.length && Array.isArray(values) ? buildTable() : undefined}
-                </Card.Body>
-            </Card>
-        </div>
-    );
+    return (
+        <React.Fragment>
+            {error?<p>{error.status} {error.err}</p>: values.length && Array.isArray(values) ? buildTable() : undefined}
+        </React.Fragment>
+        );
 };
 
 export default TablePage;

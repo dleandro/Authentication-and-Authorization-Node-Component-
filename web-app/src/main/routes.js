@@ -8,7 +8,7 @@ import UserInfo from './components/backoffice-user-components/UserInfo';
 import ListInfo from './components/backoffice-list-components/ListInfo';
 import PermissionInfo from './components/backoffice-permission-components/PermissionInfo';
 import RoleInfo from './components/backoffice-role-components/RoleInfo';
-import {Users,Lists,Roles,Permissions,Sessions} from './components/BackOfficeFunctionalities';
+import {Sessions} from './components/BackOfficeFunctionalities';
 import { AuthTypeProvider } from './components/login-components/AuthTypeContext';
 import { AccountManagement } from './components/backoffice-user-components/AccountManagement';
 import UserLogin from './components/login-components/UserLogin';
@@ -32,7 +32,7 @@ class Routes extends Component {
                     <div id={'main'} style={{ marginLeft: this.props.sidebarCollapsedSize }} >
 
                         <Route path={'/backoffice'} exact component={BackOffice} />
-                        {routers.map(route=><Route path={route.route} exact component={()=>route.component} />)}
+                        {routers.map(route=><Route key={route.route} path={route.route} exact component={()=>route.component} />)}
                         <Route path={`/users/:id`} exact component={UserInfo} />
                         <Route path={'/account'} exact component={AccountManagement} />
                         <Route path={'/login'} exact component={UserLogin} />

@@ -6,13 +6,8 @@ import GoogleButton from 'react-google-button'
 import { webApiLinks } from '../../common/links'
 import '../../common/stylesheets/App.css'
 import Alert from 'react-bootstrap/Alert'
-<<<<<<< HEAD
-import AuthTypeContext from './AuthTypeContext'
-=======
-import { useHistory } from "react-router-dom";
 import AuthTypeContext from "./AuthTypeContext";
 import {authenticationService} from "../../service";
->>>>>>> 341c67f3b277e218d624dff32d9930f2149aca15
 
 const authStyle = {
     width: '100px',
@@ -30,7 +25,6 @@ const imgBtns = {
 }
 
 export default function LoginForm({ id }) {
-    const history = useHistory();
     const [showAlert, setShowAlert] = useState(false);
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
@@ -38,10 +32,6 @@ export default function LoginForm({ id }) {
 
     const loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
-<<<<<<< HEAD
-            authenticationService().login(userToLogin.username, userToLogin.password).then((_) => window.location.assign('/backoffice')) :
-            setError({ errorMessage: "Please insert username and password first", shouldShow: true })
-=======
             authenticationService().login(userToLogin.username, userToLogin.password).then((resp) => {
                 console.log(`the response is ${resp}`)
                 if (resp[0].err) {
@@ -54,7 +44,6 @@ export default function LoginForm({ id }) {
                 console.error(err)
             }) :
             setError({errorMessage: "Please insert username and password first", shouldShow: true});
->>>>>>> 341c67f3b277e218d624dff32d9930f2149aca15
 
     const handlePassword = event => {
         setUserToLogin({ ...userToLogin, password: event.target.value })

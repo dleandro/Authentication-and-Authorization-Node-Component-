@@ -14,7 +14,7 @@ const sidebarCollapsedSize = '60px';
 
 export default function App() {
 
-    console.log(require('dotenv').config())
+    require('dotenv').config()
     const ctx = useContext(UserContext);
     const [state, setState] = useState(ctx.user);
     useEffect(() => setState(ctx.user),[ctx.user]);

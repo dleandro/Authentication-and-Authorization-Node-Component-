@@ -3,20 +3,8 @@ import {Link, useParams,useHistory} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {
-    listService,
-    sessionService,
-    userRoleService,
-    userService,
-    historyService,
-    rolesService,
-    userListService,
-    permissionService
-} from '../../service';
+import {listService, sessionService, userRoleService, userService, historyService, rolesService, userListService, permissionService} from '../../service';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Col from "react-bootstrap/Col";
-import Form from 'react-bootstrap/Form';
 import GenericFunctionality from '../../common/html-elements-utils/generics/GenericFunctionality';
 import UserContext from "../../UserContext";
 import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
@@ -39,8 +27,8 @@ function UserRoles() {
     customService.update= (perm,arr)=>permissionService().editPermission([perm.id,arr[0],arr[1]]);
     customService.editFields = [{text:'New Date (date)'}];
     customService.postFields = [{text:'Id of Role to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}];
-    customService.afterUpdateRedirectUrl = ids=>`/roles/${ids}`;
-    customService.detailsUrl = ids=>`/roles/${ids}`;
+    customService.afterUpdateRedirectUrl = role=>`/roles/${role.id}`;
+    customService.detailsUrl = role=>`/roles/${role.id}`;
 
     return (
         <TablePage resource={'user-role'} service={customService}/>
@@ -48,7 +36,7 @@ function UserRoles() {
 }
 
 export function UserSessions(){
-
+/*
     const labels = ['User id','Session Id','Expires'];
     const ctx = useContext(UserContext);
     const id=ctx.user.id;
@@ -63,11 +51,28 @@ export function UserSessions(){
     </React.Fragment>;
     return (
         <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj =>sessionService().deleteSession(obj.sid)} tableLabels={labels} valueToLineCB={sessionToLine} />
-    );
+    );*/
+    let {id}=useParams()
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const ctx = useContext(UserContext);
+
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+        <TablePage service={serv} resource={'listuser'} />
+    )
 };
 
 function UserLists() {
-    const {id}=useParams()
+    /*const {id}=useParams();
     const labels = ['Id', 'Start Date', 'End Date','Active', 'Updater'];
     const ctx = useContext(UserContext);
 
@@ -75,7 +80,7 @@ function UserLists() {
     const fetchData = ()=> listService().getUserLists(ctx.user.id);
     const postUserList = (listId)=>userListService().addUserList(listId,id,ctx.user.id,new Date())
     const removeUserList = (listId) => userListService().deleteUserList(listId,ctx.user.id)
-    let date=''
+    let date='';
     const listToLine=(list)=><React.Fragment>
         <td><Link to={`/lists/${list.ListId}`}>{`Details of List: ${list.ListId}`}</Link></td>
         <td>{list.start_date}</td>
@@ -89,11 +94,28 @@ function UserLists() {
         <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of List to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
                               tableLabels={labels} deleteDataCB={obj=>removeUserList(obj.ListId)}
                               postNewDataCB={(arr)=>postUserList(arr[0])} valueToLineCB={listToLine} />
-    );
+    );*/
+    let {id}=useParams()
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const ctx = useContext(UserContext);
+
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+        <TablePage service={serv} resource={'listuser'} />
+    )
 }
 
 function UserHistory(){
-    const labels = ['Id','UserId', 'Date', 'Success','Action','Resource','IP'];
+    /*const labels = ['Id','UserId', 'Date', 'Success','Action','Resource','IP'];
     const {id}=useParams()
     const fetchData = ()=> historyService().getUserHistory(id);
 
@@ -108,7 +130,24 @@ function UserHistory(){
     </React.Fragment>;
     return (
         <GenericFunctionality fetchCB={fetchData} tableLabels={labels} valueToLineCB={listToLine} />
-    );
+    );*/
+    let {id}=useParams()
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const ctx = useContext(UserContext);
+
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+        <TablePage service={serv} resource={'listuser'} />
+    )
 }
 
 const components = {

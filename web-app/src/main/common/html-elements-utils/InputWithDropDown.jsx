@@ -39,7 +39,7 @@ export default function InputWithDropDown({onChange,fetchData,label}) {
             <InputGroup.Append>
                   <Dropdown onSelect={setValue}>
 
-                    <Dropdown.Toggle id="dropdown-custom-components">
+                   <Dropdown.Toggle id="dropdown-custom-components">
                                     Custom toggle
                                   </Dropdown.Toggle>
 

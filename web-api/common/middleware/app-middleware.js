@@ -12,7 +12,7 @@ module.exports = async function (app, express) {
 
 
     var corsOptions = {
-        origin: ['http://localhost:3000', 'https://webapp-dot-auth-authorization.ew.r.appspot.com'],
+        origin: ['https://webapp-dot-auth-authorization.ew.r.appspot.com','http://localhost:3000'],
         optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204,
         credentials: true
     }
@@ -21,13 +21,13 @@ module.exports = async function (app, express) {
     app.use(cors(corsOptions))
     // For request logging
     app.use(morgan('tiny'))
-
+    
     try {
         // using authization module to setup authentication and authorization middleware
-        const authization = await require('../../../authization-module/authization')
         //const authization = await require('@authization/authization')
-            .setup({ app, db: middlewareConifg.db, rbac_opts: middlewareConifg.rbac_opts })
-
+        const authization = await require('../../../authization-module/authization')
+        .setup({ app, db: middlewareConifg.db, rbac_opts: middlewareConifg.rbac_opts })
+        
         app.use('/api', require("../../web-api")(authization))
 
         // Every endpoint that doesn't start with /api is redirected to our web app, make sure web app has updated production build

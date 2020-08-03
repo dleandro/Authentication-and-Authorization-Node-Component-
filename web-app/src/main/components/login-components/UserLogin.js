@@ -13,7 +13,6 @@ const UserLogin = ({ app, setRedirect }) =>
         position: 'fixed',
         overflow: 'auto'
     }}>
-
         <div className="modal-dialog text-center" >
             <div className="col-sm-8 main-section" >
                 <div className="modal-content" >

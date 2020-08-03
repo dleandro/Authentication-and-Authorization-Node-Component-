@@ -13,15 +13,13 @@ module.exports = function (apiUtils, authization) {
         else {
             process.env.WEBAPP?res.redirect("http://localhost:3000"):res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com")
         }
+        next()
     }
     const LocalsuccessCallback = async (req, res, next) => {
-
         if (req.isAuthenticated()) {
-
             apiUtils.setResponse(res,'Success',200)
-        }
-        else {
-           apiUtils.setResponse(res,'The User Is Not Authenticated',200)
+        } else {
+           apiUtils.setResponse(res,'The User Is Not Authenticated',401)
         }
     }
 

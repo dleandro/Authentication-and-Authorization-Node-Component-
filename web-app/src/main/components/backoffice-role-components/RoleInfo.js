@@ -1,6 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import UpdatableInput from  '../BackOfficeFunctionalities';
-import {permissionService, rolePermissionService, rolesService, userRoleService, userService} from "../../service";
+import {
+    listService,
+    permissionService,
+    rolePermissionService,
+    rolesService, userListService,
+    userRoleService,
+    userService
+} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -14,11 +21,12 @@ import {SubmitValuesModal} from "../../common/html-elements-utils/generics/Gener
 import Jumbotron from "react-bootstrap/Jumbotron";
 import DatePicker from "../../common/html-elements-utils/DatePicker";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
+import TablePage from "../../common/html-elements-utils/TablePage";
 
 const SpecificRoleInfo=()=><GenericInfoCard label={'Role'} fetchValueById={rolesService().getRole} />;
 
 function RolePermission() {
-
+/*
     const labels = ['Permission Id','Action','Resource'];
     const {id}=useParams();
     const fetchData = ()=> rolesService().getPermissionsWithThisRole(id).then(t=>{
@@ -38,11 +46,45 @@ function RolePermission() {
     return (
         <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Permission to be assign', DropdownOptionsFetcher:postOptionsFetcher}]} postNewDataCB={postData}
                               deleteDataCB={val =>deleteRolePermission(val.PermissionId)} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
-    );
+    );*/
+    let {id}=useParams()
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const ctx = useContext(UserContext);
+
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+        <TablePage service={serv} resource={'listuser'} />
+    )
 }
 
 export function RoleUsers() {
     let {id}=useParams()
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const ctx = useContext(UserContext);
+
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+        <TablePage service={serv} resource={'listuser'} />
+    )
+    /*let {id}=useParams()
     const fetchData = () => rolesService().getUsersWithThisRole(id)
     const ctx = useContext(UserContext)
     const labels = ["User id", "username",'Role Assignment date','Role expiration date','Active','Updater']
@@ -66,7 +108,7 @@ export function RoleUsers() {
             <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserFromRole(obj.UserId)} postNewDataCB={(arr)=>postUserRole(arr[0])} tableLabels={labels}
                                   postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={roleUserToLine} />
         </React.Fragment>
-    )
+    )*/
 }
 
 const components = {

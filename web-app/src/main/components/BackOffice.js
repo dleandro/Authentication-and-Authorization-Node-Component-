@@ -44,7 +44,6 @@ export default function BackOffice() {
                     </div>
                 </div>
             </CardColumns>
-            <TablePage service={userService()} />
         </React.Fragment>
     );
 }

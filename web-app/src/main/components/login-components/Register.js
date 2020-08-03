@@ -26,8 +26,7 @@ export default function Register() {
             <div className="omb_login">
                 <h3 className="omb_authTitle">Sign up</h3>
                 <div className="row omb_row-sm-offset-3 omb_socialButtons">
-                    {idps('Facebook','facebook')}
-                    {idps('Twitter','twitter')}
+                    {idps('Google','facebook')}
                     {idps('Office365','google')}
                 </div>
                 <br/>

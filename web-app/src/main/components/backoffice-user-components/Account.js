@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Input from '@material-ui/core/Input';
-import Button from '@material-ui/core/Button';
+import {Form,Button} from "react-bootstrap";
 
 export const Account = () => {
 
@@ -11,14 +10,19 @@ export const Account = () => {
     const submitChanges = () => 0
 
     return (
-        <div style={{paddingTop: "75px", paddingLeft: "20px"}}>
-            <form noValidate autoComplete="off">
-                <Input placeholder="New Username" inputProps={{ 'aria-label': 'description' }} onChange={(e) => setNewUsername(e.target.value)} />
-                <Input placeholder="New Password" inputProps={{ 'aria-label': 'description' }} onChange={(e) => setNewPassword(e.target.value)}/>
-            </form>
-            <Button variant="contained" onClick={submitChanges}>
+        <Form style={{paddingTop: "75px", paddingLeft: "20px"}}>
+            <Form.Group controlId="newUsername">
+                <Form.Label>New Username</Form.Label>
+                <Form.Control type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} placeholder="Enter email" />
+            </Form.Group>
+
+            <Form.Group controlId="newPassword">
+                <Form.Label>New Password</Form.Label>
+                <Form.Control type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            </Form.Group>
+            <Button variant="primary" type="submit" onClick={submitChanges}>
                 Save
             </Button>
-        </div>
+        </Form>
     )
 }

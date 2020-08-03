@@ -18,8 +18,8 @@ const
 
 console.log(process.env.REACT_APP_WEB_API_PORT)    
 
-const WEB_API_HOME_PATH = process.env.REACT_APP_WEB_API_PORT?`http://localhost:${process.env.REACT_APP_WEB_API_PORT}`:'https://webapi-dot-auth-authorization.ew.r.appspot.com'
-const WEB_APP_HOME_PATH = process.env.REACT_APP_WEB_APP_PORT?`http://localhost:${process.env.REACT_APP_WEB_APP_PORT}`:'https://webapp-dot-auth-authorization.ew.r.appspot.com'
+const WEB_API_HOME_PATH = process.env.REACT_APP_WEB_API_PORT?`http://localhost:${process.env.REACT_APP_WEB_API_PORT}`:'https://webapi-dot-auth-authorization.ew.r.appspot.com';
+const WEB_APP_HOME_PATH = process.env.REACT_APP_WEB_APP_PORT?`http://localhost:${process.env.REACT_APP_WEB_APP_PORT}`:'https://webapp-dot-auth-authorization.ew.r.appspot.com';
 
 export const webApiLinks =
 {

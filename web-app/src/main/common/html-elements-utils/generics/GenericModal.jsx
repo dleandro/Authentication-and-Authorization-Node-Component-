@@ -55,11 +55,11 @@ export function SubmitValuesModal({submitListener,disabled=false,initialValues,l
                 {text:'(date)',component: <DatePicker text={elem.text.split('(')[0]} onChange={val =>changeValue(idx,val)}/>}];
             selected = supportedInputTypes.find(input=>elem.text.includes(input.text));
         }
-        return selected?selected.component:<FormControl placeholder={elem} onChange={e=>changeValue(idx,e.target.value)}/>;
+        return selected?selected.component:<FormControl key={elem.toString()} placeholder={elem} onChange={e=>changeValue(idx,e.target.value)}/>;
     }
 
     const initialValuesRenderer= ()=><React.Fragment>
-            {initialValues?Object.keys(initialValues).map(field=><InputGroup>
+            {initialValues?Object.keys(initialValues).map(field=><InputGroup key={field.toString()}>
                 <InputGroup.Prepend>
                     <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
                 </InputGroup.Prepend>

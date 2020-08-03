@@ -1,11 +1,8 @@
-import React, {useContext, useEffect} from 'react';
+import React from 'react';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
-import {userService, protocolService, listService, rolesService,configService,permissionService} from '../service'
-import UserContext from "../UserContext";
-import TablePage from "../common/html-elements-utils/TablePage";
 
 export default function BackOffice() {
 
@@ -44,7 +41,6 @@ export default function BackOffice() {
                     </div>
                 </div>
             </CardColumns>
-            <TablePage service={userService()} />
         </React.Fragment>
     );
 }

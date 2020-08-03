@@ -6,7 +6,7 @@ const setResponse = (res, answer, statusCode) => {
         'Content-type': 'application/json'
     }
     res.status(statusCode)
-    res.send(JSON.stringify(answer))
+    res.send(answer)
 }
 
 module.exports = {

@@ -26,7 +26,7 @@ export default function App() {
                         <React.Fragment>
                             <SideBar navWidthCollapsed={sidebarCollapsedSize} />
                             <main style={{backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
-                                backgroundSize: 'auto','background-attachment': 'fixed',height:'100vh',overflow: 'auto',}}>
+                                backgroundSize: 'auto','backgroundAttachment': 'fixed',height:'100vh',overflow: 'auto',}}>
                                 <Upperbar />
                                 <Routes sidebarCollapsedSize={sidebarCollapsedSize} />
                             </main>

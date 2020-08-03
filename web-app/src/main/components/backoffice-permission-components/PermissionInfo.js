@@ -1,16 +1,25 @@
-import React, { useEffect,useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
-import {listService, permissionService, rolePermissionService, rolesService, userService} from "../../service";
+import {
+    listService,
+    permissionService,
+    rolePermissionService,
+    rolesService,
+    userListService,
+    userService
+} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import GenericFunctionality from "../../common/html-elements-utils/generics/GenericFunctionality";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
+import UserContext from "../../UserContext";
+import TablePage from "../../common/html-elements-utils/TablePage";
 
 const SpecificPermissionInfo=()=><GenericInfoCard label={'Permission'} fetchValueById={permissionService().getPermission}/>;
 
 function PermissionRoles() {
-
+/*
     const labels = ['Role id', 'role','Parent Role'];
     const {id}=useParams();
     const fetchData = ()=> permissionService().getRolesWithThisPermission(id).then(t=>{
@@ -31,7 +40,24 @@ function PermissionRoles() {
         <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Role to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}
                               postNewDataCB={postData} tableLabels={labels} valueToLineCB={rolePermissionToLine}
                               deleteDataCB={val =>deleteRolePermission(val.RoleId)}/>
-    );
+    );*/
+    let {id}=useParams()
+    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const ctx = useContext(UserContext);
+
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+        <TablePage service={serv} resource={'listuser'} />
+    )
 }
 
 const components = {

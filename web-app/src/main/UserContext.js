@@ -22,6 +22,7 @@ class UserProvider extends Component {
         const permission = await userService().getAuthenticatedUserPermissions()
 
         if (permission.length){
+            console.log('current User has permissions:',permission)
             this.state.setPermissions(permission)
         }
         if (user.username) {

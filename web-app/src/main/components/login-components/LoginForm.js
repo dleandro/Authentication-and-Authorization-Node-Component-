@@ -2,12 +2,17 @@ import React, { useState, useContext } from 'react'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import { authenticationService } from '../../service'
 import GoogleButton from 'react-google-button'
 import { webApiLinks } from '../../common/links'
 import '../../common/stylesheets/App.css'
 import Alert from 'react-bootstrap/Alert'
+<<<<<<< HEAD
 import AuthTypeContext from './AuthTypeContext'
+=======
+import { useHistory } from "react-router-dom";
+import AuthTypeContext from "./AuthTypeContext";
+import {authenticationService} from "../../service";
+>>>>>>> 341c67f3b277e218d624dff32d9930f2149aca15
 
 const authStyle = {
     width: '100px',
@@ -25,16 +30,31 @@ const imgBtns = {
 }
 
 export default function LoginForm({ id }) {
-
-
+    const history = useHistory();
+    const [showAlert, setShowAlert] = useState(false);
     const [userToLogin, setUserToLogin] = useState({ username: undefined, password: undefined })
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
     const ctx = useContext(AuthTypeContext)
 
-    var loginLocalStrat = () =>
+    const loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
+<<<<<<< HEAD
             authenticationService().login(userToLogin.username, userToLogin.password).then((_) => window.location.assign('/backoffice')) :
             setError({ errorMessage: "Please insert username and password first", shouldShow: true })
+=======
+            authenticationService().login(userToLogin.username, userToLogin.password).then((resp) => {
+                console.log(`the response is ${resp}`)
+                if (resp[0].err) {
+                    throw 'couldnt log in'
+                } else {
+                    window.location.assign('/backoffice')
+                }
+            }).catch(err => {
+                setShowAlert(true)
+                console.error(err)
+            }) :
+            setError({errorMessage: "Please insert username and password first", shouldShow: true});
+>>>>>>> 341c67f3b277e218d624dff32d9930f2149aca15
 
     const handlePassword = event => {
         setUserToLogin({ ...userToLogin, password: event.target.value })
@@ -54,22 +74,18 @@ export default function LoginForm({ id }) {
             find(availableAuthType => availableAuthType.protocol === authType && availableAuthType.active === 1)
     }
     return (
-
         <React.Fragment>
-
             {
                 error.shouldShow &&
                 <Alert variant={'warning'} onClose={() => setError(false)} dismissible>
                     {error.errorMessage}
                 </Alert>
             }
-
-
             <div className="col-12 form-input" id={id}>
-
-
+                {showAlert?<Alert key={'errorloggingin'} variant={'danger'}>
+                    Something went wrong, probably typed the wrong password.
+                </Alert>:undefined}
                 <InputGroup className="mb-3">
-
                     <FormControl placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2"
                         type="text" onChange={handleUsername} />
                     <FormControl placeholder="password" aria-label="Recipient's password" aria-describedby="basic-addon2"

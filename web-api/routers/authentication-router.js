@@ -15,12 +15,9 @@ module.exports = function (apiUtils, authization) {
         }
     }
     const LocalsuccessCallback = async (req, res) => {
-
         if (req.isAuthenticated()) {
-
             apiUtils.setResponse(res,'Success',200)
-        }
-        else {
+        } else {
            apiUtils.setResponse(res,'The User Is Not Authenticated',401)
         }
     }

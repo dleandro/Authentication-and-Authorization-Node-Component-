@@ -1,49 +1,33 @@
 import React, {useContext, useEffect, useState} from 'react'
-import UpdatableInput from "../BackOfficeFunctionalities";
 import {listService, rolesService, userListService, userService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import UserContext from "../../UserContext";
-import GenericFunctionality from "../../common/html-elements-utils/generics/GenericFunctionality";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col";
-import {SubmitValuesModal} from "../../common/html-elements-utils/generics/GenericModal";
-import Jumbotron from "react-bootstrap/Jumbotron";
-import DatePicker from "../../common/html-elements-utils/DatePicker";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
+import TablePage from "../../common/html-elements-utils/TablePage";
 
 
 const SpecificListInfo = () => <GenericInfoCard label={'User'} fetchValueById={listService().getList} />;
 
 function ListUsers() {
-
-    const labels = ["User Id", "Username", "Start Date", "End Date","Active", "Updater"]
     let {id}=useParams()
-    const fetchData = ()=>listService().getUsersInThisList(id)
-    const ctx = useContext(UserContext);
-    const addUserToList =(userId)=>userListService().addUserList(id,userId,ctx.user.id,new Date())
-    const removeUserList = (userId) => userListService().deleteUserList(id,userId)
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
-    let date = '';
-    const listUserToLine = listUser=> <React.Fragment>
-        <td><Link to={`/users/${listUser.UserId}`}>{`Details of User: ${listUser.UserId}`}</Link></td>
-        <td >{listUser['User.username']}</td>
-        <td >{listUser.start_date}</td>
-        <td>{listUser.end_date}</td>
-        <td>{listUser.active}</td>
-        <td>{listUser.updater}</td>
-        <td><SubmitValuesModal child={<DatePicker text={'New date'} onChange={val =>date=val}/>}
-                               openButtonIcon={'fa fa-edit'} submitListener={_=>userListService().editUserList(listUser.UserId,id,date,1)} buttonTooltipText={'Edit End date'} /> </td>
-    </React.Fragment>;
-    return (
+    const ctx = useContext(UserContext);
 
-        <React.Fragment>
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserList(obj.UserId)} postNewDataCB={(arr)=>addUserToList(arr[0])} tableLabels={labels}
-                                  postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={listUserToLine} />
-        </React.Fragment>
+    const serv = {...listService(),
+        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+        editFields: [{text:'New End date (date)'},'Active'],
+        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        get:()=>listService().getUsersInThisList(id),
+        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
+        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
+        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
+    }
+
+    return (
+         <TablePage service={serv} resource={'listuser'} />
     )
 }
 

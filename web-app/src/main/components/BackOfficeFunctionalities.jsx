@@ -42,11 +42,15 @@ export function Sessions(){
 }
 
 export function Users(props){
-    const customService = {...userService()};
+    const customService = {...userService(),
+        editFields:['New Username','New Password'],
+        postFields:['New Username','New Password'],
+        afterUpdateRedirectUrl:user=>`/users/${user.id}`,
+        detailsUrl:user=>`/users/${user.id}`};
     customService.editFields = ['New Username','New Password'];
     customService.postFields = ['New Username','New Password'];
-    customService.afterUpdateRedirectUrl = id=>`/users/${id}`;
-    customService.detailsUrl = id=>`/users/${id}`;
+    customService.afterUpdateRedirectUrl = user=>`/users/${user.id}`;
+    customService.detailsUrl = user=>`/users/${user.id}`;
 
     return (
         <TablePage service={customService} resource={'users'} />

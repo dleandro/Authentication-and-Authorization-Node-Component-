@@ -5,11 +5,12 @@
 
 // this should be a superclass to the functionalities classes...
 
-const
-    config = require('./common/config/config'),
-    path = require('path')
+const path = require('path')
 
 require('dotenv').config({ path: path.resolve(__dirname, './.env') })
+
+const
+    config = require('./common/config/config')
 
 const getFunctionalities = () => {
 
@@ -110,6 +111,8 @@ module.exports = {
                 };
             }
 
+            console.log(config.env === 'production')
+
             const
                 SessionStore = require('connect-session-sequelize')(expressSession.Store),
                 sequelizeSessionStore = new SessionStore({
@@ -125,9 +128,9 @@ module.exports = {
                     secret: config.cookieSecret,
                     cookie: {
                         maxAge: 1000 * 60 * 60 * 24,
-                        httpOnly: process.env.production === 'true' ? false : true,
-                        secure: process.env.production === 'true' ? true : false,
-                        sameSite: process.env.production === 'true' ? 'none' : false
+                        httpOnly: config.env === 'production' ? false : true,
+                        secure: config.env === 'production' ? true : false,
+                        sameSite: config.env === 'production' ? 'none' : false
                     }
                 }
 

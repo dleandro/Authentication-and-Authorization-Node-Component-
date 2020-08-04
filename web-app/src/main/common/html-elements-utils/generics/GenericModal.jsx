@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
@@ -17,63 +17,65 @@ import DatePicker from "../DatePicker";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function GenericModal({submitListener,disabled=false,bootstrapColor='primary',buttonTooltipText,child,openButtonIcon='fa fa-table'}){
-    const [showModal,setModal] = useState(false);
+export default function GenericModal({ submitListener, disabled = false, bootstrapColor = 'primary', buttonTooltipText, child, openButtonIcon = 'fa fa-table' }) {
+    const [showModal, setModal] = useState(false);
 
-    const submit = ()=>{
+    const submit = () => {
         submitListener();
         setModal(false);
     };
 
-    return(<React.Fragment>
-        <GenericTooltipButton disabled={disabled} onClick={()=>setModal(true)} tooltipText={buttonTooltipText} bootstrapColor={bootstrapColor} icon={openButtonIcon}/>
-        <Modal show={showModal} onHide={()=>setModal(false)}>
+    return (<React.Fragment>
+        <GenericTooltipButton disabled={disabled} onClick={() => setModal(true)} tooltipText={buttonTooltipText} bootstrapColor={bootstrapColor} icon={openButtonIcon} />
+        <Modal show={showModal} onHide={() => setModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>{buttonTooltipText}</Modal.Title>
             </Modal.Header>
             <Modal.Body>{child}</Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-secondary" onClick={()=>setModal(false)}>
+                <Button variant="outline-secondary" onClick={() => setModal(false)}>
                     Close
                 </Button>
-                {child?<Button variant="outline-primary" onClick={submit}>Save Changes</Button>:undefined}
+                {child ? <Button variant="outline-primary" onClick={submit}>Save Changes</Button> : undefined}
             </Modal.Footer>
         </Modal>
     </React.Fragment>);
 }
 
-export function SubmitValuesModal({submitListener,disabled=false,initialValues,labels,child,openButtonIcon='fa fa-table',
-                                      bootstrapColor='primary',buttonTooltipText='Add new Value'}){
-    const [value,setValue] = useState(labels?labels.map(t=>''):undefined);
+export function SubmitValuesModal({ submitListener, disabled = false, initialValues, labels, child, openButtonIcon = 'fa fa-table',
+    bootstrapColor = 'primary', buttonTooltipText = 'Add new Value' }) {
+    const [value, setValue] = useState(labels ? labels.map(t => '') : undefined);
 
-    const inputTypePicker = (elem,idx)=>{
+    const inputTypePicker = (elem, idx) => {
         let selected = undefined;
-        if (elem.text){
+        if (elem.text) {
             const supportedInputTypes = [
-                {text:'(dropdown)',component:<InputWithDropDown onChange={e=>changeValue(idx,e)} label={elem.text.split('(')[0]}
-                                                                fetchData={elem.DropdownOptionsFetcher?elem.DropdownOptionsFetcher:undefined}/>},
-                {text:'(date)',component: <DatePicker text={elem.text.split('(')[0]} onChange={val =>changeValue(idx,val)}/>}];
-            selected = supportedInputTypes.find(input=>elem.text.includes(input.text));
+                {
+                    text: '(dropdown)', component: <InputWithDropDown onChange={e => changeValue(idx, e)} label={elem.text.split('(')[0]}
+                        fetchData={elem.DropdownOptionsFetcher ? elem.DropdownOptionsFetcher : undefined} />
+                },
+                { text: '(date)', component: <DatePicker text={elem.text.split('(')[0]} onChange={val => changeValue(idx, val)} /> }];
+            selected = supportedInputTypes.find(input => elem.text.includes(input.text));
         }
-        return selected?selected.component:<FormControl key={elem.toString()} placeholder={elem} onChange={e=>changeValue(idx,e.target.value)}/>;
+        return selected ? selected.component : <FormControl key={elem.toString()} placeholder={elem} onChange={e => changeValue(idx, e.target.value)} />;
     }
 
-    const initialValuesRenderer= ()=><React.Fragment>
-            {initialValues?Object.keys(initialValues).map(field=><InputGroup key={field.toString()}>
-                <InputGroup.Prepend>
-                    <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl value={initialValues[field]} />
-            </InputGroup>):undefined}
+    const initialValuesRenderer = () => <React.Fragment>
+        {initialValues ? Object.keys(initialValues).map(field => <InputGroup key={field.toString()}>
+            <InputGroup.Prepend>
+                <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl value={initialValues[field]} />
+        </InputGroup>) : undefined}
     </React.Fragment>;
 
-    const changeValue = (i,newValue)=> setValue(value.map((elem, index) => index===i?newValue:elem));
+    const changeValue = (i, newValue) => setValue(value.map((elem, index) => index === i ? newValue : elem));
     const body = () => <React.Fragment>
-        {labels?labels.map((currElement, index) =>inputTypePicker(currElement,index)):undefined}
+        {labels ? labels.map((currElement, index) => inputTypePicker(currElement, index)) : undefined}
         {child}
         {initialValuesRenderer()}
     </React.Fragment>;
 
-    return(<GenericModal disabled={disabled} buttonTooltipText={buttonTooltipText} openButtonIcon={openButtonIcon} bootstrapColor={bootstrapColor}
-                         submitListener={()=>submitListener(value)} child={body()} />);
+    return (<GenericModal disabled={disabled} buttonTooltipText={buttonTooltipText} openButtonIcon={openButtonIcon} bootstrapColor={bootstrapColor}
+        submitListener={() => submitListener(value)} child={body()} />);
 }

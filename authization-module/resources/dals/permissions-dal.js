@@ -73,6 +73,7 @@ module.exports = {
             resource
         }),
 
+        //TODO: change fields from jointed query
     getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true }))
 
 }

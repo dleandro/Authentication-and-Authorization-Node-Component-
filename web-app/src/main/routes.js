@@ -21,7 +21,7 @@ const routers = [
             ...userService(),
             editFields: ['New Username', 'New Password'],
             postFields: ['New Username', 'New Password'],
-            afterUpdateRedirectUrl: user => `/users`,
+            afterUpdateRedirectUrl: user => `/users/${user.id}`,
             detailsUrl: user => `/users/${user.id}`
         }} resource={'users'} />
     },
@@ -30,6 +30,7 @@ const routers = [
     { route: '/lists', component: <TablePage service={{ ...listService() }} resource={'lists'} /> }];
 class Routes extends Component {
 
+    // we have two routes pointing to the backoffice to make sure that when a logged in user exists and the app is on the path '/' he doesn't get stuck on that page
 
     render() {
 
@@ -55,6 +56,8 @@ class Routes extends Component {
                         <AuthTypeProvider>
                             <Route path={'/configs'} exact component={() => <AuthenticationProtocol />} />
                         </AuthTypeProvider>
+                        
+                        <Route path={'/'} exact component={BackOffice} />
 
                     </div>
                 </React.Fragment>

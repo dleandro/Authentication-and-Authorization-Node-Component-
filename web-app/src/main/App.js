@@ -25,7 +25,7 @@ export default function App() {
 
                     {state.username ?
                         <React.Fragment>
-                            <Redirect to='/backoffice' />
+                        
                             <SideBar navWidthCollapsed={sidebarCollapsedSize} />
                             <main style={{
                                 backgroundImage: `url(https://cdn.hipwallpaper.com/i/83/34/LEHn4v.jpg)`, backgroundPosition: 'center',
@@ -37,7 +37,6 @@ export default function App() {
                         </React.Fragment> :
                         <React.Fragment>
 
-                            <Redirect to='/' />
                             <AuthenticationRoutes />
 
                         </React.Fragment>

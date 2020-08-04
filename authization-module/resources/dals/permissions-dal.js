@@ -16,12 +16,12 @@ module.exports = {
   */
     create: async (action, resource) => tryCatch(async () => {
         await config.rbac.createPermission(action, resource, true)
-        return Permission.findOrCreate({
+        return await (Permission.findOrCreate({
             where: {
                 action: action,
                 resource: resource
             }
-        })
+        }))[0]
     }),
 
     /**

@@ -13,12 +13,16 @@ module.exports = function (apiUtils, authization) {
     const rolesPermissionRouter = require('express').Router()
 
     rolesPermissionRouter.route('/')
+        .get(getRolesPermissions)
         .post(addRolesPermission)
         .delete(deleteRolesPermission)
 
-    function addRolesPermission(req, res) {
+    function getRolesPermissions(req, res) {
+        apiUtils.promiseDataToResponse(res, rolePermission.get())
+    }
 
-        apiUtils.promiseDataToResponse(res, rolePermission.create(req.body.roleId,  req.body.permissionId), 201)
+    function addRolesPermission(req, res) {
+        apiUtils.promiseDataToResponse(res, rolePermission.create(req.body.roleId, req.body.permissionId), 201)
     }
 
     function deleteRolesPermission(req, res) {

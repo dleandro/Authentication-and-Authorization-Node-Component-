@@ -4,7 +4,11 @@
 const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
-const getById = (id) => tryCatch(() => User.findByPk(id))
+const getById = (id) => tryCatch(async () =>{ 
+    const user=await User.findByPk(id)
+    delete user.password
+    return user
+})
 
 module.exports = {
     /**

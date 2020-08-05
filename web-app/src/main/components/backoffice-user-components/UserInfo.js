@@ -25,7 +25,7 @@ function UserRoles() {
     customService.post= (arr)=>userRoleService().addUserRole(id,arr[0],ctx.user.id,new Date());
     customService.destroy = id => userRoleService().deleteUserRole(ctx.user.id,id);
     customService.update= (perm,arr)=>permissionService().editPermission([perm.id,arr[0],arr[1]]);
-    customService.editFields = [{text:'New Date (date)'}];
+    customService.editFields = [{text:'New Date (date)'},{text:'New Active state (check)'}];
     customService.postFields = [{text:'Id of Role to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}];
     customService.afterUpdateRedirectUrl = role=>`/roles/${role.id}`;
     customService.detailsUrl = role=>`/roles/${role.id}`;

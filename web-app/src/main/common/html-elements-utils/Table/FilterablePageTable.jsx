@@ -2,6 +2,7 @@ import Table from "react-bootstrap/Table";
 import React, {useEffect, useState} from "react";
 import {Card, Button, Form, FormControl, InputGroup} from "react-bootstrap";
 import TableFilter from "../TableFilter";
+import GenericTooltipButton from "../generics/GenericTooltipButton";
 
 export default function FilterablePageTable({ labels, rowsValues, valueToLineConverter }) {
 
@@ -41,19 +42,13 @@ export default function FilterablePageTable({ labels, rowsValues, valueToLineCon
                     </Table>
                 </Card.Body>
                 <Card.Footer className="text-muted">
-                    <InputGroup className="mb-3">
-                        <InputGroup.Prepend>
-                            <Button disabled={values[currentPage-2]===undefined} variant="primary" type="submit" onClick={()=>setPage(currentPage-1)}>
-                                Previous Page
-                            </Button>
-                        </InputGroup.Prepend>
-                        <FormControl readOnly value={currentPage} />
-                        <InputGroup.Append>
-                            <Button disabled={values[currentPage]===undefined} variant="primary" type="submit" onClick={()=>setPage(currentPage+1)}>
-                                Next Page
-                            </Button>
-                        </InputGroup.Append>
-                    </InputGroup>
+                    <div className={`d-flex justify-content-center pt-10 align-content-center mx-auto align-items-center`} id={'tabpage'}>
+                        <GenericTooltipButton disabled={values[currentPage-2]===undefined} icon={'fa fa-arrow-circle-left'} tooltipText={'Previous Page'}
+                                              onClick={()=>setPage(currentPage-1)} bootstrapColor={'light'} />
+                        <Form.Label className={`pl-5 pr-5 text-white`} variant={'dark'}>{currentPage}</Form.Label>
+                        <GenericTooltipButton disabled={values[currentPage]===undefined} icon={'fa fa-arrow-circle-right'} tooltipText={'Next Page'}
+                                              onClick={()=>setPage(currentPage+1)} bootstrapColor={'light'} />
+                    </div>
                 </Card.Footer>
             </Card>
         </div>

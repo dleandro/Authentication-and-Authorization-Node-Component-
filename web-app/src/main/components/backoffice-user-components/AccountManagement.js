@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-import { AppBar, Tabs, Tab } from '@material-ui/core'
 import { Account } from './Account'
 import {UserSessions} from './UserInfo';
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+
+const labels = ['Sessions'];
 
 export const AccountManagement = () => {
 
@@ -13,23 +16,19 @@ export const AccountManagement = () => {
     }
 
     return (
-
         <React.Fragment>
 
-            <AppBar position="static">
-                <Tabs value={componentToBeShown} style={{ backgroundColor: "#282c34" }} onChange={(_, newValue) => {
-                    setComponentToBeShown(newValue)
-                }
-                } aria-label="user tabs">
-                    <Tab label="Account" />
-                    <Tab label="Sessions" />
-                </Tabs>
-            </AppBar>
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand onClick={()=>setComponentToBeShown(0)}>Account</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        {labels.map((comp,idx)=><Nav.Link onClick={()=>setComponentToBeShown(idx+1)}>{comp}</Nav.Link>)}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
 
-            {
-                components[componentToBeShown]
-            }
-
+            {components[componentToBeShown]}
         </React.Fragment>
 
     )

@@ -37,8 +37,10 @@ const TablePage = ({service,resource}) => {
     const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
     const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
-    const deleteValue = (selectedValue) => service.destroy(selectedValue).then(()=>setValues([...values].filter(item=>item !==selectedValue)));
-    const editValue = (newValuesArr,selectedValue) => service.update(selectedValue,newValuesArr).then(t=>history.push(service.afterUpdateRedirectUrl(selectedValue)));
+    const deleteValue = selectedValue => service.destroy(selectedValue).then(()=>setValues([...values].filter(item=>item !==selectedValue)));
+    const editValue = (newValuesArr,selectedValue) => service.update(selectedValue,newValuesArr).then(updated=>{
+        setValues([...values].map(val=>val===selectedValue?updated:val))
+    })//.then(t=>history.push(service.afterUpdateRedirectUrl(selectedValue)));
 
 
     const checkForPermission= method => ctx.userPermissions?ctx.userPermissions.filter(perm=>perm===method+'_'+resource).length:undefined;

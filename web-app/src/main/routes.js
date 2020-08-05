@@ -16,7 +16,7 @@ import TablePage from "./common/html-elements-utils/TablePage";
 import {listService, permissionService, rolesService, userService} from "./service";
 
 const routers = [
-    {route:'/users',component:<TablePage service={{...userService(),
+    {route:'/users', component:<TablePage service={{...userService(),
         editFields:['New Username','New Password'],
         postFields:['New Username','New Password'],
         afterUpdateRedirectUrl:user=>`/users/${user.id}`,
@@ -32,8 +32,9 @@ class Routes extends Component {
                     <div id={'main'} style={{ marginLeft: this.props.sidebarCollapsedSize }} >
 
                         <Route path={'/backoffice'} exact component={BackOffice} />
-                        {routers.map(route=><Route key={route.route} path={route.route} exact component={()=>route.component} />)}
+
                         <Route path={`/users/:id`} exact component={UserInfo} />
+                        {routers.map(route=><Route key={route.route} path={route.route} exact component={()=>route.component} />)}
                         <Route path={'/account'} exact component={AccountManagement} />
                         <Route path={'/login'} exact component={UserLogin} />
 

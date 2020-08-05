@@ -26,34 +26,13 @@ import TablePage from "../../common/html-elements-utils/TablePage";
 const SpecificRoleInfo=()=><GenericInfoCard label={'Role'} fetchValueById={rolesService().getRole} />;
 
 function RolePermission() {
-/*
-    const labels = ['Permission Id','Action','Resource'];
-    const {id}=useParams();
-    const fetchData = ()=> rolesService().getPermissionsWithThisRole(id).then(t=>{
-        console.log(t);
-        return t;
-    });
-    const postData = (arr)=> rolePermissionService().addRolePermission(id,arr[0],arr[1],arr[2])
-    const postOptionsFetcher = () => permissionService().getPermissions().then(data=>data.map(value=>({eventKey:value.id,text:`${value.action} ${value.resource}`})));
-    const deleteRolePermission= (permissionId)=>rolePermissionService().deleteRolePermission(id,permissionId)
-
-    const rolePermissionToLine = (rolePermission) => <React.Fragment>
-        <td><Link to={`/permissions/${rolePermission.PermissionId}`}>{`Details of Permission: ${rolePermission.PermissionId}`}</Link></td>
-        <td>{rolePermission['Permission.action']}</td>
-        <td>{rolePermission['Permission.resource']}</td>
-    </React.Fragment>;
-
-    return (
-        <GenericFunctionality fetchCB={fetchData} postNewDataFieldLabels={[{text:'Id of Permission to be assign', DropdownOptionsFetcher:postOptionsFetcher}]} postNewDataCB={postData}
-                              deleteDataCB={val =>deleteRolePermission(val.PermissionId)} tableLabels={labels} valueToLineCB={rolePermissionToLine} />
-    );*/
     let {id}=useParams()
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
     const ctx = useContext(UserContext);
 
     const serv = {...listService(),
         afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
-        editFields: [{text:'New End date (date)'},'Active'],
+        editFields: [{text:'New End date (date)'},{text:'New Active (check)'}],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
         get:()=>listService().getUsersInThisList(id),
         update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),

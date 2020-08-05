@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './common/stylesheets/App.css';
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import BackOffice from './components/BackOffice';
 import AuthenticationProtocol from './components/login-components/AuthenticationProtocol';
 import UserInfo from './components/backoffice-user-components/UserInfo';
@@ -33,36 +33,32 @@ class Routes extends Component {
     // we have two routes pointing to the backoffice to make sure that when a logged in user exists and the app is on the path '/' he doesn't get stuck on that page
 
     render() {
-
         return (
-            <Switch id={'switch'}>
-                <React.Fragment>
 
-                    <div id={'main'} style={{ marginLeft: this.props.sidebarCollapsedSize }} >
+            <div id={'main'} style={{ marginLeft: this.props.sidebarCollapsedSize }} >
 
-                        <Route path={'/backoffice'} exact component={BackOffice} />
-                        {routers.map(route => <Route key={route.route} path={route.route} exact component={() => route.component} />)}
-                        <Route path={`/users/:id`} exact component={UserInfo} />
-                        <Route path={'/account'} exact component={AccountManagement} />
-                        <Route path={'/login'} exact component={UserLogin} />
+                <Route path={'/backoffice'} exact component={BackOffice} />
+                {routers.map(route => <Route key={route.route} path={route.route} exact component={() => route.component} />)}
+                <Route path={`/users/:id`} exact component={UserInfo} />
+                <Route path={'/account'} exact component={AccountManagement} />
+                <Route path={'/login'} exact component={UserLogin} />
 
-                        <Route path={'/permissions/:id'} exact component={PermissionInfo} />
+                <Route path={'/permissions/:id'} exact component={PermissionInfo} />
 
-                        <Route path={'/roles/:id'} exact component={RoleInfo} />
+                <Route path={'/roles/:id'} exact component={RoleInfo} />
 
-                        <Route path={'/lists/:id'} exact component={ListInfo} />
-                        <Route path={'/sessions'} exact component={Sessions} />
+                <Route path={'/lists/:id'} exact component={ListInfo} />
 
-                        <AuthTypeProvider>
-                            <Route path={'/configs'} exact component={() => <AuthenticationProtocol />} />
-                        </AuthTypeProvider>
-                        
-                        <Route path={'/'} exact component={BackOffice} />
+                <Route path={'/sessions'} exact component={Sessions} />
 
-                    </div>
-                </React.Fragment>
+                <AuthTypeProvider>
+                    <Route path={'/configs'} exact component={() => <AuthenticationProtocol />} />
+                </AuthTypeProvider>
 
-            </Switch >
+                <Route path={'/'} exact component={BackOffice} />
+
+            </div>
+
         );
     }
 }

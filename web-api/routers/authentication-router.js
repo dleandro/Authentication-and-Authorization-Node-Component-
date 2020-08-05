@@ -32,10 +32,11 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/local', authenticate.usingLocal,
         (req, res) => req.isAuthenticated() ?
-            apiUtils.setResponse(res, 'Success', 200) :
-            apiUtils.setResponse(res, errors.userNotAuthenticated.message, errors.userNotAuthenticated.status))
+            apiUtils.setResponse(res, { res: 'success' }, 200) :
+            apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status))
 
-    authenticationRouter.post('/logout', authenticate.logout, successCallback)
+    authenticationRouter.post('/logout', authenticate.logout,
+        (req, res) => apiUtils.setResponse(res, { res: 'success' }, 200))
 
     authenticationRouter.get('/azureAD', authenticate.usingOffice365);
 
@@ -43,7 +44,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/authenticated-user', (req, res) => req.user ?
         apiUtils.setResponse(res, req.user, 200) :
-        apiUtils.setResponse(res, errors.userNotAuthenticated.message, errors.userNotAuthenticated.status)
+        apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status)
     )
 
     return authenticationRouter

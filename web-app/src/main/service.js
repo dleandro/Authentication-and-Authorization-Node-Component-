@@ -1,32 +1,18 @@
 var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs, WEB_API_HOME_PATH } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 
-const fetch = require('node-fetch')
-
 function produceInit(body, met) {
     return { ...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true };
 }
 
-function handleResponse(resp) {
-    if (resp.ok) {
-        return resp.json();
-    }
-    if (resp.status === 401) {
-        return createErrObj("Unauthorized:The current user cannot access this resource", 401)
-    }
-    throw new Error('Network response was not ok');
-}
-
-function createErrObj(msg, status) {
-    return JSON.parse(`{ "err":"${msg}","status":"${status}"}`)
-}
-
-
 const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url, init)
-    .then(handleResponse)
-    .catch(err => {
-        console.error(`failed to fetch: ${init.method} ${WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url}`); console.error(err); return [err]
-    });
+    .then(resp => resp.json())
+    .then(resp => {
+        if (resp.err) {
+            throw new Error(resp.err)
+        }
+        return resp
+    })
 
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
 const makeRequest = (url, body, met) => request(url, produceInit(body, met));

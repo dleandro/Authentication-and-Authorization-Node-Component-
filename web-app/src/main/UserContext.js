@@ -16,17 +16,23 @@ class UserProvider extends Component {
 
     async componentDidMount() {
 
-        const user = await userService().getAuthenticatedUser()
-        console.log(user)
+        try {
 
-        const permission = await userService().getAuthenticatedUserPermissions()
+            const user = await userService().getAuthenticatedUser()
+            console.log(user)
 
-        if (permission.length){
-            console.log('current User has permissions:',permission)
-            this.state.setPermissions(permission)
-        }
-        if (user.username) {
-            this.state.setUser(user)
+            const permission = await userService().getAuthenticatedUserPermissions()
+
+            if (permission.length) {
+                console.log('current User has permissions:', permission)
+                this.state.setPermissions(permission)
+            }
+            if (user.username) {
+                this.state.setUser(user)
+            }
+
+        } catch (err) {
+            console.error(err)
         }
 
     }

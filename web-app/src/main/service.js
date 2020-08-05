@@ -1,43 +1,28 @@
-var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs,WEB_API_HOME_PATH } = require('./common/links').webApiLinks;
+var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs, WEB_API_HOME_PATH } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
-
-const fetch = require('node-fetch')
 
 function produceInit(body, met) {
     return { ...DEFAULT_OPTIONS(met), body: JSON.stringify(body), json: true };
 }
 
-function handleResponse(resp) {
-    if (resp.ok) {
-        return resp.json();
-    }
-    if (resp.status === 401) {
-        return createErrObj("Unauthorized:The current user cannot access this resource", 401)
-    }
-    throw new Error('Network response was not ok');
-}
-
-function createErrObj(msg, status) {
-    return JSON.parse(`{ "err":"${msg}","status":"${status}"}`)
-}
-
-
-const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url:url, init)
-        .then(handleResponse)
-        .catch(err => {
-            console.error(`failed to fetch: ${init.method} ${WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url}`); console.error(err); return [err]
-        });
+const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url, init)
+    .then(resp => resp.json())
+    .then(resp => {
+        if (resp.err) {
+            throw new Error(resp.err)
+        }
+        return resp
+    })
 
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
 const makeRequest = (url, body, met) => request(url, produceInit(body, met));
-
 
 /**
  * Function used to make login logout
  */
 export function authenticationService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
         login: async (user, pass) => makeRequest(users.LOCAL_LOGIN_PATH, { username: user, password: pass }, 'POST'),
@@ -46,50 +31,50 @@ export function authenticationService(test) {
 }
 
 export function protocolService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
-        getPossibleAuthTypes: async () =>  getRequest(protocols.PROTOCOLS_PATH)
+        getPossibleAuthTypes: async (signal) =>  request(protocols.PROTOCOLS_PATH, {...DEFAULT_OPTIONS('GET'),signal:signal})
     };
 }
 
 export function userService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
+        get: async () => getRequest(users.USER_PATH),
+        post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
+        //TODO: update returning strange fields and not returning field id
+        update: async (oldObject, newValuesArr) => makeRequest(users.USERNAME_UPDATE_PATH(oldObject.id), { username: newValuesArr[0] }, 'PUT'),
+        //TODO: fix problem were delete is blocked by constraints
+        destroy: async (user) => {
+            makeRequest(users.SPECIFIC_USER_PATH(user.id), {}, 'DELETE')
+        },
         getAuthenticatedUser: async () => getRequest(users.GET_AUTHENTICATED_USER_PATH),
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
-        get: async () => getRequest(users.USER_PATH),
         getUserSessions: async (id) => getRequest(users.SESSION_PATH(id)),
         getUserLists: async (id) => getRequest(users.LIST_PATH(id)),
         getUserHistory: async (id) => getRequest(users.HISTORY_PATH(id)),
-        getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH),
-        post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
-        editUsername: async (arr) => makeRequest(users.USERNAME_UPDATE_PATH(arr[0]), { username: arr[1] }, 'PUT'),
-        destroy: async (user) => {
-            makeRequest(users.SPECIFIC_USER_PATH(user.id), {}, 'DELETE')
-        }
+        getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH)
     }
 }
 
-
-
 export function listService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
         get: async () => getRequest(lists.LIST_PATH),
-        getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
         post: async (arr) => makeRequest(lists.LIST_PATH, {
-            list: arr[1]
+            list: arr[0]
         }, 'POST'),
-        editList: async (arr) => makeRequest(lists.SPECIFIC_LIST_PATH(arr[0]), { list: arr[1] }, 'PUT'),
-        destroy: async (id) => makeRequest(lists.SPECIFIC_LIST_PATH(id), {}, 'DELETE'),
+        update: async (oldObject, newValuesArr) => makeRequest(lists.SPECIFIC_LIST_PATH(oldObject.id), { list: newValuesArr[0] }, 'PUT'),
+        destroy: async (oldObject) => makeRequest(lists.SPECIFIC_LIST_PATH(oldObject.id), {}, 'DELETE'),
+        getList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id)),
         getActiveLists: async () => getRequest(lists.ACTIVE_LISTS_PATH),
         getUserLists: async (id) => getRequest(lists.USERS_LISTS_PATH(id)),
         getUsersInThisList: async (id) => getRequest(lists.SPECIFIC_LIST_PATH(id) + "/users")
@@ -97,92 +82,85 @@ export function listService(test) {
 }
 
 export function rolesService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
         get: async () => getRequest(roles.ROLE_PATH),
+        post: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[0], parent_role: arr[1] === '' ? null : arr[1] }, 'POST'),
+        update: async (oldObject, newValuesArr) => makeRequest(roles.SPECIFIC_ROLE_PATH(oldObject.id), { role: newValuesArr[0], parent_role: newValuesArr[1] }, 'PUT'),
+        destroy: async (oldObject) => makeRequest(roles.SPECIFIC_ROLE_PATH(oldObject.id), {}, 'DELETE'),
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
         getUsersWithThisRole: async (id) => getRequest(roles.ROLE_USERS_PATH(id)),
-        getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
-        post: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[1], parent_role: arr[2]===''?null:arr[2] }, 'POST').then(vals=>vals[0]),
-        editRole: async (arr) => makeRequest(roles.SPECIFIC_ROLE_PATH(arr[0]), { role: arr[1], parent_role: arr[2] }, 'PUT'),
-        destroy: async (id) => makeRequest(roles.SPECIFIC_ROLE_PATH(id), {}, 'DELETE')
-
+        getPermissionsWithThisRole: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id))
     }
 }
 
 export function permissionService() {
     return {
-        getPermissions: async () => getRequest(permissions.PERMISSION_PATH),
+        get: async () => getRequest(permissions.PERMISSION_PATH),
+        post: async (arr) => makeRequest(permissions.PERMISSION_PATH, { action: arr[0], resource: arr[1] }, 'POST'),
+        update: async (oldObject, arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(oldObject.id), { action: arr[0], resource: arr[1] }, 'PUT'),
+        destroy: async (oldObject) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(oldObject.id), {}, 'DELETE'),
         getPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id)),
-        addPermission: async (arr) => makeRequest(permissions.PERMISSION_PATH, { action: arr[1], resource: arr[2] }, 'POST').then(array=>array[0]),
-        editPermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), { action: arr[1], resource: arr[2] }, 'PUT'),
-        deletePermission: async (arr) => makeRequest(permissions.SPECIFIC_PERMISSION_PATH(arr[0]), {}, 'DELETE'),
         getRolesWithThisPermission: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id) + '/roles')
     }
 }
 
 export function userRoleService() {
     return {
+        get: async (userId) => getRequest(users.ROLES_PATH(userId)),
+        post: async (arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: arr[0], role: arr[1], active: arr[2], updater: arr[3], start_date: arr[4] }, 'POST'),
+        update: async (oldObject, arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: oldObject.userId, role: oldObject.roleId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        destroy: async (oldObject) => makeRequest(users_roles.USERS_ROLES_PATH, { user: oldObject.userId, role: oldObject.RoleId }, 'DELETE'),
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
-        getUsersRoles: async (id) => getRequest(users.ROLES_PATH(id)),
-        addUserRole: async (userid, roleid, updater,start_date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 1, updater: updater,start_date:start_date }, 'POST')
-            .then(async data=>{
-                let res={start_date:data.start_date,end_date:'',active:data.active?1:0,updater:data.updater};
-                res['Role.id'] = data.RoleId;
-                res['Role.role'] = await rolesService().getRole(data.RoleId).then(role=>role.role);
-                return res;
-            }),
-        deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT'),
-        deleteUserRole: async (userId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: RoleId }, 'DELETE'),
-        editUserRole: async(userId,roleId,date,active)=>makeRequest(users_roles.USERS_ROLES_PATH,{ user: userId, role: roleId,end_date:new Date(date.date + 'T'+date.time), active: active },'PUT')
+        deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT')
     }
 }
 
 export function sessionService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
-        getSessions: async () => getRequest(sessions.SESSION_PATH),
-        getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id)),
-        deleteSession: async (id) => makeRequest(sessions.SESSION_PATH, { sid: id }, 'DELETE'),
-        editSession: async (date, sid) => makeRequest(sessions.SPECIFIC_SESSION_PATH(sid), { sid: sid, date:new Date(date.date + 'T'+date.time) }, 'PUT')
+        get: async () => getRequest(sessions.SESSION_PATH),
+        update: async (oldObject, arr) => makeRequest(sessions.SPECIFIC_SESSION_PATH(oldObject.sid), { sid: oldObject.sid, date: new Date(arr[0].date + 'T' + arr[0].time) }, 'PUT'),
+        destroy: async (oldObject) => makeRequest(sessions.SESSION_PATH, { sid: oldObject.sid }, 'DELETE'),
+        getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id))
     }
 }
+// TODO: UserSessions
 
 export function rolePermissionService() {
     return {
-        addRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'POST')
-            .then(data=>permissionService().getPermission(data[0].PermissionId)).then(permission=>{
-                let result ={PermissionId: permission.id};
-                result['Permission.action']=permission.action;
-                result['Permission.resource']=permission.resource;
-                return result;
-            }),
-        deleteRolePermission: async (roleId, permissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: permissionId, roleId: roleId }, 'DELETE')
+        get: async () => getRequest(roles_permissions.ROLES_PERMISSION_PATH),
+        post: async (obj) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: obj.permissionId, roleId: obj.roleId }, 'POST')
+            .then(data => permissionService().getPermission(data[0].PermissionId)),
+        destroy: async (oldObject) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: oldObject.permissionId, roleId: oldObject.roleId }, 'DELETE')
     }
 }
 
 export function userListService() {
     return {
-        addUserList: async (listId, userId, updater,start_date) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId, active: 1,start_date:start_date, updater: updater }, 'POST'),
-        deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT'),
-        deleteUserList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: listId, UserId: userId }, 'DELETE'),
-        editUserList: async(userId,listId,date,active)=>makeRequest(users_lists.USERS_LIST_PATH,{ user: userId, list: listId,end_date:new Date(date.date + 'T'+date.time), active: active },'PUT')
+        get: async (id) => getRequest(users.LIST_PATH(id)),
+        post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: arr[2], start_date: arr[3], updater: arr[4] }, 'POST'),
+        update: async (oldObject, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: oldObject.userId, list: oldObject.listId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        destroy: async (oldObject) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: oldObject.listId, UserId: oldObject.userId }, 'DELETE'),
+        // not working
+        deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')
     }
 }
 
+// TODO: USERHISTORY
+// THIS ONE BELOW IS THE LOGS
 export function historyService(test) {
-    if (test){
-        WEB_API_HOME_PATH=`http://localhost:8082`;
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
-        getUserHistory: async (userId) => getRequest(users.HISTORY_PATH(userId))
+        get: async (userId) => getRequest(users.HISTORY_PATH(userId))
     }
 }
-
 
 export function configService() {
     return {
@@ -191,10 +169,10 @@ export function configService() {
         changeGoogleAuthenticationOptions: async (google_opts) => makeRequest(configs.GOOGLE_CONFIG_PATH, { google_opts: google_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
         changeAzureADAuthenticationOptions: async (azure_opts) => makeRequest(configs.AZUREAD_CONFIG_PATH, { azure_opts: azure_opts }, 'PUT'),
         changeSamlAuthenticationOptions: async (saml_opts) => makeRequest(configs.SAML_CONFIG_PATH, { saml_opts: saml_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
-        getGoogleOptions:async()=>getRequest(configs.GOOGLE_CONFIG_PATH+'/options'),
-        getAzureOptions:async()=>getRequest(configs.AZUREAD_CONFIG_PATH+'/options'),
-        getSamlOptions:async()=>getRequest(configs.SAML_CONFIG_PATH+'/options'),
-        getOptions:async(protocol)=>getRequest(configs.SPECIFIC_PATH(protocol)+'/options')
+        getGoogleOptions: async () => getRequest(configs.GOOGLE_CONFIG_PATH + '/options'),
+        getAzureOptions: async () => getRequest(configs.AZUREAD_CONFIG_PATH + '/options'),
+        getSamlOptions: async () => getRequest(configs.SAML_CONFIG_PATH + '/options'),
+        getOptions: async (protocol) => getRequest(configs.SPECIFIC_PATH(protocol) + '/options')
     }
 }
 

@@ -8,17 +8,10 @@ module.exports = function (apiUtils, authization) {
 
         if (req.isAuthenticated()) {
 
-            process.env.WEBAPP?res.redirect("http://localhost:3000/backoffice"):res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com/backoffice")
+            process.env.WEBAPP ? res.redirect("http://localhost:3000/backoffice") : res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com/backoffice")
         }
         else {
-            process.env.WEBAPP?res.redirect("http://localhost:3000"):res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com")
-        }
-    }
-    const LocalsuccessCallback = async (req, res) => {
-        if (req.isAuthenticated()) {
-            apiUtils.setResponse(res,'Success',200)
-        } else {
-           apiUtils.setResponse(res,'The User Is Not Authenticated',401)
+            process.env.WEBAPP ? res.redirect("http://localhost:3000") : res.redirect("https://webapp-dot-auth-authorization.ew.r.appspot.com")
         }
     }
 
@@ -37,9 +30,13 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
-    authenticationRouter.post('/local', authenticate.usingLocal)
+    authenticationRouter.post('/local', authenticate.usingLocal,
+        (req, res) => req.isAuthenticated() ?
+            apiUtils.setResponse(res, { res: 'success' }, 200) :
+            apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status))
 
-    authenticationRouter.post('/logout', authenticate.logout, successCallback)
+    authenticationRouter.post('/logout', authenticate.logout,
+        (req, res) => apiUtils.setResponse(res, { res: 'success' }, 200))
 
     authenticationRouter.get('/azureAD', authenticate.usingOffice365);
 
@@ -47,7 +44,7 @@ module.exports = function (apiUtils, authization) {
 
     authenticationRouter.get('/authenticated-user', (req, res) => req.user ?
         apiUtils.setResponse(res, req.user, 200) :
-        apiUtils.setResponse(res, errors.userNotAuthenticated.message, errors.userNotAuthenticated.status)
+        apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status)
     )
 
     return authenticationRouter

@@ -6,7 +6,6 @@ export default function TableFilter({initialData,dataDisplayerCB}) {
 
     const [valuesToBeFiltered, setvaluesToBeFiltered] = useState([...initialData]);
 
-
     const [dropdownItems,setDropItems] = useState(undefined)
     const [value, setValue] = useState('');
     const [field, setField] = useState('');
@@ -18,19 +17,12 @@ export default function TableFilter({initialData,dataDisplayerCB}) {
         }
     },[initialData]);
 
-    const getFilteredData = filter =>{
-        console.log('filtering ',initialData)
-        const filtered=valuesToBeFiltered.filter(val=>val[field].toString().includes(filter));
-        console.log('into ',filtered)
-        return filtered
-    }
+    const getFilteredData = filter =>valuesToBeFiltered.filter(val=>val[field].toString().includes(filter));
 
     const renderDropdownItems = _=>{
         const labels = Object.keys(valuesToBeFiltered[0]);
         const rederedItems = labels.map( key=><Dropdown.Item onSelect={(e,value)=>setField(e)} key={key} eventKey={key}>{key}</Dropdown.Item> )
         if (!labels.includes(field))setField(labels[0])
-        console.log('Here we have data',initialData)
-        console.log(JSON.parse(JSON.stringify(initialData)))
         return rederedItems
     }
 

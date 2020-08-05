@@ -51,9 +51,9 @@ describe('Role Service tests',()=>{
         expect(inserted).toEqual(expected);
         //updating role and checking if returned value is correct and if parameters are being checked
         expected.role = 'updatedRoleName';
-        roleServ.editRole([expected.id,expected.role,undefined]).then(role=>expect(role).toEqual(expected))
+        roleServ.update(expected,[expected.role,undefined]).then(role=>expect(role).toEqual(expected))
         expected.parent_role = 'updatedParentRole';
-        roleServ.editRole([expected.id,undefined,expected.parent_role]).then(role=>expect(role).toEqual(expected))
+        roleServ.update(expected,[undefined,expected.parent_role]).then(role=>expect(role).toEqual(expected))
         //adding role to user checking if returned value is correct and operation was sucessfull
         let expectedUserRole =  { id: 2,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:1 };
         let insertedUserRole= await roleServ.addUserToRole(expected.id,2)
@@ -156,7 +156,7 @@ describe('User Service tests',()=>{
         expect(inserted).toEqual(expected);
         //updating username and checking if returned value is correct
         expected.username = 'updatedTestUsername';
-        await userServ.editUsername([inserted.id,'updatedTestUsername']).then(user=>expect(user).toEqual(expected))
+        await userServ.update(inserted,['updatedTestUsername']).then(user=>expect(user).toEqual(expected))
         //adding role to user checking if returned value is correct and operation was sucessfull
         let expectedRole =  { id: 1,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:1 };
         let insertedRole= await userServ.addRoleToUser([expected.id,1])

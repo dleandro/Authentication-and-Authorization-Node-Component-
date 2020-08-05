@@ -6,14 +6,12 @@ import GenericTooltipButton from "../generics/GenericTooltipButton";
 
 export default function FilterablePageTable({ labels, rowsValues, valueToLineConverter }) {
 
-    const chunkSize = 3;
+    const chunkSize = 11;
     const [currentPage, setPage] = useState(1);
     const [values, setValues] = useState([]);
     const [linesToDisplay,setDisplay] = useState(undefined);
     useEffect(()=>{
-        console.log('rowvalues ta sem length?',rowsValues)
         if (rowsValues.length){
-            console.log('supostamente rowsValues tem length')
             setValues(chunksGenerator(rowsValues,chunkSize))
         }
     },[rowsValues]);
@@ -42,7 +40,7 @@ export default function FilterablePageTable({ labels, rowsValues, valueToLineCon
                     </Table>
                 </Card.Body>
                 <Card.Footer className="text-muted">
-                    <div className={`d-flex justify-content-center pt-10 align-content-center mx-auto align-items-center`} id={'tabpage'}>
+                    <div className={`d-flex justify-content-center align-content-center mx-auto align-items-center`} id={'tabpage'}>
                         <GenericTooltipButton disabled={values[currentPage-2]===undefined} icon={'fa fa-arrow-circle-left'} tooltipText={'Previous Page'}
                                               onClick={()=>setPage(currentPage-1)} bootstrapColor={'light'} />
                         <Form.Label className={`pl-5 pr-5 text-white`} variant={'dark'}>{currentPage}</Form.Label>

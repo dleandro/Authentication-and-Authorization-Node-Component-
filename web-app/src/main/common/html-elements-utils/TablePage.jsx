@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import GenericTooltipButton from "./generics/GenericTooltipButton";
 import UserContext from "../../UserContext";
-import {SubmitValuesModal} from "./generics/GenericModal";
-import {useHistory} from "react-router-dom";
+import { SubmitValuesModal } from "./generics/GenericModal";
+import { useHistory } from "react-router-dom";
 import FilterablePageTable from "./Table/FilterablePageTable";
 
 
@@ -30,47 +30,47 @@ import FilterablePageTable from "./Table/FilterablePageTable";
  * @returns {JSX.Element}
  * @constructor
  */
-const TablePage = ({service,resource}) => {
+const TablePage = ({ service, resource }) => {
     const ctx = useContext(UserContext);
     let history = useHistory();
-    const [initialValues, setInitialValues] = useState([]);
-    const [values, setValues] = useState([]);
+    let [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
     const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
     const deleteValue = selectedValue => service.destroy(selectedValue).then(()=>setValues([...values].filter(item=>item !==selectedValue)));
     const editValue = (newValuesArr,selectedValue) => service.update(selectedValue,newValuesArr).then(updated=>{
+        console.log(updated)
         setValues([...values].map(val=>val===selectedValue?updated:val))
     })//.then(t=>history.push(service.afterUpdateRedirectUrl(selectedValue)));
 
 
-    const checkForPermission= method => ctx.userPermissions?ctx.userPermissions.filter(perm=>perm===method+'_'+resource).length:undefined;
+    const checkForPermission = method => ctx.userPermissions ? ctx.userPermissions.filter(perm => perm === method + '_' + resource).length : undefined;
 
-    useEffect(()=>{service.get().then(data=>{console.log(data);setInitialValues(data); return 'err' in data?setError(data):setValues(data)});},[]);
-    useEffect(()=>{if (error)console.error('An error ocurred: ',error);},[error]);
+    useEffect(() => { service.get().then(data => { console.log(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
+    useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
 
-    const buildTable = ()=> {
-        let labels=Object.keys(values[0]);
+    const buildTable = () => {
+        let labels = Object.keys(values[0]);
         const headers = <tr>
             {labels.map(label => <th key={label}>{label}</th>)}
             <th><SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData}
-                                   labels={service.postFields}/></th>
+                labels={service.postFields} /></th>
         </tr>;
         const valueToLine = val => <tr key={JSON.stringify(val)}>
-            {labels.map(label=><td key={val[label]}>{val[label]}</td>)}
-            <td><SubmitValuesModal labels={service.editFields} submitListener={newValuesArr=>editValue(newValuesArr,val)} openButtonIcon={'fa fa-edit'}
-                                   initialValues={val}  bootstrapColor={'warning'} buttonTooltipText={'Edit!'}/></td>
-            <td><GenericTooltipButton icon={'fa fa-info-circle'} onClick={t=>history.push(service.detailsUrl(val))}
-                                      tooltipText={'More Info!'} bootstrapColor={'primary'} /></td>
-            <td><GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={()=>deleteValue(val)}/></td>
+            {labels.map(label => <td key={val[label]}>{val[label]}</td>)}
+            <td><SubmitValuesModal labels={service.editFields} submitListener={newValuesArr => editValue(newValuesArr, val)} openButtonIcon={'fa fa-edit'}
+                initialValues={val} bootstrapColor={'warning'} buttonTooltipText={'Edit!'} /></td>
+            <td><GenericTooltipButton icon={'fa fa-info-circle'} onClick={t => history.push(service.detailsUrl(val))}
+                tooltipText={'More Info!'} bootstrapColor={'primary'} /></td>
+            <td><GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={() => deleteValue(val)} /></td>
         </tr>;
-        return <FilterablePageTable labels={headers} rowsValues={values} valueToLineConverter={valueToLine} />;
+        return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
     };
 
     return (
         <React.Fragment>
-            {error?<p>{error.status} {error.err}</p>: values.length && Array.isArray(values) ? buildTable() : undefined}
+            {error ? <p>{error.status} {error.err}</p> : values.length && Array.isArray(values) ? buildTable() : undefined}
         </React.Fragment>
-        );
+    );
 };
 
 export default TablePage;

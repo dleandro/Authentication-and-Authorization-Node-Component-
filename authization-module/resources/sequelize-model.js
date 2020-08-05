@@ -45,7 +45,7 @@ const Role = defineTable('Role', { role: { type: STRING, allowNull: false, uniqu
 Role.belongsToMany(Permission, { through: 'RolePermission', timestamps: false }, false);
 Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false }, false);
 
-const RolePermission = defineTable('RolePermission', { },false)
+const RolePermission = defineTable('RolePermission', {}, false)
 RolePermission.removeAttribute('id');
 
 RolePermission.belongsTo(Role)
@@ -87,7 +87,7 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, success: BOOLEAN,action:STRING,resource:STRING,from:STRING }, false);
+const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, success: BOOLEAN, action: STRING, resource: STRING, from: STRING }, false);
 User.hasMany(UserHistory, { foreignKey: 'user_id' })
 
 /**
@@ -135,8 +135,8 @@ User.hasOne(Idp, { foreignKey: 'user_id' })
  */
 
 const UserRoles = UserAssociation('UserRoles');
-Role.belongsToMany(User, { through: UserRoles});
-User.belongsToMany(Role, { through: UserRoles});
+Role.belongsToMany(User, { through: UserRoles });
+User.belongsToMany(Role, { through: UserRoles });
 
 UserRoles.belongsTo(User, { foreignKey: 'updater' })
 UserRoles.belongsTo(User)

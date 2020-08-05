@@ -20,7 +20,7 @@ module.exports = {
 
     promiseDataToResponse: (res, dataPromise, statusCode) => dataPromise
         .then(data => setResponse(res, data, statusCode || 200))
-        .catch(err => setResponse(res, err.message, err.status))
+        .catch(err => setResponse(res, { err: err.message }, err.status))
 
 
 }

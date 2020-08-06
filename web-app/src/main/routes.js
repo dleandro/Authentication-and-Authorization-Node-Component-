@@ -25,9 +25,12 @@ const routers = [
             detailsUrl: user => `/users/${user.id}`
         }} resource={'users'} />
     },
-    { route: '/roles', component: <TablePage service={{ ...rolesService() }} resource={'roles'} /> },
-    { route: '/permissions', component: <TablePage service={{ ...permissionService() }} resource={'permissions'} /> },
-    { route: '/lists', component: <TablePage service={{ ...listService() }} resource={'lists'} /> }];
+    { route: '/roles', component: <TablePage service={{ ...rolesService(),editFields: ['New Role', 'New Parent_Role'],
+    postFields: ['New Role', 'New Parent_Role'], }} resource={'roles'} /> },
+    { route: '/permissions', component: <TablePage service={{ ...permissionService(),editFields: ['New Action', 'New Resource'],
+    postFields: ['New Action', 'New Resource'], }} resource={'permissions'} /> },
+    { route: '/lists', component: <TablePage service={{ ...listService(),editFields: ['New List'],
+    postFields: ['New List'], }} resource={'lists'} /> }];
 class Routes extends Component {
 
     // we have two routes pointing to the backoffice to make sure that when a logged in user exists and the app is on the path '/' he doesn't get stuck on that page

@@ -16,7 +16,7 @@ module.exports = {
   */
     create: async (action, resource) => tryCatch(async () => {
         await config.rbac.createPermission(action, resource, true)
-        return await (Permission.findOrCreate({
+        return (await Permission.findOrCreate({
             where: {
                 action: action,
                 resource: resource
@@ -34,11 +34,10 @@ module.exports = {
         tryCatch(async () =>{
             const permission=await require('./permissions-dal').getSpecificById(id)
             config.rbac.removeByName(permission.action + '_' + permission.resource)
-            return Permission.destroy({
-                where: {
-                    id: id
-                }
-            })}),
+            return Promise.resolve({
+                deletedRows: await Permission.destroy({where: {id: id}})
+    })
+    }),
     /**
      *
      * @returns {Promise<void>}

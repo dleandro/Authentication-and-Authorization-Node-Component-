@@ -104,7 +104,7 @@ function createGrants(grants) {
 }
 
 async function createRbacRoles() {
-    let roles=await rolesDal.get()
+    let roles=await roleDal.get()
     roles=roles.map(role=>role.role)
     config.rbac.createRoles(roles,true)
 }
@@ -117,7 +117,7 @@ async function createRbacPermissions() {
 async function createRbacGrants() {
     let rolepermissions=await rolesPermissionsDal.get()
     return Promise.all(rolepermissions.map(async rolePermission=>{
-        const role=await config.rbac.getRole(rolePermission['Role.role'])
-        const permission=await config.rbac.getPermission(rolePermission['Permission.action'],rolePermission['Permission.resource'])
+        const role=await config.rbac.getRole(rolePermission.role)
+        const permission=await config.rbac.getPermission(rolePermission.action,rolePermission.resource)
         config.rbac.grant(role,permission)}))
 }

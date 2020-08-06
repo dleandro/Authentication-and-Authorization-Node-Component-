@@ -30,7 +30,6 @@ module.exports = {
             }
         }
 
-        roles.push("guest")
 
         for (let i = 0; i < roles.length; i++) {
             if (await config.rbac.can(roles[i], action, resource)) {
@@ -50,8 +49,6 @@ module.exports = {
             roles = roles.map(role => role["Roles.role"])
         }
 
-        roles.push("guest")
-
         await Promise.all(roles.map(async role => permissions.push(await config.rbac.getScope(role))))
         permissions = permissions.flat()
         return permissions
@@ -60,7 +57,6 @@ module.exports = {
     authorizationInfo: async (req) => {
         const roles = userRoleDal.getUserActiveRoles(req.user.id)
 
-        roles.push("guest")
         
         return req.body.permissions
             .map(permission =>

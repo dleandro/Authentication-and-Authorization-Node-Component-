@@ -5,8 +5,7 @@ const setResponse = (res, answer, statusCode) => {
     res.headers = {
         'Content-type': 'application/json'
     }
-    res.status(statusCode)
-    res.send(answer)
+    res.status(statusCode).send(answer)
 }
 
 module.exports = {

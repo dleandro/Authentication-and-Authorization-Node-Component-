@@ -32,7 +32,7 @@ export default function LoginForm({ id }) {
     const loginLocalStrat = () =>
         userToLogin.username && userToLogin.password ?
             authenticationService().login(userToLogin.username, userToLogin.password)
-                .then((resp) =>console.log(resp))
+                .then((resp) => window.location.assign('/backoffice'))
                 .catch(err => {
                     setError({ errorMessage: err.message, shouldShow: true })
                     console.error(err)

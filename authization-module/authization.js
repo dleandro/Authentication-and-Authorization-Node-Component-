@@ -113,7 +113,7 @@ module.exports = {
 
             console.log(config.env === 'production')
 
-            app.set('trust proxy', 1) 
+            app.set('trust proxy', 1)
 
             const
                 SessionStore = require('connect-session-sequelize')(expressSession.Store),
@@ -130,8 +130,8 @@ module.exports = {
                     secret: config.cookieSecret,
                     cookie: {
                         maxAge: 1000 * 60 * 60 * 24,
-                        sameSite: 'none',
-                        secure: true
+                        sameSite: config.env === 'production' ? 'none' : false,
+                        secure: config.env === 'production' ? true : false
                     }
                 }
 

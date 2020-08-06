@@ -90,15 +90,16 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, description: STRING,updater: INTEGER}, false);
-User.hasMany(UserHistory, { foreignKey: 'user_id' })
-UserHistory.belongsTo(User, { foreignKey: 'updater' })
+const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, description: STRING,updater: INTEGER,user_id:{type:INTEGER}}, false);
+//User.hasMany(UserHistory, { foreignKey: 'user_id' })
+//UserHistory.belongsTo(User, { foreignKey: 'updater' })
 
 /**
  * List(
  * - user_id: DefaultString,
  * - list: DefaultString)
  * @type {Model}
+ * 
  */
 const List = defineTable('List', { list: { type: STRING, allowNull: false, unique: true } }, false);
 
@@ -139,10 +140,10 @@ User.hasOne(Idp, { foreignKey: 'user_id' })
  */
 
 const UserRoles = UserAssociation('UserRoles');
-Role.belongsToMany(User, { through: UserRoles });
-User.belongsToMany(Role, { through: UserRoles });
+Role.belongsToMany(User, { through: UserRoles});
+User.belongsToMany(Role, { through: UserRoles});
 
-UserRoles.belongsTo(User, { foreignKey: 'updater' })
+UserRoles.belongsTo(User, { foreignKey: 'updater',onDelete:'CASCADE'})
 UserRoles.belongsTo(User)
 User.hasMany(UserRoles)
 
@@ -154,9 +155,9 @@ const Session = defineTable('Sessions', { sid: { type: STRING(36), primaryKey: t
 User.hasMany(Session)
 Session.belongsTo(User)
 
-const createHistory= async(obj,description) =>{
+const createHistory= async(date,updater,description,UserId) =>{
 
-    UserHistory.create({date:obj.date,updater:obj.updater,description:description,user_id:obj.UserId})
+    UserHistory.create({date:date,updater:updater,description:description,user_id:UserId})
 }
 
 const invalidateSessions= async (userList)=>{

@@ -19,7 +19,7 @@ module.exports = {
         if(parent_role){
             await config.rbac.grantByName((await getSpecificById(parent_role)).role,role)
         }
-        return await (Role.findOrCreate({
+        return (await Role.findOrCreate({
             defaults: { parent_role: parent_role},
             where: {
                 role: role
@@ -47,14 +47,16 @@ module.exports = {
      * @param roleId
      * @returns {Promise<void>}
      */
-    delete: (roleId) =>
+    delete: async (roleId) =>
         tryCatch(async () =>{
             const role = await getSpecificById(roleId)
             config.rbac.removeByName(role.role)
-            return Role.destroy({
-                where: {
-                    id: roleId
-                }
+            return Promise.resolve({
+                deletedRows: await Role.destroy({
+                    where: {
+                        id: roleId
+                    }
+                })
             })
         }),
     /**

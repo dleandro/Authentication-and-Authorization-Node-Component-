@@ -33,17 +33,19 @@ import FilterablePageTable from "./Table/FilterablePageTable";
 const TablePage = ({ service, resource }) => {
     const ctx = useContext(UserContext);
     let history = useHistory();
-    const [initialValues, setInitialValues] = useState([]);
-    const [values, setValues] = useState([]);
-    const [error, setError] = useState(undefined);
-    const postData = arr => service.post(arr).then(d => setValues([...values, d]));
-    const deleteValue = (selectedValue) => service.destroy(selectedValue).then(() => setValues([...values].filter(item => item !== selectedValue)));
-    const editValue = (newValuesArr, selectedValue) => service.update(selectedValue, newValuesArr).then(t => history.push(service.afterUpdateRedirectUrl(selectedValue)));
+    let [values, setValues] = useState([]);
+    const [error,setError] = useState(undefined);
+    const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
+    const deleteValue = selectedValue => service.destroy(selectedValue).then(()=>setValues([...values].filter(item=>item !==selectedValue)));
+    const editValue = (newValuesArr,selectedValue) => service.update(selectedValue,newValuesArr).then(updated=>{
+        console.log(updated)
+        setValues([...values].map(val=>val===selectedValue?updated:val))
+    })//.then(t=>history.push(service.afterUpdateRedirectUrl(selectedValue)));
 
 
     const checkForPermission = method => ctx.userPermissions ? ctx.userPermissions.filter(perm => perm === method + '_' + resource).length : undefined;
 
-    useEffect(() => { service.get().then(data => { console.log(data); setInitialValues(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
+    useEffect(() => { service.get().then(data => { console.log(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
 
     const buildTable = () => {
@@ -61,7 +63,7 @@ const TablePage = ({ service, resource }) => {
                 tooltipText={'More Info!'} bootstrapColor={'primary'} /></td>
             <td><GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={() => deleteValue(val)} /></td>
         </tr>;
-        return <FilterablePageTable labels={headers} rowsValues={values} valueToLineConverter={valueToLine} />;
+        return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
     };
 
     return (

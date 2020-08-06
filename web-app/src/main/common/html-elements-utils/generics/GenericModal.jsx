@@ -6,6 +6,7 @@ import GenericTooltipButton from "./GenericTooltipButton";
 import InputWithDropDown from '../InputWithDropDown';
 import InputGroup from "react-bootstrap/InputGroup";
 import DatePicker from "../DatePicker";
+import CheckBox from "../CheckBox";
 
 /**
  * This is not supposed to be changed, instead make a new component which implements this
@@ -50,30 +51,20 @@ export function SubmitValuesModal({ submitListener, disabled = false, initialVal
         let selected = undefined;
         if (elem.text) {
             const supportedInputTypes = [
-                {
-                    text: '(dropdown)', component: <InputWithDropDown onChange={e => changeValue(idx, e)} label={elem.text.split('(')[0]}
-                        fetchData={elem.DropdownOptionsFetcher ? elem.DropdownOptionsFetcher : undefined} />
-                },
-                { text: '(date)', component: <DatePicker text={elem.text.split('(')[0]} onChange={val => changeValue(idx, val)} /> }];
-            selected = supportedInputTypes.find(input => elem.text.includes(input.text));
+                {text:'(dropdown)',component:<InputWithDropDown onChange={e=>changeValue(idx,e)} label={elem.text.split('(')[0]}
+                                                                fetchData={elem.DropdownOptionsFetcher?elem.DropdownOptionsFetcher:undefined}/>},
+                {text:'(date)',component: <DatePicker text={elem.text.split('(')[0]} onChange={val =>changeValue(idx,val)}/>},
+                {text:'(check)',component: <CheckBox text={elem.text.split('(')[0]} onChange={val =>changeValue(idx,val)}/>}];
+            selected = supportedInputTypes.find(input=>elem.text.includes(input.text));
         }
         return selected ? selected.component : <FormControl key={elem.toString()} placeholder={elem} onChange={e => changeValue(idx, e.target.value)} />;
     }
 
-    const initialValuesRenderer = () => <React.Fragment>
-        {initialValues ? Object.keys(initialValues).map(field => <InputGroup key={field.toString()}>
-            <InputGroup.Prepend>
-                <InputGroup.Text>{`Current ${field}:`}</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl value={initialValues[field]} />
-        </InputGroup>) : undefined}
-    </React.Fragment>;
+    const changeValue = (i,newValue)=> setValue(value.map((elem, index) => index===i?newValue:elem));
 
-    const changeValue = (i, newValue) => setValue(value.map((elem, index) => index === i ? newValue : elem));
     const body = () => <React.Fragment>
         {labels ? labels.map((currElement, index) => inputTypePicker(currElement, index)) : undefined}
         {child}
-        {initialValuesRenderer()}
     </React.Fragment>;
 
     return (<GenericModal disabled={disabled} buttonTooltipText={buttonTooltipText} openButtonIcon={openButtonIcon} bootstrapColor={bootstrapColor}

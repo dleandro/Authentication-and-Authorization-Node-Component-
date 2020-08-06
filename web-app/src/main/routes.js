@@ -34,7 +34,6 @@ class Routes extends Component {
 
     render() {
         return (
-
             <div id={'main'} style={{ marginLeft: this.props.sidebarCollapsedSize }} >
 
                 <Route path={'/backoffice'} exact component={BackOffice} />
@@ -48,7 +47,6 @@ class Routes extends Component {
                 <Route path={'/roles/:id'} exact component={RoleInfo} />
 
                 <Route path={'/lists/:id'} exact component={ListInfo} />
-
                 <Route path={'/sessions'} exact component={Sessions} />
 
                 <AuthTypeProvider>

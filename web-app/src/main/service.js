@@ -36,7 +36,7 @@ export function protocolService(test) {
     }
     return {
         changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
-        getPossibleAuthTypes: async () => getRequest(protocols.PROTOCOLS_PATH)
+        getPossibleAuthTypes: async (signal) =>  request(protocols.PROTOCOLS_PATH, {...DEFAULT_OPTIONS('GET'),signal:signal})
     };
 }
 
@@ -47,7 +47,9 @@ export function userService(test) {
     return {
         get: async () => getRequest(users.USER_PATH),
         post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
+        //TODO: update returning strange fields and not returning field id
         update: async (oldObject, newValuesArr) => makeRequest(users.USERNAME_UPDATE_PATH(oldObject.id), { username: newValuesArr[0] }, 'PUT'),
+        //TODO: fix problem were delete is blocked by constraints
         destroy: async (user) => {
             makeRequest(users.SPECIFIC_USER_PATH(user.id), {}, 'DELETE')
         },

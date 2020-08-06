@@ -1,28 +1,43 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { protocolService,configService } from '../../service'
 
 const AuthTypeContext = React.createContext()
 
 const AuthTypeProvider = (props) => {
 
-    const [allowedProtocolsAndIdps, setAllowedProtocolsAndIdps] = useState([])
-
+    const [allowedProtocolsAndIdps, setAllowedProtocolsAndIdps] = useState([]);
+    const isMountedRef = useRef(null);
     const [authTypesWereChangedByUser, setAuthTypesFlag] = useState(false)
 
     const [error,setError]=useState(undefined)
 
+    /**
+     * @param authType
+     * @returns {Promise<TResult1 | TResult2>}
+     */
+    const getAuthTypeWithOptions = authType => configService().getOptions(authType.protocol).then(options=>({protocol:authType.protocol,active:authType.active,parameters:options}))
+
+    const fetchAuthtypes = async signal =>{
+        const authTypes = await protocolService().getPossibleAuthTypes(signal);
+        const typesWithOptions = authTypes.map(getAuthTypeWithOptions);
+        Promise.all(typesWithOptions).then(arr=>{
+            if (isMountedRef.current){
+                setAllowedProtocolsAndIdps(arr)
+            }
+        })
+    };
+
 
     // get allowed protocols and push them to state
     useEffect(() => {
+        isMountedRef.current = true;
+        const abortController= new AbortController();
+        const signal = abortController.signal;
         if (!authTypesWereChangedByUser) {
-            const arr=[]
-            protocolService().getPossibleAuthTypes().then(authTypes=>{
-                console.log(authTypes)
-                Promise.all(authTypes.map(authType=>configService().getOptions(authType.protocol).then(resp=>arr.push({protocol:authType.protocol,active:authType.active,parameters:resp}))))
-                .then(_=>setAllowedProtocolsAndIdps(arr))
-            })
+            fetchAuthtypes(signal);
         }
-    },[authTypesWereChangedByUser])
+        return () => isMountedRef.current = false;
+    },[authTypesWereChangedByUser]);
 
     // State was changes by the user so we need to update the database so that it will remain consistent with state
     useEffect(() => {

@@ -15,22 +15,18 @@ import UserLogin from './components/login-components/UserLogin';
 import TablePage from "./common/html-elements-utils/TablePage";
 import { listService, permissionService, rolesService, userService } from "./service";
 
+const userServ = {...userService(), editFields: ['New Username', 'New Password'], postFields: ['New Username', 'New Password'], detailsUrl: user => `/users/${user.id}`};
+const roleServ = {...rolesService(), editFields: ['New Role', 'New Parent_Role'], postFields: ['New Role', 'New Parent_Role'], detailsUrl: role => `/roles/${role.id}`};
+const listServ = {...listService(), editFields: ['New List'], postFields: ['New List'], detailsUrl: list => `/lists/${list.id}`};
+const permServ = {...permissionService(), editFields: ['New Action', 'New Resource'], postFields: ['New Action', 'New Resource'],
+    detailsUrl: permission => `/permissions/${permission.id}`};
+
 const routers = [
-    {
-        route: '/users', component: <TablePage service={{
-            ...userService(),
-            editFields: ['New Username', 'New Password'],
-            postFields: ['New Username', 'New Password'],
-            afterUpdateRedirectUrl: user => `/users/${user.id}`,
-            detailsUrl: user => `/users/${user.id}`
-        }} resource={'users'} />
-    },
-    { route: '/roles', component: <TablePage service={{ ...rolesService(),editFields: ['New Role', 'New Parent_Role'],
-    postFields: ['New Role', 'New Parent_Role'], }} resource={'roles'} /> },
-    { route: '/permissions', component: <TablePage service={{ ...permissionService(),editFields: ['New Action', 'New Resource'],
-    postFields: ['New Action', 'New Resource'], }} resource={'permissions'} /> },
-    { route: '/lists', component: <TablePage service={{ ...listService(),editFields: ['New List'],
-    postFields: ['New List'], }} resource={'lists'} /> }];
+    { route: '/users', component: <TablePage service={userServ} resource={'users'} />},
+    { route: '/roles', component: <TablePage service={roleServ} resource={'roles'} /> },
+    { route: '/permissions', component: <TablePage service={permServ} resource={'permissions'} /> },
+    { route: '/lists', component: <TablePage service={listServ} resource={'lists'} /> }];
+
 class Routes extends Component {
 
     // we have two routes pointing to the backoffice to make sure that when a logged in user exists and the app is on the path '/' he doesn't get stuck on that page

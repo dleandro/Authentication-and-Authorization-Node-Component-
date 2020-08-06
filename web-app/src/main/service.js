@@ -17,6 +17,12 @@ const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
 const makeRequest = (url, body, met) => request(url, produceInit(body, met));
 
+
+const arrayToObject = (valuesArr,fieldsArr)=>{
+    let obj={};
+    fieldsArr.forEach((field,idx) => obj[field]=valuesArr[idx]);
+    return obj;
+}
 /**
  * Function used to make login logout
  */
@@ -104,10 +110,10 @@ export function permissionService() {
 
 export function userRoleService() {
     return {
-        get: async (userId) => getRequest(users.ROLES_PATH(userId)),
-        post: async (arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: arr[0], role: arr[1], active: arr[2], updater: arr[3], start_date: arr[4] }, 'POST'),
+        get: async userId => getRequest(users.ROLES_PATH(userId)),
+        post: async arr => makeRequest(users_roles.USERS_ROLES_PATH, { user: arr[0], role: arr[1], active: 1, updater: arr[2], start_date: arr[3] }, 'POST'),
         update: async (oldObject, arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: oldObject.userId, role: oldObject.roleId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
-        destroy: async (oldObject) => makeRequest(users_roles.USERS_ROLES_PATH, { user: oldObject.userId, role: oldObject.RoleId }, 'DELETE'),
+        destroy: async oldObject => makeRequest(users_roles.USERS_ROLES_PATH, { user: oldObject.userId, role: oldObject.RoleId }, 'DELETE'),
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT')
     }
@@ -116,7 +122,7 @@ export function userRoleService() {
 export function roleUserService() {
     return {
         get: async (roleId) => getRequest(roles.ROLE_USERS_PATH(roleId)),
-        post: async (arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: arr[0], role: arr[1], active: arr[2], updater: arr[3], start_date: arr[4] }, 'POST'),
+        post: async (arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: arr[0], role: arr[1], active: 1, updater: arr[2], start_date: arr[3] }, 'POST'),
         update: userRoleService().update,
         destroy: userRoleService().destroy
     }
@@ -137,6 +143,7 @@ export function sessionService(test) {
 
 export function rolePermissionService() {
     return {
+        //TODO: get returns object with fields PermissionId and Permission.id chose one and change destroy/update according to the chosen one
         get: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
         post: async (obj) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: obj.permissionId, roleId: obj.roleId }, 'POST')
             .then(data => permissionService().getPermission(data.PermissionId)),
@@ -155,8 +162,9 @@ export function permissionRoleService() {
 
 export function userListService() {
     return {
+        //TODO: get not working, problem in api
         get: async (id) => getRequest(users.LIST_PATH(id)),
-        post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: arr[2], start_date: arr[3], updater: arr[4] }, 'POST'),
+        post: async arr => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
         update: async (oldObject, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: oldObject.userId, list: oldObject.listId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
         destroy: async (oldObject) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: oldObject.listId, UserId: oldObject.userId }, 'DELETE'),
         // not working
@@ -167,9 +175,9 @@ export function userListService() {
 export function listUserService() {
     return {
         get: async (id) => getRequest(lists.USERS_LISTS_PATH(id)),
-        post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: arr[2], start_date: arr[3], updater: arr[4] }, 'POST'),
-        update: async (oldObject, arr) => userListService().update(),
-        destroy: async (oldObject) => userListService().destroy(),
+        post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
+        update: async (oldObject, arr) => userListService().update(oldObject, arr),
+        destroy: async (oldObject) => userListService().destroy(oldObject),
         // not working
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')
     }
@@ -178,7 +186,7 @@ export function listUserService() {
 
 // TODO: USERHISTORY
 // THIS ONE BELOW IS THE LOGS
-export function historyService(test) {
+export function logsService(test) {
     if (test) {
         WEB_API_HOME_PATH = `http://localhost:8082`;
     }

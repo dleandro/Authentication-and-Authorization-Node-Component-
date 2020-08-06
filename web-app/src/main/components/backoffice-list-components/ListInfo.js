@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {listService, rolesService, userListService, userService} from "../../service";
+import {listService, listUserService, rolesService, userListService, userService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -15,17 +15,13 @@ function ListUsers() {
     let {id}=useParams()
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
     const ctx = useContext(UserContext);
-
-    const serv = {...listService(),
-        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+    const serv = {...listUserService(),
+        detailsUrl: (listUser) => `/lists/${id}`,
         editFields: [{text:'New End date (date)'},'Active'],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
-        get:()=>listService().getUsersInThisList(id),
-        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
-        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
-        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
     }
-
+    serv.get =()=> listUserService().get(id);
+    serv.post = arr=> listUserService().post([id,arr[0],new Date(),ctx.user.id])
     return (
          <TablePage service={serv} resource={'listuser'} />
     )

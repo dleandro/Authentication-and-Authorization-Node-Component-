@@ -62,8 +62,11 @@ Permission.hasMany(RolePermission)
  */
 const User = defineTable('User', {
     username: { type: STRING, allowNull: false, unique: true },
-    password: { type: STRING, get() { return () => this.getDataValue('password') } }
+    password: { type: STRING, get() { return () => this.getDataValue('password') } },
+    updater : {type:INTEGER}
 }, false);
+
+User.belongsTo(User, { foreignKey: 'updater' })
 
 User.encryptPassword = async (password) => await bcrypt.hash(password, await bcrypt.genSalt(10))
 
@@ -87,14 +90,16 @@ User.beforeUpdate(setSaltHashAndPassword)
  * - description: DefaultString)
  * @type {Model}
  */
-const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, success: BOOLEAN, action: STRING, resource: STRING, from: STRING }, false);
-User.hasMany(UserHistory, { foreignKey: 'user_id' })
+const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull: false }, description: STRING,updater: INTEGER,user_id:{type:INTEGER}}, false);
+//User.hasMany(UserHistory, { foreignKey: 'user_id' })
+//UserHistory.belongsTo(User, { foreignKey: 'updater' })
 
 /**
  * List(
  * - user_id: DefaultString,
  * - list: DefaultString)
  * @type {Model}
+ * 
  */
 const List = defineTable('List', { list: { type: STRING, allowNull: false, unique: true } }, false);
 
@@ -135,10 +140,10 @@ User.hasOne(Idp, { foreignKey: 'user_id' })
  */
 
 const UserRoles = UserAssociation('UserRoles');
-Role.belongsToMany(User, { through: UserRoles });
-User.belongsToMany(Role, { through: UserRoles });
+Role.belongsToMany(User, { through: UserRoles});
+User.belongsToMany(Role, { through: UserRoles});
 
-UserRoles.belongsTo(User, { foreignKey: 'updater' })
+UserRoles.belongsTo(User, { foreignKey: 'updater',onDelete:'CASCADE'})
 UserRoles.belongsTo(User)
 User.hasMany(UserRoles)
 
@@ -150,7 +155,69 @@ const Session = defineTable('Sessions', { sid: { type: STRING(36), primaryKey: t
 User.hasMany(Session)
 Session.belongsTo(User)
 
+const createHistory= async(date,updater,description,UserId) =>{
 
+    UserHistory.create({date:date,updater:updater,description:description,user_id:UserId})
+}
+
+const invalidateSessions= async (userList)=>{
+    userList=userList.dataValues
+    console.log('correu hook 1')
+    const list=await List.findOne({where:{id:userList.ListId}})
+    if(list.list==='BLACK'){
+        Session.destroy({where:{Userid:userList.UserId}})
+    }
+    createHistory(userList,`The list with the id:${userList.ListId} was added to the user`)
+}
+
+
+const createUserRoleHistory=async({dataValues})=>{
+    createHistory(dataValues.start_date,dataValues.updater,`The role with the id:${dataValues.RoleId} was added to the user`,dataValues.UserId)
+}
+
+const createUserHistory=async({dataValues})=>{
+    createHistory(new Date(),dataValues.updater,`The user was created`)
+}
+
+const deleteUserRoleHistory=async({dataValues})=>{
+    createHistory(dataValues.start_date,dataValues.updater,`The role with the id:${dataValues.RoleId} was deleted from the user`,dataValues.UserId)
+}
+
+const deleteUserHistory=async({dataValues})=>{
+    createHistory(new Date(),dataValues.updater,`The user was deleted`)
+}
+
+
+const deleteUserListHistory=async({dataValues})=>{
+    createHistory(dataValues.start_date,dataValues.updater,`The list with the id:${dataValues.ListId} was removed from the user`,dataValues.UserId)
+}
+
+const updateUserRoleHistory=async({dataValues})=>{
+    createHistory(dataValues.start_date,dataValues.updater,`The association with the Role with the id:${dataValues.RoleId} was updated`,dataValues.UserId)
+}
+
+const updateUserHistory=async({dataValues})=>{
+    createHistory(new Date(),dataValues.updater,`The user was updated`)
+}
+
+
+const updateUserListHistory=async({dataValues})=>{
+    createHistory(dataValues.start_date,dataValues.updater,`The association with the list with the id:${dataValues.ListId} was updated`,dataValues.UserId)
+}
+
+
+
+UserList.afterCreate(invalidateSessions)
+UserRoles.afterCreate(createUserRoleHistory)
+User.afterCreate(createUserHistory)
+
+UserList.afterDestroy(deleteUserListHistory)
+UserRoles.afterDestroy(deleteUserRoleHistory)
+User.afterDestroy(deleteUserHistory)
+
+UserList.afterUpdate(updateUserListHistory)
+UserRoles.afterUpdate(updateUserRoleHistory)
+User.afterUpdate(updateUserHistory)
 
 
 

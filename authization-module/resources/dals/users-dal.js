@@ -4,7 +4,11 @@
 const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
-const getById = (id) => tryCatch(() => User.findByPk(id))
+const getById = (id) => tryCatch(async () => {
+    const user = await User.findByPk(id)
+    delete user.password
+    return user
+})
 
 module.exports = {
     /**
@@ -87,7 +91,11 @@ module.exports = {
      * @param userId
      * @returns {Promise<void>}
      */
-    delete: (userId) => tryCatch(() => User.destroy({ where: { id: userId } })),
+    delete: async (userId) => Promise.resolve(
+        {
+            deletedRows: await tryCatch(() => User.destroy({ where: { id: userId } }))
+        }
+    ),
 
     // TODO: this method is a duplicate of the user-roles dal getUserRoles 
     getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true })),

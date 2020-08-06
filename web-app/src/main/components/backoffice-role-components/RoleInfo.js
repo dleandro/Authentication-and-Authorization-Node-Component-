@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import UpdatableInput from  '../BackOfficeFunctionalities';
 import {
-    listService,
+    listService, permissionRoleService,
     permissionService,
     rolePermissionService,
-    rolesService, userListService,
+    rolesService, roleUserService, userListService,
     userRoleService,
     userService
 } from "../../service";
@@ -30,15 +30,13 @@ function RolePermission() {
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
     const ctx = useContext(UserContext);
 
-    const serv = {...listService(),
-        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
+    const serv = {...rolePermissionService(),
+        detailsUrl: (listUser) => `/roles/${id}`,
         editFields: [{text:'New End date (date)'},{text:'New Active (check)'}],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
-        get:()=>listService().getUsersInThisList(id),
-        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
-        post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
-        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
     }
+    serv.get = ()=>rolePermissionService().get(id);
+    serv.post = arr => rolePermissionService().post([arr[0],id]);
 
     return (
         <TablePage service={serv} resource={'listuser'} />
@@ -46,48 +44,22 @@ function RolePermission() {
 }
 
 export function RoleUsers() {
-    let {id}=useParams()
+    let {id}=useParams();
     const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
     const ctx = useContext(UserContext);
 
-    const serv = {...listService(),
-        afterUpdateRedirectUrl: (listUser) => `/lists/${id}`,
-        editFields: [{text:'New End date (date)'},'Active'],
+    const serv = {...roleUserService(),
+        detailsUrl: (listUser) => `/role/${id}`,
+        editFields: [{text:'New End date (date)'},{text:'New Active (check)'}],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
-        get:()=>listService().getUsersInThisList(id),
-        update: (listUser,arr)=>userListService().editUserList(listUser.UserId,id,arr[0],arr[1]),
         post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
-        destroy: obj=>userListService().deleteUserList(id,obj.UserId)
     }
+    serv.get= ()=> roleUserService().get(id)
+    serv.post= arr =>roleUserService().post([arr[0],id,ctx.user.id,new Date()]);
 
     return (
         <TablePage service={serv} resource={'listuser'} />
     )
-    /*let {id}=useParams()
-    const fetchData = () => rolesService().getUsersWithThisRole(id)
-    const ctx = useContext(UserContext)
-    const labels = ["User id", "username",'Role Assignment date','Role expiration date','Active','Updater']
-    const postUserRole = (userId)=>userRoleService().addUserRole(userId,id,ctx.user.id,new Date())
-    const removeUserFromRole =(userId) => userRoleService().deleteUserRole(userId,id)
-    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
-    let date='';
-    const roleUserToLine = (roleUser) => <React.Fragment>
-        <td><Link to={`/users/${roleUser.UserId}`}>{`Details of user: ${roleUser.UserId}`}</Link></td>
-        <td >{roleUser['User.username']}</td>
-        <td >{roleUser.start_date}</td>
-        <td>{roleUser.end_date}</td>
-        <td>{roleUser.active}</td>
-        <td>{roleUser.updater}</td>
-        <td><SubmitValuesModal openButtonIcon={'fa fa-edit'} buttonTooltipText={'Edit End date'} submitListener={_=>userRoleService().editUserRole(roleUser.UserId,id,date,1)}
-                               child={<DatePicker text={'New date'} onChange={val =>date=val}/>} /> </td>
-    </React.Fragment>;
-    return (
-
-        <React.Fragment>
-            <GenericFunctionality fetchCB={fetchData} deleteDataCB={obj=>removeUserFromRole(obj.UserId)} postNewDataCB={(arr)=>postUserRole(arr[0])} tableLabels={labels}
-                                  postNewDataFieldLabels={[{text:'Id of User to be assign', DropdownOptionsFetcher:postOptionsFetcher}]}  valueToLineCB={roleUserToLine} />
-        </React.Fragment>
-    )*/
 }
 
 const components = {

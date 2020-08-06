@@ -4,7 +4,7 @@ import {
     rolesService,
     permissionService,
     authenticationService,
-    sessionService, historyService
+    sessionService, logsService
 } from "./main/service";
 
 const PORT = 8082;
@@ -14,7 +14,7 @@ const roleServ = rolesService(true);
 const permServ = permissionService(true);
 const authServ = authenticationService(true);
 const sessionServ = sessionService(true);
-const histServ = historyService(true)
+const histServ = logsService(true)
 
 /**
  * @jest-environment node

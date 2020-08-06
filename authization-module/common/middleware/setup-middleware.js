@@ -13,7 +13,7 @@ module.exports = function (app, session) {
     app.use(bodyParser.json());
 
     // Makes it easier to manage cookies
-    app.use(cookieParser());
+    //app.use(cookieParser());
 
     // set up session middleware
     app.use(session);

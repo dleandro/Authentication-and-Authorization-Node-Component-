@@ -10,7 +10,6 @@ module.exports = function (apiUtils, authization) {
     const
         configRouter = require('express').Router()
   
-
     configRouter.put('/database', (req, res) => successCallback(req, res, authization.configurations.changeDatabaseOptions))
     configRouter.put('/Google', (req, res) => successCallback(req, res, authization.configurations.changeGoogleAuthenticationOptions))
     configRouter.put('/AzureAD', (req, res) => successCallback(req, res, authization.configurations.changeAzureADAuthenticationOptions))

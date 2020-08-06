@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { userService } from './service'
+import { userService, userRoleService, configService } from './service'
+import AuthizationRbac from '../authization/authization-rbac'
 
 const UserContext = React.createContext()
 
@@ -8,9 +9,8 @@ class UserProvider extends Component {
     state = {
         selectedProtocol: "/",
         redirect: { should: false, link: "/" },
-        user: { id: undefined, username: undefined },
-        userPermissions: undefined,
-        setPermissions: (data) => this.setState(prevState => ({ userPermissions: data })),
+        user: { id: undefined, username: undefined, roles: [] },
+        rbac: undefined,
         setUser: (data) => this.setState(prevState => ({ user: data }))
     };
 
@@ -19,16 +19,21 @@ class UserProvider extends Component {
         try {
 
             const user = await userService().getAuthenticatedUser()
-            console.log(user)
 
-            const permission = await userService().getAuthenticatedUserPermissions()
-
-            if (permission.length) {
-                console.log('current User has permissions:', permission)
-                this.state.setPermissions(permission)
-            }
             if (user.username) {
+                // get authenticated User's Roles 
+                const roles = (await userRoleService().get(user.id))
+                    .map(role => role.role)
+
+                    // get rbac_opts to initialize the RBAC
+                const rbac_opts = await configService().getRbacOptions()
+                
+                const rbac = new AuthizationRbac(rbac_opts)
+                await rbac.init()
+                user.roles = roles
                 this.state.setUser(user)
+
+                this.setState(_ => ({ rbac: rbac }))
             }
 
         } catch (err) {

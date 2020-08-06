@@ -172,10 +172,7 @@ export function configService() {
         getGoogleOptions: async () => getRequest(configs.GOOGLE_CONFIG_PATH + '/options'),
         getAzureOptions: async () => getRequest(configs.AZUREAD_CONFIG_PATH + '/options'),
         getSamlOptions: async () => getRequest(configs.SAML_CONFIG_PATH + '/options'),
-        getOptions: async (protocol) => getRequest(configs.SPECIFIC_PATH(protocol) + '/options')
+        getOptions: async (protocol) => getRequest(configs.SPECIFIC_PATH(protocol) + '/options'),
+        getRbacOptions: async () => getRequest(configs.RBAC_OPTS_PATH)
     }
 }
-
-
-
-

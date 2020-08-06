@@ -90,7 +90,7 @@ module.exports = {
                 return grant
             }))
 
-        return { roles, formattedPermissions, formattedGrants }
+        return { roles, permissions: formattedPermissions, grants: formattedGrants }
     },
 
     getGoogleOptions:async () => {

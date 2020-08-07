@@ -11,15 +11,15 @@ const
     ROLES_PERMISSION_PATH = "/api/roles-permissions",
     AUTHENTICATION_PATH = "/api/authentications",
     CONFIG_PATH = "/api/configs",
-    SESSION_PATH="/api/sessions",
+    SESSION_PATH = "/api/sessions",
     PROTOCOLS_PATH = "/api/protocols",
-    USERS_LIST_PATH="/api/users-lists",
-    HISTORY_PATH="/api/users-history"
+    USERS_LIST_PATH = "/api/users-lists",
+    HISTORY_PATH = "/api/users-history"
 
-console.log(process.env.REACT_APP_WEB_API_PORT)    
+console.log(process.env.REACT_APP_WEB_API_PORT)
 
-const WEB_API_HOME_PATH = process.env.REACT_APP_WEB_API_PORT?`http://localhost:${process.env.REACT_APP_WEB_API_PORT}`:'https://webapi-dot-auth-authorization.ew.r.appspot.com';
-const WEB_APP_HOME_PATH = process.env.REACT_APP_WEB_APP_PORT?`http://localhost:${process.env.REACT_APP_WEB_APP_PORT}`:'https://webapp-dot-auth-authorization.ew.r.appspot.com';
+const WEB_API_HOME_PATH = process.env.REACT_APP_WEB_API_PORT ? `http://localhost:${process.env.REACT_APP_WEB_API_PORT}` : 'https://webapi-dot-auth-authorization.ew.r.appspot.com';
+const WEB_APP_HOME_PATH = process.env.REACT_APP_WEB_APP_PORT ? `http://localhost:${process.env.REACT_APP_WEB_APP_PORT}` : 'https://webapp-dot-auth-authorization.ew.r.appspot.com';
 
 export const webApiLinks =
 {
@@ -38,10 +38,10 @@ export const webApiLinks =
         LOGOUT_PATH: `${AUTHENTICATION_PATH}/logout`,
         GET_AUTHENTICATED_USER_PATH: `${AUTHENTICATION_PATH}/authenticated-user`,
         ROLES_PATH: id => `${USER_PATH}/${id}/roles`,
-        LIST_PATH:id => `${USER_PATH}/${id}/lists`,
-        HISTORY_PATH:id => `${USER_PATH}/${id}/history`,
-        SESSION_PATH:id=>`${USER_PATH}/${id}/sessions`,
-        CURRENT_USER_PERMISSIONS_PATH:`${USER_PATH}/CurrentUser/permissions`
+        LIST_PATH: id => `${USER_PATH}/${id}/lists`,
+        HISTORY_PATH: id => `${USER_PATH}/${id}/history`,
+        SESSION_PATH: id => `${USER_PATH}/${id}/sessions`,
+        CURRENT_USER_PERMISSIONS_PATH: `${USER_PATH}/CurrentUser/permissions`
     },
 
     roles: {
@@ -69,7 +69,7 @@ export const webApiLinks =
         USER_ROLES_DEACTIVATION_PATH: userRoleId => `${USERS_ROLES_PATH}/deactivate/${userRoleId}`
     },
 
-    users_lists:{
+    users_lists: {
         USERS_LIST_PATH
     },
 
@@ -91,18 +91,19 @@ export const webApiLinks =
         AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/azureAD`,
         DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`,
         SAML_CONFIG_PATH: `${CONFIG_PATH}/Saml`,
-        SPECIFIC_PATH:protocol=>`${CONFIG_PATH}/${protocol}`
+        SPECIFIC_PATH: protocol => `${CONFIG_PATH}/${protocol}`,
+        RBAC_OPTS_PATH: `${CONFIG_PATH}/rbac-opts`
     },
 
     protocols: {
         PROTOCOLS_PATH,
         ACTIVATE_PATH: `${PROTOCOLS_PATH}/active`,
     },
-    sessions:{
+    sessions: {
         SESSION_PATH,
-        SPECIFIC_SESSION_PATH:id=>`${SESSION_PATH}/${id}`
+        SPECIFIC_SESSION_PATH: id => `${SESSION_PATH}/${id}`
     },
-    history:{
+    history: {
         HISTORY_PATH
     }
 }

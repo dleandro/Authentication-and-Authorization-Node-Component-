@@ -15,17 +15,17 @@ module.exports = class AuthizationRbac {
         }
         throw Error("rbac options sent to the constructor were invalid")
     }
-    
+
     can(rolesNames, action, resource) {
-        return rolesNames.some(role => this.rbac.can(role, action, resource))
+        return rolesNames.some(role => this.rbac.can(role, action, resource)) 
     }
 
     canAll(rolesNames, permissions) {
-        return rolesNames.some(role => this.rbac.canAll(role, permissions))
+        return rolesNames.some(role => this.rbac.canAll(role, permissions))       
     }
 
     canAny(rolesNames, permissions) {
-        return rolesNames.some(role => this.rbac.canAny(role, permissions))
+        return rolesNames.some(role => this.rbac.canAny(role, permissions))       
     }
 
 }

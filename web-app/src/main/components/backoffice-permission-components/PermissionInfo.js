@@ -20,12 +20,11 @@ const SpecificPermissionInfo=()=><GenericInfoCard label={'Permission'} fetchValu
 
 function PermissionRoles() {
     let {id}=useParams()
-    const postOptionsFetcher = () => userService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.username})));
+    const postOptionsFetcher = () => rolesService().get().then(data => data.map(value => ({ eventKey: value.id, text: value.role })));
     const ctx = useContext(UserContext);
 
     const serv = {...permissionRoleService(),
-        editFields: [{text:'New End date (date)'},{text:'New Active state (check)'}],
-        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        postFields: [{text:'Id of Role to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get=()=> permissionRoleService().get(id)
     .then(results=>results.map(result=>{

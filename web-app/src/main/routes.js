@@ -8,15 +8,17 @@ import UserInfo from './components/backoffice-user-components/UserInfo';
 import ListInfo from './components/backoffice-list-components/ListInfo';
 import PermissionInfo from './components/backoffice-permission-components/PermissionInfo';
 import RoleInfo from './components/backoffice-role-components/RoleInfo';
-import { Sessions } from './components/BackOfficeFunctionalities';
 import { AuthTypeProvider } from './components/login-components/AuthTypeContext';
 import { AccountManagement } from './components/backoffice-user-components/AccountManagement';
 import UserLogin from './components/login-components/UserLogin';
 import TablePage from "./common/html-elements-utils/TablePage";
-import { listService, permissionService, rolesService, userService } from "./service";
+import {listService, logsService, permissionService, rolesService, sessionService, userService} from "./service";
+
+const rolesDropdownOptionsFetcher = () => rolesService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
+const rolePostFields = ['New Role', {text:'Id of the Parent Role (dropdown) ', DropdownOptionsFetcher:rolesDropdownOptionsFetcher}];
 
 const userServ = {...userService(), editFields: ['New Username', 'New Password'], postFields: ['New Username', 'New Password'], detailsUrl: user => `/users/${user.id}`};
-const roleServ = {...rolesService(), editFields: ['New Role', 'New Parent_Role'], postFields: ['New Role', 'New Parent_Role'], detailsUrl: role => `/roles/${role.id}`};
+const roleServ = {...rolesService(), editFields: rolePostFields, postFields: rolePostFields , detailsUrl: role => `/roles/${role.id}`};
 const listServ = {...listService(), editFields: ['New List'], postFields: ['New List'], detailsUrl: list => `/lists/${list.id}`};
 const permServ = {...permissionService(), editFields: ['New Action', 'New Resource'], postFields: ['New Action', 'New Resource'],
     detailsUrl: permission => `/permissions/${permission.id}`};
@@ -25,7 +27,8 @@ const routers = [
     { route: '/users', component: <TablePage service={userServ} resource={'users'} />},
     { route: '/roles', component: <TablePage service={roleServ} resource={'roles'} /> },
     { route: '/permissions', component: <TablePage service={permServ} resource={'permissions'} /> },
-    { route: '/lists', component: <TablePage service={listServ} resource={'lists'} /> }];
+    { route: '/lists', component: <TablePage service={listServ} resource={'lists'} /> },
+    { route: '/sessions', component: <TablePage service={{...sessionService()}} resource={'sessions'} /> }];
 
 class Routes extends Component {
 
@@ -46,7 +49,6 @@ class Routes extends Component {
                 <Route path={'/roles/:id'} exact component={RoleInfo} />
 
                 <Route path={'/lists/:id'} exact component={ListInfo} />
-                <Route path={'/sessions'} exact component={Sessions} />
 
                 <AuthTypeProvider>
                     <Route path={'/configs'} exact component={() => <AuthenticationProtocol />} />

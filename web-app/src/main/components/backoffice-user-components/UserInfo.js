@@ -30,7 +30,7 @@ function UserRoles() {
 
     const customService = {
         ...userRoleService(), editFields: [{ text: 'New Date (date)' }, { text: 'New Active state (check)' }],
-        postFields: [{ text: 'Id of Role to be assign (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }], detailsUrl: role => `/roles/${role.id}`
+        postFields: [{ text: 'Id of Role to be assign (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
     };
     customService.get = fetchData;
     customService.post = arr => userRoleService().post(id, arr[0], ctx.user.id, new Date())
@@ -43,13 +43,10 @@ function UserRoles() {
 
 export function UserSessions() {
     let { id } = useParams()
-    const postOptionsFetcher = () => userService().get().then(data => data.map(value => ({ eventKey: value.id, text: value.username })));
-    const ctx = useContext(UserContext);
 
     const serv = {
         ...sessionService(),
-        editFields: [{ text: 'New End date (date)' }, 'Active'],
-        postFields: [{ text: 'Id of User to be assign (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
+        editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
         get: () => sessionService().get(id).then(results => results.map(result => {
             return {
                 sid: result.sid,
@@ -72,7 +69,6 @@ function UserLists() {
 
     const serv = {
         ...userListService(),
-        detailsUrl: (listUser) => `/lists/${id}`,
         editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
         postFields: [{ text: 'Id of List to be assign (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
     };
@@ -95,7 +91,16 @@ function UserLists() {
         <TablePage service={serv} resource={'users-lists'} />
     )
 }
+function UserPermissions() {
+    let { id } = useParams();
+//TODO: uncomment this when service done
+   /*const serv = { ...userPermissionsService() };
+    serv.get = () => userPermissionsService().get(id)
 
+    return (
+        <TablePage service={serv} resource={'user-permissions'} />
+    )*/
+}
 function UserHistory() {
     let { id } = useParams();
 
@@ -116,9 +121,10 @@ const components = {
     1: <UserRoles />,
     2: <UserSessions />,
     3: <UserLists />,
-    4: <UserHistory />
+    4: <UserPermissions />,
+    5: <UserHistory />
 };
-const labels = ['Roles', 'Sessions', 'Lists', 'History'];
+const labels = ['Roles', 'Sessions', 'Lists','Permissions', 'History'];
 
 export default function UserInfo() {
     const [componentToBeShown, setComponentToBeShown] = useState(0);

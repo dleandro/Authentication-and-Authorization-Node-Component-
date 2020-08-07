@@ -43,7 +43,7 @@ export default function GenericModal({ submitListener, disabled = false, bootstr
     </React.Fragment>);
 }
 
-export function SubmitValuesModal({ submitListener, disabled = false, initialValues, labels, child, openButtonIcon = 'fa fa-table',
+export function SubmitValuesModal({ submitListener, disabled = false, labels, child, openButtonIcon = 'fa fa-table',
     bootstrapColor = 'primary', buttonTooltipText = 'Add new Value' }) {
     const [value, setValue] = useState(labels ? labels.map(t => '') : undefined);
 

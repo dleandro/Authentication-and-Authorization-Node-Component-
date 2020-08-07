@@ -141,7 +141,7 @@ export function sessionService(test) {
     }
 }
 // TODO: UserSessions
-
+//TODO: User Permissions
 export function rolePermissionService() {
     return {
         //TODO: get returns object with fields PermissionId and Permission.id chose one and change destroy/update according to the chosen one

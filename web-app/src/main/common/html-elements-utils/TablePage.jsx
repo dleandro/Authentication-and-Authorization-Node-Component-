@@ -33,42 +33,49 @@ import FilterablePageTable from "./Table/FilterablePageTable";
 const TablePage = ({ service, resource }) => {
     const ctx = useContext(UserContext);
     let history = useHistory();
-    let [values, setValues] = useState([]);
+    const [values, setValues] = useState([]);
     const [error,setError] = useState(undefined);
-    const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
-    const deleteValue = selectedValue => service.destroy(selectedValue).then(()=>setValues([...values].filter(item=>item !==selectedValue)));
-    const editValue = (newValuesArr,selectedValue) => service.update(selectedValue,newValuesArr).then(updated=>{
-        console.log(updated)
-        setValues([...values].map(val=>val===selectedValue?updated:val))
-    })//.then(t=>history.push(service.afterUpdateRedirectUrl(selectedValue)));
-
-
-    const checkForPermission = method => ctx.userPermissions ? ctx.userPermissions.filter(perm => perm === method + '_' + resource).length : undefined;
+    const checkHasPermission = async method => ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [[method, resource]]);
 
     useEffect(() => { service.get().then(data => { console.log(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
 
+    const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
+    const addButton = /*await checkHasPermission('POST')*/service.postFields?<th>
+        <SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th>:undefined;
+
+    const editButton = rowObject=> /*await checkHasPermission('PUT')*/service.editFields?<td>
+        <SubmitValuesModal openButtonIcon={'fa fa-edit'} bootstrapColor={'warning'} buttonTooltipText={'Edit!'} labels={service.editFields}
+                           submitListener={newValuesArr =>  service.update(rowObject,newValuesArr).then(updated=>{
+                               console.log(updated);setValues([...values].map(val=>val===rowObject?updated:val));})} /></td>:undefined;
+
+    const deleteButton = val=> /*await checkHasPermission('DELETE')*/service.destroy?<td>
+        <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'}
+                              onClick={() =>service.destroy(val).then(()=>setValues([...values].filter(item=>item !==val)))} /></td>:undefined;
+
     const buildTable = () => {
-        let labels = Object.keys(values[0]);
-        const headers = <tr>
-            {labels.map(label => <th key={label}>{label}</th>)}
-            <th><SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData}
-                labels={service.postFields} /></th>
-        </tr>;
-        const valueToLine = val => <tr key={JSON.stringify(val)}>
-            {labels.map(label => <td key={val[label]}>{val[label]}</td>)}
-            <td><SubmitValuesModal labels={service.editFields} submitListener={newValuesArr => editValue(newValuesArr, val)} openButtonIcon={'fa fa-edit'}
-                initialValues={val} bootstrapColor={'warning'} buttonTooltipText={'Edit!'} /></td>
-            <td><GenericTooltipButton icon={'fa fa-info-circle'} onClick={t => history.push(service.detailsUrl(val))}
-                tooltipText={'More Info!'} bootstrapColor={'primary'} /></td>
-            <td><GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'} onClick={() => deleteValue(val)} /></td>
-        </tr>;
-        return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
+        const infoButton = val=> service.detailsUrl?<td>
+            <GenericTooltipButton icon={'fa fa-info-circle'} onClick={t => history.push(service.detailsUrl(val))} tooltipText={'More Info!'} bootstrapColor={'primary'} />
+        </td>:undefined;
+        if (values.length && Array.isArray(values)){
+            let labels = Object.keys(values[0]);
+            const headers = <tr>
+                {labels.map(label => <th key={label}>{label}</th>)}
+                {addButton}
+            </tr>;
+            const valueToLine = val => <tr key={JSON.stringify(val)}>
+                {labels.map(label => <td key={val[label]}>{val[label]}</td>)}
+                {editButton(val)}{deleteButton(val)}{infoButton(val)}
+            </tr>;
+            return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
+        }
+        const noDataFoundMessage =<th ><h1 className={'text-white'}>No Data Found</h1></th>;
+        return <tr>{noDataFoundMessage}{addButton} </tr>;
     };
 
     return (
         <React.Fragment>
-            {error ? <p>{error.status} {error.err}</p> : values.length && Array.isArray(values) ? buildTable() : undefined}
+            {error ? <p>{error.status} {error.err}</p> : buildTable()}
         </React.Fragment>
     );
 };

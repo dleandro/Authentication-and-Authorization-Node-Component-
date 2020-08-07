@@ -7,6 +7,7 @@ const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-mo
 const getById = (id) => tryCatch(async () => {
     const user = await User.findByPk(id)
     delete user.password
+    delete user.updater
     return user
 })
 
@@ -52,6 +53,7 @@ module.exports = {
         const users = await User.findAll({ raw: true })
         return users.map(user => {
             delete user.password
+            delete user.updater
             return user
         })
     }),
@@ -75,7 +77,8 @@ module.exports = {
     updateUsername: async (username, id) => Promise.resolve(
         {
             insertedRows: await tryCatch(() => User.update({ username: username }, { where: { id: id } })),
-            username
+            username,
+            id
         }),
 
     /**

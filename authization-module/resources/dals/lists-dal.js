@@ -78,7 +78,7 @@ module.exports = {
             UserList.findAll({
                 where: {
                     UserId: userId
-                }
+                },include : [List],raw:true
             })
         ),
 
@@ -86,7 +86,8 @@ module.exports = {
     update: async (id, list) => Promise.resolve(
         {
             insertedRows: await tryCatch(() => List.update({ list: list }, { where: { id: id } })),
-            list
+            list,
+            id
         }),
 
     //TODO: change fields from jointed query

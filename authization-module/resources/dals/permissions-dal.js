@@ -69,7 +69,8 @@ module.exports = {
         {
             insertedRows: await tryCatch(() => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
             action,
-            resource
+            resource,
+            id
         }),
 
         //TODO: change fields from jointed query

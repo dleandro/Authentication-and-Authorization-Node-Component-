@@ -69,7 +69,10 @@ module.exports = {
         })
     }),
 
-    delete: (UserId,RoleId) => tryCatch(() => UserRole.destroy({ where: { UserId: UserId,RoleId:RoleId } })),
+    delete: (UserId,RoleId) =>Promise.resolve(
+        {
+            deletedRows:  tryCatch(async () => await  UserRole.destroy({ where: { UserId: UserId,RoleId:RoleId } }))
+        }),
 
     update: async (user, role, endDate, active) => tryCatch(() => UserRole.update({ 
         end_date: endDate,

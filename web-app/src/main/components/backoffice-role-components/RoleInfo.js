@@ -35,7 +35,15 @@ function RolePermission() {
         editFields: [{text:'New End date (date)'},{text:'New Active (check)'}],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
-    serv.get = ()=>rolePermissionService().get(id);
+    serv.get = ()=>rolePermissionService().get(id)
+    .then(results=>results.map(result=>{
+        return {
+            PermissionId:result.PermissionId,
+            action:result['Permission.action'],
+            resource:result['Permission.resource']
+        }
+    }));
+
     serv.post = arr => rolePermissionService().post([arr[0],id]);
 
     return (
@@ -55,6 +63,17 @@ export function RoleUsers() {
         post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
     }
     serv.get= ()=> roleUserService().get(id)
+    .then(results=>results.map(result=>{
+        return {
+            UserId:result.UserId,
+            username:result['User.username'],
+            start_date:result.start_date,
+            end_date:result.end_date,
+            active:result.active,
+            updater:result.updater
+
+        }
+    }));
     serv.post= arr =>roleUserService().post([arr[0],id,ctx.user.id,new Date()]);
 
     return (

@@ -27,7 +27,13 @@ function PermissionRoles() {
         editFields: [{text:'New End date (date)'},{text:'New Active state (check)'}],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
-    serv.get=()=> permissionRoleService().get(id);
+    serv.get=()=> permissionRoleService().get(id)
+    .then(results=>results.map(result=>{
+        return {
+            RoleId:result.RoleId,
+            role:result['Role.role']
+        }
+    }));
     serv.post = arr => permissionRoleService().post([id,arr[0]])
     return (
         <TablePage service={serv} resource={'listuser'} />

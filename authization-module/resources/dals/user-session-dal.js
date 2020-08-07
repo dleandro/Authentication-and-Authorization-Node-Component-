@@ -11,5 +11,8 @@ module.exports = {
         expires: endDate,
     },
     {where:{sid:sid}})),
-    delete: (sid) => tryCatch(() => Session.destroy({ where: { sid: sid } }))
+    delete: async (sid) => Promise.resolve(
+        {
+            deletedRows: await tryCatch(() => Session.destroy({ where: { sid: sid } }))
+        })
 }

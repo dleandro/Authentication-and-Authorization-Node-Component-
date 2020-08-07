@@ -20,7 +20,17 @@ function ListUsers() {
         editFields: [{text:'New End date (date)'},'Active'],
         postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
-    serv.get =()=> listUserService().get(id);
+    serv.get =()=> listUserService().get(id)
+    .then(results=>results.map(result=>{
+        return {
+            UserId:result.UserId,
+            username:result['User.username'],
+            start_date:result.start_date,
+            end_date:result.end_date,
+            active:result.active,
+            updater:result.updater
+        }
+    }));
     serv.post = arr=> listUserService().post([id,arr[0],new Date(),ctx.user.id])
     return (
          <TablePage service={serv} resource={'listuser'} />

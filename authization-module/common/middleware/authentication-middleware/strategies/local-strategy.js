@@ -15,13 +15,11 @@ module.exports = () => {
             const userIsFromIdp = await Idp.getByUserId(user.id)
 
             if (userIsFromIdp) {
-                done(errors.IdpUserUnauthorized, false)
-                return
+                return done(errors.IdpUserUnauthorized, false)
             }
 
             if (!user) {
-                done(null, false, { message: 'User isnt in database' });
-                return
+                return done(null, false, { message: 'User isnt in database' });
             }
 
             if (await passportUtils.isBlackListed(user.id)) {

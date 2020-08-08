@@ -46,7 +46,6 @@ export function UserSessions() {
 
     const serv = {
         ...sessionService(),
-        editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
         get: () => sessionService().get(id).then(results => results.map(result => {
             return {
                 sid: result.sid,

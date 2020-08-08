@@ -27,7 +27,7 @@ class UserProvider extends Component {
 
                     // get rbac_opts to initialize the RBAC
                 const rbac_opts = await configService().getRbacOptions()
-                
+
                 const rbac = new AuthizationRbac(rbac_opts)
                 await rbac.init()
                 user.roles = roles

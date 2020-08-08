@@ -26,7 +26,7 @@ module.exports = async function (app, express) {
         // using authization module to setup authentication and authorization middleware
         //const authization = await require('@authization/authization')
         const authization = await require('../../../authization-module/authization')
-            .setup({ app, db: middlewareConifg.cloud_db/*, rbac_opts: middlewareConifg.rbac_opts*/ })
+            .setup({ app, db: middlewareConifg.cloud_db, /*rbac_opts: middlewareConifg.rbac_opts*/ })
 
         app.use('/api', require("../../web-api")(authization))
 

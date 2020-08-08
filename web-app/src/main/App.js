@@ -16,6 +16,7 @@ export default function App() {
 
     require('dotenv').config()
     const ctx = useContext(UserContext);
+    console.log(ctx)
 
     return (
         <Router>

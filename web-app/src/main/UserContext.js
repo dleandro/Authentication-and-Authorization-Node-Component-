@@ -1,58 +1,51 @@
-import React, { Component } from 'react'
-import { userService, userRoleService, configService } from './service'
-import AuthizationRbac from '../authization/authization-rbac'
+import React, { useEffect,useState } from 'react'
+import { userService } from './service'
 
 const UserContext = React.createContext()
 
-class UserProvider extends Component {
+function UserProvider(props)  {
     // Context state
-    state = {
-        selectedProtocol: "/",
-        redirect: { should: false, link: "/" },
-        user: { id: undefined, username: undefined, roles: [] },
-        rbac: undefined,
-        setUser: (data) => this.setState(prevState => ({ user: data }))
-    };
-
-    async componentDidMount() {
-
-        try {
-
-            const user = await userService().getAuthenticatedUser()
-
-            if (user.username) {
-                // get authenticated User's Roles 
-                const roles = (await userRoleService().get(user.id))
-                    .map(role => role.role)
-
-                    // get rbac_opts to initialize the RBAC
-                const rbac_opts = await configService().getRbacOptions()
+    const [userPermissions,setPermissions]=useState(undefined)
+    const [user,setUser]=useState({ id: undefined, username: undefined })
+    const [rbac,setRbac] = useState(undefined)
+    
+    
+    useEffect(()=>{
+        
+        const fetchData=async()=>{
+            try {
                 
-                const rbac = new AuthizationRbac(rbac_opts)
-                await rbac.init()
-                user.roles = roles
-                this.state.setUser(user)
+            const user = await userService().getAuthenticatedUser()
+            console.log(user)
+            
 
-                this.setState(_ => ({ rbac: rbac }))
+            const permission = await userService().getAuthenticatedUserPermissions()
+
+            if (permission.length) {
+                console.log('current User has permissions:', permission)
+                setPermissions(permission)
+            }
+            if (user.username) {
+                setUser(user)
             }
 
         } catch (err) {
             console.error(err)
         }
-
     }
+    fetchData()
 
-    render() {
-        const { children } = this.props
+    },[])
+
+        const { children } = props
 
         return (
-            <UserContext.Provider value={this.state}>
+            <UserContext.Provider value={{rbac,userPermissions,user,setUser}}>
                 {children}
             </UserContext.Provider>
         )
     }
-}
 
 export default UserContext
 export const UserConsumer = UserContext.Consumer
-export { UserProvider }
+export {UserProvider}

@@ -24,7 +24,7 @@ function PermissionRoles() {
     const ctx = useContext(UserContext);
 
     const serv = {...permissionRoleService(),
-        postFields: [{text:'Id of Role to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        postFields: [{text:'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get=()=> permissionRoleService().get(id)
     .then(results=>results.map(result=>{

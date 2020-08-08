@@ -31,7 +31,7 @@ function RolePermission() {
 
     const serv = {...rolePermissionService(),
         detailsUrl: (listUser) => `/roles/${id}`,
-        postFields: [{text:'Id of Permission to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        postFields: [{text:'Id of Permission to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get = ()=>rolePermissionService().get(id)
     .then(results=>results.map(result=>({
@@ -55,7 +55,7 @@ export function RoleUsers() {
     const serv = {...roleUserService(),
         detailsUrl: (listUser) => `/role/${id}`,
         editFields: [{text:'New End date (date)'},{text:'New Active (check)'}],
-        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        postFields: [{text:'Id of User to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
         post: (arr) => userListService().addUserList(id,arr[0],ctx.user.id,new Date()),
     }
     serv.get= ()=> roleUserService().get(id)

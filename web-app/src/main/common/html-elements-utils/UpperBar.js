@@ -20,7 +20,7 @@ export default function Upperbar({ setRedirect }) {
     const history = useHistory()
 
     const ctx = useContext(UserContext)
-
+    console.log(ctx)
     const username = ctx.user.username || ""
 
     const logoutAndRedirect = async () => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { userService, userRoleService, configService } from './service'
-import AuthizationRbac from '../authization/authization-rbac'
+const AuthizationRbac = require('./common/authization-rbac')
+
 
 const UserContext = React.createContext()
 
@@ -38,6 +39,7 @@ class UserProvider extends Component {
 
         } catch (err) {
             console.error(err)
+            return 
         }
 
     }

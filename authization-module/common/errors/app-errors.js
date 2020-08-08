@@ -30,5 +30,11 @@ module.exports = {
         title: "Unauthorized",
         detail: 'User registered with an identity provider so he cannot authenticate via a local strategy',
         status: 401
+    }),
+
+    incorrectPassword: new CustomError({
+        title: "Incorrect Password", 
+        detail: "The user tried to authenticate with the wrong password",
+        status: 401
     })
 }

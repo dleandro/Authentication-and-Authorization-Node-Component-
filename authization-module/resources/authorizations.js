@@ -29,6 +29,9 @@ module.exports = {
                 return next()
             }
         }
+        else{
+            roles.push('guest')
+        }
 
 
         for (let i = 0; i < roles.length; i++) {

@@ -3,7 +3,7 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { listService, userRoleService, userService, logsService, rolesService, userListService, sessionService } from '../../service';
+import { listService, userRoleService, userService, logsService, rolesService, userListService, sessionService, UsersessionService } from '../../service';
 import Button from 'react-bootstrap/Button';
 import UserContext from "../../UserContext";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
@@ -30,11 +30,34 @@ function UserRoles() {
 
     const customService = {
         ...userRoleService(), editFields: [{ text: 'New Date (date)' }, { text: 'New Active state (check)' }],
-        postFields: [{ text: 'Id of Role to be assign (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
+        postFields: [{ text: 'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
     };
     customService.get = fetchData;
-    customService.post = arr => userRoleService().post(id, arr[0], ctx.user.id, new Date())
+    customService.post = arr => {console.log(arr);return userRoleService().post(id, arr[0], ctx.user.id, new Date()).then(
+        result=>{
+            console.log(result)
+            return{
+               RoleId: result.RoleId,
+                start_date: result.start_date,
+                end_date: result.end_date,
+                active: result.active==true?1:0,
+                updater: result.updater
+            }
+        }
+    )}
     customService.update = (oldObj, arr) =>userRoleService().update(id, oldObj.RoleId, arr)
+    .then(result => {
+        console.log(result)
+        return {
+            RoleId: oldObj.RoleId,
+            role: oldObj.role,
+            start_date: oldObj.start_date,
+            end_date: result.endDate,
+            active: result.active,
+            updater: ctx.user.id
+        }
+    });
+    
     customService.destroy= oldObj => userRoleService().destroy(id,oldObj.RoleId)
     return (
         <TablePage resource={'user-role'} service={customService} />
@@ -43,10 +66,13 @@ function UserRoles() {
 
 export function UserSessions() {
     let { id } = useParams()
-
+    const ctx = useContext(UserContext);
+    if(!id){
+        id=ctx.user.id
+    }
     const serv = {
-        ...sessionService(),
-        get: () => sessionService().get(id).then(results => results.map(result => {
+        ...UsersessionService(),
+        get: () => UsersessionService().get(id).then(results => results.map(result => {
             return {
                 sid: result.sid,
                 start_date: result.createdAt,
@@ -69,11 +95,10 @@ function UserLists() {
     const serv = {
         ...userListService(),
         editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
-        postFields: [{ text: 'Id of List to be assign (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
+        postFields: [{ text: 'Id of List to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
     };
     serv.get = () => userListService().get(id)
         .then(results => results.map(result => {
-            console.log(result)
             return {
                 ListId: result.ListId,
                 list:result['List.list'],
@@ -85,7 +110,7 @@ function UserLists() {
         }));
     serv.post = arr => userListService().post([arr[0], id, new Date(), ctx.user.id])
     serv.update = (oldObj,arr)=>userListService().update(id,oldObj.ListId,arr)
-
+    serv.destroy = (oldObj)=> userListService().destroy(oldObj.ListId,id)
     return (
         <TablePage service={serv} resource={'users-lists'} />
     )

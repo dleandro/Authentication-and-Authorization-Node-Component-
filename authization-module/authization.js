@@ -3,8 +3,6 @@
 // This file is the entry point for our authentication and autorization nodejs module
 // it also calls the setup file
 
-// this should be a superclass to the functionalities classes...
-
 const path = require('path')
 
 require('dotenv').config({ path: path.resolve(__dirname, './.env') })

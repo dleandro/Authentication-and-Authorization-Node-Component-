@@ -1,13 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
-import {
-    listService, permissionRoleService,
-    permissionService,
-    rolePermissionService,
-    rolesService,
-    userListService,
-    userService
-} from "../../service";
+import {permissionRoleService, permissionService, rolesService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -24,7 +17,7 @@ function PermissionRoles() {
     const ctx = useContext(UserContext);
 
     const serv = {...permissionRoleService(),
-        postFields: [{text:'Id of Role to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        postFields: [{text:'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get=()=> permissionRoleService().get(id)
     .then(results=>results.map(result=>{
@@ -34,9 +27,8 @@ function PermissionRoles() {
         }
     }));
     serv.post = arr => permissionRoleService().post([id,arr[0]])
-    return (
-        <TablePage service={serv} resource={'listuser'} />
-    )
+
+    return serv?<TablePage service={serv} resource={'listuser'}/>:undefined
 }
 
 const components = {

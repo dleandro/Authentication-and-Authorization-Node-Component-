@@ -129,7 +129,7 @@ export function roleUserService() {
     }
 }
 
-export function sessionService(test) {
+export function UsersessionService(test) {
     if (test) {
         WEB_API_HOME_PATH = `http://localhost:8082`;
     }
@@ -138,6 +138,16 @@ export function sessionService(test) {
         update: async (oldObject, arr) => makeRequest(sessions.SPECIFIC_SESSION_PATH(oldObject.sid), { sid: oldObject.sid, date: new Date(arr[0].date + 'T' + arr[0].time) }, 'PUT'),
         destroy: async (oldObject) => makeRequest(sessions.SESSION_PATH, { sid: oldObject.sid }, 'DELETE'),
         getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id))
+    }
+}
+
+export function sessionService(test) {
+    if (test) {
+        WEB_API_HOME_PATH = `http://localhost:8082`;
+    }
+    return {
+        get: async () => getRequest(sessions.SESSION_PATH),
+        destroy: async (oldObject) => makeRequest(sessions.SESSION_PATH, { sid: oldObject.sid }, 'DELETE')
     }
 }
 // TODO: UserSessions
@@ -167,7 +177,7 @@ export function userListService() {
         get: async (id) => getRequest(users.LIST_PATH(id)),
         post: async arr => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
         update: async (UserId,ListId, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
-        destroy: async (oldObject) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: oldObject.listId, UserId: oldObject.userId }, 'DELETE'),
+        destroy: async (ListId,UserId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: ListId, UserId: UserId }, 'DELETE'),
         // not working
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')
     }
@@ -178,7 +188,7 @@ export function listUserService() {
         get: async (id) => getRequest(lists.USERS_LISTS_PATH(id)),
         post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
         update: async (oldObject, arr) => userListService().update(oldObject, arr),
-        destroy: async (oldObject) => userListService().destroy(oldObject),
+        destroy: async (ListId,UserId) => userListService().destroy(ListId,UserId),
         // not working
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')
     }

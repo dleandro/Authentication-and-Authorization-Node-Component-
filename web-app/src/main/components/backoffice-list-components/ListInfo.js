@@ -18,7 +18,7 @@ function ListUsers() {
     const serv = {...listUserService(),
         detailsUrl: (listUser) => `/lists/${id}`,
         editFields: [{text:'New End date (date)'},'Active'],
-        postFields: [{text:'Id of User to be assign (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
+        postFields: [{text:'Id of User to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get =()=> listUserService().get(id)
     .then(results=>results.map(result=>{
@@ -32,6 +32,7 @@ function ListUsers() {
         }
     }));
     serv.post = arr=> listUserService().post([id,arr[0],new Date(),ctx.user.id])
+    serv.destroy= oldObj=>listUserService().destroy(id,oldObj.UserId)
     return (
          <TablePage service={serv} resource={'listuser'} />
     )

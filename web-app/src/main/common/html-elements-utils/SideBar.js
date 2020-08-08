@@ -49,7 +49,7 @@ export default function Sidebar({ navWidthCollapsed }) {
 
     const [expand, setexpand] = useState(false);
 
-    React.useEffect(() => { document.getElementById('main').style.marginLeft = expand ? navWidthExpanded : navWidthCollapsed; }, [expand])
+    React.useEffect(() => { document.getElementById('main').style.marginLeft = expand ? navWidthExpanded : navWidthCollapsed; }, [expand, navWidthCollapsed])
 
     return (
         <SideNav id={"sidebar"}

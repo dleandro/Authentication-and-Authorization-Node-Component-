@@ -9,8 +9,7 @@ const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url
     .then(resp => resp.json())
     .then(resp => {
         if (resp.err) {
-            console.log(resp.err)
-            return {err:resp.err}
+            throw new Error(resp.err)
         }
         return resp
     })

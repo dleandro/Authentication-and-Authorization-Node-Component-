@@ -1,51 +1,57 @@
 import React, { useEffect,useState } from 'react'
-import { userService } from './service'
+import { userService, userRoleService, configService } from './service'
+const AuthizationRbac = require('./common/authization-rbac')
+
 
 const UserContext = React.createContext()
 
-function UserProvider(props)  {
+function UserProvider(props) {
     // Context state
-    const [userPermissions,setPermissions]=useState(undefined)
-    const [user,setUser]=useState({ id: undefined, username: undefined })
-    const [rbac,setRbac] = useState(undefined)
-    
-    
-    useEffect(()=>{
-        
-        const fetchData=async()=>{
+    const [userPermissions, setPermissions] = useState(undefined)
+    const [user, setUser] = useState({ id: undefined, username: undefined })
+    const [rbac, setRbac] = useState(undefined)
+
+
+    useEffect(() => {
+
+        const fetchData = async () => {
             try {
-                
-            const user = await userService().getAuthenticatedUser()
-            console.log(user)
-            
 
-            const permission = await userService().getAuthenticatedUserPermissions()
+                const user = await userService().getAuthenticatedUser()
 
-            if (permission.length) {
-                console.log('current User has permissions:', permission)
-                setPermissions(permission)
+                if (user.username) {
+                    // get authenticated User's Roles 
+                    const roles = (await userRoleService().get(user.id))
+                        .map(role => role.role)
+
+                    // get rbac_opts to initialize the RBAC
+                    const rbac_opts = await configService().getRbacOptions()
+
+                    const rbac = new AuthizationRbac(rbac_opts)
+                    await rbac.init()
+                    user.roles = roles
+                    setUser(user)
+
+                    setRbac(rbac)
+                }
+            } catch (err) {
+                console.error(err)
+                return
             }
-            if (user.username) {
-                setUser(user)
-            }
-
-        } catch (err) {
-            console.error(err)
         }
-    }
-    fetchData()
+        fetchData()
 
-    },[])
+    }, [])
 
-        const { children } = props
+    const { children } = props
 
-        return (
-            <UserContext.Provider value={{rbac,userPermissions,user,setUser}}>
-                {children}
-            </UserContext.Provider>
-        )
-    }
+    return (
+        <UserContext.Provider value={{ rbac, userPermissions, user, setUser }}>
+            {children}
+        </UserContext.Provider>
+    )
+}
 
 export default UserContext
 export const UserConsumer = UserContext.Consumer
-export {UserProvider}
+export { UserProvider }

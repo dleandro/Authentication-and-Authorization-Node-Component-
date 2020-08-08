@@ -12,27 +12,30 @@ module.exports = () => {
         async function (username, password, done) {
             const user = await passportUtils.findCorrespondingUser(username);
 
-            const userIsFromIdp = await Idp.getByUserId(user.id)
-
-            if (userIsFromIdp) {
-                done(errors.IdpUserUnauthorized, false)
-                return
-            }
-
             if (!user) {
                 done(null, false, { message: 'User isnt in database' });
                 return
             }
-
+            
             if (await passportUtils.isBlackListed(user.id)) {
                 passportUtils.addNotification(user.id);
                 done(null, false, { message: 'User is BlackListed' });
                 return;
             }
 
-            if (await User.correctPassword(password, user)) {
-                done(null, user);
+            const userIsFromIdp = await Idp.getByUserId(user.id)
+            if (userIsFromIdp) {
+                done(errors.IdpUserUnauthorized, false)
+                return
             }
+
+            if (await User.correctPassword(password, user)) {
+                done(null, user)
+                return
+            }
+
+            // incorrect password
+            done(errors.incorrectPassword, false)
         }
     );
 

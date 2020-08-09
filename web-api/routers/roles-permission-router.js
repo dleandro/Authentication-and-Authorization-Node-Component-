@@ -17,8 +17,19 @@ module.exports = function (apiUtils, authization) {
         .post(addRolesPermission)
         .delete(deleteRolesPermission)
 
+    rolesPermissionRouter.get('/roles/:id',getByRole)    
+    rolesPermissionRouter.get('/permissions/:id',getByPermission) 
+
     function getRolesPermissions(req, res) {
         apiUtils.promiseDataToResponse(res, rolePermission.get())
+    }
+
+    function getByRole(req,res){
+        apiUtils.promiseDataToResponse(res, rolePermission.getByRole(req.params.id))
+    }
+
+    function getByPermission(req,res){
+        apiUtils.promiseDataToResponse(res, rolePermission.getByPermission(req.params.id))
     }
 
     function addRolesPermission(req, res) {

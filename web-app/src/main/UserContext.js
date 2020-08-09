@@ -44,7 +44,7 @@ function UserProvider(props) {
     const { children } = props
 
     return (
-        <UserContext.Provider value={{ rbac, userPermissions, user, setUser }}>
+        <UserContext.Provider value={{ rbac, user, setUser }}>
             {children}
         </UserContext.Provider>
     )

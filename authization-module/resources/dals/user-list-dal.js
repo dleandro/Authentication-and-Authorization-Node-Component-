@@ -11,7 +11,7 @@ module.exports = {
     * @param userId
     * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
     */
-    getUsersLists: (userId) =>
+    getByUser: (userId) =>
         tryCatch(() =>
             UserList.findAll({
                 where: {
@@ -22,13 +22,13 @@ module.exports = {
 
 
     //TODO: change fields from jointed query
-    getUsersInThisList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
+    getByList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
 
     //TODO: change fields from jointed query
     isUserBlackListed: (user_id) => tryCatch(async () => {
         const userLists = await UserList.findAll({ where: { UserId: user_id }, include: [List], raw: true })
 
-        return userLists.some(userList => userList['List.list'] === 'BLACK')
+        return userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active==1)
     }),
 
     create: (listId, userId, updater, start_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date: start_date, active: active, updater: updater }, { include: [List] })),

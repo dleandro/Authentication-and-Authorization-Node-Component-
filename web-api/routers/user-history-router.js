@@ -9,7 +9,7 @@ module.exports = function (apiUtils, authization) {
 
     userHistoryRouter.get('/', getAllHistories)
 
-    userHistoryRouter.get('/:userId', getAllHistoriesFromSpecificUser)
+    userHistoryRouter.get('/:id', getAllHistoriesFromSpecificUser)
 
     function getAllHistories(req, res) {
         apiUtils.promiseDataToResponse(res, userHistory.get())

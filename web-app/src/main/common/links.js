@@ -34,10 +34,8 @@ export const webApiLinks =
         LOCAL_LOGIN_PATH: `${AUTHENTICATION_PATH}/local`,
         LOGOUT_PATH: `${AUTHENTICATION_PATH}/logout`,
         GET_AUTHENTICATED_USER_PATH: `${AUTHENTICATION_PATH}/authenticated-user`,
-        ROLES_PATH: id => `${USER_PATH}/${id}/roles`,
         LIST_PATH: id => `${USER_PATH}/${id}/lists`,
         HISTORY_PATH: id => `${USER_PATH}/${id}/history`,
-        SESSION_PATH: id => `${USER_PATH}/${id}/sessions`,
         CURRENT_USER_PERMISSIONS_PATH: `${USER_PATH}/CurrentUser/permissions`
     },
 
@@ -61,33 +59,38 @@ export const webApiLinks =
 
     users_roles: {
         USERS_ROLES_PATH,
+        BY_USER: userId=>`${USERS_ROLES_PATH}/users/${userId}`,
+        BY_ROLE: roleId=>`${USERS_ROLES_PATH}/roles/${roleId}`,
         ACTIVE_USERS_ROLES_PATH: `${USERS_ROLES_PATH}/active`,
         USERS_ACTIVE_ROLES_PATH: userId => `${USERS_ROLES_PATH}/active/user/${userId}`,
         USER_ROLES_DEACTIVATION_PATH: userRoleId => `${USERS_ROLES_PATH}/deactivate/${userRoleId}`
     },
 
     users_lists: {
-        USERS_LIST_PATH
+        USERS_LIST_PATH,
+        BY_USER: userId=>`${USERS_LIST_PATH}/users/${userId}`,
+        BY_LIST: listId=>`${USERS_LIST_PATH}/lists/${listId}`
     },
 
     lists: {
         LIST_PATH,
         SPECIFIC_LIST_PATH: listId => `${LIST_PATH}/${listId}`,
         ACTIVE_LISTS_PATH: `${LIST_PATH}/active`,
-        USERS_LISTS_PATH: listId => `${LIST_PATH}/${listId}/users`,
         LIST_DEACTIVATION_PATH: listId => `${LIST_PATH}/deactivate/${listId}`
     },
 
     roles_permissions: {
-        ROLES_PERMISSION_PATH
+        ROLES_PERMISSION_PATH,
+        BY_ROLE: roleId=>`${ROLES_PERMISSION_PATH}/roles/${roleId}`,
+        BY_PERMISSION : permissionId=>`${ROLES_PERMISSION_PATH}/permissions/${permissionId}`,
     },
 
     configs: {
         CONFIG_PATH,
-        GOOGLE_CONFIG_PATH: `${CONFIG_PATH}/google`,
-        AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/azureAD`,
+        GOOGLE_CONFIG_PATH: `${CONFIG_PATH}/oauth2/google`,
+        AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/oauth2/office365`,
         DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`,
-        SAML_CONFIG_PATH: `${CONFIG_PATH}/Saml`,
+        SAML_CONFIG_PATH: `${CONFIG_PATH}/saml/office365`,
         SPECIFIC_PATH: protocol => `${CONFIG_PATH}/${protocol}`,
         RBAC_OPTS_PATH: `${CONFIG_PATH}/rbac-opts`
     },
@@ -98,9 +101,10 @@ export const webApiLinks =
     },
     sessions: {
         SESSION_PATH,
-        SPECIFIC_SESSION_PATH: id => `${SESSION_PATH}/${id}`
+        USER_SESSIONS_PATH: id => `${SESSION_PATH}/${id}`
     },
     history: {
-        HISTORY_PATH
+        HISTORY_PATH,
+        USER_HITORY_PATH: userId=> `${HISTORY_PATH}/${userId}`
     }
 }

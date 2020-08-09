@@ -63,7 +63,6 @@ export function userService(test) {
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),
         getUserLists: async (id) => getRequest(users.LIST_PATH(id)),
-        getUserHistory: async (id) => getRequest(users.HISTORY_PATH(id)),
         getAuthenticatedUserPermissions: async () => getRequest(users.CURRENT_USER_PERMISSIONS_PATH)
     }
 }
@@ -110,7 +109,7 @@ export function permissionService() {
 
 export function userRoleService() {
     return {
-        get: async userId => getRequest(users.ROLES_PATH(userId)),
+        get: async userId => getRequest(users_roles.BY_USER(userId)),
         post: async (userId,roleId,updater,date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId, active: 1, updater: updater, start_date: date }, 'POST'),
         update: async (userId,roleId,arr) =>makeRequest(users_roles.USERS_ROLES_PATH, { user:userId, role:roleId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
         destroy: async (UserId,RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: UserId, role: RoleId }, 'DELETE'),
@@ -122,7 +121,7 @@ export function userRoleService() {
 
 export function roleUserService() {
     return {
-        get: async (roleId) => getRequest(roles.ROLE_USERS_PATH(roleId)),
+        get: async (roleId) => getRequest(users_roles.BY_ROLE(roleId)),
         post: async (arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: arr[0], role: arr[1], active: 1, updater: arr[2], start_date: arr[3] }, 'POST'),
         update: userRoleService().update,
         destroy: userRoleService().destroy
@@ -134,7 +133,7 @@ export function UsersessionService(test) {
         WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
-        get: async (id) => getRequest(users.SESSION_PATH(id)),
+        get: async (id) => getRequest(sessions.USER_SESSIONS_PATH(id)),
         update: async (oldObject, arr) => makeRequest(sessions.SPECIFIC_SESSION_PATH(oldObject.sid), { sid: oldObject.sid, date: new Date(arr[0].date + 'T' + arr[0].time) }, 'PUT'),
         destroy: async (oldObject) => makeRequest(sessions.SESSION_PATH, { sid: oldObject.sid }, 'DELETE'),
         getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id))
@@ -155,7 +154,7 @@ export function sessionService(test) {
 export function rolePermissionService() {
     return {
         //TODO: get returns object with fields PermissionId and Permission.id chose one and change destroy/update according to the chosen one
-        get: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
+        get: async (id) => getRequest(roles_permissions.BY_ROLE(id)),
         post: async (arr) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: arr[0], roleId: arr[1] }, 'POST')
             .then(data => permissionService().getPermission(data.PermissionId)),
         destroy: async (roleId,PermissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: PermissionId, roleId: roleId }, 'DELETE')
@@ -164,7 +163,7 @@ export function rolePermissionService() {
 
 export function permissionRoleService() {
     return {
-        get: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id) + '/roles'),
+        get: async (id) => getRequest(roles_permissions.BY_PERMISSION(id)),
         post: async (arr) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: arr[0], roleId: arr[1] }, 'POST'),
         destroy: rolePermissionService().destroy
     }
@@ -173,7 +172,7 @@ export function permissionRoleService() {
 export function userListService() {
     return {
         //TODO: get not working, problem in api
-        get: async (id) => getRequest(users.LIST_PATH(id)),
+        get: async (id) => getRequest(users_lists.BY_USER(id)),
         post: async arr => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
         update: async (UserId,ListId, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
         destroy: async (ListId,UserId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: ListId, UserId: UserId }, 'DELETE'),
@@ -184,7 +183,7 @@ export function userListService() {
 
 export function listUserService() {
     return {
-        get: async (id) => getRequest(lists.USERS_LISTS_PATH(id)),
+        get: async (id) => getRequest(users_lists.BY_LIST(id)),
         post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
         update: async (oldObject, arr) => userListService().update(oldObject, arr),
         destroy: async (ListId,UserId) => userListService().destroy(ListId,UserId),
@@ -195,6 +194,13 @@ export function listUserService() {
 
 
 // TODO: USERHISTORY
+export function userHistoryService(){
+    return{
+        get :async (id)=>getRequest(history.USER_HITORY_PATH(id))
+    }
+}
+
+
 // THIS ONE BELOW IS THE LOGS
 export function logsService(test) {
     if (test) {
@@ -212,10 +218,10 @@ export function configService() {
         changeGoogleAuthenticationOptions: async (google_opts) => makeRequest(configs.GOOGLE_CONFIG_PATH, { google_opts: google_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
         changeAzureADAuthenticationOptions: async (azure_opts) => makeRequest(configs.AZUREAD_CONFIG_PATH, { azure_opts: azure_opts }, 'PUT'),
         changeSamlAuthenticationOptions: async (saml_opts) => makeRequest(configs.SAML_CONFIG_PATH, { saml_opts: saml_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
-        getGoogleOptions: async () => getRequest(configs.GOOGLE_CONFIG_PATH + '/options'),
-        getAzureOptions: async () => getRequest(configs.AZUREAD_CONFIG_PATH + '/options'),
-        getSamlOptions: async () => getRequest(configs.SAML_CONFIG_PATH + '/options'),
-        getOptions: async (protocol) => getRequest(configs.SPECIFIC_PATH(protocol) + '/options'),
+        getGoogleOptions: async () => getRequest(configs.GOOGLE_CONFIG_PATH),
+        getAzureOptions: async () => getRequest(configs.AZUREAD_CONFIG_PATH),
+        getSamlOptions: async () => getRequest(configs.SAML_CONFIG_PATH),
+        getOptions: async (protocol) => getRequest(configs.SPECIFIC_PATH(protocol)),
         getRbacOptions: async () => getRequest(configs.RBAC_OPTS_PATH)
     }
 }

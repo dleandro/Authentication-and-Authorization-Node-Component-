@@ -3,7 +3,7 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { listService, userRoleService, userService, logsService, rolesService, userListService, sessionService, UsersessionService } from '../../service';
+import { listService, userRoleService, userService, logsService, rolesService, userListService, sessionService, UsersessionService, userHistoryService } from '../../service';
 import Button from 'react-bootstrap/Button';
 import UserContext from "../../UserContext";
 import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
@@ -130,8 +130,8 @@ function UserLists() {
 function UserHistory() {
     let { id } = useParams();
 
-    const serv = { ...logsService() };
-    serv.get = () => logsService().get(id)
+    const serv = { ...userHistoryService() };
+    serv.get = () => userHistoryService().get(id)
         .then(results => results.map(result => {
             delete result.user_id
             return result

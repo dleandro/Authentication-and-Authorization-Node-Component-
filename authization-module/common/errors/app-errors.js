@@ -1,40 +1,23 @@
-'use strict'
-
-const CustomError = require('./custom-error')
+const CustomError = require('./custom-error');
 
 module.exports = {
 
-    SequelizeValidationError: {
-        status: 400
-    },
-
-    SequelizeUniqueConstraintError: {
-        status: 409
-    },
-
-    SequelizeForeignKeyConstraintError: {
-        status: 409
-    },
-
-    SequelizeConnectionError: {
-        status: 400
-    },
-
+    SequelizeValidationError: {status: 400},
+    SequelizeUniqueConstraintError: {status: 409},
+    SequelizeForeignKeyConstraintError: {status: 409},
+    SequelizeConnectionError: {status: 400},
     Unauthorized: new CustomError({
-        title: "Unauthorized",
+        title: 'Unauthorized',
         detail: `The current user cannot access this resource`,
-        status: 401
-    }),
+        status: 401}),
 
     IdpUserUnauthorized: new CustomError({
-        title: "Unauthorized",
+        title: 'Unauthorized',
         detail: 'User registered with an identity provider so he cannot authenticate via a local strategy',
-        status: 401
-    }),
+        status: 401}),
 
     incorrectPassword: new CustomError({
-        title: "Incorrect Password", 
-        detail: "The user tried to authenticate with the wrong password",
-        status: 401
-    })
-}
+        title: 'Incorrect Password',
+        detail: 'The user tried to authenticate with the wrong password',
+        status: 401}),
+};

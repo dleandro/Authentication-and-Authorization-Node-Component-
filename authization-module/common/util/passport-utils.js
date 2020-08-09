@@ -29,7 +29,6 @@ module.exports = {
         const user = await users.getByIdp(idp)
         return user ? { id: user.id, idp: idp, username: user.username } : null
     },
-
     /**
      *
      * @param username

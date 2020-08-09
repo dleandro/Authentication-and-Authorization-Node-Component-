@@ -50,6 +50,6 @@ function UserProvider(props) {
     )
 }
 
-export default UserContext
-export const UserConsumer = UserContext.Consumer
-export { UserProvider }
+export default UserContext;
+export const UserConsumer = UserContext.Consumer;
+export { UserProvider };

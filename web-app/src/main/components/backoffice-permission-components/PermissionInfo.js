@@ -1,13 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
-import {
-    listService, permissionRoleService,
-    permissionService,
-    rolePermissionService,
-    rolesService,
-    userListService,
-    userService
-} from "../../service";
+import {permissionRoleService, permissionService, rolesService} from "../../service";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -32,11 +25,20 @@ function PermissionRoles() {
             RoleId:result.RoleId,
             role:result['Role.role']
         }
-    }));
-    serv.post = arr => permissionRoleService().post([id,arr[0]])
-    return (
-        <TablePage service={serv} resource={'listuser'} />
+    }))
+    serv.post = arr =>permissionRoleService().post([id,arr[0].value])
+    .then(
+        result=>{
+            console.log(result)
+            return{
+            RoleId:result.RoleId,
+            role:arr[0].label
+            }
+        }
     )
+    serv.destroy=oldObj=>permissionRoleService().destroy(oldObj.RoleId,id)
+
+    return serv?<TablePage service={serv} resource={'listuser'}/>:undefined
 }
 
 const components = {

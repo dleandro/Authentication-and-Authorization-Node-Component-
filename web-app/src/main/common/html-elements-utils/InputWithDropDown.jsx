@@ -10,9 +10,9 @@ const CustomMenu = React.forwardRef(
 
         return (
             <div ref={ref} style={style} className={className} aria-labelledby={labeledBy}>
-                <FormControl autoFocus className="mx-3 my-2 w-auto" placeholder="Type to filter..." onChange={(e) => setValue(e.target.value)} value={value} />
+                <FormControl autoFocus className="mx-3 my-2 w-auto" placeholder="Type to filter..." onChange={e=> setValue(e.target.value)} value={value} />
                 <ul className="list-unstyled">
-                    {React.Children.toArray(children).filter( (child) => !value || child.props.children.toLowerCase().startsWith(value), )}
+                    {React.Children.toArray(children).filter( child => !value || child.props.children.toLowerCase().startsWith(value), )}
                 </ul>
             </div>
         );
@@ -22,10 +22,15 @@ const CustomMenu = React.forwardRef(
 export default function InputWithDropDown({onChange,fetchData,label}) {
     const [value, setValue] = useState('');
     const [options, setOptions] = useState([]);
-
+    const [toggleLabel,setToggleLabel] = useState('Select one Item');
     const fetchOptions = () => fetchData().then(setOptions);
-    React.useEffect(()=>{fetchOptions()},[]);
-    React.useEffect(()=>{onChange(value);fetchOptions()},[value]);
+    React.useEffect(()=>{
+    fetchOptions();
+    },[]);
+    React.useEffect(()=>{
+    onChange({value,label:toggleLabel});
+    fetchOptions();
+    },[value]);
     return (
         <InputGroup>
             <FormControl value={value} placeholder={label}/>
@@ -34,11 +39,11 @@ export default function InputWithDropDown({onChange,fetchData,label}) {
                 <Dropdown onSelect={setValue}>
 
                     <Dropdown.Toggle id="dropdown-custom-components" >
-                        Matias chato dá fix
+                        {toggleLabel}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu as={CustomMenu}>
-                        {options.map(option=><Dropdown.Item eventKey={option.eventKey}>{option.text}</Dropdown.Item>)}
+                        {options.map(option=><Dropdown.Item onClick={index => setToggleLabel(index.target.outerText)} eventKey={option.eventKey}>{option.text}</Dropdown.Item>)}
                     </Dropdown.Menu>
                 </Dropdown>
             </InputGroup.Append>

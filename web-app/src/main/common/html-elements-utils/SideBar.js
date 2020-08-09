@@ -17,8 +17,8 @@ const fontSize = { fontSize: '1.75em'/*,color: '#1cc4e6'*/ }
 export default function Sidebar({ navWidthCollapsed }) {
     const ctx = useContext(UserContext);
 
-    const checkShouldShowItem = async permissionResource => 
-    ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [['GET', permissionResource], ['POST', permissionResource]])
+    const checkShouldShowItem = async permissionResource =>
+    ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [['GET', permissionResource], ['POST', permissionResource]]);
 
     const subItemToLink = subItem => checkShouldShowItem(subItem.key) ? <NavItem key={subItem.key}>
         <NavText >

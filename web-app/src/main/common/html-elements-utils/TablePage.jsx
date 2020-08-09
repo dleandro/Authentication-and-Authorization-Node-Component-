@@ -4,6 +4,8 @@ import UserContext from "../../UserContext";
 import { SubmitValuesModal } from "./generics/GenericModal";
 import { useHistory } from "react-router-dom";
 import FilterablePageTable from "./Table/FilterablePageTable";
+import {Spinner} from "react-bootstrap";
+import Loading from "./Loading";
 
 
 /**
@@ -33,13 +35,13 @@ import FilterablePageTable from "./Table/FilterablePageTable";
 const TablePage = ({ service, resource }) => {
     const ctx = useContext(UserContext);
     let history = useHistory();
-    const [values, setValues] = useState([]);
+    const [values, setValues] = useState(undefined);
     const [error,setError] = useState(undefined);
     const checkHasPermission = async method => ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [[method, resource]]);
 
     useEffect(() => { service.get().then(data => { console.log(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
-
+    useEffect(()=>console.log(values),[values])
     const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
     const addButton = /*await checkHasPermission('POST')*/service.postFields?<th>
         <SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th>:undefined;
@@ -54,6 +56,8 @@ const TablePage = ({ service, resource }) => {
                               onClick={() =>service.destroy(val).then(()=>setValues([...values].filter(item=>item !==val)))} /></td>:undefined;
 
     const buildTable = () => {
+        console.log('building table...')
+        console.log('serv: ',service,' res: ',resource)
         const infoButton = val=> service.detailsUrl?<td>
             <GenericTooltipButton icon={'fa fa-info-circle'} onClick={t => history.push(service.detailsUrl(val))} tooltipText={'More Info!'} bootstrapColor={'primary'} />
         </td>:undefined;
@@ -69,13 +73,13 @@ const TablePage = ({ service, resource }) => {
             </tr>;
             return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
         }
-        const noDataFoundMessage =<th ><h1 className={'text-white'}>No Data Found</h1></th>;
-        return <tr>{noDataFoundMessage}{addButton} </tr>;
+        const noDataFoundMessage =<h1 className={'text-white'}>No Data Found</h1>;
+        return <div className={'d-flex justify-content-center '}><ul><li>{noDataFoundMessage}</li><li>{addButton}</li></ul></div>;
     };
-
+//<Spinner animation="border" size="lg" variant="info" />
     return (
         <React.Fragment>
-            {error ? <p>{error.status} {error.err}</p> : buildTable()}
+            {error ? <p>{error.status} {error.err}</p> : values?buildTable(): <Loading />}
         </React.Fragment>
     );
 };

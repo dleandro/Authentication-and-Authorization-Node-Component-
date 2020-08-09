@@ -1,39 +1,22 @@
 
-const config = require('../../../config/config'),
+const {callbackUrl,entryPoint,issuer,certificate} = require('../../../config/config').saml,
  SamlStrategy = require('passport-saml').Strategy,
-    fs = require('fs'),
-    path = require('path'),
-    passportUtils = require('../../../util/passport-utils'),
-    protocolName = 'Saml'
+    {checkProtocol,findUserByIdp,createUser,isBlackListed,addNotification,findUserByIdpOrCreate} = require('../../../util/passport-utils'),
+    protocolName = 'Saml',usernameLink='http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress';
 
 module.exports=()=>{
-    return new SamlStrategy({
-        callbackUrl: config.saml.callbackUrl,
-        entryPoint: config.saml.entryPoint,
-        issuer: config.saml.issuer,
-        cert: config.saml.certificate,
-        signatureAlgorithm:'sha256'
-
-    }, async function (profile, done) {
-        console.log('VAI COMEÇAR')
-        if (!(await passportUtils.checkProtocol(protocolName))) {
-            done(null, false, { message: 'Protocol is not avaiable' });
-            return;
-        }
-        console.log('Passou o checkProtocol')
-        console.log('Showing profile obj...')
-        console.log(profile)
-        let user = await passportUtils.findUserByIdp(profile.nameID);
-        console.log(user)
-        if (!user) {
-            user = await passportUtils.createUser(profile.nameID, 'saml', profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'], 'null');
-        }
-        if (await passportUtils.isBlackListed(user.id)) {
-            passportUtils.addNotification(user.id);
-            done(null, false, { message: 'User is BlackListed' });
-            return;
-        }
-        done(null, user);
-    });
+    return new SamlStrategy({callbackUrl, entryPoint, issuer, cert: certificate, signatureAlgorithm:'sha256'},
+        async function (profile, done) {
+            let errorMessage = 'Protocol is not avaiable';
+            if (await checkProtocol(protocolName)) {
+                const user = await findUserByIdpOrCreate(profile.nameID, 'saml', profile[usernameLink], 'null');
+                if (!await isBlackListed(user.id)) {
+                    return done(null, user);
+                }
+                addNotification(user.id);
+                errorMessage= 'User is BlackListed';
+            }
+            return done(null, false, {message: errorMessage});
+        });
 
 }

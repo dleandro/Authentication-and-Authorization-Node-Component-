@@ -12,7 +12,5 @@ module.exports = function (apiUtils, authization) {
     sessionRouter.put('/:id',(req,res)=>apiUtils.promiseDataToResponse(res,sessions.update(req.body.sid,req.body.date)))
     sessionRouter.delete('/',(req,res)=>apiUtils.promiseDataToResponse(res,sessions.delete(req.body.sid)))
 
-
-
     return sessionRouter
 }

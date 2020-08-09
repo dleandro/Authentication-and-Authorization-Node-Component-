@@ -7,11 +7,9 @@ module.exports = function (apiUtils, authization) {
     const userHistory = authization.userHistory
     const userHistoryRouter = require('express').Router()
 
-    userHistoryRouter
-        .get('/', getAllHistories)
+    userHistoryRouter.get('/', getAllHistories)
 
-    userHistoryRouter
-        .get('/:userId', getAllHistoriesFromSpecificUser)
+    userHistoryRouter.get('/:userId', getAllHistoriesFromSpecificUser)
 
     function getAllHistories(req, res) {
         apiUtils.promiseDataToResponse(res, userHistory.get())

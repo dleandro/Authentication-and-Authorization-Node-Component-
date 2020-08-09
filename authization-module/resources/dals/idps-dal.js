@@ -24,6 +24,7 @@ module.exports = {
                 user_id: userId
             })
         ),
+        
     /**
      *
      * @param idpId

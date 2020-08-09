@@ -1,7 +1,7 @@
 'use strict'
 
 const
-    { List, User, UserList } = require('../sequelize-model'),
+    { List } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
 // TODO: should a user be in more than one list?? if not we need to controll that
@@ -68,20 +68,6 @@ module.exports = {
      */
     getActive: () => tryCatch(() => List.findAll({ where: { active: 1 } })),
 
-    /**
-    * asks the database for all list entries that are active and associated with a specific user
-    * @param userId
-    * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
-    */
-    getUsersLists: (userId) =>
-        tryCatch(() =>
-            UserList.findAll({
-                where: {
-                    UserId: userId
-                },include : [List],raw:true
-            })
-        ),
-
     // update query doesn't return the updated resource for some reason
     update: async (id, list) => Promise.resolve(
         {
@@ -90,17 +76,4 @@ module.exports = {
             id
         }),
 
-    //TODO: change fields from jointed query
-    getUsersInThisList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
-
-    isUserBlackListed: (userId) =>
-        tryCatch(() =>
-            List.findAll({
-                where: {
-                    list: 'BLACK',
-                    active: 1,
-                    user_id: userId
-                }
-            })
-        )
 }

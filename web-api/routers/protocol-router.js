@@ -15,7 +15,7 @@ module.exports = function (apiUtils, authization) {
 
     protocolRouter.get('/active', getActiveProtocols)
 
-    protocolRouter.put('/active', changeActive)
+    protocolRouter.patch('/active', changeActive)
 
     function getProtocols(req, res) {
         apiUtils.promiseDataToResponse(res, protocols.get())

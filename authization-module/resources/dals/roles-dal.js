@@ -1,10 +1,10 @@
 'use strict'
 
-    const {Role,UserRoles,Permission, User, RolePermission }= require('../sequelize-model'),
+const { Role, Permission } = require('../sequelize-model'),
     config = require('../../common/config/config'),
     tryCatch = require('../../common/util/functions-utils')
 
-    const getSpecificById= (roleId) =>
+const getSpecificById = (roleId) =>
     tryCatch(() => Role.findByPk(roleId))
 
 module.exports = {
@@ -14,13 +14,13 @@ module.exports = {
          * @param role
          * @returns {Promise<void>}
          */
-    create: async (role,parent_role) => tryCatch(async () => {
+    create: async (role, parent_role) => tryCatch(async () => {
         await config.rbac.createRole(role, true)
-        if(parent_role){
-            await config.rbac.grantByName((await getSpecificById(parent_role)).role,role)
+        if (parent_role) {
+            await config.rbac.grantByName((await getSpecificById(parent_role)).role, role)
         }
         return (await Role.findOrCreate({
-            defaults: { parent_role: parent_role},
+            defaults: { parent_role: parent_role },
             where: {
                 role: role
             }
@@ -48,7 +48,7 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: async (roleId) =>
-        tryCatch(async () =>{
+        tryCatch(async () => {
             const role = await getSpecificById(roleId)
             config.rbac.removeByName(role.role)
             return Promise.resolve({
@@ -64,13 +64,6 @@ module.exports = {
      * @returns {Promise<void>}
      */
     get: () => tryCatch(() => Role.findAll({ raw: true })),
-
-    //TODO: change fields from jointed query
-    getRolePermissions: (roleId) => tryCatch(() => Role.findAll({ where: { id: roleId }, include: [Permission], raw: true })),
-
-    getUsersWithThisRole: (roleId) => tryCatch(() => UserRoles.findAll({ where: { RoleId: roleId }, include: [User], raw: true })),
-
-    getPermissionsWithThisRole: (roleId) => tryCatch(() => RolePermission.findAll({ where: { RoleId: roleId }, include: [Permission], raw: true })),
 
     addParentRole: (role, parentRole) =>
         tryCatch(async () => {

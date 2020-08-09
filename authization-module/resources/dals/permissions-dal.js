@@ -1,6 +1,6 @@
 'use strict'
 
-const { Role, RolePermission } = require('../sequelize-model'),
+const
     tryCatch = require('../../common/util/functions-utils'),
     Permission = require('../sequelize-model').Permission,
     config = require('../../common/config/config')
@@ -31,13 +31,13 @@ module.exports = {
      * @returns {Promise<void>}
      */
     delete: (id) =>
-        tryCatch(async () =>{
-            const permission=await require('./permissions-dal').getSpecificById(id)
+        tryCatch(async () => {
+            const permission = await require('./permissions-dal').getSpecificById(id)
             config.rbac.removeByName(permission.action + '_' + permission.resource)
             return Promise.resolve({
-                deletedRows: await Permission.destroy({where: {id: id}})
-    })
-    }),
+                deletedRows: await Permission.destroy({ where: { id: id } })
+            })
+        }),
     /**
      *
      * @returns {Promise<void>}
@@ -73,8 +73,4 @@ module.exports = {
             id
         }),
 
-        //TODO: change fields from jointed query
-    getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true }))
-
 }
-

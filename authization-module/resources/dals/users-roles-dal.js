@@ -1,8 +1,7 @@
 'use strict'
 
-const { Role } = require('../sequelize-model')
-
-const UserRole = require('../sequelize-model').UserRoles,
+const
+    { Role, User, UserRole } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
 
@@ -43,6 +42,9 @@ module.exports = {
      * @returns {Promise<*>}
      */
     getUserActiveRoles: (id) => tryCatch(() => UserRole.findAll({ where: { UserId: id, active: 1 } })),
+
+    getUsersWithThisRole: (roleId) => tryCatch(() => UserRole.findAll({ where: { RoleId: roleId }, include: [User], raw: true })),
+
     /**
      *
      * @returns {Promise<void>}
@@ -56,9 +58,9 @@ module.exports = {
     getById: (id) => tryCatch(() => UserRole.findByPk(id)),
 
     getUserRoles: (userId) => tryCatch(async () => {
-        
+
         const users = await UserRole.findAll({ where: { UserId: userId }, include: [Role], raw: true })
-        
+
         return users.map(user => {
             user.role = user['Role.role']
             delete user['Role.role']
@@ -69,22 +71,22 @@ module.exports = {
         })
     }),
 
-    delete: (UserId,RoleId) =>Promise.resolve(
+    delete: (UserId, RoleId) => Promise.resolve(
         {
-            deletedRows:  tryCatch(async () => await  UserRole.destroy({ where: { UserId: UserId,RoleId:RoleId } }))
+            deletedRows: tryCatch(async () => await UserRole.destroy({ where: { UserId: UserId, RoleId: RoleId } }))
         }),
 
-    update: async (user, role, endDate, active) =>Promise.resolve(
+    update: async (user, role, endDate, active) => Promise.resolve(
         {
-         updatedRows: await tryCatch(() => UserRole.update({ 
-            end_date: endDate,
-            active: active
-        },
-        {where:{UserId:user,RoleId:role}})),
-        endDate,
-        active
+            updatedRows: await tryCatch(() => UserRole.update({
+                end_date: endDate,
+                active: active
+            },
+                { where: { UserId: user, RoleId: role } })),
+            endDate,
+            active
         }
-    ) 
+    )
 
 
 }

@@ -2,12 +2,10 @@ import React, { useEffect,useState } from 'react'
 import { userService, userRoleService, configService } from './service'
 const AuthizationRbac = require('./common/authization-rbac')
 
-
 const UserContext = React.createContext()
 
 function UserProvider(props) {
     // Context state
-    const [userPermissions, setPermissions] = useState(undefined)
     const [user, setUser] = useState({ id: undefined, username: undefined })
     const [rbac, setRbac] = useState(undefined)
 
@@ -17,22 +15,22 @@ function UserProvider(props) {
         const fetchData = async () => {
             try {
 
-                const user = await userService().getAuthenticatedUser()
+                const authenticatedUser = await userService().getAuthenticatedUser()
 
-                if (user.username) {
+                if (authenticatedUser.username) {
                     // get authenticated User's Roles 
-                    const roles = (await userRoleService().get(user.id))
+                    const roles = (await userRoleService().get(authenticatedUser.id))
                         .map(role => role.role)
 
                     // get rbac_opts to initialize the RBAC
                     const rbac_opts = await configService().getRbacOptions()
 
-                    const rbac = new AuthizationRbac(rbac_opts)
-                    await rbac.init()
-                    user.roles = roles
-                    setUser(user)
+                    const setupRbac = new AuthizationRbac(rbac_opts)
+                    await setupRbac.init()
+                    authenticatedUser.roles = roles
+                    setUser(authenticatedUser)
 
-                    setRbac(rbac)
+                    setRbac(setupRbac)
                 }
             } catch (err) {
                 console.error(err)

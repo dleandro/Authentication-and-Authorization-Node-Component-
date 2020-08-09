@@ -2,13 +2,12 @@
 
 const
     users = require('../../resources/dals/users-dal'),
-    userList=require('../../resources/dals/user-list-dal'),
+    userList = require('../../resources/dals/user-list-dal'),
     idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
     userSession = require('../../resources/dals/user-session-dal'),
     protocol = require('../../resources/dals/protocols-dal'),
     moment = require('moment')
-
 
 module.exports = {
 
@@ -19,6 +18,7 @@ module.exports = {
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
     findUser: (userId) => users.getById(userId),
+
     /**
      *
      * @param idp
@@ -27,8 +27,9 @@ module.exports = {
     findUserByIdp: async (idp) => {
         // needs endpoint
         const user = await users.getByIdp(idp)
-        return user ? {id: user.id, idp: idp, username: user.username} : null
+        return user ? { id: user.id, idp: idp, username: user.username } : null
     },
+
     /**
      *
      * @param username
@@ -63,32 +64,21 @@ module.exports = {
             username: username
         }
     },
+
     /**
      *
      * @param userId
      * @returns {Promise<boolean>}
      */
-    isBlackListed: async (userId)=>{
-        let result=await userList.isUserBlackListed(userId)
-        result=result.filter(obj=>obj["Lists.list"]==='BLACK')
-        return result.length > 0
-    },
+    isBlackListed: (userId) => userList.isUserBlackListed(userId),
+
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    addNotification: async (userId) => {
-        await userHistories.create(userId, moment().format("YYYY-MM-DD HH:mm:ss"), "BlackListed User tried to Login")
-    },
-    updateSession: async (userId, sessionId) => {
-        await Session.update({UserId:userId},{where:{sid:sessionId}})
-    },
-    checkProtocol: async (protocolName) => {
-        const result = await protocol.getByName(protocolName)
-        return result!=null
-    },
-    deleteUserSession : async(userId,sessionId)=>{
-        await userSession.delete(userId,sessionId)
-    }
+    addNotification: (userId) => userHistories.create(new Date(), userId, "BlackListed User tried to Login", userId),
+
+    checkProtocol: (protocolName) => protocol.getByName(protocolName)
+    
 }

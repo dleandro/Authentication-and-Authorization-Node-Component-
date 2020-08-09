@@ -20,7 +20,7 @@ module.exports = {
         tryCatch(async () => {
             const permission = await require('./permissions-dal').getSpecificById(id)
             rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
-            return await (RolePermission.findOrCreate({
+            return (await RolePermission.findOrCreate({
                 where: {
                     RoleId: RoleId,
                     PermissionId: permission.id
@@ -34,8 +34,8 @@ module.exports = {
      * @param permission
      * @returns {Promise<void>}
      */
-    delete: (roleId, permissionId) =>
-        tryCatch(async () => {
+    delete: async (roleId, permissionId) =>Promise.resolve({
+        deletedRows: await  tryCatch(async () => {
             const permission = await require('./permissions-dal').getSpecificById(permissionId)
             const role = await rolesDal.getSpecificById(roleId)
             await rbac.revokeByName(role.role, permission.action + '_' + permission.resource)
@@ -44,21 +44,8 @@ module.exports = {
                     RoleId: roleId, PermissionId: permissionId
                 }
             })
-        }),
-
-    /**
-     *
-     * @param permission
-     * @returns {Promise<void>}
-     */
-    getRolesByPermission: (permission) =>
-        tryCatch(() =>
-            RolePermission.findAll({
-                where: {
-                    PermissionId: permission
-                }
-            })
-        ),
+        })
+    }),
 
     get: () =>
         tryCatch(async () => {
@@ -85,7 +72,12 @@ module.exports = {
                 return rolePermission
 
             })
-        }
-        )
+        }),
+
+    getPermissionsWithThisRole: (roleId) => tryCatch(() => RolePermission.findAll({ where: { RoleId: roleId }, include: [Permission], raw: true })),
+
+    //TODO: change fields from jointed query
+    getRolesByPermission: (id) => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true }))
+
 
 }

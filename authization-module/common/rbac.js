@@ -22,10 +22,8 @@ module.exports = async function (rbac_opts) {
     // variables are only initialized here because they need rbac to be placed on the config file before dal's are called
     roleDal = require('../resources/dals/roles-dal')
     permissionsDal = require('../resources/dals/permissions-dal')
-    rolesPermissionsDal = require('../resources/dals/roles-permissions-dal'),
+    rolesPermissionsDal = require('../resources/dals/roles-permissions-dal')
     usersRolesDal=require('../resources/dals/users-roles-dal')
-
-
 
 const setGuestRole = async user => {
     const role= await roleDal.getByName('guest')

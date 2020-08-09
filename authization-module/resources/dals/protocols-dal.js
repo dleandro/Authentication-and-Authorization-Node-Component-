@@ -3,6 +3,7 @@ const Protocols = require('../sequelize-model').Protocols,
 
 
 module.exports = {
+
     create: (name, active) =>
         tryCatch(() =>
             Protocols.create({
@@ -12,12 +13,13 @@ module.exports = {
         ),
 
     get: () =>
-        tryCatch(() => Protocols.findAll({ raw: true }))
-    ,
+        tryCatch(() => Protocols.findAll({ raw: true })),
+
     getByName: (name) =>
-        tryCatch(() => Protocols.findByPk(name, { raw: true })),
+        tryCatch(() => Protocols.findByPk(name, { where: { active: 1 }, raw: true })),
 
     getActive: () => tryCatch(() => Protocols.findAll({ where: { active: 1 } })),
 
     changeActive: (protocol, active) => tryCatch(() => Protocols.update({ active: active }, { where: { protocol: protocol } }))
+
 }

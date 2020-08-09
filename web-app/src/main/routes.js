@@ -18,7 +18,11 @@ const rolesDropdownOptionsFetcher = () => rolesService().get().then(data=>data.m
 const rolePostFields = ['New Role', {text:'Id of the Parent Role (dropdown) ', DropdownOptionsFetcher:rolesDropdownOptionsFetcher}];
 
 const userServ = {...userService(), editFields: ['New Username'], postFields: ['New Username', 'New Password'], detailsUrl: user => `/users/${user.id}`};
-const roleServ = {...rolesService(), editFields: rolePostFields, postFields: rolePostFields , detailsUrl: role => `/roles/${role.id}`};
+const roleServ = {...rolesService(),
+     editFields: rolePostFields,
+      postFields: rolePostFields ,
+       detailsUrl: role => `/roles/${role.id}`
+    };
 const listServ = {...listService(), detailsUrl: list => `/lists/${list.id}`};
 const permServ = {...permissionService(), editFields: ['New Action', 'New Resource'], postFields: ['New Action', 'New Resource'],
     detailsUrl: permission => `/permissions/${permission.id}`};

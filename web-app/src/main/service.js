@@ -91,7 +91,7 @@ export function rolesService(test) {
     }
     return {
         get: async () => getRequest(roles.ROLE_PATH),
-        post: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[0], parent_role: arr[1] === '' ? null : arr[1] }, 'POST'),
+        post: async (arr) => makeRequest(roles.ROLE_PATH, { role: arr[0], parent_role: arr[1].value === '' ? null : arr[1].value }, 'POST'),
         update: async (oldObject, newValuesArr) => makeRequest(roles.SPECIFIC_ROLE_PATH(oldObject.id), { role: newValuesArr[0], parent_role: newValuesArr[1] }, 'PUT'),
         destroy: async (oldObject) => makeRequest(roles.SPECIFIC_ROLE_PATH(oldObject.id), {}, 'DELETE'),
         getRole: async (id) => getRequest(roles.SPECIFIC_ROLE_PATH(id)),
@@ -156,17 +156,16 @@ export function rolePermissionService() {
     return {
         //TODO: get returns object with fields PermissionId and Permission.id chose one and change destroy/update according to the chosen one
         get: async (id) => getRequest(roles.ROLES_PERMISSION_PATH(id)),
-        post: async (obj) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: obj.permissionId, roleId: obj.roleId }, 'POST')
+        post: async (arr) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: arr[0], roleId: arr[1] }, 'POST')
             .then(data => permissionService().getPermission(data.PermissionId)),
-        destroy: async (oldObject) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: oldObject.permissionId, roleId: oldObject.roleId }, 'DELETE')
+        destroy: async (roleId,PermissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: PermissionId, roleId: roleId }, 'DELETE')
     }
 }
 
 export function permissionRoleService() {
     return {
         get: async (id) => getRequest(permissions.SPECIFIC_PERMISSION_PATH(id) + '/roles'),
-        post: async (obj) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: obj.permissionId, roleId: obj.roleId }, 'POST')
-            .then(data => permissionService().getPermission(data.PermissionId)),
+        post: async (arr) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: arr[0], roleId: arr[1] }, 'POST'),
         destroy: rolePermissionService().destroy
     }
 }

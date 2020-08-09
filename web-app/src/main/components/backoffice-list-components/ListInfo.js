@@ -31,7 +31,19 @@ function ListUsers() {
             updater:result.updater
         }
     }));
-    serv.post = arr=> listUserService().post([id,arr[0],new Date(),ctx.user.id])
+    serv.post = arr=> listUserService().post([id,arr[0].value,new Date(),ctx.user.id]).then(
+        result=>{
+            console.log(result)
+            return{
+               UserId:result.UserId,
+               username:arr[0].label,
+                start_date: result.start_date,
+                end_date: result.end_date,
+                active: result.active==true?1:0,
+                updater: result.updater
+            }
+        }
+    )
     serv.destroy= oldObj=>listUserService().destroy(id,oldObj.UserId)
     return (
          <TablePage service={serv} resource={'listuser'} />

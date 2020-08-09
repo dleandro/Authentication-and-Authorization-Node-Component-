@@ -25,8 +25,18 @@ function PermissionRoles() {
             RoleId:result.RoleId,
             role:result['Role.role']
         }
-    }));
-    serv.post = arr => permissionRoleService().post([id,arr[0]])
+    }))
+    serv.post = arr =>permissionRoleService().post([id,arr[0].value])
+    .then(
+        result=>{
+            console.log(result)
+            return{
+            RoleId:result.RoleId,
+            role:arr[0].label
+            }
+        }
+    )
+    serv.destroy=oldObj=>permissionRoleService().destroy(oldObj.RoleId,id)
 
     return serv?<TablePage service={serv} resource={'listuser'}/>:undefined
 }

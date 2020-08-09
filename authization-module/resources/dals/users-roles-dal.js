@@ -41,7 +41,7 @@ module.exports = {
      * @param id
      * @returns {Promise<*>}
      */
-    getByUser: (id) => tryCatch(() => UserRoles.findAll({ where: { UserId: id, active: 1 } })),
+    getUserActiveRoles: (id) => tryCatch(() => UserRoles.findAll({ where: { UserId: id, active: 1 } })),
 
     getByRole: (roleId) => tryCatch(() => UserRoles.findAll({ where: { RoleId: roleId }, include: [User], raw: true })),
 
@@ -57,7 +57,7 @@ module.exports = {
      */
     getById: (id) => tryCatch(() => UserRoles.findByPk(id)),
 
-    getUserRoles: (userId) => tryCatch(async () => {
+    getByUser: (userId) => tryCatch(async () => {
 
         const users = await UserRoles.findAll({ where: { UserId: userId }, include: [Role], raw: true })
 

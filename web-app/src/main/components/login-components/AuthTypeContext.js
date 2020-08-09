@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react'
-import { protocolService,configService } from '../../service'
+import React, { useEffect, useRef, useState } from 'react'
+import { protocolService, configService } from '../../service'
 
 const AuthTypeContext = React.createContext()
 
@@ -9,19 +9,19 @@ const AuthTypeProvider = (props) => {
     const isMountedRef = useRef(null);
     const [authTypesWereChangedByUser, setAuthTypesFlag] = useState(false)
 
-    const [error,setError]=useState(undefined)
+    const [error, setError] = useState(undefined)
 
     /**
      * @param authType
      * @returns {Promise<TResult1 | TResult2>}
      */
-    const getAuthTypeWithOptions = authType => configService().getOptions(authType.protocol).then(options=>({protocol:authType.protocol,active:authType.active,parameters:options}))
+    const getAuthTypeWithOptions = authType => configService().getOptions(authType.protocol, authType.idp).then(options => ({ protocol: authType.protocol, idp: authType.idp, active: authType.active, parameters: options }))
 
-    const fetchAuthtypes = async signal =>{
+    const fetchAuthtypes = async signal => {
         const authTypes = await protocolService().getPossibleAuthTypes(signal);
         const typesWithOptions = authTypes.map(getAuthTypeWithOptions);
-        Promise.all(typesWithOptions).then(arr=>{
-            if (isMountedRef.current){
+        Promise.all(typesWithOptions).then(arr => {
+            if (isMountedRef.current) {
                 setAllowedProtocolsAndIdps(arr)
             }
         })
@@ -31,33 +31,33 @@ const AuthTypeProvider = (props) => {
     // get allowed protocols and push them to state
     useEffect(() => {
         isMountedRef.current = true;
-        const abortController= new AbortController();
+        const abortController = new AbortController();
         const signal = abortController.signal;
         if (!authTypesWereChangedByUser) {
             fetchAuthtypes(signal);
         }
         return () => isMountedRef.current = false;
-    },[authTypesWereChangedByUser]);
+    }, [authTypesWereChangedByUser]);
 
     // State was changes by the user so we need to update the database so that it will remain consistent with state
     useEffect(() => {
 
         if (authTypesWereChangedByUser) {
             allowedProtocolsAndIdps
-                .forEach(authType => protocolService().changeActive(authType.protocol, authType.active)
-                .then(data=>
-                    {if("err" in data){
-                    console.log(data.err)
-                    setError(data)
-                }
-            }))
+                .forEach(authType => protocolService().changeActive(authType.protocol, authType.idp, authType.active)
+                    .then(data => {
+                        if ("err" in data) {
+                            console.log(data.err)
+                            setError(data)
+                        }
+                    }))
 
-        } 
+        }
 
     }, [allowedProtocolsAndIdps, authTypesWereChangedByUser])
 
     return (
-        <AuthTypeContext.Provider value={{ allowedProtocolsAndIdps,error, setAllowedProtocolsAndIdps, setAuthTypesFlag }}>
+        <AuthTypeContext.Provider value={{ allowedProtocolsAndIdps, error, setAllowedProtocolsAndIdps, setAuthTypesFlag }}>
             {props.children}
         </AuthTypeContext.Provider>
     )

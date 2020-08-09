@@ -6,7 +6,7 @@ const
     idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
     userSession = require('../../resources/dals/user-session-dal'),
-    protocol = require('../../resources/dals/protocols-dal'),
+    protocol = require('../../resources/dals/authentication-types-dal'),
     moment = require('moment')
 
 module.exports = {

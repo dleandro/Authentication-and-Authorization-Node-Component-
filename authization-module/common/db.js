@@ -32,7 +32,7 @@ async function databasesetup(rbac_opts) {
     console.log(chalk.blue('DATABASE SETUP'))
 
     // defining the EA model
-    const { List, Protocols } = require('../resources/sequelize-model')
+    const { List, AuthenticationTypes } = require('../resources/sequelize-model')
 
     // sync present state of the database with our models
     await sequelize.sync()
@@ -43,9 +43,9 @@ async function databasesetup(rbac_opts) {
         List.findOrCreate({ where: { "list": "BLACK" } }),
         List.findOrCreate({ where: { "list": "GREY" } }),
         List.findOrCreate({ where: { "list": "RED" } }),
-        Protocols.findOrCreate({ where: { "protocol": "Google" }, defaults: { "active": 1 } }),
-        Protocols.findOrCreate({ where: { "protocol": "AzureAD" }, defaults: { "active": 1 } }),
-        Protocols.findOrCreate({ where: { "protocol": "Saml" }, defaults: { "active": 1 } }),
+        AuthenticationTypes.findOrCreate({ where: { "protocol": "oauth2", "idp": "google" }, defaults: { "active": 1 } }),
+        AuthenticationTypes.findOrCreate({ where: { "protocol": "oauth2", "idp": "office365" }, defaults: { "active": 1 } }),
+        AuthenticationTypes.findOrCreate({ where: { "protocol": "saml", "idp": "office365" }, defaults: { "active": 1 } }),
         require('./rbac')(rbac_opts)
     ]
 

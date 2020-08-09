@@ -17,12 +17,6 @@ const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
 const makeRequest = (url, body, met) => request(url, produceInit(body, met));
 
-
-const arrayToObject = (valuesArr,fieldsArr)=>{
-    let obj={};
-    fieldsArr.forEach((field,idx) => obj[field]=valuesArr[idx]);
-    return obj;
-}
 /**
  * Function used to make login logout
  */
@@ -41,8 +35,8 @@ export function protocolService(test) {
         WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
-        changeActive: async (protocolName, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, active: active }, 'PUT'),
-        getPossibleAuthTypes: async (signal) =>  request(protocols.PROTOCOLS_PATH, {...DEFAULT_OPTIONS('GET'),signal:signal})
+        changeActive: async (protocolName, idp, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, idp, active }, 'PATCH'),
+        getPossibleAuthTypes: async (signal) => request(protocols.PROTOCOLS_PATH, { ...DEFAULT_OPTIONS('GET'), signal: signal })
     };
 }
 
@@ -110,9 +104,9 @@ export function permissionService() {
 export function userRoleService() {
     return {
         get: async userId => getRequest(users_roles.BY_USER(userId)),
-        post: async (userId,roleId,updater,date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId, active: 1, updater: updater, start_date: date }, 'POST'),
-        update: async (userId,roleId,arr) =>makeRequest(users_roles.USERS_ROLES_PATH, { user:userId, role:roleId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
-        destroy: async (UserId,RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: UserId, role: RoleId }, 'DELETE'),
+        post: async (userId, roleId, updater, date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId, active: 1, updater: updater, start_date: date }, 'POST'),
+        update: async (userId, roleId, arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        destroy: async (UserId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: UserId, role: RoleId }, 'DELETE'),
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT')
     }
@@ -157,7 +151,7 @@ export function rolePermissionService() {
         get: async (id) => getRequest(roles_permissions.BY_ROLE(id)),
         post: async (arr) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: arr[0], roleId: arr[1] }, 'POST')
             .then(data => permissionService().getPermission(data.PermissionId)),
-        destroy: async (roleId,PermissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: PermissionId, roleId: roleId }, 'DELETE')
+        destroy: async (roleId, PermissionId) => makeRequest(roles_permissions.ROLES_PERMISSION_PATH, { permissionId: PermissionId, roleId: roleId }, 'DELETE')
     }
 }
 
@@ -174,8 +168,8 @@ export function userListService() {
         //TODO: get not working, problem in api
         get: async (id) => getRequest(users_lists.BY_USER(id)),
         post: async arr => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
-        update: async (UserId,ListId, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
-        destroy: async (ListId,UserId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: ListId, UserId: UserId }, 'DELETE'),
+        update: async (UserId, ListId, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        destroy: async (ListId, UserId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: ListId, UserId: UserId }, 'DELETE'),
         // not working
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')
     }
@@ -186,7 +180,7 @@ export function listUserService() {
         get: async (id) => getRequest(users_lists.BY_LIST(id)),
         post: async (arr) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
         update: async (oldObject, arr) => userListService().update(oldObject, arr),
-        destroy: async (ListId,UserId) => userListService().destroy(ListId,UserId),
+        destroy: async (ListId, UserId) => userListService().destroy(ListId, UserId),
         // not working
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')
     }
@@ -194,9 +188,9 @@ export function listUserService() {
 
 
 // TODO: USERHISTORY
-export function userHistoryService(){
-    return{
-        get :async (id)=>getRequest(history.USER_HITORY_PATH(id))
+export function userHistoryService() {
+    return {
+        get: async (id) => getRequest(history.USER_HITORY_PATH(id))
     }
 }
 
@@ -221,7 +215,7 @@ export function configService() {
         getGoogleOptions: async () => getRequest(configs.GOOGLE_CONFIG_PATH),
         getAzureOptions: async () => getRequest(configs.AZUREAD_CONFIG_PATH),
         getSamlOptions: async () => getRequest(configs.SAML_CONFIG_PATH),
-        getOptions: async (protocol) => getRequest(configs.SPECIFIC_PATH(protocol)),
+        getOptions: async (protocol, idp) => getRequest(configs.SPECIFIC_PATH(protocol, idp)),
         getRbacOptions: async () => getRequest(configs.RBAC_OPTS_PATH)
     }
 }

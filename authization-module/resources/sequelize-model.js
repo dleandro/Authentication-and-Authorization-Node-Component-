@@ -1,6 +1,6 @@
 
 
-const { Sequelize, DataTypes } = require('sequelize'),
+const { Sequelize } = require('sequelize'),
     config = require('../common/config/config'),
     sequelize = config.sequelize,
     bcrypt = require('bcrypt')
@@ -23,12 +23,12 @@ const defineTable = (modelName, attributes, timestamps) => sequelize.define(mode
  */
 const Permission = defineTable('Permission', { action: { type: STRING, validate: { notEmpty: true}, allowNull: false }, resource: { type: STRING, validate: { notEmpty: true}, allowNull: false } }, false);
 /**
- * Protocols(
+ * AuthenticationType(
  * - protocol: NonNullStringPK,
  * - active:DefaultBool)
  * @type {Model}
  */
-const Protocols = defineTable('Protocols', { protocol: { type: STRING, validate: { notEmpty: true}, allowNull: false, primaryKey: true }, active: BOOLEAN }, false);
+const AuthenticationTypes = defineTable('AuthenticationTypes', { protocol: { type: STRING, primaryKey: true, validate: { notEmpty: true}, allowNull: false }, idp: { type: STRING, primaryKey: true, validate: { notEmpty: true}, allowNull: false }, active: BOOLEAN }, false);
 /**
  Role(
  * - role: NonNullString,
@@ -223,7 +223,7 @@ User.afterUpdate(updateUserHistory)
 
 
 exports.Permission = Permission
-exports.Protocols = Protocols
+exports.AuthenticationTypes = AuthenticationTypes
 exports.Role = Role
 exports.RolePermission = sequelize.models.RolePermission
 exports.UserHistory = UserHistory

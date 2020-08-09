@@ -91,7 +91,7 @@ export const webApiLinks =
         AZUREAD_CONFIG_PATH: `${CONFIG_PATH}/oauth2/office365`,
         DATABASE_CONFIG_PATH: `${CONFIG_PATH}/database`,
         SAML_CONFIG_PATH: `${CONFIG_PATH}/saml/office365`,
-        SPECIFIC_PATH: protocol => `${CONFIG_PATH}/${protocol}`,
+        SPECIFIC_PATH: (protocol, idp) => `${CONFIG_PATH}/${protocol}/${idp}`,
         RBAC_OPTS_PATH: `${CONFIG_PATH}/rbac-opts`
     },
 

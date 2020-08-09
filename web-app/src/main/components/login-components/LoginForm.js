@@ -55,9 +55,9 @@ export default function LoginForm({ id }) {
         window.location.assign(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
     }
 
-    const checkIfSpecificAuthTypeIsActive = (authType) => {
+    const checkIfSpecificAuthTypeIsActive = (protocol, idp) => {
         return ctx.allowedProtocolsAndIdps.
-            find(availableAuthType => availableAuthType.protocol === authType && availableAuthType.active === 1)
+            find(availableAuthType => availableAuthType.protocol === protocol && availableAuthType.idp === idp && availableAuthType.active === 1)
     }
     return (
         <React.Fragment>
@@ -78,16 +78,16 @@ export default function LoginForm({ id }) {
                 </InputGroup>
                 <Button variant="primary" onClick={loginLocalStrat}>{'Login'}</Button>
 
-                {checkIfSpecificAuthTypeIsActive('Google') && <GoogleButton style={googleBtn} onClick={() => loginIdp("google")} />}
+                {checkIfSpecificAuthTypeIsActive('oauth2', 'google') && <GoogleButton style={googleBtn} onClick={() => loginIdp("google")} />}
 
 
-                {checkIfSpecificAuthTypeIsActive('AzureAD') && <React.Fragment>
+                {checkIfSpecificAuthTypeIsActive('oauth2', 'office365') && <React.Fragment>
                     <h6>Using oauth2</h6>
                     <Button style={imgBtns} onClick={() => loginIdp("azureAD")} >
                         <img src="ms-symbollockup_signin_dark.png" alt="microsoft" /></Button>
                 </React.Fragment>}
 
-                {checkIfSpecificAuthTypeIsActive('AzureAD') &&
+                {checkIfSpecificAuthTypeIsActive('saml', 'office365') &&
                     <React.Fragment>
                         <h6>Using Saml</h6>
                         <Button style={imgBtns} onClick={() => loginIdp("saml")} >

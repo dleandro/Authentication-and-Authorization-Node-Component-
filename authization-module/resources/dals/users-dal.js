@@ -65,8 +65,11 @@ module.exports = {
      * @param password
      * @returns {Promise<void>}
      */
-    create: async (username, password) => tryCatch(() =>
-        User.create({ username: username, password: password })),
+    create: (username, password, updater) => tryCatch(async () => {
+
+        const res = await User.create({ username: username, password: password, updater })
+        console.log(res)
+    }),
 
     /**
      * update specific user's username

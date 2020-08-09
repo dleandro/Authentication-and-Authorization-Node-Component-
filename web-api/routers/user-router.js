@@ -31,7 +31,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function createUser(req, res) {
-        apiUtils.promiseDataToResponse(res, users.create(req.body.username, req.body.password), 201)
+        apiUtils.promiseDataToResponse(res, users.create(req.body.username, req.body.password, req.body.updater), 201)
     }
 
     function getSpecificUser(req, res) {

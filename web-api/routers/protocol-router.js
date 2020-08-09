@@ -26,7 +26,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function changeActive(req, res) {
-        apiUtils.promiseDataToResponse(res, protocols.changeActive(req.body.protocol, req.body.active))
+        apiUtils.promiseDataToResponse(res, protocols.changeActive(req.body.protocol, req.body.idp, req.body.active))
     }
 
     return protocolRouter

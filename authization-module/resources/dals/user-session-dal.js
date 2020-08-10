@@ -4,13 +4,17 @@ const { Session } = require('../sequelize-model'),
 
 module.exports = {
     get: () => tryCatch(() => Session.findAll()),
+
     getUserSessions: (id) => tryCatch(() => Session.findAll({
         where: { UserId: id }
     })),
-    update: async (sid, endDate) => tryCatch(() => Session.update({ 
+
+    update: async (sid) => tryCatch(() => Session.update({
         expires: endDate,
     },
-    {where:{sid:sid}})),
+        { where: { sid: sid } })
+    ),
+
     delete: async (sid) => Promise.resolve(
         {
             deletedRows: await tryCatch(() => Session.destroy({ where: { sid: sid } }))

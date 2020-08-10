@@ -1,8 +1,6 @@
 'use strict'
 
-const usersDal = require('./dals/users-dal')
-
-const userRoleDal = require('../resources/dals/users-roles-dal'),
+const userRolesDal = require('../resources/dals/users-roles-dal'),
     config = require('../common/config/config'),
     errors = require('../common/errors/app-errors')
 const rbac = require('../common/rbac')
@@ -23,16 +21,14 @@ module.exports = {
         var roles = []
 
         if (user) {
-            roles = await usersDal.getUserRoles(user.id)
-            roles = roles.map(role => role["Roles.role"])
+            roles = (await userRoles.getUserActiveRoles(user.id)).map(userRole => userRole.role)
             if (roles.includes('admin')) {
                 return next()
             }
         }
-        else{
+        else {
             roles.push('guest')
         }
-
 
         for (let i = 0; i < roles.length; i++) {
             if (await config.rbac.can(roles[i], action, resource)) {
@@ -48,8 +44,7 @@ module.exports = {
         var roles = []
 
         if (user) {
-            roles = await usersDal.getUserRoles(user.id)
-            roles = roles.map(role => role["Roles.role"])
+            roles = (await userRoles.getUserActiveRoles(user.id)).map(userRole => userRole.role)
         }
 
         await Promise.all(roles.map(async role => permissions.push(await config.rbac.getScope(role))))
@@ -58,9 +53,8 @@ module.exports = {
     },
 
     authorizationInfo: async (req) => {
-        const roles = userRoleDal.getUserActiveRoles(req.user.id)
+        const roles = userRolesDal.getUserActiveRoles(req.user.id)
 
-        
         return req.body.permissions
             .map(permission =>
                 JSON.parse(`${permission.resource}/${permission.action}: ${roles

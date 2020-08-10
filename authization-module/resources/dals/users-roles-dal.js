@@ -1,8 +1,7 @@
 'use strict'
 
-const { Role } = require('../sequelize-model')
-
-const UserRole = require('../sequelize-model').UserRoles,
+const
+    { Role, User, UserRoles } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
 
@@ -18,7 +17,7 @@ module.exports = {
      * @param active
      * @returns {Promise<void>}
      */
-    create: async (user, role, startDate, endDate, updater, active) => tryCatch(() => UserRole.create({
+    create: async (user, role, startDate, endDate, updater, active) => tryCatch(() => UserRoles.create({
         UserId: user,
         RoleId: role,
         start_date: startDate,
@@ -31,34 +30,37 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    deactivate: (id) => tryCatch(() => UserRole.update({ active: 0 }, { where: { UserId: id } })),
+    deactivate: (id) => tryCatch(() => UserRoles.update({ active: 0 }, { where: { UserId: id } })),
     /**
      * checks if all User roles are active
      * @returns {Promise<*>}
      */
-    getActive: () => tryCatch(UserRole.findAll({ where: { active: 1 } })),
+    getActive: () => tryCatch(UserRoles.findAll({ where: { active: 1 } })),
     /**
      *
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: (id) => tryCatch(() => UserRole.findAll({ where: { UserId: id, active: 1 } })),
+    getUserActiveRoles: (id) => tryCatch(() => UserRoles.findAll({ where: { UserId: id, active: 1 } })),
+
+    getByRole: (roleId) => tryCatch(() => UserRoles.findAll({ where: { RoleId: roleId }, include: [User], raw: true })),
+
     /**
      *
      * @returns {Promise<void>}
      */
-    get: () => tryCatch(() => UserRole.findAll({ raw: true })),
+    get: () => tryCatch(() => UserRoles.findAll({ raw: true })),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getById: (id) => tryCatch(() => UserRole.findByPk(id)),
+    getById: (id) => tryCatch(() => UserRoles.findByPk(id)),
 
-    getUserRoles: (userId) => tryCatch(async () => {
-        
-        const users = await UserRole.findAll({ where: { UserId: userId }, include: [Role], raw: true })
-        
+    getByUser: (userId) => tryCatch(async () => {
+
+        const users = await UserRoles.findAll({ where: { UserId: userId }, include: [Role], raw: true })
+
         return users.map(user => {
             user.role = user['Role.role']
             delete user['Role.role']
@@ -69,22 +71,22 @@ module.exports = {
         })
     }),
 
-    delete: (UserId,RoleId) =>Promise.resolve(
+    delete: (UserId, RoleId) => Promise.resolve(
         {
-            deletedRows:  tryCatch(async () => await  UserRole.destroy({ where: { UserId: UserId,RoleId:RoleId } }))
+            deletedRows: tryCatch(async () => await UserRoles.destroy({ where: { UserId: UserId, RoleId: RoleId } }))
         }),
 
-    update: async (user, role, endDate, active) =>Promise.resolve(
+    update: async (user, role, endDate, active) => Promise.resolve(
         {
-         updatedRows: await tryCatch(() => UserRole.update({ 
-            end_date: endDate,
-            active: active
-        },
-        {where:{UserId:user,RoleId:role}})),
-        endDate,
-        active
+            updatedRows: await tryCatch(() => UserRoles.update({
+                end_date: endDate,
+                active: active
+            },
+                { where: { UserId: user, RoleId: role } })),
+            endDate,
+            active
         }
-    ) 
+    )
 
 
 }

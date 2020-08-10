@@ -22,6 +22,8 @@ module.exports = function (apiUtils, authization) {
     usersRolesRouter.get('/active/user/:id', getUserActiveRoles)
     usersRolesRouter.get('/active/user', getUserRolesById)
     usersRolesRouter.put('/deactivate/:userRoleId', deactivateUserRole)
+    usersRolesRouter.get('/users/:id', getByUser)
+    usersRolesRouter.get('/roles/:id', getByRole)
 
     function addUsersRoles(req, res) {
         apiUtils.promiseDataToResponse(
@@ -57,6 +59,14 @@ module.exports = function (apiUtils, authization) {
 
     function editUserRole(req, res) {
         apiUtils.promiseDataToResponse(res, userRoles.update(req.body.user,req.body.role,req.body.end_date,req.body.active))
+    }
+
+    function getByUser(req,res){
+        apiUtils.promiseDataToResponse(res, userRoles.getByUser(req.params.id))
+    }
+
+    function getByRole(req,res){
+        apiUtils.promiseDataToResponse(res, userRoles.getByRole(req.params.id))
     }
 
     return usersRolesRouter

@@ -15,11 +15,6 @@ module.exports = function (apiUtils, authization) {
         .delete(deleteRole)
         .put(updateRole)
 
-    roleRouter.get('/:id/users', getUsersWithThisRole)
-    roleRouter.get('/:id/permissions', getPermissionsWithThisRole)
-
-    roleRouter.route('/:id/permissions').get((req, res) => promiseDataToResponse(res, roles.getRolePermissions(req.params.id)))
-
     function updateRole(req, res) {
         apiUtils.promiseDataToResponse(res, roles.update(req.params.id, req.body.role, req.body.parent_role), 201)
     }
@@ -32,21 +27,12 @@ module.exports = function (apiUtils, authization) {
         apiUtils.promiseDataToResponse(res, roles.delete(req.params.id))
     }
 
-
     function getRoles(req, res) {
         apiUtils.promiseDataToResponse(res, roles.get())
     }
 
     function getRoleById(req, res) {
         apiUtils.promiseDataToResponse(res, roles.getSpecificById(req.params.id))
-    }
-
-    function getUsersWithThisRole(req, res) {
-        apiUtils.promiseDataToResponse(res, roles.getUsersWithThisRole(req.params.id))
-    }
-
-    function getPermissionsWithThisRole(req, res) {
-        apiUtils.promiseDataToResponse(res, roles.getPermissionsWithThisRole(req.params.id))
     }
 
     return roleRouter

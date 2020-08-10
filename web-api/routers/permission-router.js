@@ -20,13 +20,6 @@ module.exports = function (apiUtils, authization) {
         .put(updatePermission)
         .delete(deletePermission)
 
-
-    permissionRouter.route('/:id/roles').get(getRolesByPermission)
-
-    function getRolesByPermission(req, res) {
-        apiUtils.promiseDataToResponse(res, permissions.getRolesByPermission(req.params.id))
-    }
-
     function getPermissions(req, res) {
         apiUtils.promiseDataToResponse(res, permissions.get())
     }

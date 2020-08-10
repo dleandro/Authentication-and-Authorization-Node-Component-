@@ -5,7 +5,7 @@ const db2 = {
     "password": "1234",
     "connectionLimit": 5,
     "database": "postgres",
-    "sgbd": "postgres"
+    "dbms": "postgres"
 }
 
 const db = {
@@ -15,7 +15,7 @@ const db = {
     "password": "pv9t6oy23bsv65ri",
     "connectionLimit": 5,
     "database": "r15dtqer5c72jvex",
-    "sgbd": "mariadb"
+    "dbms": "mariadb"
 }
 
 const cloud_db={
@@ -25,11 +25,8 @@ const cloud_db={
     "password": "hwwuq1PAAmmejOEk",
     "connectionLimit": 5,
     "database": "authization",
-    "sgbd": "mysql"
+    "dbms": "mysql"
 }
-
-
-
 
 const rbac_opts = {
     "roles": ["admin", "DbManager", "Developer", "guest"],

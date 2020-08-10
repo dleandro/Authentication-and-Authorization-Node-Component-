@@ -1,7 +1,7 @@
 'use strict'
 
 
-const { UserHistory, User, Idp, Role, List, Session } = require('../sequelize-model'),
+const { User, Idp, Role, } = require('../sequelize-model'),
     tryCatch = require('../../common/util/functions-utils')
 
 const getById = (id) => tryCatch(async () => {
@@ -65,8 +65,11 @@ module.exports = {
      * @param password
      * @returns {Promise<void>}
      */
-    create: async (username, password) => tryCatch(() =>
-        User.create({ username: username, password: password })),
+    create: (username, password, updater) => tryCatch(async () => {
+
+        const res = await User.create({ username: username, password: password, updater })
+        console.log(res)
+    }),
 
     /**
      * update specific user's username
@@ -98,12 +101,6 @@ module.exports = {
         {
             deletedRows: await tryCatch(() => User.destroy({ where: { id: userId } }))
         }
-    ),
-
-    // TODO: this method is a duplicate of the user-roles dal getUserRoles 
-    getUserRoles: (userId) => tryCatch(() => User.findAll({ where: { id: userId }, include: [Role], raw: true })),
-
-    getUserHistory: (userId) => tryCatch(() => UserHistory.findAll({ where: { user_id: userId } }))
-
+    )
 
 }

@@ -2,23 +2,26 @@
 
 module.exports = function (apiUtils, authization) {
     const
-        successCallback = (req, res, configChangeCB) => {
-            configChangeCB(req.body)
+        successCallback = (res) => {
             apiUtils.setResponse(res, { success: "changes made successfully" }, 200)
         }
 
     const
         configRouter = require('express').Router()
-  
-    configRouter.put('/database', (req, res) => successCallback(req, res, authization.configurations.changeDatabaseOptions))
-    configRouter.put('/Google', (req, res) => successCallback(req, res, authization.configurations.changeGoogleAuthenticationOptions))
-    configRouter.put('/AzureAD', (req, res) => successCallback(req, res, authization.configurations.changeAzureADAuthenticationOptions))
-    configRouter.put('/Saml', (req, res) => successCallback(req, res, authization.configurations.changeSamlAuthenticationOptions))
+
+    configRouter.route('/oauth2/google')
+        .get((req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getGoogleOptions()))
+        .put((req, res) => { authization.configurations.changeGoogleAuthenticationOptions(); successCallback(res) })
+
+    configRouter.route('/oauth2/office365')
+        .get((req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getAzureAdOptions()))
+        .put((req, res) => { authization.configurations.changeAzureADAuthenticationOptions(); successCallback(res) })
+
+    configRouter.route('/saml/office365')
+        .get((req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getSamlOptions()))
+        .put((req, res) => { authization.configurations.changeSamlAuthenticationOptions(); successCallback(res) })
+
     configRouter.get('/rbac-opts', (req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getRbacOptions()))
-    configRouter.get('/Google/options',(req,res)=>apiUtils.promiseDataToResponse(res, authization.configurations.getGoogleOptions()))
-    configRouter.get('/AzureAD/options',(req,res)=>apiUtils.promiseDataToResponse(res, authization.configurations.getAzureAdOptions()))
-    configRouter.get('/Saml/options',(req,res)=>apiUtils.promiseDataToResponse(res, authization.configurations.getSamlOptions()))
-    
 
     return configRouter
 }

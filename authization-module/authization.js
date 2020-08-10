@@ -72,7 +72,7 @@ const getFunctionalities = () => {
              */
             configurations: require('./resources/configurations'),
 
-            protocols: require('./resources/dals/protocols-dal'),
+            protocols: require('./resources/dals/authentication-types-dal'),
 
             sessions: require('./resources/dals/user-session-dal'),
 

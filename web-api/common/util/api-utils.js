@@ -21,5 +21,4 @@ module.exports = {
         .then(data => setResponse(res, data, statusCode || 200))
         .catch(err => setResponse(res, { err: err.message }, err.status))
 
-
 }

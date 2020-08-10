@@ -1,21 +1,96 @@
-import {
-    listService,
-    userService,
-    rolesService,
-    permissionService,
-    authenticationService,
-    sessionService, logsService
-} from "./main/service";
+import {listService, userService, rolesService, permissionService, authenticationService, sessionService, logsService, roleUserService,
+userRoleService,userListService} from "./main/service";
+import {useContext} from "react";
+import UserContext from "./main/UserContext";
 
+const ctx = useContext(UserContext);
 const PORT = 8082;
 const listServ = listService(true);
 const userServ = userService(true);
+const userRoleServ = userRoleService(true);
+const roleUserServ = roleUserService(true);
 const roleServ = rolesService(true);
 const permServ = permissionService(true);
 const authServ = authenticationService(true);
 const sessionServ = sessionService(true);
-const histServ = logsService(true)
+const histServ = logsService(true);
 
+
+const genericTest = async serv =>{
+    const posted = serv.post();
+    const postedFields= posted.then(values=>Object.keys(values).sort());
+    const updated = serv.update();
+    const updatedFields= updated.then(values=>Object.keys(values).sort());
+    //multiple request will be made in parallel
+    //testing if update and post have the correct return values
+    const expectedFields = await serv.get().then(values=>Object.keys(values[0]).sort());
+    expect(expectedFields).toEqual(await postedFields);
+    expect(expectedFields).toEqual(await updatedFields);
+    //testing if update and post request were successful
+    await Promise.all([
+        serv.get().then(async values=>expect(values).toContainEqual(await posted)),
+        serv.get().then(async values=>expect(values).toContainEqual(await updated)),
+    ]);
+    //deleting updated values and posted values and checking if they were successfully deleted
+    await Promise.all([
+        posted.then(serv.destroy).then(()=>serv.get().then(async values=>expect(values).not.toContainEqual(await posted))),
+        updated.then(serv.destroy).then(()=>serv.get().then(async values=>expect(values).not.toContainEqual(await updated))),
+    ]);
+};
+//Most recent tests, made on 10/8
+describe('Generic Testing', () => {
+    test('PermissionService test:', async ()=>{
+        const inserted=await permServ.post(['GET','testingPut']);
+        const serv = {...permServ};
+        serv.put= () => permServ.update(inserted,['PUT','testingPutUpdated']);
+        serv.post= () =>permServ.post(['GET','testingPost']);
+        await genericTest(serv);
+    });
+
+    test('UserService test:', async ()=>{
+        const inserted=await userServ.post(['putinTesting','comuna123']);
+        const serv = {...userServ};
+        serv.put= () => userServ.update(inserted,['updatedPutinTesting','testingPutUpdated']);
+        serv.post= () => userServ.post(['testingPost','testingPost']);
+        await genericTest(serv);
+    });
+    test('ListService test:', async ()=>{
+        //Tests not done cause doesnt have update
+    });
+    test('RoleService test:', async ()=>{
+        const inserted=await roleServ.post(['testingPut','']);
+        const serv = {...roleServ};
+        serv.put= () => roleServ.update(inserted,['updatedPutTesting','']);
+        serv.post= () => roleServ.post(['roleTestingPost',{value:inserted.id,label:inserted.role}]);
+        await genericTest(serv);
+    });
+    test('UserRoleService test:', async ()=>{
+        const temporaryUser = await userServ.post(['tester','tester']);
+        const temporaryRole = await roleServ.post(['testerRole','']);
+        const temporaryRole2 = await roleServ.post(['testerRole2','']);
+        const inserted=await userRoleServ.post([temporaryUser.id,{value:temporaryRole.id,label:temporaryRole.role},ctx.user.id, new Date()]);
+        const serv = {...userRoleServ};
+        serv.put= () => userRoleServ.update(inserted,[{ date: '2020-08-09', time: '21:55:35.000' },true]);
+        serv.post= () => userRoleServ.post([temporaryUser.id,{value:temporaryRole2.id,label:temporaryRole2.role},ctx.user.id, new Date()]);
+        await genericTest(serv);
+        await roleServ.destroy(temporaryRole);
+        await roleServ.destroy(temporaryRole2);
+        await userServ.destroy(temporaryUser);
+    });
+    test('RoleUserService test:', async ()=>{
+        const temporaryUser = await userServ.post(['tester','tester']);
+        const temporaryUser2 = await userServ.post(['tester2','tester2']);
+        const temporaryRole = await roleServ.post(['testerRole','']);
+        const inserted=await roleUserServ.post([temporaryRole.id,{value:temporaryUser.id,label:temporaryUser.username},ctx.user.id, new Date()]);
+        const serv = {...roleUserServ};
+        serv.put= () => roleUserServ.update(inserted,[{ date: '2020-08-09', time: '21:55:35.000' },true]);
+        serv.post= () => roleUserServ.post([temporaryRole.id,{value:temporaryUser2.id,label:temporaryUser2.username},ctx.user.id, new Date()]);
+        await genericTest(serv);
+        await roleServ.destroy(temporaryRole);
+        await userServ.destroy(temporaryUser2);
+        await userServ.destroy(temporaryUser);
+    });
+});
 /**
  * @jest-environment node
  */

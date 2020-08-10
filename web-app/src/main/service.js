@@ -52,7 +52,7 @@ export function userService(test) {
     }
     return {
         get: async () => getRequest(users.USER_PATH),
-        post: async (arr) => makeRequest(users.USER_PATH, { username: arr[0], password: arr[1] }, 'POST'),
+        post: async (arr) => makeRequest(users.USER_PATH, arrayToObject(arr,['username','password']), 'POST'),
         //TODO: update returning strange fields and not returning field id
         update: async (oldObject, newValuesArr) => makeRequest(users.USERNAME_UPDATE_PATH(oldObject.id), { username: newValuesArr[0] }, 'PUT'),
         //TODO: fix problem were delete is blocked by constraints

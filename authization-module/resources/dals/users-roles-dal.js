@@ -76,15 +76,17 @@ module.exports = {
             deletedRows: tryCatch(async () => await UserRoles.destroy({ where: { UserId: UserId, RoleId: RoleId } }))
         }),
 
-    update: async (user, role, endDate, active) => Promise.resolve(
+    update: async (user, role, endDate, active,updater) => Promise.resolve(
         {
             updatedRows: await tryCatch(() => UserRoles.update({
                 end_date: endDate,
-                active: active
+                active: active,
+                updater:updater
             },
                 { where: { UserId: user, RoleId: role } })),
             endDate,
-            active
+            active,
+            updater
         }
     )
 

@@ -17,7 +17,7 @@ function ListUsers() {
     const ctx = useContext(UserContext);
     const serv = {...listUserService(),
         detailsUrl: (listUser) => `/lists/${id}`,
-        editFields: [{text:'New End date (date)'},'Active'],
+        editFields: [{text:'New End date (date)'},{ text: 'New Active state (check)' }],
         postFields: [{text:'Id of User to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get =()=> listUserService().get(id)
@@ -44,6 +44,19 @@ function ListUsers() {
             }
         }
     )
+    serv.update = (oldObj,arr)=>listUserService().update(oldObj.UserId,id,ctx.user.id,arr).then(
+        result=>{
+            console.log(result,oldObj,arr)
+            
+            return{
+               UserId: oldObj.UserId,
+               username: oldObj.username,
+                start_date: oldObj.start_date,
+                end_date: result.end_date,
+                active: result.active==true?1:0,
+                updater: result.updater
+            }
+        })
     serv.destroy= oldObj=>listUserService().destroy(id,oldObj.UserId)
     return (
          <TablePage service={serv} resource={'listuser'} />

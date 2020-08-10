@@ -58,7 +58,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function editUserRole(req, res) {
-        apiUtils.promiseDataToResponse(res, userRoles.update(req.body.user,req.body.role,req.body.end_date,req.body.active))
+        apiUtils.promiseDataToResponse(res, userRoles.update(req.body.user,req.body.role,req.body.end_date,req.body.active,req.body.updater))
     }
 
     function getByUser(req,res){

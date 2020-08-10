@@ -22,7 +22,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function editUserList(req, res) {
-        apiUtils.promiseDataToResponse(res, userList.update(req.body.user,req.body.list,req.body.end_date,req.body.active))
+        apiUtils.promiseDataToResponse(res, userList.update(req.body.user,req.body.list,req.body.end_date,req.body.active,req.body.updater))
     }
 
     function getByUser(req,res){

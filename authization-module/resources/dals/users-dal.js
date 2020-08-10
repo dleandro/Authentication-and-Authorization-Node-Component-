@@ -67,8 +67,7 @@ module.exports = {
      */
     create: (username, password, updater) => tryCatch(async () => {
 
-        const res = await User.create({ username: username, password: password, updater })
-        console.log(res)
+        return User.create({ username: username, password: password, updater })
     }),
 
     /**

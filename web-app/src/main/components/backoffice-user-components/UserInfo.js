@@ -46,7 +46,7 @@ function UserRoles() {
             }
         }
     )}
-    customService.update = (oldObj, arr) =>userRoleService().update(id, oldObj.RoleId, arr)
+    customService.update = (oldObj, arr) =>userRoleService().update(id, oldObj.RoleId,ctx.user.id, arr)
     .then(result => {
         console.log(result)
         return {
@@ -55,7 +55,7 @@ function UserRoles() {
             start_date: oldObj.start_date,
             end_date: result.endDate,
             active: result.active==true?1:0,
-            updater: ctx.user.id
+            updater: result.updater
         }
     });
     
@@ -121,7 +121,19 @@ function UserLists() {
                 updater: result.updater
             }
         })
-    serv.update = (oldObj,arr)=>userListService().update(id,oldObj.ListId,arr)
+    serv.update = (oldObj,arr)=>userListService().update(id,oldObj.ListId,ctx.user.id,arr).then(
+        result=>{
+            console.log(result,oldObj,arr)
+            
+            return{
+               ListId: oldObj.ListId,
+               list: oldObj.list,
+                start_date: oldObj.start_date,
+                end_date: result.end_date,
+                active: result.active==true?1:0,
+                updater: result.updater
+            }
+        })
     serv.destroy = (oldObj)=> userListService().destroy(oldObj.ListId,id)
     return (
         <TablePage service={serv} resource={'users-lists'} />

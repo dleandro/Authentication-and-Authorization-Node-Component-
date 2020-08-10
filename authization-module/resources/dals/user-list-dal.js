@@ -39,9 +39,13 @@ module.exports = {
         }
     ),
 
-    update: async (user, list, endDate, active) => tryCatch(() => UserList.update({
-        end_date: endDate,
-        active: active
-    },
-        { where: { UserId: user, ListId: list } }))
+    update: async (user, list, end_date, active,updater) =>Promise.resolve({
+        updatedRows: await  tryCatch(() => UserList.update({end_date: end_date,active: active,updater:updater},
+            { where: { UserId: user, ListId: list } })),
+            end_date,
+            active,
+            updater
+           
+    })
+
 }

@@ -30,7 +30,6 @@ function RolePermission() {
     const ctx = useContext(UserContext);
 
     const serv = {...rolePermissionService(),
-        detailsUrl: (listUser) => `/roles/${id}`,
         postFields: [{text:'Id of Permission to be assigned (dropdown)', DropdownOptionsFetcher:postOptionsFetcher}],
     }
     serv.get = ()=>rolePermissionService().get(id)
@@ -81,8 +80,31 @@ export function RoleUsers() {
 
         }
     }));
-    serv.post= arr =>roleUserService().post([arr[0],id,ctx.user.id,new Date()]);
-
+    serv.post= arr =>roleUserService().post([arr[0].value,id,ctx.user.id,new Date()])
+    .then(result=>{
+        console.log(result)
+        return {
+            UserId:result.UserId,
+            username:arr[0].label,
+            start_date:result.start_date,
+            end_date:result.end_date,
+            active:result.active==true?1:0,
+            updater:result.updater
+        }
+    })
+    serv.destroy= oldObj => roleUserService().destroy(oldObj.UserId,id)
+    serv.update = (oldObj, arr) =>roleUserService().update(oldObj.UserId,id,ctx.user.id,arr)
+    .then(result => {
+        console.log(result)
+        return {
+            UserId: oldObj.UserId,
+            username: oldObj.username,
+            start_date: oldObj.start_date,
+            end_date: result.endDate,
+            active: result.active==true?1:0,
+            updater: result.updater,
+        }
+    })
     return (
         <TablePage service={serv} resource={'listuser'} />
     )

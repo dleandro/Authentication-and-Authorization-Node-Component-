@@ -68,8 +68,9 @@ module.exports = async function (rbac_opts) {
 async function setupSuperuser() {
     // server admin should change superuser's password
     // this should use our own dals to make sure rbac object is always consistent with our database
-    const superuser = await User.findOrCreate({ where: { "username": "superuser" }, defaults: { "password": "superuser" } })
     const role = Role.findOrCreate({ where: { "role": "admin" } })
+    Role.findOrCreate({ where: { "role": "guest" } })
+    const superuser = await User.findOrCreate({ where: { "username": "superuser" }, defaults: { "password": "superuser" } })
     return UserRoles.findOrCreate({
         where: { "UserId": superuser[0].id, "RoleId": (await role)[0].id },
         defaults: { "updater": superuser[0].id, "active": 1, "start_date": moment().format() }

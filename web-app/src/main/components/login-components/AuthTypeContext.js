@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { protocolService, configService } from '../../service'
+import { protocolService, configService, authTypesService } from '../../service'
 
 const AuthTypeContext = React.createContext()
 
@@ -15,10 +15,12 @@ const AuthTypeProvider = (props) => {
      * @param authType
      * @returns {Promise<TResult1 | TResult2>}
      */
-    const getAuthTypeWithOptions = authType => configService().getOptions(authType.protocol, authType.idp).then(options => ({ protocol: authType.protocol, idp: authType.idp, active: authType.active, parameters: options }))
+    const getAuthTypeWithOptions = authType => configService().getOptions(authType.protocol, authType.idp)
+    .then(options => ({ protocol: authType.protocol, idp: authType.idp, active: authType.active, parameters: options }))
+    .catch(err=>console.error(err))
 
     const fetchAuthtypes = async signal => {
-        const authTypes = await protocolService().getPossibleAuthTypes(signal);
+        const authTypes = await authTypesService().getPossibleAuthTypes(signal);
         const typesWithOptions = authTypes.map(getAuthTypeWithOptions);
         Promise.all(typesWithOptions).then(arr => {
             if (isMountedRef.current) {
@@ -44,7 +46,7 @@ const AuthTypeProvider = (props) => {
 
         if (authTypesWereChangedByUser) {
             allowedProtocolsAndIdps
-                .forEach(authType => protocolService().changeActive(authType.protocol, authType.idp, authType.active)
+                .forEach(authType => authTypesService().changeActive(authType.protocol, authType.idp, authType.active)
                     .then(data => {
                         if ("err" in data) {
                             console.log(data.err)

@@ -15,9 +15,6 @@ export default function GenericInfoCard({fetchValueById,label}){
                 <Card.Header>{`${label} Info`}</Card.Header>
                 <Card.Body>
                     <Card.Title>{`Details of ${label} num: ${value.id}`}</Card.Title>
-                    <Card.Text>
-                        {`This page and all his sections displays all information relative to this ${label}.`}
-                    </Card.Text>
                     <Form.Group>
                         {Object.keys(value).map(key=><React.Fragment>
                             <br />

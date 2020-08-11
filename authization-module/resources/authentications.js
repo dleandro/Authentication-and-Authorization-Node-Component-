@@ -1,6 +1,7 @@
 'use strict'
 
 const passport = require('passport')
+const { UserRoles } = require('./sequelize-model')
 
 module.exports = {
 
@@ -136,5 +137,5 @@ module.exports = {
             next()
         })
 
-    }
+    },
 }

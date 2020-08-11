@@ -35,10 +35,10 @@ const rbac_opts = {
         { "resource": "users-lists", "action": "POST" },
         { "resource": "users-lists", "action": "PUT" },
         { "resource": "users-lists", "action": "DELETE" },
-        { "resource": "protocols", "action": "GET" },
-        { "resource": "protocols", "action": "POST" },
-        { "resource": "protocols", "action": "PUT" },
-        { "resource": "protocols", "action": "DELETE" },
+        { "resource": "auth-types", "action": "GET" },
+        { "resource": "auth-types", "action": "POST" },
+        { "resource": "auth-types", "action": "PATCH" },
+        { "resource": "auth-types", "action": "DELETE" },
         { "resource": "permissions", "action": "GET" },
         { "resource": "permissions", "action": "POST" },
         { "resource": "permissions", "action": "PUT" },
@@ -47,6 +47,10 @@ const rbac_opts = {
         { "resource": "roles", "action": "POST" },
         { "resource": "roles", "action": "PUT" },
         { "resource": "roles", "action": "DELETE" },
+        { "resource": "configs", "action": "GET" },
+        { "resource": "configs", "action": "POST" },
+        { "resource": "configs", "action": "PUT" },
+        { "resource": "configs", "action": "DELETE" },
         { "resource": "users", "action": "GET" },
         { "resource": "users", "action": "POST" },
         { "resource": "users", "action": "PUT" },
@@ -80,10 +84,11 @@ const rbac_opts = {
             { "resource": "users", "action": "PUT" },
         ],
         "guest": [
-            { "resource": "protocols", "action": "GET" },
+            { "resource": "auth-types", "action": "GET" },
             { "resource": "authentications", "action": "GET" },
             { "resource": "authentications", "action": "POST" },
-            { "resource": "users", "action": "POST" }
+            { "resource": "users", "action": "POST" },
+            { "resource": "configs", "action": "GET" }
         ]
     }
 }

@@ -34,9 +34,9 @@ export default function AuthenticationProtocol() {
 
           <Card style={{ width: '24rem' }} key={'AuthProtocolCard'} border="info" className='ml-2 mr-2'>
             <Card.Body>
-              <Card.Title>{'Select Supported Identity Providers'}</Card.Title>
+              <Card.Title>{'Select Supported Authentication Types'}</Card.Title>
               {state.map((authType, idx) => <React.Fragment><Form inline>
-                <Form.Check id={`${authType.protocol} switch`} checked={authType.active === 1} onChange={() => switchValue(idx)} label={authType.protocol} type={'switch'} />
+                <Form.Check id={`Protocol: ${authType.protocol} IDP: ${authType.idp} switch`} checked={authType.active === 1} onChange={() => switchValue(idx)} label={`${authType.idp} with ${authType.protocol} `} type={'switch'} />
                     &nbsp;&nbsp;
                     <SubmitValuesModal submitListener={val => {
                   let config = {}
@@ -49,12 +49,6 @@ export default function AuthenticationProtocol() {
               </Form><br /></React.Fragment>)}
               <Form inline>
                 <div className="col-sm"><button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={saveAuthTypesAllowed}> Save</button> </div>
-                <div className="col-sm">
-                  <SubmitValuesModal submitListener={val => configService().changeSGDB(val[0])}
-                    openButtonIcon={'fa fa-database'} buttonTooltipText={`Edit SGDB`} labels={['Edit SGBD']} />
-                  <SubmitValuesModal submitListener={val => configService().changeDatabaseOptions(val[0])} buttonTooltipText={`Edit Database Options`}
-                    openButtonIcon={'fa fa-database'} labels={['new Host', 'new Port', 'new User', 'new Password', 'new ConnectionLimit', 'New Database']} />
-                </div>
               </Form>
             </Card.Body>
           </Card>

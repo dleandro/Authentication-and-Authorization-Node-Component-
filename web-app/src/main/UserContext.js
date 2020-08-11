@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { userService, userRoleService, configService } from './service'
+import { userService, userRoleService, configService, authenticationService } from './service'
 const AuthizationRbac = require('./common/authization-rbac')
 
 const UserContext = React.createContext()
@@ -19,7 +19,7 @@ function UserProvider(props) {
 
                 if (authenticatedUser.username) {
                     // get authenticated User's Roles 
-                    const roles = (await userRoleService().get(authenticatedUser.id))
+                    const roles = (await authenticationService().getUserRoles(authenticatedUser.id))
                         .map(role => role.role)
 
                     // get rbac_opts to initialize the RBAC
@@ -33,7 +33,7 @@ function UserProvider(props) {
                     setRbac(setupRbac)
                 }
             } catch (err) {
-                console.error(err)
+                console.log(err)
                 return
             }
         }

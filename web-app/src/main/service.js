@@ -1,4 +1,4 @@
-var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, protocols, history, configs, WEB_API_HOME_PATH } = require('./common/links').webApiLinks;
+var { users_lists, sessions, users, roles, permissions, users_roles, lists, roles_permissions, auth_types, history, configs, WEB_API_HOME_PATH } = require('./common/links').webApiLinks;
 const DEFAULT_OPTIONS = (met) => { return { method: met, credentials: "include", headers: { 'Content-Type': "application/json" } } };
 
 function produceInit(body, met) {
@@ -32,17 +32,18 @@ export function authenticationService(test) {
     }
     return {
         login: async (user, pass) => makeRequest(users.LOCAL_LOGIN_PATH, { username: user, password: pass }, 'POST'),
-        logout: async (redirect) => makeRequest(users.LOGOUT_PATH, {}, 'POST')
+        logout: async (redirect) => makeRequest(users.LOGOUT_PATH, {}, 'POST'),
+        getUserRoles: async()=>getRequest(users.ROLES_PATH)
     }
 }
 
-export function protocolService(test) {
+export function authTypesService(test) {
     if (test) {
         WEB_API_HOME_PATH = `http://localhost:8082`;
     }
     return {
-        changeActive: async (protocolName, idp, active) => makeRequest(protocols.ACTIVATE_PATH, { protocol: protocolName, idp, active }, 'PATCH'),
-        getPossibleAuthTypes: async (signal) => request(protocols.PROTOCOLS_PATH, { ...DEFAULT_OPTIONS('GET'), signal: signal })
+        changeActive: async (protocolName, idp, active) => makeRequest(auth_types.ACTIVATE_PATH, { protocol: protocolName, idp, active }, 'PATCH'),
+        getPossibleAuthTypes: async (signal) => request(auth_types.AUTH_TYPES_PATH, { ...DEFAULT_OPTIONS('GET'), signal: signal })
     };
 }
 
@@ -52,13 +53,14 @@ export function userService(test) {
     }
     return {
         get: async () => getRequest(users.USER_PATH),
-        post: async (arr) => makeRequest(users.USER_PATH, arrayToObject(arr,['username','password']), 'POST'),
+        post: async (arr) =>makeRequest(users.USER_PATH, arrayToObject(arr,['username','password','updater']), 'POST'),
         //TODO: update returning strange fields and not returning field id
-        update: async (oldObject, newValuesArr) => makeRequest(users.USERNAME_UPDATE_PATH(oldObject.id), { username: newValuesArr[0] }, 'PUT'),
+        update: async (oldObject, newValuesArr,updater) => makeRequest(users.USERNAME_UPDATE_PATH(oldObject.id), { username: newValuesArr[0],updater:updater }, 'PUT'),
         //TODO: fix problem were delete is blocked by constraints
         destroy: async (user) => {
             makeRequest(users.SPECIFIC_USER_PATH(user.id), {}, 'DELETE')
         },
+        updatePassword:async (UserId,password)=>makeRequest(users.PASSWORD_UPDATE_PATH(UserId), { password: password,updater:UserId }, 'PUT'),
         getAuthenticatedUser: async () => getRequest(users.GET_AUTHENTICATED_USER_PATH),
         getUser: async (name) => getRequest(users.SPECIFIC_USER_PATH_BY_USERNAME(name)),
         getUserById: async (id) => getRequest(users.SPECIFIC_USER_PATH(id)),

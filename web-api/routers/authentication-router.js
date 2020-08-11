@@ -16,6 +16,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     const authenticate = authization.authenticate
+    const userRoles=authization.userRole
     const bodyParser = require('body-parser');
 
     // this module contains all user authentication related endpoints
@@ -46,6 +47,11 @@ module.exports = function (apiUtils, authization) {
         apiUtils.setResponse(res, req.user, 200) :
         apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status)
     )
+
+    authenticationRouter.get('/authenticated-user-roles', (req, res) => 
+  apiUtils.promiseDataToResponse(res, userRoles.getByUser(req.user.id))
+)
+
 
     return authenticationRouter
 

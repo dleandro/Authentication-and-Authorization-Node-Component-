@@ -51,7 +51,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function updateUsername(req, res) {
-        apiUtils.promiseDataToResponse(res,  users.updateUsername(req.body.username, req.params.id), 201)
+        apiUtils.promiseDataToResponse(res,  users.updateUsername(req.body.username, req.params.id,req.body.updater), 201)
     }
 
     return userRouter

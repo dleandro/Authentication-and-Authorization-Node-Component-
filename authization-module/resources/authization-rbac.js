@@ -28,4 +28,5 @@ module.exports = class AuthizationRbac {
         return rolesNames.some(role => this.rbac.canAny(role, permissions))
     }
 
+
 }

@@ -12,7 +12,7 @@ const
     AUTHENTICATION_PATH = "/api/authentications",
     CONFIG_PATH = "/api/configs",
     SESSION_PATH = "/api/sessions",
-    PROTOCOLS_PATH = "/api/protocols",
+    AUTH_TYPES_PATH = "/api/auth-types",
     USERS_LIST_PATH = "/api/users-lists",
     HISTORY_PATH = "/api/users-history"
 
@@ -23,6 +23,7 @@ export const webApiLinks =
     WEB_API_HOME_PATH,
     users: {
         USER_PATH,
+        ROLES_PATH:`${AUTHENTICATION_PATH}/authenticated-user-roles`,
         USERNAME_UPDATE_PATH: userId => `${USER_PATH}/${userId}/username`,
         PASSWORD_UPDATE_PATH: userId => `${USER_PATH}/${userId}/password`,
         SPECIFIC_USER_PATH: userId => `${USER_PATH}/${userId}`,
@@ -95,9 +96,9 @@ export const webApiLinks =
         RBAC_OPTS_PATH: `${CONFIG_PATH}/rbac-opts`
     },
 
-    protocols: {
-        PROTOCOLS_PATH,
-        ACTIVATE_PATH: `${PROTOCOLS_PATH}/active`,
+    auth_types: {
+        AUTH_TYPES_PATH,
+        ACTIVATE_PATH: `${AUTH_TYPES_PATH}/active`,
     },
     sessions: {
         SESSION_PATH,

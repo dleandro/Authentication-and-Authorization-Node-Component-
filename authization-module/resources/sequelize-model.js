@@ -79,10 +79,16 @@ const setSaltHashAndPassword = async user => {
     }
 }
 
+const updateSaltHashAndPassword = async user => {
+    if (user.attributes.password) {
+        user.attributes.password = await User.encryptPassword(user.attributes.password)
+    }
+}
+
 
 
 User.beforeCreate(setSaltHashAndPassword)
-User.beforeUpdate(setSaltHashAndPassword)
+User.beforeBulkUpdate(updateSaltHashAndPassword)
 
 /**
  * User_History(
@@ -178,7 +184,7 @@ const invalidateSessions = async (userList) => {
     if (list.list === 'BLACK') {
         Session.destroy({ where: { Userid: userList.UserId } })
     }
-    createHistory(userList, `The list with the id:${userList.ListId} was added to the user`)
+    createHistory(userList.start_date,userList.updater, `The list with the id:${userList.ListId} was added to the user`,userList.UserId)
 }
 
 
@@ -187,33 +193,33 @@ const createUserRoleHistory = async ({ dataValues }) => {
 }
 
 const createUserHistory = async ({ dataValues }) => {
-    createHistory(new Date(), dataValues.updater, `The user was created`)
+    createHistory(new Date(), dataValues.updater, `The user was created`,dataValues.id)
 }
 
-const deleteUserRoleHistory = async ({ dataValues }) => {
+const deleteUserRoleHistory = async ( dataValues ) => {
     createHistory(dataValues.start_date, dataValues.updater, `The role with the id:${dataValues.RoleId} was deleted from the user`, dataValues.UserId)
 }
 
-const deleteUserHistory = async ({ dataValues }) => {
-    createHistory(new Date(), dataValues.updater, `The user was deleted`)
+const deleteUserHistory = async (dataValues) => {
+  createHistory(new Date(), dataValues.updater, `The user was deleted`,dataValues.id)
 }
 
 
-const deleteUserListHistory = async ({ dataValues }) => {
+const deleteUserListHistory = async ( dataValues ) => {
     createHistory(dataValues.start_date, dataValues.updater, `The list with the id:${dataValues.ListId} was removed from the user`, dataValues.UserId)
 }
 
-const updateUserRoleHistory = async ({ dataValues }) => {
-    createHistory(dataValues.start_date, dataValues.updater, `The association with the Role with the id:${dataValues.RoleId} was updated`, dataValues.UserId)
+const updateUserRoleHistory = async (dataValues) => {
+    createHistory(dataValues.start_date, dataValues.attributes.updater, `The association with the Role with the id:${dataValues.where.RoleId} was updated`, dataValues.where.UserId)
 }
 
-const updateUserHistory = async ({ dataValues }) => {
-    createHistory(new Date(), dataValues.updater, `The user was updated`)
+const updateUserHistory = async (dataValues) => {
+   createHistory(new Date(), dataValues.attributes.updater, `The user was updated`,dataValues.where.id)
 }
 
 
-const updateUserListHistory = async ({ dataValues }) => {
-    createHistory(dataValues.start_date, dataValues.updater, `The association with the list with the id:${dataValues.ListId} was updated`, dataValues.UserId)
+const updateUserListHistory = async ( dataValues ) => {
+    createHistory(dataValues.start_date, dataValues.attributes.updater, `The association with the list with the id:${dataValues.where.ListId} was updated`, dataValues.where.UserId)
 }
 
 
@@ -226,9 +232,9 @@ UserList.afterDestroy(deleteUserListHistory)
 UserRoles.afterDestroy(deleteUserRoleHistory)
 User.afterDestroy(deleteUserHistory)
 
-UserList.afterUpdate(updateUserListHistory)
-UserRoles.afterUpdate(updateUserRoleHistory)
-User.afterUpdate(updateUserHistory)
+UserList.afterBulkUpdate(updateUserListHistory)
+UserRoles.afterBulkUpdate(updateUserRoleHistory)
+User.afterBulkUpdate(updateUserHistory)
 
 
 

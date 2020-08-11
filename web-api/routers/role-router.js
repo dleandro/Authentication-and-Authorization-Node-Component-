@@ -16,7 +16,7 @@ module.exports = function (apiUtils, authization) {
         .put(updateRole)
 
     function updateRole(req, res) {
-        apiUtils.promiseDataToResponse(res, roles.update(req.params.id, req.body.role, req.body.parent_role), 201)
+        apiUtils.promiseDataToResponse(res, roles.update(req.params.id, req.body.parent_role), 201)
     }
 
     function addRole(req, res) {

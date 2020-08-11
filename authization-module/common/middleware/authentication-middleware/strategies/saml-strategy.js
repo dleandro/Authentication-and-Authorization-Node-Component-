@@ -2,7 +2,9 @@
 const {callbackUrl,entryPoint,issuer,certificate} = require('../../../config/config').saml,
  SamlStrategy = require('passport-saml').Strategy,
     {checkProtocol,findUserByIdp,createUser,isBlackListed,addNotification,findUserByIdpOrCreate} = require('../../../util/passport-utils'),
-    protocolName = 'Saml',usernameLink='http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress';
+    protocol = 'saml',
+    idp='office365',
+    usernameLink='http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress';
 
 module.exports=()=>{
     return new SamlStrategy({callbackUrl, entryPoint, issuer, cert: certificate, signatureAlgorithm:'sha256'},

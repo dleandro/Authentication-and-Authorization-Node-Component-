@@ -35,7 +35,7 @@ module.exports = {
 
     delete: async (listId, userId) => Promise.resolve(
         {
-            deletedRows: await tryCatch(() => UserList.destroy({ where: { ListId: listId, UserId: userId } }))
+            deletedRows: await tryCatch(() => UserList.destroy({ where: { ListId: listId, UserId: userId },individualHooks: true }))
         }
     ),
 

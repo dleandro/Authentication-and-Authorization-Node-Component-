@@ -6,7 +6,7 @@ const
     idps = require('../../resources/dals/idps-dal'),
     userHistories = require('../../resources/dals/users-history-dal'),
     userSession = require('../../resources/dals/user-session-dal'),
-    protocol = require('../../resources/dals/authentication-types-dal'),
+    authTypes = require('../../resources/dals/authentication-types-dal'),
     moment = require('moment')
 
 module.exports = {
@@ -40,6 +40,14 @@ module.exports = {
         } catch (error) {
             return null
         }
+    },
+    
+    findUserByIdpOrCreate: async (idpId, idpName, username, password) => {
+        // needs endpoint
+        const user = await users.getByIdp(idpId);
+        return user ? {id: user.id, idp: idpId, username: user.username} : users.create(username, password)
+            .then(userId=>idps.create(idpId, idpName, userId.id)
+                .then(()=>({id: userId.id, idp_id: idpId, username})));
     },
 
     /**
@@ -78,6 +86,6 @@ module.exports = {
      */
     addNotification: (userId) => userHistories.create(new Date(), userId, "BlackListed User tried to Login", userId),
 
-    checkProtocol: (protocolName) => protocol.getByName(protocolName)
+    checkProtocol: (protocol,idp) => authTypes.getByName(protocol,idp)
     
 }

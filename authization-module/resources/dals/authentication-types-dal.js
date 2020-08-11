@@ -6,8 +6,16 @@ module.exports = {
 
     get: () => tryCatch(() => AuthenticationTypes.findAll()),
 
-    getActive: () => tryCatch(() => AuthenticationType.findAll({ where: { active: 1 } })),
+    getActive: () => tryCatch(() => AuthenticationTypes.findAll({ where: { active: 1 } })),
 
-    changeActive: (protocol, idp, active) => tryCatch(() => AuthenticationType.update({ active: active }, { where: { protocol: protocol, idp: idp } }))
+    changeActive: (protocol, idp, active) => tryCatch(() => AuthenticationTypes.update({ active: active }, { where: { protocol: protocol, idp: idp } })),
+
+    getByName: async (protocol,idp)=> await AuthenticationTypes.findAll({
+        where:{
+            protocol:protocol,
+            idp:idp,
+            active:1
+        }
+    })
 
 }

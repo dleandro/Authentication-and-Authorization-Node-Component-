@@ -37,7 +37,6 @@ async function databasesetup(rbac_opts) {
     // sync present state of the database with our models
     await sequelize.sync()
     
-    // TODO: Events to check if end dates have already passed 
     // Set up default values for Lists and Available authentication identity providers
     const promiseArr = [
         List.findOrCreate({ where: { "list": "BLACK" } }),

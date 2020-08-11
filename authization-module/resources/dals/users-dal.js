@@ -67,7 +67,7 @@ module.exports = {
      */
     create: (username, password, updater) => tryCatch(async () => {
 
-        return User.create({ username: username, password: password, updater })
+        return User.create({ username: username, password: password, updater:updater })
     }),
 
     /**
@@ -76,9 +76,9 @@ module.exports = {
      * @param id
      * @returns {Promise<void>}
      */
-    updateUsername: async (username, id) => Promise.resolve(
+    updateUsername: async (username, id,updater) => Promise.resolve(
         {
-            insertedRows: await tryCatch(() => User.update({ username: username }, { where: { id: id } })),
+            insertedRows: await tryCatch(() => User.update({ username: username,updater:updater}, { where: { id: id }  })),
             username,
             id
         }),
@@ -98,7 +98,7 @@ module.exports = {
      */
     delete: async (userId) => Promise.resolve(
         {
-            deletedRows: await tryCatch(() => User.destroy({ where: { id: userId } }))
+            deletedRows: await tryCatch(() => User.destroy({ where: { id: userId }, individualHooks: true }))
         }
     )
 

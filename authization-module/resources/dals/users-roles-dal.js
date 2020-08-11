@@ -41,7 +41,7 @@ module.exports = {
      * @param id
      * @returns {Promise<*>}
      */
-    getUserActiveRoles: (id) => tryCatch(() => UserRoles.findAll({ where: { UserId: id, active: 1 } })),
+    getUserActiveRoles: (id) => tryCatch(() => UserRoles.findAll({ where: { UserId: id, active: 1 }, include: [Role], raw: true  })),
 
     getByRole: (roleId) => tryCatch(() => UserRoles.findAll({ where: { RoleId: roleId }, include: [User], raw: true })),
 
@@ -73,7 +73,7 @@ module.exports = {
 
     delete: (UserId, RoleId) => Promise.resolve(
         {
-            deletedRows: tryCatch(async () => await UserRoles.destroy({ where: { UserId: UserId, RoleId: RoleId } }))
+            deletedRows: tryCatch(async () => await UserRoles.destroy({ where: { UserId: UserId, RoleId: RoleId },individualHooks: true }))
         }),
 
     update: async (user, role, start_date, endDate, active,updater) => Promise.resolve(

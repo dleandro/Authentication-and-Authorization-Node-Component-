@@ -27,12 +27,16 @@ module.exports = {
         }))[0]
     }),
 
-    update: async (id, role, parent_role) => Promise.resolve(
+    update: async (id, parent_role) =>{
+        const role=await getSpecificById(id)
+        config.rbac.grant(await config.rbac.getRole(parent_role.label),await config.rbac.getRole(role.role))
+        return Promise.resolve(
         {
-            insertedRows: await tryCatch(() => Role.update({ role: role, parent_role: parent_role }, { where: { id: id } })),
-            role,
+            insertedRows: await tryCatch(() => Role.update({parent_role: parent_role.value }, { where: { id: id } })),
             parent_role
-        }),
+        })
+    },
+
 
     /**
      *

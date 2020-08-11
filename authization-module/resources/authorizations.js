@@ -21,7 +21,7 @@ module.exports = {
         var roles = []
 
         if (user) {
-            roles = (await userRoles.getUserActiveRoles(user.id)).map(userRole => userRole.role)
+            roles = (await userRolesDal.getUserActiveRoles(user.id)).map(userRole => userRole['Role.role'])
             if (roles.includes('admin')) {
                 return next()
             }
@@ -44,7 +44,7 @@ module.exports = {
         var roles = []
 
         if (user) {
-            roles = (await userRoles.getUserActiveRoles(user.id)).map(userRole => userRole.role)
+            roles = (await userRolesDal.getUserActiveRoles(user.id)).map(userRole => userRole.role)
         }
 
         await Promise.all(roles.map(async role => permissions.push(await config.rbac.getScope(role))))

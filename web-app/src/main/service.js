@@ -111,7 +111,7 @@ export function userRoleService() {
     return {
         get: async userId => getRequest(users_roles.BY_USER(userId)),
         post: async (userId, roleId, updater, date) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId, active: 1, updater: updater, start_date: date }, 'POST'),
-        update: async (userId, roleId,updater, arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId,updater:updater, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        update: async (userId, start_date, roleId,updater, arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, start_date, role: roleId,updater:updater, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
         destroy: async (UserId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: UserId, role: RoleId }, 'DELETE'),
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT')
@@ -174,7 +174,7 @@ export function userListService() {
         //TODO: get not working, problem in api
         get: async (id) => getRequest(users_lists.BY_USER(id)),
         post: async arr => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], updater: arr[3] }, 'POST'),
-        update: async (UserId, ListId,updater,arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, updater:updater, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        update: async (UserId, start_date, ListId,updater,arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, start_date, updater:updater, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
         destroy: async (ListId, UserId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: ListId, UserId: UserId }, 'DELETE'),
         // not working
         deactivateList: async (listId, userId) => makeRequest(users_lists.USERS_LIST_PATH, { active: 0 }, 'PUT')

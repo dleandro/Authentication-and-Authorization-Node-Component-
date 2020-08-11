@@ -20,8 +20,8 @@ function UserRoles() {
             return {
                 RoleId: result.RoleId,
                 role: result.role,
-                start_date: result.start_date,
-                end_date: result.end_date,
+                start_date: `${new Date(result.start_date)}`,
+                end_date: `${new Date(result.end_date)}`,
                 active: result.active,
                 updater: result.updater
 
@@ -33,33 +33,35 @@ function UserRoles() {
         postFields: [{ text: 'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
     };
     customService.get = fetchData;
-    customService.post = arr => {console.log(arr);return userRoleService().post(id, arr[0].value, ctx.user.id, new Date()).then(
-        result=>{
+    customService.post = arr => {
+        console.log(arr); return userRoleService().post(id, arr[0].value, ctx.user.id, new Date()).then(
+            result => {
+                console.log(result)
+                return {
+                    RoleId: result.RoleId,
+                    role: arr[0].label,
+                    start_date: `${new Date(result.start_date)}`,
+                    end_date: `${new Date(result.end_date)}`,
+                    active: result.active == true ? 1 : 0,
+                    updater: result.updater
+                }
+            }
+        )
+    }
+    customService.update = (oldObj, arr) => userRoleService().update(id, oldObj.start_date, oldObj.RoleId, ctx.user.id, arr)
+        .then(result => {
             console.log(result)
-            return{
-               RoleId: result.RoleId,
-               role: arr[0].label,
-                start_date: result.start_date,
-                end_date: result.end_date,
-                active: result.active==true?1:0,
+            return {
+                RoleId: oldObj.RoleId,
+                role: oldObj.role,
+                start_date: `${new Date(oldObj.start_date)}`,
+                end_date: `${new Date(result.endDate)}`,
+                active: result.active == true ? 1 : 0,
                 updater: result.updater
             }
-        }
-    )}
-    customService.update = (oldObj, arr) =>userRoleService().update(id, oldObj.RoleId,ctx.user.id, arr)
-    .then(result => {
-        console.log(result)
-        return {
-            RoleId: oldObj.RoleId,
-            role: oldObj.role,
-            start_date: oldObj.start_date,
-            end_date: result.endDate,
-            active: result.active==true?1:0,
-            updater: result.updater
-        }
-    });
-    
-    customService.destroy= oldObj => userRoleService().destroy(id,oldObj.RoleId)
+        });
+
+    customService.destroy = oldObj => userRoleService().destroy(id, oldObj.RoleId)
     return (
         <TablePage resource={'user-role'} service={customService} />
     );
@@ -68,16 +70,16 @@ function UserRoles() {
 export function UserSessions() {
     let { id } = useParams()
     const ctx = useContext(UserContext);
-    if(!id){
-        id=ctx.user.id
+    if (!id) {
+        id = ctx.user.id
     }
     const serv = {
         ...UsersessionService(),
         get: () => UsersessionService().get(id).then(results => results.map(result => {
             return {
                 sid: result.sid,
-                start_date: result.createdAt,
-                end_date: result.expires
+                start_date: `${new Date(result.createdAt)}`,
+                end_date: `${new Date(result.end_date)}`,
 
             }
         }))
@@ -102,39 +104,39 @@ function UserLists() {
         .then(results => results.map(result => {
             return {
                 ListId: result.ListId,
-                list:result['List.list'],
-                start_date: result.start_date,
-                end_date: result.end_date,
+                list: result['List.list'],
+                start_date: `${new Date(result.start_date)}`,
+                end_date: `${new Date(result.end_date)}`,
                 active: result.active,
                 updater: result.updater
             }
         }));
     serv.post = arr => userListService().post([arr[0].value, id, new Date(), ctx.user.id]).then(
-        result=>{
+        result => {
             console.log(result)
-            return{
-               ListId: result.ListId,
-               list: arr[0].label,
-                start_date: result.start_date,
-                end_date: result.end_date,
-                active: result.active==true?1:0,
+            return {
+                ListId: result.ListId,
+                list: arr[0].label,
+                start_date: `${new Date(result.start_date)}`,
+                end_date: `${new Date(result.end_date)}`,
+                active: result.active == true ? 1 : 0,
                 updater: result.updater
             }
         })
-    serv.update = (oldObj,arr)=>userListService().update(id,oldObj.ListId,ctx.user.id,arr).then(
-        result=>{
-            console.log(result,oldObj,arr)
-            
-            return{
-               ListId: oldObj.ListId,
-               list: oldObj.list,
-                start_date: oldObj.start_date,
-                end_date: result.end_date,
-                active: result.active==true?1:0,
+    serv.update = (oldObj, arr) => userListService().update(id, oldObj.start_date, oldObj.ListId, ctx.user.id, arr).then(
+        result => {
+            console.log(result, oldObj, arr)
+
+            return {
+                ListId: oldObj.ListId,
+                list: oldObj.list,
+                start_date: `${new Date(oldObj.start_date)}`,
+                end_date: `${new Date(result.end_date)}`,
+                active: result.active == true ? 1 : 0,
                 updater: result.updater
             }
         })
-    serv.destroy = (oldObj)=> userListService().destroy(oldObj.ListId,id)
+    serv.destroy = (oldObj) => userListService().destroy(oldObj.ListId, id)
     return (
         <TablePage service={serv} resource={'users-lists'} />
     )

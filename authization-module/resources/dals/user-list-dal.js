@@ -28,7 +28,7 @@ module.exports = {
     isUserBlackListed: (user_id) => tryCatch(async () => {
         const userLists = await UserList.findAll({ where: { UserId: user_id }, include: [List], raw: true })
 
-        return userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active==1)
+        return userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active == 1)
     }),
 
     create: (listId, userId, updater, start_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date: start_date, active: active, updater: updater }, { include: [List] })),
@@ -39,13 +39,13 @@ module.exports = {
         }
     ),
 
-    update: async (user, list, end_date, active,updater) =>Promise.resolve({
-        updatedRows: await  tryCatch(() => UserList.update({end_date: end_date,active: active,updater:updater},
+    update: async (user, start_date, list, end_date, active, updater) => Promise.resolve({
+        updatedRows: await tryCatch(() => UserList.update({ start_date, end_date: end_date, active: active, updater: updater },
             { where: { UserId: user, ListId: list } })),
-            end_date,
-            active,
-            updater
-           
+        end_date,
+        active,
+        updater
+
     })
 
 }

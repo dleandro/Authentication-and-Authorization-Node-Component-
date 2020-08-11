@@ -21,21 +21,21 @@ const defineTable = (modelName, attributes, timestamps) => sequelize.define(mode
  * - description: DefaultString)
  * @type {Model}
  */
-const Permission = defineTable('Permission', { action: { type: STRING, validate: { notEmpty: true}, allowNull: false }, resource: { type: STRING, validate: { notEmpty: true}, allowNull: false } }, false);
+const Permission = defineTable('Permission', { action: { type: STRING, validate: { notEmpty: true }, allowNull: false }, resource: { type: STRING, validate: { notEmpty: true }, allowNull: false } }, false);
 /**
  * AuthenticationType(
  * - protocol: NonNullStringPK,
  * - active:DefaultBool)
  * @type {Model}
  */
-const AuthenticationTypes = defineTable('AuthenticationTypes', { protocol: { type: STRING, primaryKey: true, validate: { notEmpty: true}, allowNull: false }, idp: { type: STRING, primaryKey: true, validate: { notEmpty: true}, allowNull: false }, active: BOOLEAN }, false);
+const AuthenticationTypes = defineTable('AuthenticationTypes', { protocol: { type: STRING, primaryKey: true, validate: { notEmpty: true }, allowNull: false }, idp: { type: STRING, primaryKey: true, validate: { notEmpty: true }, allowNull: false }, active: BOOLEAN }, false);
 /**
  Role(
  * - role: NonNullString,
  * - parent_role: DefaultInt)
  * @type {Model}
  */
-const Role = defineTable('Role', { role: { type: STRING, validate: { notEmpty: true}, allowNull: false, unique: true }, parent_role: INTEGER }, false);
+const Role = defineTable('Role', { role: { type: STRING, validate: { notEmpty: true }, allowNull: false, unique: true }, parent_role: INTEGER }, false);
 /**
  * RolePermission(
  * - role: NonNullAutoIncIntPK,
@@ -102,10 +102,21 @@ const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull:
  * @type {Model}
  * 
  */
-const List = defineTable('List', { list: { type: STRING, validate: { notEmpty: true}, allowNull: false, unique: true } }, false);
+const List = defineTable('List', { list: { type: STRING, validate: { notEmpty: true }, allowNull: false, unique: true } }, false);
 
 const UserAssociation = (associationName) => defineTable(associationName, {
-    start_date: { type: DATE, allowNull: false }, end_date: DATE,
+    start_date: { type: DATE, allowNull: false }, end_date: {
+        type: DATE, validate: {
+            isDateAndTimeAfter(end_date) {
+                const endDateFormatted = new Date(end_date)
+                const startDateFormatted = new Date(this.start_date)
+
+                if (endDateFormatted < startDateFormatted) {
+                    throw new Error('end_date needs to be after start_date')
+                }
+            }
+        }
+    },
     updater: { model: 'User', key: 'id', type: INTEGER, allowNull: false }, active: BOOLEAN
 }, false);
 

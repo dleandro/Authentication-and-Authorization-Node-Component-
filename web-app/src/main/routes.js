@@ -12,28 +12,32 @@ import { AuthTypeProvider } from './components/login-components/AuthTypeContext'
 import { AccountManagement } from './components/backoffice-user-components/AccountManagement';
 import UserLogin from './components/login-components/UserLogin';
 import TablePage from "./common/html-elements-utils/TablePage";
-import {listService, logsService, permissionService, rolesService, sessionService,UsersessionService, userService} from "./service";
+import { listService, permissionService, rolesService, sessionService, userService } from "./service";
 
-const rolesDropdownOptionsFetcher = () => rolesService().get().then(data=>data.map(value=>({eventKey:value.id,text:value.role})));
-const rolePostFields = ['New Role', {text:'Id of the Parent Role (dropdown) ', DropdownOptionsFetcher:rolesDropdownOptionsFetcher}];
+const rolesDropdownOptionsFetcher = () => rolesService().get().then(data => data.map(value => ({ eventKey: value.id, text: value.role })));
+const rolePostFields = ['New Role', { text: 'Id of the Parent Role (dropdown) ', DropdownOptionsFetcher: rolesDropdownOptionsFetcher }];
 
-const userServ = {...userService(), editFields: ['New Username'], postFields: ['New Username', 'New Password'], detailsUrl: user => `/users/${user.id}`};
-const roleServ = {...rolesService(),
-     editFields: rolePostFields,
-      postFields: rolePostFields ,
-       detailsUrl: role => `/roles/${role.id}`
-    };
-const listServ = {...listService(), detailsUrl: list => `/lists/${list.id}`};
-const permServ = {...permissionService(), editFields: ['New Action', 'New Resource'], postFields: ['New Action', 'New Resource'],
-    detailsUrl: permission => `/permissions/${permission.id}`};
+const userServ = { ...userService(), editFields: ['New Username'], postFields: ['New Username', 'New Password'], detailsUrl: user => `/users/${user.id}` };
+const roleServ = {
+    ...rolesService(),
+    editFields: rolePostFields,
+    postFields: rolePostFields,
+    detailsUrl: role => `/roles/${role.id}`
+};
+const listServ = { ...listService(), detailsUrl: list => `/lists/${list.id}` };
+const permServ = {
+    ...permissionService(), editFields: ['New Action', 'New Resource'], postFields: ['New Action', 'New Resource'],
+    detailsUrl: permission => `/permissions/${permission.id}`
+};
 
-const sessionServ={...sessionService(),
+const sessionServ = {
+    ...sessionService(),
     get: () => sessionService().get().then(results => results.map(result => {
         return {
             sid: result.sid,
-            start_date: result.createdAt,
-            end_date: result.expires,
-            UserId:result.UserId
+            start_date: `${new Date(result.createdAt)}`,
+            end_date: `${new Date(result.expires)}`,
+            UserId: result.UserId
 
         }
     }))
@@ -41,7 +45,7 @@ const sessionServ={...sessionService(),
 
 
 const routers = [
-    { route: '/users', component: <TablePage service={userServ} resource={'users'} />},
+    { route: '/users', component: <TablePage service={userServ} resource={'users'} /> },
     { route: '/roles', component: <TablePage service={roleServ} resource={'roles'} /> },
     { route: '/permissions', component: <TablePage service={permServ} resource={'permissions'} /> },
     { route: '/lists', component: <TablePage service={listServ} resource={'lists'} /> },

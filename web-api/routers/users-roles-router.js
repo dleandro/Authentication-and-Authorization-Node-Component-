@@ -32,10 +32,10 @@ module.exports = function (apiUtils, authization) {
             201)
     }
 
-        
+
     function deleteUsersRoles(req, res) {
-            apiUtils.promiseDataToResponse(res, userRoles.delete(req.body.user,req.body.role))
-        }
+        apiUtils.promiseDataToResponse(res, userRoles.delete(req.body.user, req.body.role))
+    }
 
     function getUsersRoles(req, res) {
         apiUtils.promiseDataToResponse(res, userRoles.get())
@@ -58,14 +58,14 @@ module.exports = function (apiUtils, authization) {
     }
 
     function editUserRole(req, res) {
-        apiUtils.promiseDataToResponse(res, userRoles.update(req.body.user,req.body.role,req.body.end_date,req.body.active,req.body.updater))
+        apiUtils.promiseDataToResponse(res, userRoles.update(req.body.user, req.body.role, req.body.start_date, req.body.end_date, req.body.active, req.body.updater))
     }
 
-    function getByUser(req,res){
+    function getByUser(req, res) {
         apiUtils.promiseDataToResponse(res, userRoles.getByUser(req.params.id))
     }
 
-    function getByRole(req,res){
+    function getByRole(req, res) {
         apiUtils.promiseDataToResponse(res, userRoles.getByRole(req.params.id))
     }
 

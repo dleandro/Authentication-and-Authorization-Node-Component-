@@ -31,7 +31,7 @@ module.exports = {
         return userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active == 1)
     }),
 
-    create: (listId, userId, updater, start_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date: start_date, active: active, updater: updater }, { include: [List] })),
+    create: (listId, userId, updater, start_date, end_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date, end_date, active, updater }, { include: [List] })),
 
     delete: async (listId, userId) => Promise.resolve(
         {
@@ -39,7 +39,7 @@ module.exports = {
         }
     ),
 
-    update: async (user, start_date, list, end_date, active, updater) => Promise.resolve({
+    update: async (user, list, start_date, end_date, active, updater) => Promise.resolve({
         updatedRows: await tryCatch(() => UserList.update({ start_date, end_date: end_date, active: active, updater: updater },
             { where: { UserId: user, ListId: list } })),
         end_date,

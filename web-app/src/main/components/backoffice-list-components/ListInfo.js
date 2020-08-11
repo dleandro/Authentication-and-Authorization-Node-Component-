@@ -19,7 +19,7 @@ function ListUsers() {
         ...listUserService(),
         detailsUrl: (listUser) => `/lists/${id}`,
         editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
-        postFields: [{ text: 'Id of User to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
+        postFields: [{ text: 'Id of User to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }, { text: 'New Date (date)'}],
     }
     serv.get = () => listUserService().get(id)
         .then(results => results.map(result => {
@@ -27,19 +27,19 @@ function ListUsers() {
                 UserId: result.UserId,
                 username: result['User.username'],
                 start_date: `${new Date(result.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active,
                 updater: result.updater
             }
         }));
-    serv.post = arr => listUserService().post([id, arr[0].value, new Date(), ctx.user.id]).then(
+    serv.post = arr => listUserService().post([id, arr[0].value, new Date(), arr[1], ctx.user.id]).then(
         result => {
             console.log(result)
             return {
                 UserId: result.UserId,
                 username: arr[0].label,
                 start_date: `${new Date(result.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater
             }
@@ -53,7 +53,7 @@ function ListUsers() {
                 UserId: oldObj.UserId,
                 username: oldObj.username,
                 start_date: `${new Date(oldObj.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater
             }

@@ -4,8 +4,10 @@ import UserContext from "../../UserContext";
 import { SubmitValuesModal } from "./generics/GenericModal";
 import { useHistory } from "react-router-dom";
 import FilterablePageTable from "./Table/FilterablePageTable";
-import {Spinner} from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import Loading from "./Loading";
+import Alert from 'react-bootstrap/Alert'
+
 
 
 /**
@@ -36,32 +38,53 @@ const TablePage = ({ service, resource }) => {
     const ctx = useContext(UserContext);
     let history = useHistory();
     const [values, setValues] = useState(undefined);
-    const [error,setError] = useState(undefined);
+    const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
     const checkHasPermission = async method => ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [[method, resource]]);
 
     useEffect(() => { service.get().then(data => { console.log(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
-    useEffect(()=>console.log(values),[values])
-    const postData = arr => service.post(arr).then(d=>setValues([...values,d]));
-    const addButton = /*await checkHasPermission('POST')*/service.postFields?<th>
-        <SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th>:undefined;
+    useEffect(() => console.log(values), [values])
+    const postData = arr => service.post(arr)
+        .then(d => setValues([...values, d]))
+        .catch(err => {
+            setError({ errorMessage: err.message, shouldShow: true })
+            console.error(err)
+        });
 
-    const editButton = rowObject=> /*await checkHasPermission('PUT')*/service.editFields?<td>
+    const addButton = /*await checkHasPermission('POST')*/service.postFields ? <th>
+        <SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th> : undefined;
+
+    const editButton = rowObject => /*await checkHasPermission('PUT')*/service.editFields ? <td>
         <SubmitValuesModal openButtonIcon={'fa fa-edit'} bootstrapColor={'warning'} buttonTooltipText={'Edit!'} labels={service.editFields}
-                           submitListener={newValuesArr =>  service.update(rowObject,newValuesArr).then(updated=>{
-                               console.log(updated);setValues([...values].map(val=>val===rowObject?updated:val));})} /></td>:undefined;
+            submitListener={newValuesArr => service.update(rowObject, newValuesArr)
+                .then(updated => {
+                    console.log(updated); setValues([...values].map(val => val === rowObject ? updated : val));
+                })
+                .catch(err => {
+                    setError({ errorMessage: err.message, shouldShow: true })
+                    console.error(err)
+                })} rowObj={rowObject} /></td> :
+        undefined;
 
-    const deleteButton = val=> /*await checkHasPermission('DELETE')*/service.destroy?<td>
+    const deleteButton = val => /*await checkHasPermission('DELETE')*/service.destroy ? <td>
         <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'}
-                              onClick={() =>service.destroy(val).then(()=>setValues([...values].filter(item=>item !==val)))} /></td>:undefined;
+            onClick={() => service.destroy(val)
+                .then(() => setValues([...values]
+                    .filter(item => item !== val)
+                ))
+                .catch(err => {
+                    setError({ errorMessage: err.message, shouldShow: true })
+                    console.error(err)
+                })} /></td> :
+        undefined;
 
     const buildTable = () => {
         console.log('building table...')
-        console.log('serv: ',service,' res: ',resource)
-        const infoButton = val=> service.detailsUrl?<td>
+        console.log('serv: ', service, ' res: ', resource)
+        const infoButton = val => service.detailsUrl ? <td>
             <GenericTooltipButton icon={'fa fa-info-circle'} onClick={t => history.push(service.detailsUrl(val))} tooltipText={'More Info!'} bootstrapColor={'primary'} />
-        </td>:undefined;
-        if (values.length && Array.isArray(values)){
+        </td> : undefined;
+        if (values.length && Array.isArray(values)) {
             let labels = Object.keys(values[0]);
             const headers = <tr>
                 {labels.map(label => <th key={label}>{label}</th>)}
@@ -73,13 +96,22 @@ const TablePage = ({ service, resource }) => {
             </tr>;
             return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
         }
-        const noDataFoundMessage =<h1 className={'text-white'}>No Data Found</h1>;
+        const noDataFoundMessage = <h1 className={'text-white'}>No Data Found</h1>;
         return <div className={'d-flex justify-content-center '}><ul><li>{noDataFoundMessage}</li><li>{addButton}</li></ul></div>;
     };
-//<Spinner animation="border" size="lg" variant="info" />
+    //<Spinner animation="border" size="lg" variant="info" />
     return (
         <React.Fragment>
-            {error ? <p>{error.status} {error.err}</p> : values?buildTable(): <Loading />}
+            {
+                error.shouldShow &&
+                <Alert variant={'warning'} onClose={() => setError(false)} dismissible>
+                    {error.errorMessage}
+                </Alert>
+            }
+            {
+                values ? buildTable() : <Loading />
+
+            }
         </React.Fragment>
     );
 };

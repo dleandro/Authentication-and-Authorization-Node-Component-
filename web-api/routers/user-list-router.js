@@ -9,12 +9,12 @@ module.exports = function (apiUtils, authization) {
     userListRouter.post('/', createUserList)
     userListRouter.delete('/', deleteUserList)
     userListRouter.put('/', editUserList)
-    userListRouter.get('/users/:id',getByUser)
-    userListRouter.get('/lists/:id',getByList)
+    userListRouter.get('/users/:id', getByUser)
+    userListRouter.get('/lists/:id', getByList)
 
 
     function createUserList(req, res) {
-        apiUtils.promiseDataToResponse(res, userList.create(req.body.ListId, req.body.UserId, req.body.updater,req.body.start_date, req.body.active), 201)
+        apiUtils.promiseDataToResponse(res, userList.create(req.body.ListId, req.body.UserId, req.body.updater, req.body.start_date, req.body.end_date, req.body.active), 201)
     }
 
     function deleteUserList(req, res) {
@@ -22,14 +22,14 @@ module.exports = function (apiUtils, authization) {
     }
 
     function editUserList(req, res) {
-        apiUtils.promiseDataToResponse(res, userList.update(req.body.user,req.body.list,req.body.end_date,req.body.active,req.body.updater))
+        apiUtils.promiseDataToResponse(res, userList.update(req.body.user, req.body.list, req.body.start_date, req.body.end_date, req.body.active, req.body.updater))
     }
 
-    function getByUser(req,res){
+    function getByUser(req, res) {
         apiUtils.promiseDataToResponse(res, userList.getByUser(req.params.id))
     }
 
-    function getByList(req,res){
+    function getByList(req, res) {
         apiUtils.promiseDataToResponse(res, userList.getByList(req.params.id))
     }
 

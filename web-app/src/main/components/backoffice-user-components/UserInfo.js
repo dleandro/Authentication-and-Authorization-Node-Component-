@@ -21,7 +21,7 @@ function UserRoles() {
                 RoleId: result.RoleId,
                 role: result.role,
                 start_date: `${new Date(result.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active,
                 updater: result.updater
 
@@ -30,18 +30,18 @@ function UserRoles() {
 
     const customService = {
         ...userRoleService(), editFields: [{ text: 'New Date (date)' }, { text: 'New Active state (check)' }],
-        postFields: [{ text: 'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
+        postFields: [{ text: 'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }, { text: 'New End Date (date)'}],
     };
     customService.get = fetchData;
     customService.post = arr => {
-        console.log(arr); return userRoleService().post(id, arr[0].value, ctx.user.id, new Date()).then(
+        console.log(arr); return userRoleService().post(id, arr[0].value, ctx.user.id, new Date(), arr[1]).then(
             result => {
                 console.log(result)
                 return {
                     RoleId: result.RoleId,
                     role: arr[0].label,
                     start_date: `${new Date(result.start_date)}`,
-                    end_date: `${new Date(result.end_date)}`,
+                    end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                     active: result.active == true ? 1 : 0,
                     updater: result.updater
                 }
@@ -55,11 +55,11 @@ function UserRoles() {
                 RoleId: oldObj.RoleId,
                 role: oldObj.role,
                 start_date: `${new Date(oldObj.start_date)}`,
-                end_date: `${new Date(result.endDate)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater
             }
-        });
+        })
 
     customService.destroy = oldObj => userRoleService().destroy(id, oldObj.RoleId)
     return (
@@ -98,7 +98,7 @@ function UserLists() {
     const serv = {
         ...userListService(),
         editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
-        postFields: [{ text: 'Id of List to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
+        postFields: [{ text: 'Id of List to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }, { text: 'New Date (date)'}],
     };
     serv.get = () => userListService().get(id)
         .then(results => results.map(result => {
@@ -106,19 +106,19 @@ function UserLists() {
                 ListId: result.ListId,
                 list: result['List.list'],
                 start_date: `${new Date(result.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active,
                 updater: result.updater
             }
         }));
-    serv.post = arr => userListService().post([arr[0].value, id, new Date(), ctx.user.id]).then(
+    serv.post = arr => userListService().post([arr[0].value, id, new Date(), arr[1], ctx.user.id]).then(
         result => {
             console.log(result)
             return {
                 ListId: result.ListId,
                 list: arr[0].label,
                 start_date: `${new Date(result.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater
             }
@@ -131,7 +131,7 @@ function UserLists() {
                 ListId: oldObj.ListId,
                 list: oldObj.list,
                 start_date: `${new Date(oldObj.start_date)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater
             }

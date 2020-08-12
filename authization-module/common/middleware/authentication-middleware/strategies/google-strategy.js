@@ -1,6 +1,7 @@
 
 const
     GoogleStrategy = require('passport-google-oauth20').Strategy,
+    errors = require('../../../errors/app-errors'),
     protocol = 'oauth2',
     idp='google',
     {google_client_id,google_client_secret,callbackUrl} = require('../../../config/config').google,
@@ -14,7 +15,7 @@ module.exports = () => {
         callbackURL: callbackUrl,
     },
         async function (accessToken, refreshToken, profile, done) {
-            let errorMessage= 'Protocol is not avaiable';
+            let error = errors.protocolIsNotActive;
             if (await checkProtocol(protocol,idp)) {
                 //find or create user
                 const user = await findUserByIdp(profile.id) || await createUser(profile.id, 'google', profile.displayName, 'null');
@@ -22,9 +23,9 @@ module.exports = () => {
                     return done(null,user);
                 }
                 addNotification(user.id);
-                errorMessage = 'User is BlackListed';
+                error = errors.userIsBlacklisted;
             }
-            return done(null, false, {message: errorMessage});
+            return done(error, false);
         }
     );
 };

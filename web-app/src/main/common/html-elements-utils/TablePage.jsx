@@ -41,7 +41,15 @@ const TablePage = ({ service, resource }) => {
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
     const checkHasPermission = async method => ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [[method, resource]]);
 
-    useEffect(() => { service.get().then(data => { console.log(data); return 'err' in data ? setError(data) : setValues(data) }); }, []);
+    useEffect(() => {
+        service.get()
+            .then(data => setValues(data))
+            .catch(err => {
+                setError({ errorMessage: err.message, shouldShow: true })
+                console.error(err)
+            })
+    }, []);
+    
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
     useEffect(() => console.log(values), [values])
     const postData = arr => service.post(arr)

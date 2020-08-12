@@ -1,7 +1,7 @@
 
 const
     LocalStrategy = require('passport-local').Strategy,
-    {findCorrespondingUser,isBlackListed,addNotification} = require('../../../util/passport-utils'),
+    { findCorrespondingUser, isBlackListed, addNotification } = require('../../../util/passport-utils'),
     Idp = require('../../../../resources/dals/idps-dal'),
     errors = require('../../../errors/app-errors'),
     { User } = require('../../../../resources/sequelize-model');

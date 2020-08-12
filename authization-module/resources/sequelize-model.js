@@ -1,11 +1,12 @@
 
 
-const { Sequelize } = require('sequelize'),
+const { Sequelize,Op} = require('sequelize'),
     config = require('../common/config/config'),
     sequelize = config.sequelize,
     bcrypt = require('bcrypt')
 
-const { STRING, DATE, BOOLEAN, INTEGER, TEXT } = Sequelize
+const { STRING, DATE, BOOLEAN, INTEGER, TEXT} = Sequelize
+
 
 /**
  * @param modelName
@@ -48,10 +49,10 @@ Permission.belongsToMany(Role, { through: 'RolePermission', timestamps: false },
 const RolePermission = defineTable('RolePermission', {}, false)
 RolePermission.removeAttribute('id');
 
-RolePermission.belongsTo(Role)
+RolePermission.belongsTo(Role, {onDelete: 'CASCADE'} )
 Role.hasMany(RolePermission)
 
-RolePermission.belongsTo(Permission)
+RolePermission.belongsTo(Permission,{ onDelete: 'CASCADE'} )
 Permission.hasMany(RolePermission)
 
 /**
@@ -60,10 +61,28 @@ Permission.hasMany(RolePermission)
  * - password: DefaultString)
  * @type {Model}
  */
-// TODO: password validator?? we can do it but when done superuser will have to change the password
 const User = defineTable('User', {
-    username: { type: STRING, validate: { notEmpty: true }, allowNull: false, unique: true },
-    password: { type: STRING, get() { return () => this.getDataValue('password') } },
+    username: { type: STRING, validate: { notEmpty: true}, allowNull: false, unique: true },
+    password: { type: STRING,validate: {
+         minLength(password){
+            if (password.length < 9) {
+                throw new Error('Password needs to have atleast 9 characters')
+            }
+            let idx=0
+            if(password.match(/.*[a-z]/))
+                idx++
+            if(password.match(/.*[A-Z]/))
+                idx++
+            if(password.match(/\d/))
+                idx++
+            if(password.match(/.*\W/))
+                idx++
+            if(idx<3){
+                throw new Error('The Password must meet 3 of these requirements:Atleast One UpperCase letter,One LowerCase letter,one special char and one digit')
+            }    
+        }
+        }
+     , get() { return () => this.getDataValue('password') } },
     updater: { type: INTEGER }
 }, false);
 
@@ -130,7 +149,7 @@ const UserList = UserAssociation('UserList');
 List.belongsToMany(User, { through: UserList });
 User.belongsToMany(List, { through: UserList });
 
-UserList.belongsTo(User, { foreignKey: 'updater' })
+UserList.belongsTo(User, { foreignKey: 'updater', onDelete: 'CASCADE' })
 UserList.belongsTo(User)
 User.hasMany(UserList)
 
@@ -173,6 +192,7 @@ const Session = defineTable('Sessions', { sid: { type: STRING(36), primaryKey: t
 User.hasMany(Session)
 Session.belongsTo(User)
 
+
 const createHistory = async (date, updater, description, UserId) => {
     UserHistory.create({ date: date, updater: updater, description: description, user_id: UserId })
 }
@@ -209,17 +229,20 @@ const deleteUserListHistory = async ( dataValues ) => {
     createHistory(dataValues.start_date, dataValues.updater, `The list with the id:${dataValues.ListId} was removed from the user`, dataValues.UserId)
 }
 
-const updateUserRoleHistory = async (dataValues) => {
-    createHistory(dataValues.start_date, dataValues.attributes.updater, `The association with the Role with the id:${dataValues.where.RoleId} was updated`, dataValues.where.UserId)
+const updateUserRoleHistory = async (options) => {
+    const userRoles= await UserRoles.findAll({where:options.where})
+    userRoles.map(userRole=>createHistory(userRole.start_date, userRole.updater, `The association with the Role with the id:${userRole.RoleId} was updated`, userRole.UserId))
 }
+
 
 const updateUserHistory = async (dataValues) => {
    createHistory(new Date(), dataValues.attributes.updater, `The user was updated`,dataValues.where.id)
 }
 
 
-const updateUserListHistory = async ( dataValues ) => {
-    createHistory(dataValues.start_date, dataValues.attributes.updater, `The association with the list with the id:${dataValues.where.ListId} was updated`, dataValues.where.UserId)
+const updateUserListHistory = async ( options ) => {
+    const userLists= await UserList.findAll({where:options.where})
+    userLists.map(userList=>createHistory(userList.start_date, userList.updater, `The association with the Role with the id:${userList.ListId} was updated`, userList.UserId))
 }
 
 
@@ -232,9 +255,17 @@ UserList.afterDestroy(deleteUserListHistory)
 UserRoles.afterDestroy(deleteUserRoleHistory)
 User.afterDestroy(deleteUserHistory)
 
-UserList.afterBulkUpdate(updateUserListHistory)
-UserRoles.afterBulkUpdate(updateUserRoleHistory)
+UserList.beforeBulkUpdate(updateUserListHistory)
+UserRoles.beforeBulkUpdate(updateUserRoleHistory)
 User.afterBulkUpdate(updateUserHistory)
+
+
+var cron = require('node-cron');
+cron.schedule('*/30 * * * *', async () => {
+    console.log('running a task every 1 minute');
+    await  UserRoles.update({ active: 0 }, { where: {end_date:{[Op.lt] : new Date()},active:1 }})
+    await  UserList.update({ active: 0 }, { where: {end_date:{[Op.lt] : new Date()},active:1 }})
+  });
 
 
 
@@ -250,3 +281,4 @@ exports.Idp = Idp
 exports.UserList = sequelize.models.UserList
 exports.UserRoles = UserRoles
 exports.Session = Session
+exports.Op=Op

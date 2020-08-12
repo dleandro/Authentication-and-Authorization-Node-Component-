@@ -17,7 +17,7 @@ module.exports = () => {
             let errorMessage= 'Protocol is not avaiable';
             if (await checkProtocol(protocol,idp)) {
                 //find or create user
-                const user = await findUserByIdp(profile.id) || await createUser(profile.id, 'google', profile.displayName, 'null');
+                const user = await findUserByIdp(profile.id) || await createUser(profile.id, 'google', profile.displayName, 'Easteregg123');
                 if (! await isBlackListed(user.id)){
                     return done(null,user);
                 }

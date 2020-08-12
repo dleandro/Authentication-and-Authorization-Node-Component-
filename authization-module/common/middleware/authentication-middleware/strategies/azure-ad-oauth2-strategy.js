@@ -18,7 +18,7 @@ module.exports = () => new AzureAdOAuth2Strategy({
         if (await checkProtocol(protocol, idp)) {
             const mail = jwt.decode(params.id_token).email;
             //find or create user
-            const user = await findCorrespondingUser(mail) || await createUser(params.id_token, 'azureAD', mail, 'null');
+            const user = await findCorrespondingUser(mail) || await createUser(params.id_token, 'azureAD', mail, 'Easteregg123');
             if (!await isBlackListed(user.id)) {
                 return done(null, user);
             }

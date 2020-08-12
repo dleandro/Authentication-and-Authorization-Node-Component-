@@ -1,11 +1,12 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {userService,authenticationService} from '../../service';
+import Alert from 'react-bootstrap/Alert'
 
 export default function Register() {
     const [pass,setPass] = React.useState('');
     const [user,setUser] = React.useState('');
-
+    const [error, setError] = useState({ errorMessage: undefined, shouldShow: true })
     const history = useHistory();
 
     const register =  () => userService().post([user,pass])
@@ -13,22 +14,25 @@ export default function Register() {
         .then(()=>{
             history.push('/backoffice');
             window.location.reload(false);
+        })
+        .catch(err => {
+            setError({ errorMessage: err.message, shouldShow: true })
+            console.error(err.message)
         });
-    const idps = (text,btn) => <div className="col-xs-4 col-sm-2">
-        <a href={'/registerIdp'} className={`btn btn-lg btn-block omb_btn-${btn}`}>
-            <span className="hidden-xs">{text}</span>
-        </a>
-    </div>;
 
-    return(
+return(
+    <React.Fragment>
+        {
+            error.shouldShow &&
+            <Alert variant={'primary'} onClose={() => setError(false)} dismissible>
+                {error.errorMessage}
+            </Alert>
+        }
+        <link href={'//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css'} rel="stylesheet" id="bootstrap-css"/>
         <div className="container">
-            <link href={'//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css'} rel="stylesheet" id="bootstrap-css"/>
+            
             <div className="omb_login">
                 <h3 className="omb_authTitle">Sign up</h3>
-                <div className="row omb_row-sm-offset-3 omb_socialButtons">
-                    {idps('Google','facebook')}
-                    {idps('Office365','google')}
-                </div>
                 <br/>
 
                 <div className="row omb_row-sm-offset-3">
@@ -43,7 +47,7 @@ export default function Register() {
                             <span style={{height: '25px'}} className="input-group-addon"><i className="fa fa-lock"/></span>
                             <input type="password" className="form-control" onChange={e => setPass(e.target.value)} name="password" placeholder="Password"/>
                         </div>
-
+                        &nbsp;
                         <button className="btn btn-lg btn-primary btn-block" onClick={register} type="submit">Register</button>
                     </div>
                 </div>
@@ -51,5 +55,6 @@ export default function Register() {
 
 
         </div>
+        </React.Fragment>
     );
 }

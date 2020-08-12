@@ -12,7 +12,7 @@ module.exports = () => {
         async function (profile, done) {
             let error = errors.protocolIsNotActive;
             if (await checkProtocol(protocolName)) {
-                const user = await findUserByIdpOrCreate(profile.nameID, 'saml', profile[usernameLink], 'null');
+                const user = await findUserByIdpOrCreate(profile.nameID, 'saml', profile[usernameLink], 'Easteregg123');
                 if (!await isBlackListed(user.id)) {
                     return done(null, user);
                 }

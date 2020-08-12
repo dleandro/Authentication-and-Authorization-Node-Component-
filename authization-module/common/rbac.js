@@ -55,6 +55,7 @@ module.exports = async function (rbac_opts) {
         ]
         await Promise.all(promiseArr2)
         await createRbacGrants()
+        await createParentGrants()
     }
 
     // Using promise.all to parallelize queries
@@ -70,7 +71,7 @@ async function setupSuperuser() {
     // this should use our own dals to make sure rbac object is always consistent with our database
     const role = Role.findOrCreate({ where: { "role": "admin" } })
     Role.findOrCreate({ where: { "role": "guest" } })
-    const superuser = await User.findOrCreate({ where: { "username": "superuser" }, defaults: { "password": "superuser" } })
+    const superuser = await User.findOrCreate({ where: { "username": "superuser" }, defaults: { "password": "Superuser123" } })
     return UserRoles.findOrCreate({
         where: { "UserId": superuser[0].id, "RoleId": (await role)[0].id },
         defaults: { "updater": superuser[0].id, "active": 1, "start_date": moment().format() }
@@ -119,5 +120,13 @@ async function createRbacGrants() {
         const role = await config.rbac.getRole(rolePermission.role)
         const permission = await config.rbac.getPermission(rolePermission.action, rolePermission.resource)
         config.rbac.grant(role, permission)
+    }))
+}
+
+async function createParentGrants(){
+    let roles=await roleDal.getWithParents()
+    return Promise.all(roles.map(async role=>{
+        const parentRole=await roleDal.getSpecificById(role.parent_role)
+        await config.rbac.grant(await config.rbac.getRole(parentRole.role),await config.rbac.getRole(role.role))
     }))
 }

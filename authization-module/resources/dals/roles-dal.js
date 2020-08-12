@@ -1,6 +1,6 @@
 'use strict'
 
-const { Role, Permission } = require('../sequelize-model'),
+const { Role, Permission,Op } = require('../sequelize-model'),
     config = require('../../common/config/config'),
     tryCatch = require('../../common/util/functions-utils')
 
@@ -44,6 +44,8 @@ module.exports = {
      * @returns {Promise<*>}
      */
     getSpecificById,
+
+    getWithParents : ()=> tryCatch(async () => await Role.findAll({ where: { parent_role:{[Op.ne]:null} } })),
 
     getByName: (roleName) => tryCatch(async () => await Role.findOne({ where: { role: roleName } })),
     /**

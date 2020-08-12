@@ -6,13 +6,19 @@ function produceInit(body, met) {
 }
 
 const request = (url, init) => fetch(WEB_API_HOME_PATH ? WEB_API_HOME_PATH + url : url, init)
-    .then(resp => resp.json())
-    .then(resp => {
-        if (resp.err) {
-            throw new Error(resp.err)
-        }
-        return resp
-    })
+.then(async resp => {
+    const jsonResponse = await resp.json()
+    if (resp.ok) {
+        return jsonResponse
+    }
+    const error = new Error(jsonResponse.err)
+    error.status = resp.status
+    if(error.status==403){
+        window.location.assign('/')
+    }
+    console.log(error.status)
+    throw error
+})
 
 const getRequest = (url) => request(url, DEFAULT_OPTIONS('GET'));
 const makeRequest = (url, body, met) => request(url, produceInit(body, met));

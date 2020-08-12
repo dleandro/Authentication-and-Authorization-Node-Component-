@@ -82,7 +82,7 @@ export function RoleUsers() {
 
             }
         }));
-    serv.post = arr => roleUserService().post([arr[0].value, id, ctx.user.id, new Date(), arr[1]])
+    serv.post = arr => roleUserService().post(arr[0].value, id, ctx.user.id, new Date(), arr[1])
         .then(result => {
             console.log(result)
             return {
@@ -102,7 +102,7 @@ export function RoleUsers() {
                 UserId: oldObj.UserId,
                 username: oldObj.username,
                 start_date: `${new Date(oldObj.start_date)}`,
-                end_date: result.endDate ? `${new Date(result.endDate)}` : undefined,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater,
             }

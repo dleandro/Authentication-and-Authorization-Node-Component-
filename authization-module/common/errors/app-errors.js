@@ -11,6 +11,11 @@ module.exports = {
         detail: `The current user cannot access this resource`,
         status: 401
     }),
+    Forbidden: new CustomError({
+        title: 'Forbidden',
+        detail: `The  user is not Authenticated`,
+        status: 403
+    }),
 
     IdpUserUnauthorized: new CustomError({
         title: 'Unauthorized',

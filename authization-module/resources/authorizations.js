@@ -35,7 +35,10 @@ module.exports = {
                 return next()
             }
         }
-        return next(errors.Unauthorized)
+
+        if(user)return next(errors.Unauthorized)
+        
+        return next(errors.Forbidden)
     },
 
     getUserPermissions: async (req, resp, next) => {

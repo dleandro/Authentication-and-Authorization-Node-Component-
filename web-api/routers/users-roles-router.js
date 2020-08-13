@@ -71,7 +71,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function changeActiveFlag(req, res) {
-        apiUtils.promiseDataToResponse(res, userRole.changeActiveFlag(req.params.userId, req.params.roleId, req.body.active), 201)
+        apiUtils.promiseDataToResponse(res, userRoles.changeActiveFlag(req.params.userId, req.params.roleId, req.body.active), 201)
     }
 
     return usersRolesRouter

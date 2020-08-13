@@ -17,7 +17,6 @@ function ListUsers() {
     const ctx = useContext(UserContext);
     const serv = {
         ...listUserService(),
-        detailsUrl: (listUser) => `/lists/${id}`,
         editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
         postFields: [{ text: 'Id of User to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }, { text: 'New Date (date)'}],
     }

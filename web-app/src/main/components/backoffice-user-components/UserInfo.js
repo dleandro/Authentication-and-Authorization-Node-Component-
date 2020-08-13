@@ -79,7 +79,7 @@ export function UserSessions() {
             return {
                 sid: result.sid,
                 start_date: `${new Date(result.createdAt)}`,
-                end_date: `${new Date(result.end_date)}`,
+                end_date: `${new Date(result.expires)}`,
 
             }
         }))

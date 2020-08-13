@@ -12,16 +12,16 @@ module.exports = {
      * @param user
      * @param role
      * @param startDate
-     * @param endDate
+     * @param end_date
      * @param updater
      * @param active
      * @returns {Promise<void>}
      */
-    create: async (user, role, startDate, endDate, updater, active) => tryCatch(() => UserRoles.create({
+    create: async (user, role, startDate, end_date, updater, active) => tryCatch(() => UserRoles.create({
         UserId: user,
         RoleId: role,
         start_date: startDate,
-        end_date: endDate,
+        end_date: end_date,
         updater: updater,
         active: active
     })),
@@ -76,16 +76,16 @@ module.exports = {
             deletedRows: tryCatch(async () => await UserRoles.destroy({ where: { UserId: UserId, RoleId: RoleId },individualHooks: true }))
         }),
 
-    update: async (user, role, start_date, endDate, active,updater) => Promise.resolve(
+    update: async (user, role, start_date, end_date, active,updater) => Promise.resolve(
         {
             updatedRows: await tryCatch(() => UserRoles.update({
                 start_date,
-                end_date: endDate,
+                end_date: end_date,
                 active: active,
                 updater:updater
             },
                 { where: { UserId: user, RoleId: role } })),
-            endDate,
+            end_date,
             active,
             updater
         }

@@ -27,10 +27,10 @@ module.exports = {
     })),
     /**
      *
-     * @param id
+     * @param userId
      * @returns {Promise<void>}
      */
-    deactivate: (id) => tryCatch(() => UserRoles.update({ active: 0 }, { where: { UserId: id } })),
+    changeActiveFlag: (userId, roleId, newState) => tryCatch(() => UserRoles.update({ active: newState }, { where: { UserId: userId, RoleId: roleId } })),
     /**
      * checks if all User roles are active
      * @returns {Promise<*>}

@@ -64,20 +64,20 @@ export const webApiLinks =
         BY_ROLE: roleId=>`${USERS_ROLES_PATH}/roles/${roleId}`,
         ACTIVE_USERS_ROLES_PATH: `${USERS_ROLES_PATH}/active`,
         USERS_ACTIVE_ROLES_PATH: userId => `${USERS_ROLES_PATH}/active/user/${userId}`,
-        USER_ROLES_DEACTIVATION_PATH: userRoleId => `${USERS_ROLES_PATH}/deactivate/${userRoleId}`
+        USER_ROLES_ACTIVE_FLAG_PATH: (userId, roleId) => `${USERS_ROLES_PATH}/users/${userId}/roles/${roleId}/active`
     },
 
     users_lists: {
         USERS_LIST_PATH,
         BY_USER: userId=>`${USERS_LIST_PATH}/users/${userId}`,
-        BY_LIST: listId=>`${USERS_LIST_PATH}/lists/${listId}`
+        BY_LIST: listId=>`${USERS_LIST_PATH}/lists/${listId}`,
+        USER_LISTS_ACTIVE_FLAG_PATH: (userId, listId) => `${USERS_LIST_PATH}/users/${userId}/lists/${listId}/active`
     },
 
     lists: {
         LIST_PATH,
         SPECIFIC_LIST_PATH: listId => `${LIST_PATH}/${listId}`,
         ACTIVE_LISTS_PATH: `${LIST_PATH}/active`,
-        LIST_DEACTIVATION_PATH: listId => `${LIST_PATH}/deactivate/${listId}`
     },
 
     roles_permissions: {

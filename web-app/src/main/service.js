@@ -113,7 +113,11 @@ export function userRoleService() {
     return {
         get: async userId => getRequest(users_roles.BY_USER(userId)),
         post: async (userId, roleId, updater, start_datetime, end_datetime) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, role: roleId, active: 1, updater: updater, start_date: start_datetime, end_date: new Date(end_datetime.date + 'T' + end_datetime.time) }, 'POST'),
-        update: async (userId, start_date, roleId, updater, arr) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, start_date, role: roleId, updater: updater, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        update: async (userId, start_date, roleId, updater, arr) => {
+            return arr[0].date && arr[0].time ?
+                makeRequest(users_roles.USERS_ROLES_PATH, { user: userId, start_date, role: roleId, updater: updater, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT') :
+                makeRequest(users_roles.USER_ROLES_ACTIVE_FLAG_PATH(userId, roleId), { active: arr[1] }, 'PATCH')
+        },
         destroy: async (UserId, RoleId) => makeRequest(users_roles.USERS_ROLES_PATH, { user: UserId, role: RoleId }, 'DELETE'),
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT')
@@ -176,7 +180,11 @@ export function userListService() {
         //TODO: get not working, problem in api
         get: async (id) => getRequest(users_lists.BY_USER(id)),
         post: async arr => makeRequest(users_lists.USERS_LIST_PATH, { ListId: arr[0], UserId: arr[1], active: 1, start_date: arr[2], end_date: new Date(arr[3].date + 'T' + arr[3].time), updater: arr[4] }, 'POST'),
-        update: async (UserId, start_date, ListId, updater, arr) => makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, start_date, updater: updater, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT'),
+        update: async (UserId, start_date, ListId, updater, arr) => {
+            return arr[0].date && arr[0].time ?
+            makeRequest(users_lists.USERS_LIST_PATH, { user: UserId, start_date, updater: updater, list: ListId, end_date: new Date(arr[0].date + 'T' + arr[0].time), active: arr[1] }, 'PUT') :
+            makeRequest(users_lists.USER_LISTS_ACTIVE_FLAG_PATH(UserId, ListId), {active: arr[1]}, 'PATCH')
+        },
         destroy: async (ListId, UserId) => makeRequest(users_lists.USERS_LIST_PATH, { ListId: ListId, UserId: UserId }, 'DELETE')
     }
 }

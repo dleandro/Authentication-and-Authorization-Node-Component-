@@ -24,6 +24,7 @@ module.exports = function (apiUtils, authization) {
     usersRolesRouter.put('/deactivate/:userRoleId', deactivateUserRole)
     usersRolesRouter.get('/users/:id', getByUser)
     usersRolesRouter.get('/roles/:id', getByRole)
+    usersRolesRouter.patch('/users/:userId/roles/:roleId/active', changeActiveFlag)
 
     function addUsersRoles(req, res) {
         apiUtils.promiseDataToResponse(
@@ -67,6 +68,10 @@ module.exports = function (apiUtils, authization) {
 
     function getByRole(req, res) {
         apiUtils.promiseDataToResponse(res, userRoles.getByRole(req.params.id))
+    }
+
+    function changeActiveFlag(req, res) {
+        apiUtils.promiseDataToResponse(res, userRole.changeActiveFlag(req.params.userId, req.params.roleId, req.body.active), 201)
     }
 
     return usersRolesRouter

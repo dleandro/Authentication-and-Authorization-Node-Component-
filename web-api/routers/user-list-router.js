@@ -11,6 +11,7 @@ module.exports = function (apiUtils, authization) {
     userListRouter.put('/', editUserList)
     userListRouter.get('/users/:id', getByUser)
     userListRouter.get('/lists/:id', getByList)
+    userListRouter.patch('/users/:userId/lists/:listId/active', changeActiveFlag)
 
 
     function createUserList(req, res) {
@@ -33,6 +34,9 @@ module.exports = function (apiUtils, authization) {
         apiUtils.promiseDataToResponse(res, userList.getByList(req.params.id))
     }
 
+    function changeActiveFlag(req, res) {
+        apiUtils.promiseDataToResponse(res, userList.changeActiveFlag(req.params.userId, req.params.listId, req.body.active), 201)
+    }
 
     return userListRouter
 }

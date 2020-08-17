@@ -10,10 +10,10 @@ export default function DatePicker({onChange,text = 'Choose Date ...'}) {
                 <div className="col-md-8">
                     <Form.Group controlId="dob">
                         <Form.Label>Select Date:</Form.Label>
-                        <Form.Control type="date" onChange={e=>setValue({date:e.target.value,time: value.time})} placeholder="Date of Birth" />
+                        <Form.Control type="date" onChange={e=>setValue({date:e.target.value,time: value.time})} placeholder="yyyy-mm-dd" />
                         <br/>
                         <Form.Label>Select Time:</Form.Label>
-                        <Form.Control type="time" onChange={e=>setValue({date:value.date,time: e.target.value})} placeholder="Date of Birth" />
+                        <Form.Control type="time" onChange={e=>setValue({date:value.date,time: e.target.value})} placeholder="hh-mm" />
                     </Form.Group>
                 </div>
             </div>

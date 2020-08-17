@@ -46,6 +46,8 @@ module.exports = {
         active,
         updater
 
-    })
+    }),
+
+    changeActiveFlag: (userId, listId, newState) => tryCatch(() => UserList.update({ active: newState }, { where: { UserId: userId, ListId: listId } })),
 
 }

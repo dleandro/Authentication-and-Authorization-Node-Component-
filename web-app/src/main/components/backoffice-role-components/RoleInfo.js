@@ -3,10 +3,7 @@ import {permissionService, rolePermissionService, rolesService, roleUserService,
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { useParams } from 'react-router-dom';
-import UserContext from "../../UserContext";
 import GenericInfoCard from "../../common/html-elements-utils/generics/GenericInfoCard";
-import TablePage from "../../common/html-elements-utils/Tables/TablePage";
 import GenericInfo from "../../common/html-elements-utils/generics/GenericInfo";
 
 const SpecificRoleInfo = () => <GenericInfoCard label={'Role'} fetchValueById={rolesService().getRole} />;

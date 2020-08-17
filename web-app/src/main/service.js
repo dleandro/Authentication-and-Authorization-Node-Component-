@@ -123,7 +123,7 @@ export function userRoleService() {
                 RoleId: oldObj.RoleId,
                 role: oldObj.role,
                 start_date: `${new Date(oldObj.start_date)}`,
-                end_date: result.endDate ? `${new Date(result.endDate)}` : undefined,
+                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active == true ? 1 : 0,
                 updater: result.updater,
             })),
@@ -152,11 +152,11 @@ export function roleUserService() {
                 active: active === true ? 1 : 0,
             })),
         update: (oldObj, arr, role, updtr) => userRolePut(oldObj.UserId, oldObj.start_date, role, updtr, arr)
-            .then(({active, endDate, updater}) => ({
+            .then(({active, end_date, updater}) => ({
                 UserId: oldObj.UserId,
                 username: oldObj.username,
                 start_date: `${new Date(oldObj.start_date)}`,
-                end_date: endDate ? `${new Date(endDate)}` : undefined,
+                end_date: end_date ? `${new Date(end_date)}` : undefined,
                 active: active == true ? 1 : 0,
                 updater,
             })),
@@ -235,7 +235,7 @@ export function userListService() {
                 end_date: end_date ? `${new Date(end_date)}` : undefined,
                 active: active == true ? 1 : 0,
             })),
-        update: (oldObj,newVals,userId,updtr)=>userRolePut(userId,oldObj.start_date, oldObj.ListId,updtr,newVals)
+        update: (oldObj,newVals,userId,updtr)=>userListPut(userId,oldObj.start_date, oldObj.ListId,updtr,newVals)
             .then(result => ({
                 ListId: oldObj.ListId,
                 list: oldObj.list,

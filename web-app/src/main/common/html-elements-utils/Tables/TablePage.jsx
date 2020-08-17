@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import GenericTooltipButton from "./generics/GenericTooltipButton";
-import UserContext from "../../UserContext";
-import { SubmitValuesModal } from "./generics/GenericModal";
+import GenericTooltipButton from "../generics/GenericTooltipButton";
+import UserContext from "../../../UserContext";
+import { SubmitValuesModal } from "../generics/GenericModal";
 import { useHistory } from "react-router-dom";
-import FilterablePageTable from "./Table/FilterablePageTable";
+import FilterablePageTable from "./FilterablePageTable";
 import { Spinner } from "react-bootstrap";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import Alert from 'react-bootstrap/Alert'
 
 

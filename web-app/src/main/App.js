@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SideBar from './common/html-elements-utils/SideBar';
+import SideBar from './common/html-elements-utils/Bars/SideBar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Routes from './routes';
 import { AuthenticationRoutes } from './AuthenticationRoutes';
 import './common/stylesheets/App.css';
 import UserContext from './UserContext';
-import Upperbar from './common/html-elements-utils/UpperBar';
+import Upperbar from './common/html-elements-utils/Bars/UpperBar';
 
 //available icons https://www.w3schools.com/icons/fontawesome_icons_webapp.asp
 

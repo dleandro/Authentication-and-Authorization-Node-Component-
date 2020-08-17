@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "set PORT=8082 && craco test --env=node",
+    "test": "react-scripts test --testNamePattern=Generic Testing Performance Test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

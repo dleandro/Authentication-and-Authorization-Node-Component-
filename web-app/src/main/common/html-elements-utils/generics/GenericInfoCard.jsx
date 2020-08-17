@@ -1,6 +1,5 @@
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {userService} from "../../service";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 

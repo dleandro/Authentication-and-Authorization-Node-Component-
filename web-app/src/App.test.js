@@ -3,7 +3,7 @@ userRoleService,userListService} from "./main/service";
 import {useContext} from "react";
 import UserContext from "./main/UserContext";
 
-const ctx = useContext(UserContext);
+//const ctx = useContext(UserContext);
 const PORT = 8082;
 const listServ = listService(true);
 const userServ = userService(true);
@@ -39,6 +39,14 @@ const genericTest = async serv =>{
 };
 //Most recent tests, made on 10/8
 describe('Generic Testing', () => {
+    test('Performance test:', async ()=>{
+        await authenticationService(true).login('superuser','Superuser123');
+        const performancevals=['GET','testingPut'];
+        const promises= [...Array(500).keys()].map(idx=>permServ.post([performancevals[0],performancevals[1]+idx]));
+        await Promise.all(promises);
+        await permissionService(true).get().then(console.log);
+    });
+
     test('PermissionService test:', async ()=>{
         const inserted=await permServ.post(['GET','testingPut']);
         const serv = {...permServ};

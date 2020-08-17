@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form,Button,Dropdown, FormControl, InputGroup} from 'react-bootstrap';
+import {Dropdown, FormControl, InputGroup} from 'react-bootstrap';
 import DropdownButton from 'react-bootstrap/DropdownButton'
 
 export default function TableFilter({initialData,dataDisplayerCB}) {

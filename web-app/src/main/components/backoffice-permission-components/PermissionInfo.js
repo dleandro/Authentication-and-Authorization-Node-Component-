@@ -1,42 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { permissionRoleService, permissionService, rolesService } from "../../service";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
-import TablePage from "../../common/html-elements-utils/TablePage";
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import GenericInfoCard from '../../common/html-elements-utils/generics/GenericInfoCard';
+import TablePage from '../../common/html-elements-utils/Tables/TablePage';
+import GenericInfo from "../../common/html-elements-utils/generics/GenericInfo";
 
 const SpecificPermissionInfo = () => <GenericInfoCard label={'Permission'} fetchValueById={permissionService().getPermission} />;
 
 function PermissionRoles() {
-    let { id } = useParams()
     const postOptionsFetcher = () => rolesService().get().then(data => data.map(value => ({ eventKey: value.id, text: value.role })));
 
     const serv = {
         ...permissionRoleService(),
         postFields: [{ text: 'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }],
     }
-    serv.get = () => permissionRoleService().get(id)
-        .then(results => results.map(result => {
-            return {
-                RoleId: result.RoleId,
-                role: result['Role.role']
-            }
-        }))
-    serv.post = arr => permissionRoleService().post([id, arr[0].value])
-        .then(
-            result => {
-                console.log(result)
-                return {
-                    RoleId: result.RoleId,
-                    role: arr[0].label
-                }
-            }
-        )
-    serv.destroy = oldObj => permissionRoleService().destroy(oldObj.RoleId, id)
 
-    return serv ? <TablePage service={serv} resource={'listuser'} /> : undefined
+    return serv ?<GenericInfo service={serv} resource={'listuser'} /> : undefined;
 }
 
 const components = {

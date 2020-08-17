@@ -24,9 +24,8 @@ export default function InputWithDropDown({onChange,fetchData,label}) {
     const [options, setOptions] = useState([]);
     const [toggleLabel,setToggleLabel] = useState('Select one Item');
     const fetchOptions = () => fetchData().then(setOptions);
-    React.useEffect(()=>{
-    fetchOptions();
-    },[]);
+
+    React.useEffect(()=>{fetchOptions();},[]);
     React.useEffect(()=>{
     onChange({value,label:toggleLabel});
     fetchOptions();

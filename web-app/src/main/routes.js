@@ -11,7 +11,7 @@ import RoleInfo from './components/backoffice-role-components/RoleInfo';
 import { AuthTypeProvider } from './components/login-components/AuthTypeContext';
 import { AccountManagement } from './components/backoffice-user-components/AccountManagement';
 import UserLogin from './components/login-components/UserLogin';
-import TablePage from "./common/html-elements-utils/TablePage";
+import TablePage from "./common/html-elements-utils/Tables/TablePage";
 import {listService, permissionService, rolesService, sessionService, userService} from "./service";
 import UserContext from './UserContext';
 

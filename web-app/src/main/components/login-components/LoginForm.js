@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react'
-import InputGroup from 'react-bootstrap/InputGroup'
-import FormControl from 'react-bootstrap/FormControl'
-import Button from 'react-bootstrap/Button'
-import GoogleButton from 'react-google-button'
-import { webApiLinks } from '../../common/links'
-import '../../common/stylesheets/App.css'
-import Alert from 'react-bootstrap/Alert'
+import React, { useState, useContext } from 'react';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Button from 'react-bootstrap/Button';
+import GoogleButton from 'react-google-button';
+import { webApiLinks } from '../../common/links';
+import '../../common/stylesheets/App.css';
+import Alert from 'react-bootstrap/Alert';
 import AuthTypeContext from "./AuthTypeContext";
 import { authenticationService } from "../../service";
 
@@ -51,8 +51,8 @@ export default function LoginForm({ id }) {
     }
 
     var loginIdp = async (idp) => {
-        console.log(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
-        window.location.assign(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`)
+        console.log(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`);
+        window.location.assign(`${webApiLinks.WEB_API_HOME_PATH}${webApiLinks.users.AUTHENTICATION_PATH}/${idp}`);
     }
 
     const checkIfSpecificAuthTypeIsActive = (protocol, idp) => {

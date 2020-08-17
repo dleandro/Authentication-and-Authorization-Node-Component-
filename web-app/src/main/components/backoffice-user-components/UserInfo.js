@@ -6,65 +6,20 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { listService, userRoleService, userService, logsService, rolesService, userListService, sessionService, UsersessionService, userHistoryService } from '../../service';
 import Button from 'react-bootstrap/Button';
 import UserContext from "../../UserContext";
-import GenericInfoCard from "../../common/html-elements-utils/GenericInfoCard";
-import TablePage from "../../common/html-elements-utils/TablePage";
+import GenericInfoCard from "../../common/html-elements-utils/generics/GenericInfoCard";
+import TablePage from "../../common/html-elements-utils/Tables/TablePage";
+import GenericInfo from "../../common/html-elements-utils/generics/GenericInfo";
 
 const SpecificUserInfo = () => <GenericInfoCard label={'User'} fetchValueById={userService().getUserById} />;
 
 function UserRoles() {
     const postOptionsFetcher = () => rolesService().get().then(data => data.map(value => ({ eventKey: value.id, text: value.role })));
-    const { id } = useParams();
-    const ctx = useContext(UserContext);
-    const fetchData = () => userRoleService().get(id)
-        .then(results => results.map(result => {
-            return {
-                RoleId: result.RoleId,
-                role: result.role,
-                start_date: `${new Date(result.start_date)}`,
-                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active,
-                updater: result.updater
-
-            }
-        }));
 
     const customService = {
         ...userRoleService(), editFields: [{ text: 'New Date (date)' }, { text: 'New Active state (check)' }],
         postFields: [{ text: 'Id of Role to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }, { text: 'New End Date (date)'}],
     };
-    customService.get = fetchData;
-    customService.post = arr => {
-        console.log(arr); return userRoleService().post(id, arr[0].value, ctx.user.id, new Date(), arr[1]).then(
-            result => {
-                console.log(result)
-                return {
-                    RoleId: result.RoleId,
-                    role: arr[0].label,
-                    start_date: `${new Date(result.start_date)}`,
-                    end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                    active: result.active == true ? 1 : 0,
-                    updater: result.updater
-                }
-            }
-        )
-    }
-    customService.update = (oldObj, arr) => userRoleService().update(id, oldObj.start_date, oldObj.RoleId, ctx.user.id, arr)
-        .then(result => {
-            console.log(result)
-            return {
-                RoleId: oldObj.RoleId,
-                role: oldObj.role,
-                start_date: `${new Date(oldObj.start_date)}`,
-                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active == true ? 1 : 0,
-                updater: result.updater
-            }
-        })
-
-    customService.destroy = oldObj => userRoleService().destroy(id, oldObj.RoleId)
-    return (
-        <TablePage resource={'user-role'} service={customService} />
-    );
+    return <GenericInfo resource={'user-role'} service={customService}/>;
 }
 
 export function UserSessions() {
@@ -75,85 +30,29 @@ export function UserSessions() {
     }
     const serv = {
         ...UsersessionService(),
-        get: () => UsersessionService().get(id).then(results => results.map(result => {
-            return {
-                sid: result.sid,
-                start_date: `${new Date(result.createdAt)}`,
-                end_date: `${new Date(result.end_date)}`,
-
-            }
-        }))
+        get: () => UsersessionService().get(id),
     }
 
     return (
         <TablePage service={serv} resource={'listuser'} />
-    )
+    );
 };
 
 function UserLists() {
-    let { id } = useParams()
     const postOptionsFetcher = () => listService().get().then(data => data.map(value => ({ eventKey: value.id, text: value.list })));
-    const ctx = useContext(UserContext);
 
     const serv = {
         ...userListService(),
         editFields: [{ text: 'New End date (date)' }, { text: 'New Active state (check)' }],
         postFields: [{ text: 'Id of List to be assigned (dropdown)', DropdownOptionsFetcher: postOptionsFetcher }, { text: 'New Date (date)'}],
     };
-    serv.get = () => userListService().get(id)
-        .then(results => results.map(result => {
-            return {
-                ListId: result.ListId,
-                list: result['List.list'],
-                start_date: `${new Date(result.start_date)}`,
-                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active,
-                updater: result.updater
-            }
-        }));
-    serv.post = arr => userListService().post([arr[0].value, id, new Date(), arr[1], ctx.user.id]).then(
-        result => {
-            console.log(result)
-            return {
-                ListId: result.ListId,
-                list: arr[0].label,
-                start_date: `${new Date(result.start_date)}`,
-                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active == true ? 1 : 0,
-                updater: result.updater
-            }
-        })
-    serv.update = (oldObj, arr) => userListService().update(id, oldObj.start_date, oldObj.ListId, ctx.user.id, arr).then(
-        result => {
-            console.log(result, oldObj, arr)
-
-            return {
-                ListId: oldObj.ListId,
-                list: oldObj.list,
-                start_date: `${new Date(oldObj.start_date)}`,
-                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active == true ? 1 : 0,
-                updater: result.updater
-            }
-        })
-    serv.destroy = (oldObj) => userListService().destroy(oldObj.ListId, id)
-    return (
-        <TablePage service={serv} resource={'users-lists'} />
-    )
+    return <GenericInfo service={serv} resource={'users-lists'} />;
 }
 function UserHistory() {
-    let { id } = useParams();
 
     const serv = { ...userHistoryService() };
-    serv.get = () => userHistoryService().get(id)
-        .then(results => results.map(result => {
-            delete result.user_id
-            return result
-        }));
 
-    return (
-        <TablePage service={serv} resource={'listuser'} />
-    )
+    return <GenericInfo service={serv} resource={'user-history'} />;
 }
 
 const components = {

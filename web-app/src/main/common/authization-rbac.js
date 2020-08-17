@@ -4,8 +4,10 @@ module.exports = class AuthizationRbac {
 
     constructor(rbac_opts) {
         this.rbac_opts = rbac_opts
+
     }
 
+    roles=[];
     init() {
         this.rbac = new RBAC(this.rbac_opts)
 
@@ -15,17 +17,18 @@ module.exports = class AuthizationRbac {
         }
         throw Error("rbac options sent to the constructor were invalid")
     }
-    
-    can(rolesNames, action, resource) {
-        return rolesNames.some(role => this.rbac.can(role, action, resource))
+
+    can(action, resource) {
+        return this.roles.some(role => this.rbac.can(role, action, resource));
     }
 
-    canAll(rolesNames, permissions) {
-        return rolesNames.some(role => this.rbac.canAll(role, permissions))
+    canAll( permissions) {
+        const canall=this.roles.some(role => this.rbac.canAll(role, permissions));
+        return permissions.map(p=>canall);
     }
 
-    canAny(rolesNames, permissions) {
-        return rolesNames.some(role => this.rbac.canAny(role, permissions))
+    canAny( permissions) {
+        return this.roles.some(role => this.rbac.canAny(role, permissions));
     }
 
 }

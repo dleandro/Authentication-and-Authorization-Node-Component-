@@ -57,7 +57,7 @@ const getFunctionalities = () => {
              */
             userRole: require('./resources/dals/users-roles-dal'),
 
-            /** 
+            /**
              * returns rolePermission resource file to manage role's permissions
              */
             rolePermission: require('./resources/dals/roles-permissions-dal'),

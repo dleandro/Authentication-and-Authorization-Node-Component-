@@ -7,7 +7,7 @@ const
     cors = require('cors')
 
 // This module is used to setup middleware on the app passed as a parameter
-module.exports = async function (app) {
+module.exports = async function(app) {
 
     var corsOptions = {
         origin: ['https://webapp-dot-auth-authorization.ew.r.appspot.com', 'http://localhost:3000'],
@@ -24,7 +24,7 @@ module.exports = async function (app) {
         // using authization module to setup authentication and authorization middleware
         // const authization = await require('@authization/authization')
         const authization = await require('../../../authization-module/authization')
-            .setup({ app, db: middlewareConifg.cloud_db,/*rbac_opts: middlewareConifg.rbac_opts*/})
+            .setup({ app, db: middlewareConifg.cloud_db,rbac_opts: middlewareConifg.rbac_opts})
 
         app.use('/api', require("../../web-api")(authization))
 

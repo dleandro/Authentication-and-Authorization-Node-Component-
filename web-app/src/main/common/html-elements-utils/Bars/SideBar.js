@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import SideNav, { NavIcon, NavItem, NavText } from '@trendmicro/react-sidenav';
 import { Link } from 'react-router-dom';
-import UserContext from "../../UserContext";
+import UserContext from "../../../UserContext";
 const fontSize = { fontSize: '1.75em'/*,color: '#1cc4e6'*/ }
 
 
@@ -18,13 +18,13 @@ export default function Sidebar({ navWidthCollapsed }) {
     const ctx = useContext(UserContext);
 
     const checkShouldShowItem = async permissionResource =>
-    ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [['GET', permissionResource], ['POST', permissionResource]]);
+    ctx.rbac && (await ctx.rbac.canAll( [['GET', permissionResource], ['POST', permissionResource]])).reduce((first,second)=>first&&second);
 
     const subItemToLink = subItem => checkShouldShowItem(subItem.key) ? <NavItem key={subItem.key}>
         <NavText >
             <Link to={subItem.link}> {subItem.text}</Link>
         </NavText>
-    </NavItem> : undefined
+    </NavItem> : undefined;
 
     const officeSubItems = [
         { link: '/users', text: 'Users', key: 'users' },

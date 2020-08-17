@@ -5,6 +5,7 @@ const
     tryCatch = require('../../common/util/functions-utils')
 
 // TODO: should a user be in more than one list?? if not we need to controll that
+// JUSTIFICATION: Probably should because being in the greylist and in the redlist even if they block completely different resources is still better than being in the blacklist
 // the same with user roles
 
 module.exports = {
@@ -12,12 +13,7 @@ module.exports = {
 
     /**
      * Creates a list entry with a user_id associated and a type of list
-     * @param userId
      * @param list
-     * @param startDate
-     * @param endDate
-     * @param updater
-     * @param active
      * @returns {Promise<CustomError>}
      */
     create: async (list) => tryCatch(() =>
@@ -69,6 +65,12 @@ module.exports = {
     getActive: () => tryCatch(() => List.findAll({ where: { active: 1 } })),
 
     // update query doesn't return the updated resource for some reason
+    /**
+     *
+     * @param id
+     * @param list
+     * @returns {Promise<{insertedRows: *, id: *, list: *}>}
+     */
     update: async (id, list) => Promise.resolve(
         {
             insertedRows: await tryCatch(() => List.update({ list: list }, { where: { id: id } })),

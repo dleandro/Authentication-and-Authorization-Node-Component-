@@ -3,10 +3,10 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import GenericTooltipButton from "./GenericTooltipButton";
-import InputWithDropDown from '../InputWithDropDown';
+import InputWithDropDown from '../Inputs/InputWithDropDown';
 import InputGroup from "react-bootstrap/InputGroup";
-import DatePicker from "../DatePicker";
-import CheckBox from "../CheckBox";
+import DatePicker from "../Inputs/DatePicker";
+import CheckBox from "../Inputs/CheckBox";
 
 /**
  * This is not supposed to be changed, instead make a new component which implements this

@@ -1,8 +1,8 @@
 import Table from "react-bootstrap/Table";
 import React, {useEffect, useState} from "react";
-import {Card, Button, Form, FormControl, InputGroup} from "react-bootstrap";
-import TableFilter from "../TableFilter";
-import GenericTooltipButton from "../generics/GenericTooltipButton";
+import {Card, Form} from 'react-bootstrap';
+import GenericTooltipButton from '../generics/GenericTooltipButton';
+import TableFilter from './TableFilter';
 
 export default function FilterablePageTable({ labels, rowsValues, valueToLineConverter }) {
 

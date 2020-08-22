@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { protocolService, configService, authTypesService } from '../../service'
+import { protocolService, configService, authTypesService } from '../../common/services/basicServices'
 
 const AuthTypeContext = React.createContext()
 
@@ -26,7 +26,7 @@ const AuthTypeProvider = (props) => {
             if (isMountedRef.current) {
                 setAllowedProtocolsAndIdps(arr)
             }
-        })
+        });
     };
 
 

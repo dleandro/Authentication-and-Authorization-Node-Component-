@@ -1,5 +1,3 @@
-'use strict'
-
 const
     users = require('../../resources/dals/users-dal'),
     userList = require('../../resources/dals/user-list-dal'),
@@ -7,7 +5,7 @@ const
     userHistories = require('../../resources/dals/users-history-dal'),
     userSession = require('../../resources/dals/user-session-dal'),
     authTypes = require('../../resources/dals/authentication-types-dal'),
-    moment = require('moment')
+    moment = require('moment');
 
 module.exports = {
 
@@ -17,31 +15,26 @@ module.exports = {
      * @param userId
      * @returns {Promise<{password: *, id: *, username: *}>}
      */
-    findUser: (userId) => users.getById(userId),
+    findUser: userId => users.getById(userId),
 
     /**
      *
      * @param idp
      * @returns {Promise<*>}
-     */
-    findUserByIdp: async (idp) => {
-        // needs endpoint
-        const user = await users.getByIdp(idp)
-        return user ? { id: user.id, idp: idp, username: user.username } : null
-    },
+     */// needs endpoint
+    findUserByIdp: idp => users.getByIdp(idp).then(user=>user ? { idp,id: user.id,  username: user.username } : null),
     /**
      *
      * @param username
      * @returns {Promise<{password: *, id: *, username: *}|null>}
      */
-    findCorrespondingUser: async (username) => {
+    findCorrespondingUser: async username => {
         try {
-            return await users.getByUsername(username)
+            return await users.getByUsername(username);
         } catch (error) {
-            return null
+            return null;
         }
     },
-    
     findUserByIdpOrCreate: async (idpId, idpName, username, password) => {
         // needs endpoint
         const user = await users.getByIdp(idpId);
@@ -61,15 +54,9 @@ module.exports = {
      */
     createUser: async (idpId, idpName, username, password) => {
 
-        const userId = await users.create(username, password)
-
-        await idps.create(idpId, idpName, userId.id)
-
-        return {
-            id: userId.id,
-            idp_id: idpId,
-            username: username
-        }
+        const {id} = await users.create(username, password);
+        await idps.create(idpId, idpName, id);
+        return { id, username, idp_id: idpId};
     },
 
     /**
@@ -77,15 +64,14 @@ module.exports = {
      * @param userId
      * @returns {Promise<boolean>}
      */
-    isBlackListed: (userId) => userList.isUserBlackListed(userId),
+    isBlackListed: userId => userList.isUserBlackListed(userId),
 
     /**
      *
      * @param userId
      * @returns {Promise<void>}
      */
-    addNotification: (userId) => userHistories.create(new Date(), userId, "BlackListed User tried to Login", userId),
+    addNotification: userId => userHistories.create(new Date(), userId, 'BlackListed User tried to Login', userId),
 
-    checkProtocol: (protocol,idp) => authTypes.getByName(protocol,idp)
-    
-}
+    checkProtocol: (protocol,idp) => authTypes.getByName(protocol,idp),
+};

@@ -1,9 +1,7 @@
-import {listService, userService, rolesService, permissionService, authenticationService, sessionService, logsService, roleUserService,
-userRoleService,userListService} from "./main/service";
-import {useContext} from "react";
-import UserContext from "./main/UserContext";
+import {listService, userService, rolesService, permissionService, authenticationService, sessionService, logsService} from "./main/common/services/basicServices";
+import {roleUserService, userRoleService} from "./main/common/services/infoPagesServices";
 
-//const ctx = useContext(UserContext);
+
 const PORT = 8082;
 const listServ = listService(true);
 const userServ = userService(true);

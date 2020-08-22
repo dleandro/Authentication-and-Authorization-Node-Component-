@@ -1,9 +1,9 @@
 class CustomError extends Error {
-    constructor(args) {
-        super(args);
-        this.title = args.title;
-        this.message = args.detail;
-        this.status = args.status;
+    constructor(title,detail,status) {
+        super({title,detail,status})
+        this.title = title;
+        this.message = detail;
+        this.status = status;
     }
 }
 

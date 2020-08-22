@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from "react-router-dom";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Dropdown } from "react-bootstrap";
-import { authenticationService } from '../../../service';
+import { authenticationService } from '../../services/basicServices';
 import UserContext from '../../../UserContext'
 
 

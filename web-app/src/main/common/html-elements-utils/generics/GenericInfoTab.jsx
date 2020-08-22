@@ -15,10 +15,11 @@ import TablePage from "../Tables/TablePage";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function GenericInfo({ service,resource }) {
+export default function GenericInfoTab({ service,resource }) {
 
-    let { id } = useParams();
+
     const ctx = useContext(UserContext);
+    let  id = useParams().id;
     const serv = {...service};
     serv.get = () => service.get(id);
     serv.post = arr => service.post(arr,id,ctx.user.id);

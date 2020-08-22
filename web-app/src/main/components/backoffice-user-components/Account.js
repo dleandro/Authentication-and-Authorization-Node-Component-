@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import {Form,Button} from "react-bootstrap";
-import { userService } from '../../service';
+import { userService } from '../../common/services/basicServices';
 import UserContext from '../../UserContext'
 
 export const Account = () => {

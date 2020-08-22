@@ -38,6 +38,9 @@ module.exports = {
         deletedRows: await  tryCatch(async () => {
             const permission = await require('./permissions-dal').getSpecificById(permissionId)
             const role = await rolesDal.getSpecificById(roleId)
+            console.log('role getted',role,'permission getted',permission)
+
+            console.log('rba:',rbac.storage)
             await rbac.revokeByName(role.role, permission.action + '_' + permission.resource)
             return RolePermission.destroy({
                 where: {
@@ -45,7 +48,7 @@ module.exports = {
                 }
             })
         })
-    }),
+    }).then(r=>{console.log('finished',r);return r;}),
 
     get: () =>
         tryCatch(async () => {

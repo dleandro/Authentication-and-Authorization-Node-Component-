@@ -1,12 +1,10 @@
-
-const
-    LocalStrategy = require('passport-local').Strategy,
-    { findCorrespondingUser, isBlackListed, addNotification } = require('../../../util/passport-utils'),
+const LocalStrategy = require('passport-local').Strategy,
+    {findCorrespondingUser,addNotification,isBlackListed} = require('../../../util/passport-utils'),
     Idp = require('../../../../resources/dals/idps-dal'),
     errors = require('../../../errors/app-errors'),
     { User } = require('../../../../resources/sequelize-model');
 
-module.exports = () => new LocalStrategy(
+const localStratBuilder = () =>new LocalStrategy(
     async function (username, password, done) {
         const user = await findCorrespondingUser(username);
         if (!user) {
@@ -27,3 +25,5 @@ module.exports = () => new LocalStrategy(
         return done(errors.incorrectPassword, false);
     }
 );
+
+module.exports = localStratBuilder;

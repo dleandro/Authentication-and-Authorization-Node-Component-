@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import { userService, userRoleService, configService, authenticationService } from './service'
+import { userService, configService, authenticationService } from './common/services/basicServices'
 const AuthizationRbac = require('./common/authization-rbac')
 
 

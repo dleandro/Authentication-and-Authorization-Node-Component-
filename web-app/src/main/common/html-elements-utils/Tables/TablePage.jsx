@@ -87,19 +87,21 @@ const TablePage = ({ service, resource }) => {
         undefined;
 
     const buildTable = () => {
-        console.log('building table...')
+        console.log('building table...',values)
         console.log('serv: ', service, ' res: ', resource)
         const infoButton = val => service.detailsUrl ? <td>
             <GenericTooltipButton icon={'fa fa-info-circle'} onClick={t => history.push(service.detailsUrl(val))} tooltipText={'More Info!'} bootstrapColor={'primary'} />
         </td> : undefined;
         if (values.length && Array.isArray(values)) {
-            let labels = Object.keys(values[0]);
+            //this avoids rendering blank cells by making sure every line as the same fields and that only common fields will be shown
+            let labels = values.map(Object.keys).reduce((first,second)=>first.filter(v=>second.includes(v)));
+            //let labels = Object.keys(values[0]);
             const headers = <tr>
                 {labels.map(label => <th key={label}>{label}</th>)}
                 {addButton}
             </tr>;
             const valueToLine = val => <tr key={JSON.stringify(val)}>
-                {labels.map(label => <td key={val[label]}>{val[label]}</td>)}
+                {labels.map((label,idx) => <td key={`${idx}:${val[label]}`}>{val[label]}</td>)}
                 {editButton(val)}{deleteButton(val)}{infoButton(val)}
             </tr>;
             return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;

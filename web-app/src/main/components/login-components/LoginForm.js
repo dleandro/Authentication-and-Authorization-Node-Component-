@@ -7,7 +7,7 @@ import { webApiLinks } from '../../common/links';
 import '../../common/stylesheets/App.css';
 import Alert from 'react-bootstrap/Alert';
 import AuthTypeContext from "./AuthTypeContext";
-import { authenticationService } from "../../service";
+import { authenticationService } from "../../common/services/basicServices";
 
 const authStyle = {
     width: '100px',

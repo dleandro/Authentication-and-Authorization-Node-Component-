@@ -4,16 +4,11 @@ const
     passportUtils = require('../../util/passport-utils');
 
 // Setup available authentication strategies
-passport.use('saml', require('./strategies/saml-strategy')());
-passport.use('openid', require('./strategies/open-id-strategy'));
-passport.use('azure_ad_oauth2', require('./strategies/azure-ad-oauth2-strategy')());
-passport.use('google', require('./strategies/google-strategy')());
-passport.use('local', require('./strategies/local-strategy')());
-//passport.use('saml', require('./strategies/strategies').samlStrat());
-//passport.use('openid', require('./strategies/strategies').openIdStrat());
-//passport.use('azure_ad_oauth2', require('./strategies/strategies').azureStrat());
-//passport.use('google', require('./strategies/strategies').googleStrat());
-//passport.use('local', require('./strategies/strategies').localStrat());
+passport.use('saml', require('./strategies/saml-strat')());
+passport.use('openid', require('./strategies/openId-strat')());
+passport.use('azure_ad_oauth2', require('./strategies/azure-strat')());
+passport.use('google', require('./strategies/google-strat')());
+passport.use('local', require('./strategies/local-strat')());
 
 /**
  *

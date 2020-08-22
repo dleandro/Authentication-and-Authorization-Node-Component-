@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import AuthTypeContext from './AuthTypeContext'
 import Form from "react-bootstrap/Form";
 import { SubmitValuesModal } from "../../common/html-elements-utils/generics/GenericModal";
-import { configService } from "../../service";
+import { configService } from "../../common/services/basicServices";
 import Card from "react-bootstrap/Card";
 import CardColumns from "react-bootstrap/CardColumns";
 

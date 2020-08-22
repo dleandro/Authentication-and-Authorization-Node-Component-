@@ -2,7 +2,7 @@
 const
     passport = require('./authentication-middleware/passport'),
     bodyParser = require('body-parser'),
-    authorization = require('../../resources/authorizations')
+    authorization = require('../../resources/authorizations');
 
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = function (app, session) {

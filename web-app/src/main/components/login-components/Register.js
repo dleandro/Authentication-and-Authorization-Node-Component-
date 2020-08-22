@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import {userService,authenticationService} from '../../service';
+import {userService,authenticationService} from '../../common/services/basicServices';
 import Alert from 'react-bootstrap/Alert'
 
 export default function Register() {

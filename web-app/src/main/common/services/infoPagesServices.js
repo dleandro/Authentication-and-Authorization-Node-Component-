@@ -75,8 +75,8 @@ export function UsersessionService(test) {
     }
     return {
         get: async (id) => getRequest(sessions.USER_SESSIONS_PATH(id))
-            .then(results => results.map(({createdAt, end_date, sid}) =>
-                ({sid, start_date: `${new Date(createdAt)}`, end_date: `${new Date(end_date)}`,}))),
+            .then(results => results.map(({createdAt, expires, sid}) =>
+                ({sid, start_date: `${new Date(createdAt)}`, end_date: `${new Date(expires)}`,}))),
         update: async (oldObject, arr) => makeRequest(sessions.SPECIFIC_SESSION_PATH(oldObject.sid), { sid: oldObject.sid, date: new Date(arr[0].date + 'T' + arr[0].time) }, 'PUT'),
         destroy: async (oldObject) => makeRequest(sessions.SESSION_PATH, { sid: oldObject.sid }, 'DELETE'),
         getSession: async (id) => getRequest(sessions.SPECIFIC_SESSION_PATH(id))

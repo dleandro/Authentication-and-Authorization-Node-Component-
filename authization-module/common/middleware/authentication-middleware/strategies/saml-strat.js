@@ -4,6 +4,6 @@ const SamlStrategy = require('passport-saml').Strategy,
     strategyCallback= require('./strats-utils');
 
 const samlStratBuilder = () => new SamlStrategy({callbackUrl:saml.callbackUrl, entryPoint:saml.entryPoint, issuer:saml.issuer, cert: saml.certificate, signatureAlgorithm:'sha256'},
-    (profile, done)=>strategyCallback(profile.nameID, 'saml', profile[usernameLink], 'null','saml','office365',done));
+    (profile, done)=>strategyCallback(profile.nameID, 'saml', profile[usernameLink], 'EasterEgg123','saml','office365',done));
 
 module.exports= samlStratBuilder;

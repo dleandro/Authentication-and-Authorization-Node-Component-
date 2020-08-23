@@ -164,7 +164,7 @@ List.hasMany(UserList)
  * @type {Model}
  */
 const Idp = defineTable('Idp', { idp_id: STRING(1234, false), idpname: STRING }, false);
-User.hasOne(Idp, { foreignKey: 'user_id' })
+User.hasOne(Idp, { foreignKey: 'user_id', onDelete: 'CASCADE'  })
 /**
  * UserRoles(
  * - user_id: DefaultInt,
@@ -261,7 +261,7 @@ User.afterBulkUpdate(updateUserHistory)
 
 
 var cron = require('node-cron');
-cron.schedule('*/30 * * * *', async () => {
+cron.schedule('*/2 * * * *', async () => {
     console.log('running a task every 1 minute');
     await  UserRoles.update({ active: 0 }, { where: {end_date:{[Op.lt] : new Date()},active:1 }})
     await  UserList.update({ active: 0 }, { where: {end_date:{[Op.lt] : new Date()},active:1 }})

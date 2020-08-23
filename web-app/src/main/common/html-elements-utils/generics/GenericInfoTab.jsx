@@ -21,7 +21,7 @@ export default function GenericInfoTab({ service,resource }) {
     const ctx = useContext(UserContext);
     let  id = useParams().id;
     const serv = {...service};
-    serv.get = () => service.get(id);
+    serv.get = () => service.get(id?id:ctx.user.id);
     serv.post = arr => service.post(arr,id,ctx.user.id);
     serv.update = (oldObj, arr) => service.update(oldObj,arr, id, ctx.user.id);
     serv.destroy = oldObj => service.destroy(oldObj ,id);

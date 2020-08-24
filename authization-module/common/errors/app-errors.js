@@ -1,6 +1,6 @@
 const CustomError = require('./custom-error');
 const UNAUTORIZED_STATUS = 401;
-const FORBIDDEN_STATUS = 401;
+const FORBIDDEN_STATUS = 403;
 const BAD_REQUEST_STATUS = 400;
 module.exports = {
 

@@ -1,53 +1,34 @@
-const UserList = require('../sequelize-model').UserList,
-    List = require('../sequelize-model').List,
-    User = require('../sequelize-model').User,
-    tryCatch = require('../../common/util/functions-utils')
+const {UserList, List, User} = require('../sequelize-model'),
+    tryCatch = require('../../common/util/functions-utils');
 
 module.exports = {
-    getByUserId: (id) => tryCatch(() => UserList.findByPk(id)),
+    getByUserId: id => tryCatch(() => UserList.findByPk(id)),
 
     /**
-    * asks the database for all list entries that are active and associated with a specific user
-    * @param userId
-    * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
-    */
-    getByUser: (userId) =>
-        tryCatch(() =>
-            UserList.findAll({
-                where: {
-                    UserId: userId
-                }, include: [List], raw: true
-            })
-        ),
+     * asks the database for all list entries that are active and associated with a specific user
+     * @returns {Promise<{end_date: *, active, id, list: *, user: *, start_date: *, updater}>}
+     * @param UserId
+     */
+    getByUser: UserId => tryCatch(() => UserList.findAll({where: {UserId}, include: [List], raw: true})),
 
 
     //TODO: change fields from jointed query
-    getByList: (id) => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
+    getByList: id => tryCatch(() => UserList.findAll({ where: { ListId: id }, include: [User], raw: true })),
 
     //TODO: change fields from jointed query
-    isUserBlackListed: (user_id) => tryCatch(async () => {
-        const userLists = await UserList.findAll({ where: { UserId: user_id }, include: [List], raw: true })
+    isUserBlackListed: UserId => tryCatch(() => UserList
+        .findAll({ where: {UserId}, include: [List], raw: true })
+        .then(userLists=>userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active === 1))),
 
-        return userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active == 1)
-    }),
+    create: (ListId, UserId, updater, start_date, end_date, active) => tryCatch(() => UserList.create({ListId,UserId,start_date,end_date, active, updater }, { include: [List] })),
 
-    create: (listId, userId, updater, start_date, end_date, active) => tryCatch(() => UserList.create({ ListId: listId, UserId: userId, start_date, end_date, active, updater }, { include: [List] })),
-
-    delete: async (listId, userId) => Promise.resolve(
-        {
-            deletedRows: await tryCatch(() => UserList.destroy({ where: { ListId: listId, UserId: userId },individualHooks: true }))
-        }
-    ),
+    delete: async (ListId, UserId) => Promise.resolve({deletedRows: await tryCatch(() => UserList.destroy({ where: { ListId, UserId },individualHooks: true }))}),
 
     update: async (user, list, start_date, end_date, active, updater) => Promise.resolve({
-        updatedRows: await tryCatch(() => UserList.update({ start_date, end_date: end_date, active: active, updater: updater },
-            { where: { UserId: user, ListId: list } })),
-        end_date,
-        active,
-        updater
+        updatedRows:
+            await tryCatch(() => UserList.update({ start_date, end_date, active, updater}, { where: { UserId: user, ListId: list } })),
+        end_date, active, updater}),
 
-    }),
-
-    changeActiveFlag: (userId, listId, newState) => tryCatch(() => UserList.update({ active: newState }, { where: { UserId: userId, ListId: listId } })),
+    changeActiveFlag: (UserId, ListId, newState) => tryCatch(() => UserList.update({ active: newState }, { where: { UserId, ListId } })),
 
 }

@@ -45,7 +45,8 @@
   },
   "devDependencies": {
     "jest": "^26.0.1",
-    "jest-sonar-reporter": "^2.0.0"
+    "jest-sonar-reporter": "^2.0.0",
+    "jsdoc": "^3.6.5"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
 const AuthenticationTypes = require('../sequelize-model').AuthenticationTypes,
-    tryCatch = require('../../common/util/functions-utils')
+    tryCatch = require('../../common/util/functions-utils');
 
 
 module.exports = {
@@ -8,14 +8,8 @@ module.exports = {
 
     getActive: () => tryCatch(() => AuthenticationTypes.findAll({ where: { active: 1 } })),
 
-    changeActive: (protocol, idp, active) => tryCatch(() => AuthenticationTypes.update({ active: active }, { where: { protocol: protocol, idp: idp } })),
+    changeActive: (protocol, idp, active) => tryCatch(() => AuthenticationTypes.update({active}, { where: {protocol, idp } })),
 
-    getByName: async (protocol,idp)=> await AuthenticationTypes.findAll({
-        where:{
-            protocol:protocol,
-            idp:idp,
-            active:1
-        }
-    })
+    getByName: (protocol,idp)=> AuthenticationTypes.findAll({where:{protocol, idp, active:1}}),
 
 }

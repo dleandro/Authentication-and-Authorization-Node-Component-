@@ -1,20 +1,17 @@
-'use strict'
-
 const UserHistory = require('../sequelize-model').UserHistory,
-    tryCatch = require('../../common/util/functions-utils')
+    tryCatch = require('../../common/util/functions-utils');
 
 module.exports = {
 
     /**
      *
-     * @param userId
      * @param date
+     * @param updater
      * @param description
+     * @param user_id
      * @returns {Promise<void>}
      */
-    create: (date, updater, description, user_id) => tryCatch(() => UserHistory.create({
-        date, updater, description, user_id
-    })),
+    create: (date, updater, description, user_id) => tryCatch(() => UserHistory.create({date, updater, description, user_id})),
 
     /**
      *
@@ -22,26 +19,14 @@ module.exports = {
      */
     get: () => tryCatch(() => UserHistory.findAll({ raw: true })),
 
-    getAllFromUser: (userId) => tryCatch(() => UserHistory.findAll({ where: { user_id: userId } })),
+    getAllFromUser: userId => tryCatch(() => UserHistory.findAll({ where: { user_id: userId } })),
 
     OLDsaveHistory: (req, res, next) => {
-        const resource = req.path.split("/")[2]
-        const action = req.method
-
-        const user = req.user
-        const from = req.connection.remoteAddress
         if (req.user) {
-            UserHistory.create({
-                user_id: user.id,
-                date: new Date(),
-                success: 1,
-                action: action,
-                resource: resource,
-                from: from
-            })
+            const [, , resource] = req.path.split('/');
+            UserHistory.create({resource, user_id: req.user.id, date: new Date(), success: 1, action: req.method, from: req.connection.remoteAddress});
         }
-        next()
-    }
+        next();
+    },
 
-}
-
+};

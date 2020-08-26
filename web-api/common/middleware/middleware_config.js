@@ -93,7 +93,7 @@ const rbac_opts = {
     }
 }
 
-exports.db2 = db2
-exports.db = db
-exports.rbac_opts = rbac_opts
-exports.cloud_db = cloud_db
+exports.db2 = db2;
+exports.db = db;
+exports.rbac_opts = rbac_opts;
+exports.cloud_db = cloud_db;

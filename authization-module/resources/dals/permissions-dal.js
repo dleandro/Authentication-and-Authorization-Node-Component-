@@ -1,76 +1,51 @@
-'use strict'
 
 const
     tryCatch = require('../../common/util/functions-utils'),
     Permission = require('../sequelize-model').Permission,
-    config = require('../../common/config/config')
+    {rbac} = require('../../common/config/config');
 
 module.exports = {
 
     /**
-  *
-  * @param method
-  * @param path
-  * @param description
-  * @returns {Promise<void>}
-  */
-    create: async (action, resource) => tryCatch(async () => {
-        await config.rbac.createPermission(action, resource, true)
-        return (await Permission.findOrCreate({
-            where: {
-                action: action,
-                resource: resource
-            }
-        }))[0]
-    }),
+     *
+     * @returns {Promise<void>}
+     * @param action
+     * @param resource
+     */
+    create: (action, resource) => tryCatch(() => rbac.createPermission(action, resource, true)
+        .then(()=>Permission.findOrCreate({where: {action,resource}}))
+        .then(perm=>perm[0])),
 
     /**
      *
-     * @param method
-     * @param path
      * @returns {Promise<void>}
+     * @param id
      */
-    delete: (id) =>
+    delete: id =>
         tryCatch(async () => {
-            const permission = await require('./permissions-dal').getSpecificById(id)
-            config.rbac.removeByName(permission.action + '_' + permission.resource)
-            return Promise.resolve({
-                deletedRows: await Permission.destroy({ where: { id: id } })
-            })
+            const {action, resource} = await require('./permissions-dal').getSpecificById(id);
+            rbac.removeByName(`${action}_${resource}`);
+            return Promise.resolve({deletedRows: await Permission.destroy({ where: { id } })});
         }),
     /**
      *
      * @returns {Promise<void>}
      */
-    get: () =>
-        tryCatch(() => Permission.findAll({ raw: true })),
+    get: () => tryCatch(() => Permission.findAll({ raw: true })),
     /**
      *
      * @param id
      * @returns {Promise<void>}
      */
-    getSpecificById: (id) => tryCatch(() => Permission.findByPk(id)),
+    getSpecificById: id => tryCatch(() => Permission.findByPk(id)),
     /**
      *
-     * @param method
-     * @param path
      * @returns {Promise<*>}
+     * @param action
+     * @param resource
      */
-    getSpecific: (action, resource) =>
-        tryCatch(() =>
-            Permission.findOne({
-                where: {
-                    action: action,
-                    resource: resource
-                }
-            })),
+    getSpecific: (action, resource) => tryCatch(() => Permission.findOne({where: {action, resource}})),
 
-    update: async (id, action, resource) => Promise.resolve(
-        {
-            insertedRows: await tryCatch(() => Permission.update({ action: action, resource: resource }, { where: { id: id } })),
-            action,
-            resource,
-            id
-        }),
+    update: async (id, action, resource) => Promise.resolve({insertedRows: await tryCatch(() => Permission.update({ action, resource }, { where: { id } })), action, resource, id}),
 
 }

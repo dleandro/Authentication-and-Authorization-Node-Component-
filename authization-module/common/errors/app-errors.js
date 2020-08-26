@@ -2,6 +2,10 @@ const CustomError = require('./custom-error');
 const UNAUTORIZED_STATUS = 401;
 const FORBIDDEN_STATUS = 403;
 const BAD_REQUEST_STATUS = 400;
+
+/**
+ * @module
+ */
 module.exports = {
 
     SequelizeValidationError: { status: BAD_REQUEST_STATUS },

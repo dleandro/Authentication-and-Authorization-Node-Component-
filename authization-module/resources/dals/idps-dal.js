@@ -1,13 +1,10 @@
 const
     Idp = require('../sequelize-model').Idp,
-    tryCatch = require('../../common/util/functions-utils')
+    tryCatch = require('../../common/util/functions-utils');
 
 module.exports = {
 
-    getByUserId: (userId) =>
-        tryCatch(() =>
-            Idp.findOne({ where: { user_id: userId } })
-        ),
+    getByUserId: userId => tryCatch(() => Idp.findOne({ where: { user_id: userId } })),
 
     /**
      *
@@ -16,22 +13,11 @@ module.exports = {
      * @param userId
      * @returns {Promise<*>}
      */
-    create: (idpId, idpname, userId) =>
-        tryCatch(() =>
-            Idp.create({
-                idp_id: idpId,
-                idpname: idpname,
-                user_id: userId
-            })
-        ),
-        
+    create: (idpId, idpname, userId) => tryCatch(() =>Idp.create({idpname, idp_id: idpId, user_id: userId})),
     /**
      *
      * @param idpId
      * @returns {Promise<*>}
      */
-    delete: (idpId) =>
-        tryCatch(
-            () => Idp.destroy({ where: { idp_id: idpId } })
-        )
-}
+    delete: idpId => tryCatch(() => Idp.destroy({ where: { idp_id: idpId } })),
+};

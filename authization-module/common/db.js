@@ -33,7 +33,7 @@ const databasesetup = async rbacOpts => {
         AuthenticationTypes.findOrCreate({ where: { "protocol": "oauth2", "idp": "google" }, defaults: { "active": 1 } }),
         AuthenticationTypes.findOrCreate({ where: { "protocol": "oauth2", "idp": "office365" }, defaults: { "active": 1 } }),
         AuthenticationTypes.findOrCreate({ where: { "protocol": "saml", "idp": "office365" }, defaults: { "active": 1 } }),
-        require('./rbac')(rbacOpts)
+        require('./rbac')(rbacOpts),
     ]
 
 

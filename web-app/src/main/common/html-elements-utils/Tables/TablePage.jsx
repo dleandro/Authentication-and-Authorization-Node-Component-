@@ -45,8 +45,9 @@ const TablePage = ({ service, resource }) => {
         service.get()
             .then(data => setValues(data))
             .catch(err => {
-                setError({ errorMessage: err.message, shouldShow: true })
-                console.error(err)
+                //this removes the page from the loading state
+                setValues([]);
+                setError({ errorMessage: err.message, shouldShow: true });
             })
     }, []);
     

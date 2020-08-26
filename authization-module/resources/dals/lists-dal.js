@@ -2,7 +2,7 @@
 
 const
     { List } = require('../sequelize-model'),
-    tryCatch = require('../../common/util/functions-utils')
+    tryCatch = require('../../common/util/functions-utils');
 
 // TODO: should a user be in more than one list?? if not we need to controll that
 // JUSTIFICATION: Probably should because being in the greylist and in the redlist even if they block completely different resources is still better than being in the blacklist
@@ -16,11 +16,7 @@ module.exports = {
      * @param list
      * @returns {Promise<CustomError>}
      */
-    create: async (list) => tryCatch(() =>
-        List.create({
-            list: list
-        })
-    ),
+    create: list => tryCatch(() =>List.create({list})),
 
 
     /**
@@ -28,24 +24,14 @@ module.exports = {
      * @param listId
      * @returns {*}
      */
-    deactivate: (listId) =>
-        tryCatch(
-            () => List.update({ active: 0 }, { where: { id: listId } })
-        ),
+    deactivate: listId => tryCatch(() => List.update({ active: 0 }, { where: { id: listId } })),
 
     /**
      * deletes the user association to a list
-     * @param listId
+     * @param id
      * @returns {*}
      */
-    delete: (listId) =>
-        tryCatch(
-            async () =>{
-            return Promise.resolve({
-                deletedRows: await List.destroy({ where: { id: listId } })
-            })
-            } 
-        ),
+    delete: id => tryCatch(async () =>Promise.resolve({deletedRows: await List.destroy({ where: { id } })})),
 
     /**
      * asks the database for all list entries
@@ -56,7 +42,7 @@ module.exports = {
      */
     get: () => tryCatch(() => List.findAll({ raw: true })),
 
-    getById: (id) => tryCatch(() => List.findByPk(id)),
+    getById: id => tryCatch(() => List.findByPk(id)),
 
     /**
      * asks the database for all list entries that are active at the moment
@@ -71,11 +57,6 @@ module.exports = {
      * @param list
      * @returns {Promise<{insertedRows: *, id: *, list: *}>}
      */
-    update: async (id, list) => Promise.resolve(
-        {
-            insertedRows: await tryCatch(() => List.update({ list: list }, { where: { id: id } })),
-            list,
-            id
-        }),
+    update: async (id, list) => Promise.resolve({insertedRows: await tryCatch(() => List.update({list}, { where: {id} })), list, id}),
 
 }

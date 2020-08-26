@@ -1,40 +1,28 @@
-'use strict'
+const {Role, Permission, Op} = require('../sequelize-model'),
+    {rbac} = require('../../common/config/config'),
+    tryCatch = require('../../common/util/functions-utils');
 
-const { Role, Permission,Op } = require('../sequelize-model'),
-    config = require('../../common/config/config'),
-    tryCatch = require('../../common/util/functions-utils')
-
-const getSpecificById = (roleId) =>
-    tryCatch(() => Role.findByPk(roleId))
+const getSpecificById = roleId => tryCatch(() => Role.findByPk(roleId));
 
 module.exports = {
 
     /**
-         *
-         * @param role
-         * @returns {Promise<void>}
-         */
+     *
+     * @param role
+     * @returns {Promise<void>}
+     */
     create: async (role, parent_role) => tryCatch(async () => {
-        await config.rbac.createRole(role, true)
+        await rbac.createRole(role, true);
         if (parent_role) {
-            await config.rbac.grantByName((await getSpecificById(parent_role)).role, role)
+            await rbac.grantByName((await getSpecificById(parent_role)).role, role);
         }
-        return (await Role.findOrCreate({
-            defaults: { parent_role: parent_role },
-            where: {
-                role: role
-            }
-        }))[0]
+        return (await Role.findOrCreate({defaults: {parent_role}, where: {role}}))[0];
     }),
 
-    update: async (id, parent_role) =>{
-        const role=await getSpecificById(id)
-        config.rbac.grant(await config.rbac.getRole(parent_role.label),await config.rbac.getRole(role.role))
-        return Promise.resolve(
-        {
-            insertedRows: await tryCatch(() => Role.update({parent_role: parent_role.value }, { where: { id: id } })),
-            parent_role
-        })
+    update: async (id, parent_role) => {
+        const rbacRole = getSpecificById(id).then(({role})=>rbac.getRole(role));
+        rbac.grant(await rbac.getRole(parent_role.label), await rbacRole);
+        return Promise.resolve({insertedRows: await tryCatch(() => Role.update({parent_role: parent_role.value}, {where: {id}})), parent_role});
     },
 
 
@@ -45,36 +33,28 @@ module.exports = {
      */
     getSpecificById,
 
-    getWithParents : ()=> tryCatch(async () => await Role.findAll({ where: { parent_role:{[Op.ne]:null} } })),
+    getWithParents: () => tryCatch(() => Role.findAll({where: {parent_role: {[Op.ne]: null}}})),
 
-    getByName: (roleName) => tryCatch(async () => await Role.findOne({ where: { role: roleName } })),
+    getByName: roleName => tryCatch(() => Role.findOne({where: {role: roleName}})),
     /**
      *
      * @param roleId
      * @returns {Promise<void>}
      */
-    delete: async (roleId) =>
+    delete: async roleId =>
         tryCatch(async () => {
-            const role = await getSpecificById(roleId)
-            config.rbac.removeByName(role.role)
-            return Promise.resolve({
-                deletedRows: await Role.destroy({
-                    where: {
-                        id: roleId
-                    }
-                })
-            })
+            await getSpecificById(roleId).then(({role})=>rbac.removeByName(role));
+            return Promise.resolve({deletedRows: await Role.destroy({where: {id: roleId}})});
         }),
     /**
      *
      * @returns {Promise<void>}
      */
-    get: () => tryCatch(() => Role.findAll({ raw: true })),
+    get: () => tryCatch(() => Role.findAll({raw: true})),
 
-    addParentRole: (role, parentRole) =>
-        tryCatch(async () => {
-            config.rbac.grant(await config.rbac.getRole(parentRole.role), await config.rbac.getRole(role.role))
-            return Role.update({ parent_role: parentRole.id }, { where: { id: role.id } })
-        })
+    addParentRole: (role, parentRole) => tryCatch(async () => {
+        rbac.grant(await rbac.getRole(parentRole.role), await rbac.getRole(role.role));
+        return Role.update({parent_role: parentRole.id}, {where: {id: role.id,}});
+    }),
 
-}
+};

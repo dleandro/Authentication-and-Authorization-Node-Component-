@@ -1,86 +1,54 @@
-'use strict'
 
-const { Role, Permission } = require('../sequelize-model')
+const { Role, Permission } = require('../sequelize-model');
 
 const RolePermission = require('../sequelize-model').RolePermission,
     rolesDal = require('./roles-dal'),
     config = require('../../common/config/config'),
     rbac = config.rbac,
-    tryCatch = require('../../common/util/functions-utils')
+    tryCatch = require('../../common/util/functions-utils');
 
 module.exports = {
 
     /**
      *
-     * @param role
-     * @param permission
      * @returns {Promise<void>}
+     * @param RoleId
+     * @param permissionId
      */
-    create: (RoleId, id) =>
+    create: (RoleId, permissionId) =>
         tryCatch(async () => {
-            const permission = await require('./permissions-dal').getSpecificById(id)
-            rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(permission.action, permission.resource))
-            return (await RolePermission.findOrCreate({
-                where: {
-                    RoleId: RoleId,
-                    PermissionId: permission.id
-                }
-            }))[0];
+            const {action, id, resource} = await require('./permissions-dal').getSpecificById(permissionId);
+            rbac.grant(await rbac.getRole((await rolesDal.getSpecificById(RoleId)).role), await rbac.getPermission(action, resource));
+            return (await RolePermission.findOrCreate({where: {RoleId, PermissionId: id}}))[0];
         }),
 
     /**
      *
-     * @param role
-     * @param permission
      * @returns {Promise<void>}
+     * @param roleId
+     * @param permissionId
      */
     delete: async (roleId, permissionId) =>Promise.resolve({
         deletedRows: await  tryCatch(async () => {
-            const permission = await require('./permissions-dal').getSpecificById(permissionId)
-            const role = await rolesDal.getSpecificById(roleId)
-            console.log('role getted',role,'permission getted',permission)
-
-            console.log('rba:',rbac.storage)
-            await rbac.revokeByName(role.role, permission.action + '_' + permission.resource)
-            return RolePermission.destroy({
-                where: {
-                    RoleId: roleId, PermissionId: permissionId
-                }
-            })
-        })
-    }).then(r=>{console.log('finished',r);return r;}),
+            const {action, resource} = await require('./permissions-dal').getSpecificById(permissionId);
+            const role = await rolesDal.getSpecificById(roleId);
+            await rbac.revokeByName(role.role, `${action}_${resource}`);
+            return RolePermission.destroy({where: {RoleId: roleId, PermissionId: permissionId}});
+        })}),
 
     get: () =>
-        tryCatch(async () => {
+        tryCatch(() => RolePermission.findAll({include: [Role, Permission], raw: true})
+            .then(rolePermissions=>
+                rolePermissions.map(rolePermission => {
+                    const {'Permission.action': action, 'Permission.resource': resource, 'Role.role': role, 'Role.parent_role': parentRole,
+                        'Permission.id': unused0, 'Role.id': unused1, ...rest} = rolePermission;
+                return {action, resource, role,parentRole, ...rest};
+            }))),
 
-            const rolesPermissions = await RolePermission.findAll({
-                include: [Role, Permission],
-                raw: true
-            })
-
-            return rolesPermissions.map(rolePermission => {
-                rolePermission.action = rolePermission['Permission.action']
-                delete rolePermission['Permission.action']
-                rolePermission.resource = rolePermission['Permission.resource']
-                delete rolePermission['Permission.resource']
-
-                delete rolePermission['Permission.id']
-                delete rolePermission['Role.id']
-
-                rolePermission.role = rolePermission['Role.role']
-                delete rolePermission['Role.role']
-                rolePermission.parentRole = rolePermission['Role.parent_role']
-                delete rolePermission['Role.parent_role']
-
-                return rolePermission
-
-            })
-        }),
-
-    getByRole: (roleId) => tryCatch(() => RolePermission.findAll({ where: { RoleId: roleId }, include: [Permission], raw: true })),
+    getByRole: roleId => tryCatch(() => RolePermission.findAll({ where: { RoleId: roleId }, include: [Permission], raw: true })),
 
     //TODO: change fields from jointed query
-    getByPermission: (id) => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true }))
+    getByPermission: id => tryCatch(() => RolePermission.findAll({ where: { PermissionId: id }, include: [Role], raw: true })),
 
 
 }

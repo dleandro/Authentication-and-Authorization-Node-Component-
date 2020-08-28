@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import {Form,Button} from "react-bootstrap";
-import { userService } from '../../common/services/basicServices';
+import { userService, profileService } from '../../common/services/basicServices';
 import UserContext from '../../UserContext'
 import Alert from 'react-bootstrap/Alert'
 import { useHistory } from 'react-router-dom';
@@ -11,11 +11,12 @@ export const Account = () => {
 
     const [newPassword, setNewPassword] = useState(undefined)
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
+    const [success, setSuccess] = useState({ message: undefined, shouldShow: false })
     const history=useHistory()
     // TODO:
     const submitChanges = () =>{
-        userService().updatePassword(ctx.user.id,newPassword)
-        .then(_=>history.push('/account'))
+        profileService().put(newPassword)
+        .then(_=>setSuccess({message: 'Password updated successfully',shouldShow: true}))
     .catch(err => {
         setError({ errorMessage: err.message, shouldShow: true })
         console.error(err)
@@ -29,6 +30,9 @@ export const Account = () => {
                 <Alert variant={'warning'} onClose={() => setError(false)} dismissible>
                     {error.errorMessage}
                 </Alert>
+            }
+            {
+                success.shouldShow && <Alert variant={'success'} onClose={() => setSuccess(false)} dismissible> {success.message} </Alert>
             }
 
         <Form  className={`pl-5 pr-5 text-white`} variant={'dark'} style={{paddingTop: "75px", paddingLeft: "20px"}}>

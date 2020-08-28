@@ -14,13 +14,18 @@ const
     SESSION_PATH = "/api/sessions",
     AUTH_TYPES_PATH = "/api/auth-types",
     USERS_LIST_PATH = "/api/users-lists",
-    HISTORY_PATH = "/api/users-history"
+    HISTORY_PATH = "/api/users-history",
+    PROFILE_PATH= "/api/profile"
 
 const WEB_API_HOME_PATH = process.env.REACT_APP_WEB_API_PORT ? `http://localhost:${process.env.REACT_APP_WEB_API_PORT}` : 'https://webapi-dot-auth-authorization.ew.r.appspot.com';
 
 export const webApiLinks =
 {
     WEB_API_HOME_PATH,
+    profile:{
+        PASSWORD_UPDATE_PATH:`${PROFILE_PATH}/password`,
+        SESSION_PATH:`${PROFILE_PATH}/sessions`
+    },
     users: {
         USER_PATH,
         ROLES_PATH:`${AUTHENTICATION_PATH}/authenticated-user-roles`,

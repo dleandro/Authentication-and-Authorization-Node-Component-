@@ -29,8 +29,12 @@ const cloud_db={
 }
 
 const rbac_opts = {
-    "roles": ["admin", "DbManager", "Developer", "guest"],
+    "roles": ["admin", "DbManager", "Developer", "guest","Colaborator"],
     "permissions": [
+        { "resource": "profile", "action": "POST" },
+        { "resource": "profile", "action": "GET" },
+        { "resource": "profile", "action": "PUT" },
+        { "resource": "profile", "action": "DELETE" },
         { "resource": "users-lists", "action": "GET" },
         { "resource": "users-lists", "action": "POST" },
         { "resource": "users-lists", "action": "PUT" },
@@ -88,7 +92,16 @@ const rbac_opts = {
             { "resource": "authentications", "action": "GET" },
             { "resource": "authentications", "action": "POST" },
             { "resource": "users", "action": "POST" },
-            { "resource": "configs", "action": "GET" }
+            { "resource": "configs", "action": "GET" },
+        ],
+        "Colaborator":[
+            { "resource": "profile", "action": "POST" },
+            { "resource": "profile", "action": "GET" },
+            { "resource": "profile", "action": "DELETE" },
+            { "resource": "configs", "action": "GET" },
+            { "resource": "auth-types", "action": "GET" },
+            { "resource": "authentications", "action": "GET" },
+            { "resource": "authentications", "action": "POST" },
         ]
     }
 }

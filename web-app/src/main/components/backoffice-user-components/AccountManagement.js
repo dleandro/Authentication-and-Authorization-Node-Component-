@@ -4,6 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {UsersessionService} from "../../common/services/infoPagesServices";
 import GenericInfoTab from "../../common/html-elements-utils/generics/GenericInfoTab";
+import { profileService } from '../../common/services/basicServices';
 
 const labels = ['Sessions'];
 
@@ -13,7 +14,7 @@ export const AccountManagement = () => {
 
     const components = {
         0: <Account />,
-        1: <GenericInfoTab service={UsersessionService()} resource={'users-session'} />,
+        1: <GenericInfoTab service={profileService()} resource={'user-profile'} />,
     }
 
     return (

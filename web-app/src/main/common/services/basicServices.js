@@ -1,4 +1,4 @@
-var { sessions, users, roles, permissions, lists, auth_types, configs, WEB_API_HOME_PATH } = require('../links').webApiLinks;
+var { sessions, users, roles, permissions, lists, auth_types, configs, WEB_API_HOME_PATH,profile } = require('../links').webApiLinks;
 const {request,makeRequest,getRequest,DEFAULT_OPTIONS} =require('../Requests').requests;
 const dateify = date => new Date(`${date.date}T${date.time}`);
 
@@ -114,6 +114,15 @@ export function sessionService(test) {
         get: async () => getRequest(sessions.SESSION_PATH)
             .then(results => results.map(({UserId, createdAt, expires, sid}) => ({sid,UserId, start_date: `${new Date(createdAt)}`, end_date: `${new Date(expires)}`}))),
         destroy: async (oldObject) => makeRequest(sessions.SESSION_PATH, { sid: oldObject.sid }, 'DELETE')
+    }
+}
+
+export function profileService(){
+    return {
+        get: async () => getRequest(profile.SESSION_PATH)
+        .then(results => results.map(({ createdAt, expires, sid}) => ({sid, start_date: `${new Date(createdAt)}`, end_date: `${new Date(expires)}`}))),
+        put: async (newPassword) => makeRequest(profile.PASSWORD_UPDATE_PATH,{password:newPassword},'PUT'),
+        destroy : async (oldObj) => makeRequest(profile.SESSION_PATH,{ sid: oldObj.sid },'DELETE')
     }
 }
 

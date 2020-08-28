@@ -6,13 +6,13 @@ const LocalStrategy = require('passport-local').Strategy,
 
 const localStratBuilder = () =>new LocalStrategy(
     async function (username, password, done) {
-        const user = await findCorrespondingUser(username);
+        const user = await findCorrespondingUser(username)
         if (!user) {
             return done(null, false, { message: 'User isnt in database' });
         }
         if (await isBlackListed(user.id)) {
             addNotification(user.id);
-            return done(null, false, { message: 'User is BlackListed' });
+            return done(errors.userIsBlacklisted,null);
         }
         if (await Idp.getByUserId(user.id)) {
             return done(errors.IdpUserUnauthorized, false);

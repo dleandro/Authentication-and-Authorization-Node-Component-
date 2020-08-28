@@ -24,7 +24,6 @@ module.exports = function (apiUtils, authization) {
 
     userRouter.put('/:id/username', updateUsername)
 
-    userRouter.put('/:id/password', updatePassword)
 
     function getAllUsers(req, res) {
         apiUtils.promiseDataToResponse(res, users.get())
@@ -44,10 +43,6 @@ module.exports = function (apiUtils, authization) {
 
     function getUserByUsername(req, res) {
         apiUtils.promiseDataToResponse(res, users.getByUsername(req.params.username))
-    }
-
-    function updatePassword(req, res) {
-        apiUtils.promiseDataToResponse(res, users.updatePassword(req.body.password, req.params.id), 201)
     }
 
     function updateUsername(req, res) {

@@ -26,12 +26,12 @@ module.exports = async function (rbacOpts) {
     rolesPermissionsDal = require('../resources/dals/roles-permissions-dal');
     usersRolesDal = require('../resources/dals/users-roles-dal');
 
-    const setGuestRole = async user => {
-        const {id} = await roleDal.getByName('guest');
+    const setBasicRoles = async user => {
+        const {id} = await roleDal.getByName('Colaborator');
         usersRolesDal.create(user.dataValues.id, id, new Date(), null, user.dataValues.id, 1);
     };
 
-    User.afterCreate(setGuestRole);
+    User.afterCreate(setBasicRoles);
 
 
     if (rbacOpts) {
@@ -96,6 +96,7 @@ const setupSuperuser = async () => {
     // this should use our own dals to make sure rbac object is always consistent with our database
     const role = Role.findOrCreate({ where: { "role": "admin" } });
     Role.findOrCreate({ where: { "role": "guest" } });
+    Role.findOrCreate({where:{"role":"Colaborator"}})
     const [{id}] = await User.findOrCreate({where: {"username": "superuser"}, defaults: {"password": "Superuser123"}});
     return UserRoles.findOrCreate({
         where: { "UserId": id, "RoleId": (await role)[0].id },

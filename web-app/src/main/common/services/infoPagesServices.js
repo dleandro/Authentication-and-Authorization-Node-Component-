@@ -42,15 +42,8 @@ export function userRoleService() {
                 end_date: end_date ? `${new Date(end_date)}` : undefined,
                 active,updater,
             }))),
-        post: (arr,userId,updtr)=> userRolePost(userId,arr[0].value,updtr,new Date(),arr[1]).then(result=>({
-            RoleId: result.RoleId,
-            role: arr[0].label,
-            start_date: `${new Date(result.start_date)}`,
-            end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-            active: result.active,
-            updater: result.updater
-        })),
-        update: (oldObj,newVals,userId,updtr)=>userRolePut(userId,oldObj.start_date,oldObj.RoleId,updtr,newVals).then(userRole=>({...userRole,role: oldObj.role})),
+        post: (arr,userId,updtr)=> userRolePost(userId,arr[0].value,updtr,new Date(),arr[1]).then(({UserId,...rest} )=>({role:arr[0].label,...rest})),
+        update: (oldObj,newVals,userId,updtr)=>userRolePut(userId,oldObj.start_date,oldObj.RoleId,updtr,newVals).then(({UserId,...rest} )=>({role: oldObj.role,...rest})),
         destroy: (oldObj,UserId) => userRoleDestroy(UserId,oldObj.RoleId),
         getUsersActiveRoles: async (id) => getRequest(users_roles.USERS_ACTIVE_ROLES_PATH(id)),
         deactivateUserRole: async (userid, roleid) => makeRequest(users_roles.USERS_ROLES_PATH, { user: userid, role: roleid, active: 0 }, 'PUT')
@@ -71,13 +64,7 @@ export function roleUserService() {
                 end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
                 active: result.active,
                 updater: result.updater}))),
-        post: (arr, role, updtr) => userRolePost(arr[0].value, role, updtr, new Date(), arr[1]).then(result=>({
-            UserId: result.UserId,
-            username: arr[0].label,
-            start_date: `${new Date(result.start_date)}`,
-            end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-            active: result.active,
-            updater: result.updater})),
+        post: (arr, role, updtr) => userRolePost(arr[0].value, role, updtr, new Date(), arr[1]).then(({RoleId,...rest} )=>({username:arr[0].label,...rest,})),
         update: (oldObj, arr, role, updtr) => userRolePut(oldObj.UserId, oldObj.start_date, role, updtr, arr).then(userRole=>({...userRole,username: oldObj.username})),
         destroy: (oldObj, role) => userRoleDestroy(oldObj.UserId,role)
     }
@@ -163,15 +150,7 @@ export function userListService() {
             active: result.active,
             updater: result.updater,
         }))),
-        post: (newVals,userId,updtr)=>userListPost([newVals[0].value, userId, new Date(), newVals[1], updtr]).then(result=>(
-            {
-                ListId: result.ListId,
-                list: newVals[0].label,
-                start_date: `${new Date(result.start_date)}`,
-                end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active,
-                updater: result.updater,
-            })),
+        post: (newVals,userId,updtr)=>userListPost([newVals[0].value, userId, new Date(), newVals[1], updtr]).then(({UserId,...rest})=>({list: newVals[0].label,...rest})),
         update: (oldObj,newVals,userId,updtr)=>userListPut(userId,oldObj.start_date, oldObj.ListId,updtr,newVals).then(userList=>({...userList,list: oldObj.list})),
         destroy: (oldObj, UserId) =>userListDestroy(oldObj.ListId,UserId)
     }
@@ -191,16 +170,9 @@ export function listUserService() {
             active: result.active,
             updater: result.updater,
         }))),
-        post: (arr,listId,userId)=> userListPost([listId,arr[0].value,new Date(),arr[1],userId]).then(userList =>({
-            UserId: userList.UserId,
-            username: arr[0].label,
-            start_date: `${new Date(userList.start_date)}`,
-            end_date: userList.end_date ? `${new Date(userList.end_date)}` : undefined,
-            active: userList.active,
-            updater: userList.updater,
-        })),
+        post: (arr,listId,userId)=> userListPost([listId,arr[0].value,new Date(),arr[1],userId]).then(({ListId,...rest})=>({username: arr[0].label,...rest})),
         update: (oldObj,arr,listId,updtr)=>userListPut(oldObj.UserId, oldObj.start_date, listId,updtr, arr).then(userList=>({...userList, username: oldObj.username})),
-        destroy: (oldObj, ListId) => userListDestroy(ListId,oldObj.UserId)
+        destroy: (oldObj, ListId) => userListDestroy(ListId,oldObj.UserId),
     }
 }
 

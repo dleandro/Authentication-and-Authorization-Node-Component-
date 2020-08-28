@@ -25,6 +25,7 @@ module.exports = function (apiUtils, authization) {
     }
 
     function addPermission(req, res) {
+        console.log('req on addperm:',req)
         apiUtils.promiseDataToResponse(res, permissions.create(req.body.action, req.body.resource), 201)
     }
 

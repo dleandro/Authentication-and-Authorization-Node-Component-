@@ -24,7 +24,7 @@ export default function GenericInfoTab({ service,resource }) {
     serv.get = () => service.get(id?id:ctx.user.id);
     serv.post = arr => service.post(arr,id,ctx.user.id);
     serv.update = (oldObj, arr) => service.update(oldObj,arr, id, ctx.user.id);
-    serv.destroy = oldObj => service.destroy(oldObj ,id);
+    serv.destroy = service.destroy? oldObj => service.destroy(oldObj ,id):undefined;
 
     return <TablePage service={serv} resource={resource} /> ;
 }

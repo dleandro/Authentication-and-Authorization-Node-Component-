@@ -32,9 +32,12 @@ module.exports = function (apiUtils, authization) {
     authenticationRouter.post('/saml/callback', bodyParser.urlencoded({ extended: false }), authenticate.usingSamlCallback, successCallback)
 
     authenticationRouter.post('/local', authenticate.usingLocal,
-        (req, res) => req.isAuthenticated() ?
-            apiUtils.setResponse(res, { res: 'success' }, 200) :
-            apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status))
+        (req, res) => {
+        console.log('logging in, req.isAuthenticated(): ',req.isAuthenticated())
+        return req.isAuthenticated() ?
+                apiUtils.setResponse(res, { res: 'success' }, 200) :
+                apiUtils.setResponse(res, { err: errors.userNotAuthenticated.message }, errors.userNotAuthenticated.status)
+        })
 
     authenticationRouter.post('/logout', authenticate.logout,
         (req, res) => apiUtils.setResponse(res, { res: 'success' }, 200))

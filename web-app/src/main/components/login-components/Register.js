@@ -1,12 +1,11 @@
 import React,{useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {userService,authenticationService} from '../../common/services/basicServices';
-import Alert from 'react-bootstrap/Alert'
 
 export default function Register() {
     const [pass,setPass] = React.useState('');
     const [user,setUser] = React.useState('');
-    const [error, setError] = useState({ errorMessage: undefined, shouldShow: true })
+    const [error, setError] = useState({ errorMessage: undefined, shouldShow: false });
     const history = useHistory();
 
     const register =  () => userService().post([user,pass])
@@ -16,25 +15,23 @@ export default function Register() {
             window.location.reload(false);
         })
         .catch(err => {
-            setError({ errorMessage: err.message, shouldShow: true })
-            console.error(err.message)
+            setError({ errorMessage: err.message, shouldShow: true });
+            console.error(err.message);
         });
 
 return(
     <React.Fragment>
         {
-            error.shouldShow &&
-            <Alert variant={'primary'} onClose={() => setError(false)} dismissible>
-                {error.errorMessage}
-            </Alert>
+            error.shouldShow && <div className="alert alert-primary alert-dismissable" onClose={() => setError(false)}>
+                <button type="button" className="close" data-dismiss="alert" >×</button>
+                <strong>Oh snap! </strong>{error.errorMessage}
+            </div>
         }
         <link href={'//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css'} rel="stylesheet" id="bootstrap-css"/>
         <div className="container">
-            
             <div className="omb_login">
                 <h3 className="omb_authTitle">Sign up</h3>
                 <br/>
-
                 <div className="row omb_row-sm-offset-3">
                     <div className="col-xs-12 col-sm-6">
                         <div className="input-group">

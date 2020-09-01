@@ -38,8 +38,11 @@ const TablePage = ({ service, resource }) => {
     const ctx = useContext(UserContext);
     let history = useHistory();
     const [values, setValues] = useState(undefined);
+    const [post,setPost] = useState(undefined);
+    const [put,setPut] = useState(undefined);
+    const [del,setDel] = useState(undefined);
     const [error, setError] = useState({ errorMessage: undefined, shouldShow: false })
-    const checkHasPermission = async method => ctx.rbac && await ctx.rbac.canAll(ctx.user.roles, [[method, resource]]);
+    const checkHasPermission = async method => ctx.rbac && ctx.rbac.can(method, resource);
 
     useEffect(() => {
         service.get()
@@ -50,20 +53,31 @@ const TablePage = ({ service, resource }) => {
                 setError({ errorMessage: err.message, shouldShow: true });
             })
     }, []);
+
+    useEffect(()=>{
+        const asyncOpts=async ()=>{
+            setPost(await checkHasPermission('POST'))
+            setPut(await checkHasPermission('PUT'))
+            setDel(await checkHasPermission('DELETE'))
+
+            
+        }
+        asyncOpts()
+    },[])
     
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
     useEffect(() => console.log(values), [values])
     const postData = arr => service.post(arr)
-        .then(d => setValues([...values, d]))
-        .catch(err => {
-            setError({ errorMessage: err.message, shouldShow: true })
-            console.error(err)
-        });
+    .then(d => setValues([...values, d]))
+    .catch(err => {
+        setError({ errorMessage: err.message, shouldShow: true })
+        console.error(err)
+    });
+    
+    const addButton= ()=>post && service.postFields ?
+     <th><SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th> : undefined 
 
-    const addButton = /*await checkHasPermission('POST')*/service.postFields ? <th>
-        <SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th> : undefined;
-
-    const editButton = rowObject => /*await checkHasPermission('PUT')*/service.editFields ? <td>
+    const editButton =   rowObject =>  put && service.editFields ? <td>
         <SubmitValuesModal openButtonIcon={'fa fa-edit'} bootstrapColor={'warning'} buttonTooltipText={'Edit!'} labels={service.editFields}
             submitListener={newValuesArr => service.update(rowObject, newValuesArr)
                 .then(updated => {
@@ -75,7 +89,7 @@ const TablePage = ({ service, resource }) => {
                 })} rowObj={rowObject} /></td> :
         undefined;
 
-    const deleteButton = val => /*await checkHasPermission('DELETE')*/service.destroy ? <td>
+    const deleteButton =  val =>  del && service.destroy ? <td>
         <GenericTooltipButton icon={'fa fa-trash'} tooltipText={'Delete!'} bootstrapColor={'danger'}
             onClick={() => service.destroy(val)
                 .then(() => setValues([...values]
@@ -99,7 +113,7 @@ const TablePage = ({ service, resource }) => {
             //let labels = Object.keys(values[0]);
             const headers = <tr>
                 {labels.map(label => <th key={label}>{label}</th>)}
-                {addButton}
+                {addButton()}
             </tr>;
             const valueToLine = val => <tr key={JSON.stringify(val)}>
                 {labels.map((label,idx) => <td key={`${idx}:${val[label]}`}>{val[label]}</td>)}

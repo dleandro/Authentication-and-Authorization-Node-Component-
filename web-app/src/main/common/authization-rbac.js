@@ -19,7 +19,12 @@ module.exports = class AuthizationRbac {
     }
 
     can(action, resource) {
-        return this.roles.some(role => this.rbac.can(role, action, resource));
+        let arr=[]
+         this.roles.forEach(role => arr.push(this.rbac.can(role, action, resource)));
+         return Promise.all(arr).then(
+              array=>{return array.some(bool=>bool==true)}
+         )
+         
     }
 
     canAll( permissions) {

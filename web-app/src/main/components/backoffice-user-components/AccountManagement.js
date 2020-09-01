@@ -14,7 +14,7 @@ export const AccountManagement = () => {
 
     const components = {
         0: <Account />,
-        1: <GenericInfoTab service={profileService()} resource={'user-profile'} />,
+        1: <GenericInfoTab service={profileService()} resource={'profile'} />,
     }
 
     return (

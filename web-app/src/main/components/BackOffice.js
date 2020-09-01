@@ -1,20 +1,38 @@
-import React from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
+import UserContext from '../UserContext'
+
 
 export default function BackOffice() {
 
     const history = useHistory();
+    const ctx=useContext(UserContext);
 
-    const backOfficeFunctionalitiesRow1 = [{title:'Users',desc:'Manage User configurations and associate them with Roles.',link:'/users'},
-        {title:'Permissions',desc:'Create, Update and Delete Permissions. Associate these Permissions to Roles.',link:'/permissions'},
-        {title:'Roles',desc:'Create, Update and Delete Roles. Associate these roles with different sets of Permissions and Users.',link:'/roles'}];
+    const [state,setState]=useState([])
+
+    const checkHasPermission = async resource => ctx.rbac && ctx.rbac.can('GET', resource);
+  
+    const backOfficeFunctionalitiesRow1 = [{title:'Users',desc:'Manage User configurations and associate them with Roles.',link:'/users',resource:'users'},
+        {title:'Permissions',desc:'Create, Update and Delete Permissions. Associate these Permissions to Roles.',link:'/permissions',resource:'permissions'},
+        {title:'Roles',desc:'Create, Update and Delete Roles. Associate these roles with different sets of Permissions and Users.',link:'/roles',resource:'roles'}];
     const backOfficeFunctionalitiesRow2 = [
         {title:'Lists',desc:'Manage Lists and associate them with Users.',link:'/lists'},
         {title:'Backoffice Configs',desc:'Choose the allowed authentication types for the application.',link:'/configs'},
         {title:'Sessions',desc:'Manage User Sessions.',link:'/sessions'}];
+
+    useEffect(()=>{
+        const asyncOpts=async ()=>{
+            backOfficeFunctionalitiesRow1.map(async backOfficeFunctionality=>setState([...state,{resource:backOfficeFunctionality.resource,shouldShow:await checkHasPermission(backOfficeFunctionality.resource)}]))
+
+            
+        }
+        asyncOpts()
+        console.log(state)
+    },[])
+
 
     const functionalityToCard = func =>
         <Card key={`${func.title}Card`} className='ml-2 mr-2'>

@@ -17,7 +17,7 @@ const
     HISTORY_PATH = "/api/users-history",
     PROFILE_PATH= "/api/profile"
 
-const WEB_API_HOME_PATH = process.env.REACT_APP_WEB_API_PORT ? `http://localhost:${process.env.REACT_APP_WEB_API_PORT}` : 'https://webapi-dot-auth-authorization.ew.r.appspot.com';
+const WEB_API_HOME_PATH = process.env.REACT_APP_ENV === 'production' ? process.env.REACT_APP_DEPLOYED_WEB_API_HOME_PATH : process.env.REACT_APP_LOCAL_WEB_API_HOME_PATH
 
 export const webApiLinks =
 {

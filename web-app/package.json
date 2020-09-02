@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@authization/authization": "^1.0.38",
-    "@craco/craco": "^5.6.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -15,7 +13,6 @@
     "jest": "24.9.0",
     "mdbreact": "^4.27.0",
     "node-fetch": "^2.6.0",
-    "pg-hstore": "^2.3.3",
     "rbac": "^5.0.3",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0-beta.17",
@@ -46,7 +43,6 @@
     ]
   },
   "devDependencies": {
-    "jest": "^26.0.1",
-    "webpack-node-externals": "^2.5.0"
+    "jest": "^26.0"
   }
 }

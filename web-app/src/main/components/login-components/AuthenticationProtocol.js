@@ -14,7 +14,7 @@ export default function AuthenticationProtocol() {
 
   const switchValue = idx => {
     let newValue = [...state];
-    newValue[idx].active = newValue[idx].active === 1 ? 0 : 1;
+    newValue[idx].active = !newValue[idx].active;
     setState(newValue);
   }
 
@@ -36,7 +36,7 @@ export default function AuthenticationProtocol() {
             <Card.Body>
               <Card.Title>{'Select Supported Authentication Types'}</Card.Title>
               {state.map((authType, idx) => <React.Fragment><Form inline>
-                <Form.Check id={`Protocol: ${authType.protocol} IDP: ${authType.idp} switch`} checked={authType.active === 1} onChange={() => switchValue(idx)} label={`${authType.idp} with ${authType.protocol} `} type={'switch'} />
+                <Form.Check id={`Protocol: ${authType.protocol} IDP: ${authType.idp} switch`} checked={authType.active} onChange={() => switchValue(idx)} label={`${authType.idp} with ${authType.protocol} `} type={'switch'} />
                     &nbsp;&nbsp;
                     <SubmitValuesModal submitListener={val => {
                   let config = {}

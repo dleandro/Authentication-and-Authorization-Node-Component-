@@ -26,7 +26,7 @@ const list = (userId) => {
         start_date: moment().format("YYYY-MM-DD HH:mm:ss"),
         end_date: moment().format("YYYY-MM-DD HH:mm:ss"),
         updater: userId,
-        active: 1
+        active: true
 
     }
 }

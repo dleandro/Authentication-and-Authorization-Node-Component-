@@ -18,21 +18,21 @@ import GenericInfoPage from './common/html-elements-utils/generics/GenericInfoPa
 
 const listInfoComponents = {
     0: <GenericInfoCard label={'User'} fetchValueById={listService().getList} />,
-    1: <GenericInfoTab resource={'listuser'} service={listUserService()} />,
+    1: <GenericInfoTab resource={'users-lists'} service={listUserService()} />,
 };
 const permissionInfoComponents = {
     0: <GenericInfoCard label={'Permission'} fetchValueById={permissionService().getPermission} />,
-    1: <GenericInfoTab service={permissionRoleService()} resource={'listuser'} />,
+    1: <GenericInfoTab service={permissionRoleService()} resource={'roles-permissions'} />,
 };
-const RolePermission = () => <GenericInfoTab service={{...rolePermissionService()}} resource={'rolepermission'} />;
+const RolePermission = () => <GenericInfoTab service={{...rolePermissionService()}} resource={'roles-permissions'} />;
 const roleInfoComponents = {
     0: <GenericInfoCard label={'Role'} fetchValueById={rolesService().getRole} />,
     1: <RolePermission/>,
-    2: <GenericInfoTab service={{...roleUserService()}} resource={'roleuser'}/>,
+    2: <GenericInfoTab service={{...roleUserService()}} resource={'users-roles'}/>,
 };
 
-const UserRole = () => <GenericInfoTab resource={'user-role'} service={userRoleService()}/>;
-const UserSession = ()=>  <GenericInfoTab service={UsersessionService()} resource={'users-session'} />;
+const UserRole = () => <GenericInfoTab resource={'users-roles'} service={userRoleService()}/>;
+const UserSession = ()=>  <GenericInfoTab service={UsersessionService()} resource={'sessions'} />;
 const UserList = () =>  <GenericInfoTab service={userListService()} resource={'users-lists'} />;
 const userInfoComponents = {
     0: <GenericInfoCard label={'User'} fetchValueById={userService().getUserById} />,

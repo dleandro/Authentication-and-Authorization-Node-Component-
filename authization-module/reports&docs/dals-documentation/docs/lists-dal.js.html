@@ -54,7 +54,7 @@ module.exports = {
      * @param {int} listId
      * @returns {*}
      */
-    deactivate: listId => tryCatch(() => List.update({ active: 0 }, { where: { id: listId } })),
+    deactivate: listId => tryCatch(() => List.update({ active: true }, { where: { id: listId } })),
 
     /**
      * Deletes a list by its id

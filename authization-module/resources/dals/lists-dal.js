@@ -26,7 +26,7 @@ module.exports = {
      * @param {int} listId
      * @returns {*}
      */
-    deactivate: listId => tryCatch(() => List.update({ active: 0 }, { where: { id: listId } })),
+    deactivate: listId => tryCatch(() => List.update({ active: false }, { where: { id: listId } })),
 
     /**
      * Deletes a list by its id
@@ -56,7 +56,7 @@ module.exports = {
      * asks the database for all list entries that are active at the moment
      * @returns {PromiseLike<function(*=): *> | Promise<function(*=): *>}
      */
-    getActive: () => tryCatch(() => List.findAll({ where: { active: 1 } })),
+    getActive: () => tryCatch(() => List.findAll({ where: { active: true } })),
 
     // update query doesn't return the updated resource for some reason
     /**

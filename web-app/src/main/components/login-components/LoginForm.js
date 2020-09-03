@@ -57,7 +57,7 @@ export default function LoginForm({ id }) {
 
     const checkIfSpecificAuthTypeIsActive = (protocol, idp) => {
         return ctx.allowedProtocolsAndIdps.
-            find(availableAuthType => availableAuthType.protocol === protocol && availableAuthType.idp === idp && availableAuthType.active === 1)
+            find(availableAuthType => availableAuthType.protocol === protocol && availableAuthType.idp === idp && availableAuthType.active)
     }
     return (
         <React.Fragment>

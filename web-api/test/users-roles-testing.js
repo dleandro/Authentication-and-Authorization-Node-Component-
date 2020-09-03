@@ -27,7 +27,7 @@ const userRoles = {
     start_date: moment().format(),
     end_date: moment().format(),
     updater: userId,
-    active: 1
+    active: true
 }
 
 function bodyLengthChecker(resp) {

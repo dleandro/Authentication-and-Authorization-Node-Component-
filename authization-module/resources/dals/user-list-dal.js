@@ -35,7 +35,7 @@ module.exports = {
      */
     isUserBlackListed: UserId => tryCatch(() => UserList
         .findAll({ where: {UserId}, include: [List], raw: true })
-        .then(userLists=>userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active === 1))),
+        .then(userLists=>userLists.some(userList => userList['List.list'] === 'BLACK' && userList.active === true))),
 
     /**
      * Associate a user with a list, the parameters userId and listId represent the user id and the list id,
@@ -66,10 +66,16 @@ module.exports = {
      * @param {int} updater
      * @returns {Promise<{end_date: *, active: *, updatedRows: (Object|Error), updater: *}>}
      */
-    update: async (user, list, start_date, end_date, active, updater) => Promise.resolve({
+    update: async (UserId, ListId, start_date, end_date, active, updater) => Promise.resolve({
         updatedRows:
-            await tryCatch(() => UserList.update({ start_date, end_date, active, updater}, { where: { UserId: user, ListId: list } })),
-        end_date, active, updater}),
+            await tryCatch(() => UserList.update({ start_date, end_date, active, updater}, { where: { UserId: UserId, ListId: ListId } })),
+        UserId,
+        ListId,
+        start_date,
+        end_date,
+        active,
+        updater
+    }),
     /**
      * Changes the active bit of the association between user UserId and list ListId according to the provided newState.
      * @param {int} UserId

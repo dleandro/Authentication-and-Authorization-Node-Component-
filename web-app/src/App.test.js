@@ -139,7 +139,7 @@ describe('Role Service tests',()=>{
         expected.parent_role = 'updatedParentRole';
         roleServ.update(expected,[undefined,expected.parent_role]).then(role=>expect(role).toEqual(expected))
         //adding role to user checking if returned value is correct and operation was sucessfull
-        let expectedUserRole =  { id: 2,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:1 };
+        let expectedUserRole =  { id: 2,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:true };
         let insertedUserRole= await roleServ.addUserToRole(expected.id,2)
         expectedUserRole.start_date=insertedUserRole.start_date
         expectedUserRole.updater=insertedUserRole.updater
@@ -204,8 +204,8 @@ describe('User Service tests',()=>{
             resource: 'authentications',
             from: '::ffff:127.0.0.1'
         }
-        const expectedList = { id: 2, list: 'GREY',start_date: '2016-06-03 09:34:00',end_date:'2016-06-03 09:34:00',updater:null,active:0};
-        const expectedRole =  { id: 1,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:1 };
+        const expectedList = { id: 2, list: 'GREY',start_date: '2016-06-03 09:34:00',end_date:'2016-06-03 09:34:00',updater:null,active:false};
+        const expectedRole =  { id: 1,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:true };
         const expectedPerm =  { id: 20, action: 'GET', resource: 'authentications' };
         await userServ.getUserPermissions(1).then(permissions=>expect(permissions).toContainEqual(expectedPerm)).catch(err=>{
             console.error('Permissions array doesnt contain expected value: ',expectedPerm);
@@ -242,7 +242,7 @@ describe('User Service tests',()=>{
         expected.username = 'updatedTestUsername';
         await userServ.update(inserted,['updatedTestUsername']).then(user=>expect(user).toEqual(expected))
         //adding role to user checking if returned value is correct and operation was sucessfull
-        let expectedRole =  { id: 1,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:1 };
+        let expectedRole =  { id: 1,start_date: '2020-07-23 01:52:46',end_date:null,updater:1,active:true };
         let insertedRole= await userServ.addRoleToUser([expected.id,1])
         expectedRole.start_date=insertedRole.start_date
         expect(insertedRole).toEqual(expectedRole)
@@ -267,7 +267,7 @@ describe('User Service tests',()=>{
         });
         //considering add reactivate userrole
         //adding list to user checking if returned values are correct and if operation was sucessfull
-        let expectedList = { id: 2, list: 'GREY',start_date: '2016-06-03 09:34:00',end_date:'2016-06-03 09:34:00',updater:null,active:1};
+        let expectedList = { id: 2, list: 'GREY',start_date: '2016-06-03 09:34:00',end_date:'2016-06-03 09:34:00',updater:null,active:true};
         let insertedList= await userServ.addListToUser(expected.id,2,expectedDate);
         expectedList.start_date=insertedList.start_date;
         expectedList.end_date=insertedList.end_date;

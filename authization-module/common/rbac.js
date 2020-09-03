@@ -100,7 +100,7 @@ const setupSuperuser = async () => {
     const [{id}] = await User.findOrCreate({where: {"username": "superuser"}, defaults: {"password": "Superuser123"}});
     return UserRoles.findOrCreate({
         where: { "UserId": id, "RoleId": (await role)[0].id },
-        defaults: { "updater": id, "active": 1, "start_date": moment().format() }});
+        defaults: { "updater": id, "active": true, "start_date": moment().format() }});
 };
 
 

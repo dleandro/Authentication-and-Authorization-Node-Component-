@@ -122,7 +122,7 @@ const TablePage = ({ service, resource }) => {
             return <FilterablePageTable labels={headers} rowsValues={[...values]} valueToLineConverter={valueToLine} />;
         }
         const noDataFoundMessage = <h1 className={'text-white'}>No Data Found</h1>;
-        return <div className={'d-flex justify-content-center '}><ul><li>{noDataFoundMessage}</li><li>{addButton}</li></ul></div>;
+        return <div className={'d-flex justify-content-center '}><ul><li>{noDataFoundMessage}</li><li>{addButton()}</li></ul></div>;
     };
     //<Spinner animation="border" size="lg" variant="info" />
     return (

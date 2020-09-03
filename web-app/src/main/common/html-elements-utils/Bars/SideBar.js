@@ -17,21 +17,44 @@ const fontSize = { fontSize: '1.75em'/*,color: '#1cc4e6'*/ }
 export default function Sidebar({ navWidthCollapsed }) {
     const ctx = useContext(UserContext);
 
-    const checkShouldShowItem = async permissionResource =>
-    ctx.rbac && (await ctx.rbac.canAll( [['GET', permissionResource], ['POST', permissionResource]])).reduce((first,second)=>first&&second);
+    const [itemsToShow,setItemsToShow]=useState({})
 
-    const subItemToLink = subItem => checkShouldShowItem(subItem.key) ? <NavItem key={subItem.key}>
+        const checkShouldShowItem =  permissionResource =>itemsToShow[permissionResource]
+    const subItemToLink = subItem => /*checkShouldShowItem(subItem.key) ?*/ <NavItem key={subItem.key}>
         <NavText >
             <Link to={subItem.link}> {subItem.text}</Link>
         </NavText>
-    </NavItem> : undefined;
-
+    </NavItem> /*: undefined*/;
+    
+    
     const officeSubItems = [
         { link: '/users', text: 'Users', key: 'users' },
         { link: '/permissions', text: 'Permissions', key: 'permissions' },
         { link: '/roles', text: 'Roles', key: 'roles' },
         { link: '/lists', text: 'Lists', key: 'lists' }
-    ].map(subItem => subItemToLink(subItem));
+    ]
+    
+    const subItemsLinks=officeSubItems.map(subItem => subItemToLink(subItem));
+
+    /*
+    useEffect(()=>{
+        const asyncOpts=async ()=>{
+            if(ctx.rbac){
+            officeSubItems.forEach(async officeSubItem=>{
+                console.log(ctx)
+               const json=itemsToShow
+               json[officeSubItem['key']]=await ctx.rbac.can('GET',officeSubItem['key'])
+               setItemsToShow(json)
+            })
+        }
+        
+    }
+    asyncOpts()
+    },[ctx.rbac])
+    */
+
+
+
 
     const navWidthExpanded = '250px';
     /**
@@ -44,7 +67,7 @@ export default function Sidebar({ navWidthCollapsed }) {
      * {link: string, text: string}], link: string, text: string, key: string})[]}
      */
     let mainItems = [
-        { key: 'office', link: '/backoffice', icon: <i className="fa fa-cog" style={fontSize} />, text: 'Backoffice', subItems: officeSubItems },
+        { key: 'office', link: '/backoffice', icon: <i className="fa fa-cog" style={fontSize} />, text: 'Backoffice', subItems: subItemsLinks },
         { key: 'configs', link: '/configs', icon: <i className="fa fa-lock" style={fontSize} />, text: 'Configurations' }];
 
     const [expand, setexpand] = useState(false);

@@ -39,13 +39,7 @@ module.exports = async function (rbacOpts) {
         await setupSuperuser();
         const admin = await roleDal.getByName('admin');
 
-        const insertOnAdmin = async permission => {
-            await rolesPermissionsDal.create(admin.id, permission.dataValues.id);
-        };
-
-        Permission.afterCreate(insertOnAdmin);
-
-        await createPermissions(rbacOpts.permissions);
+        await createPermissions(admin.id,rbacOpts.permissions);
         await createGrants(rbacOpts.grants);
     } else {
         const promiseArrToSolve = [
@@ -68,7 +62,10 @@ module.exports = async function (rbacOpts) {
 
 const createRoles = roles => Promise.all(roles.map(role => roleDal.create(role)));
 
-const createPermissions = permissions => Promise.all(permissions.map(permission => permissionsDal.create(permission.action, permission.resource)));
+const createPermissions = (adminId, permissions) => Promise.all(permissions.map(async permission => {
+    const createdPermission = await permissionsDal.create(permission.action, permission.resource)
+    return rolesPermissionsDal.create(adminId, createdPermission.id)
+}));
 
 const createRbacPermissions = () => permissionsDal.get()
     .then(permissions => permissions.map(({ action, resource }) => config.rbac.createPermission(action, resource, true)));

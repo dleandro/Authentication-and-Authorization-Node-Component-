@@ -60,6 +60,7 @@ function UserProvider(props) {
                     setUser(authenticatedUser);
 
                     setRbac(setupRbac)
+                    console.log('setRbac')
                 }
             } catch (err) {
                 console.error(err)

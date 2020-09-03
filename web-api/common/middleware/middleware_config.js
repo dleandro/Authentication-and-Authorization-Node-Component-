@@ -38,6 +38,7 @@ const rbac_opts = {
         { "resource": "users-lists", "action": "GET" },
         { "resource": "users-lists", "action": "POST" },
         { "resource": "users-lists", "action": "PUT" },
+        { "resource": "users-lists", "action": "PATCH" },
         { "resource": "users-lists", "action": "DELETE" },
         { "resource": "auth-types", "action": "GET" },
         { "resource": "auth-types", "action": "POST" },
@@ -75,10 +76,12 @@ const rbac_opts = {
           { "resource": "users-roles", "action": "POST" },
           { "resource": "users-roles", "action": "PUT" },
           { "resource": "users-roles", "action": "DELETE" },
+          { "resource": "users-roles", "action": "PATCH" },
         { "resource": "authentications", "action": "GET" },
         { "resource": "authentications", "action": "POST" },
         { "resource": "authentications", "action": "PUT" },
-        { "resource": "authentications", "action": "DELETE" }
+        { "resource": "authentications", "action": "DELETE" },
+
     ],
     "grants": {
         "DbManager": [

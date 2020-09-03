@@ -10,10 +10,10 @@ const
     app = express(),
     path=require('path')
 
+// setup environment variables file
+require('dotenv').config({ path: path.resolve(__dirname, './.env') })
 
 // Setup app's middleware
 require('./common/middleware/app-middleware')(app, express)
-
-require('dotenv').config({ path: path.resolve(__dirname, './.env') })
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on Port: ${process.env.PORT || 8080}`))

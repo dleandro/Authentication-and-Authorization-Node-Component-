@@ -20,6 +20,8 @@ module.exports = {
      */
     create: async (user, role, startDate, end_date, updater, active) => tryCatch(() =>
         UserRoles.create({UserId: user, RoleId: role, start_date: startDate, end_date, updater, active})),
+
+    createMultiple: userRolesArray => tryCatch(() =>UserRoles.bulkCreate(userRolesArray)),
     /**
      * Changes the active bit of the association between the user UserId and the role RoleId, according to the provided newState
      * @returns {Promise<void>}

@@ -14,7 +14,6 @@ const sequelize = new Sequelize(database, user, password,dbInfo);
 
 config.sequelize = sequelize;
 
-
 const databasesetup = async rbacOpts => {
 
     console.log(chalk.blue('DATABASE SETUP'));

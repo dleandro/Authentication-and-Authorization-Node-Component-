@@ -20,6 +20,13 @@ module.exports = {
      */
     create: list => tryCatch(() =>List.create({list})),
 
+    /**
+     * Creates multiple list entries, the insertion order respects the order in which the elements are present on the array
+     * @param listArray
+     * @returns {Promise<Object|Error>}
+     */
+    createMultiple: listArray => tryCatch(() =>List.bulkCreate(listArray)),
+
 
     /**
      * Puts the active BIT to 0 of a list with id=listId, deactivates active list, it only deactivates because we don't wanna change inactive list's status for history purposes

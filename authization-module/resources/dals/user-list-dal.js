@@ -49,6 +49,9 @@ module.exports = {
      * @returns {Promise<Object|Error>}
      */
     create: (ListId, UserId, updater, start_date, end_date, active) => tryCatch(() => UserList.create({ListId,UserId,start_date,end_date, active, updater }, { include: [List] })),
+
+
+    createMultiple: userListArray => tryCatch(() =>UserList.bulkCreate(userListArray,{include:[List]})),
     /**
      * Deletes the association between the specified user and list.
      * @param {int} ListId

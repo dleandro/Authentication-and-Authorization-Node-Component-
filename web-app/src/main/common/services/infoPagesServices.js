@@ -32,7 +32,7 @@ export function userRoleService() {
                 role,
                 start_date: `${new Date(start_date)}`,
                 end_date: end_date ? `${new Date(end_date)}` : undefined,
-                active:active===1?'true':'false',
+                active:active==true?'true':'false',
                 updater,
             }))),
         post: (arr,userId,updtr)=> userRolePost(userId,arr[0].value,updtr,new Date(),arr[1])
@@ -71,7 +71,7 @@ export function roleUserService() {
                 username: result['User.username'],
                 start_date: `${new Date(result.start_date)}`,
                 end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-                active: result.active===1?'true':'false',
+                active: result.active==true?'true':'false',
                 updater: result.updater}))),
         post: (arr, role, updtr) => userRolePost(arr[0].value, role, updtr, new Date(), arr[1])
             .then(({UserId,start_date,end_date,active,updater} )=>({
@@ -164,7 +164,7 @@ export function userListService() {
             list: result['List.list'],
             start_date: `${new Date(result.start_date)}`,
             end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-            active: result.active===1?'true':'false',
+            active: result.active==true?'true':'false',
             updater: result.updater,
         }))),
 
@@ -203,7 +203,7 @@ export function listUserService() {
             username: result['User.username'],
             start_date: `${new Date(result.start_date)}`,
             end_date: result.end_date ? `${new Date(result.end_date)}` : undefined,
-            active: result.active===1?'true':'false',
+            active: result.active==true?'true':'false',
             updater: result.updater,
         }))),
         post: (arr,listId,userId)=> userListPost([listId,arr[0].value,new Date(),arr[1],userId])

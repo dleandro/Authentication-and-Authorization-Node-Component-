@@ -11,15 +11,15 @@ module.exports = function (apiUtils, authization) {
 
     configRouter.route('/oauth2/google')
         .get((req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getGoogleOptions()))
-        .put((req, res) => { authization.configurations.changeGoogleAuthenticationOptions(); successCallback(res) })
+        .put((req, res) => { authization.configurations.changeGoogleAuthenticationOptions(req.body.google_oauth2_opts); successCallback(res) })
 
     configRouter.route('/oauth2/office365')
         .get((req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getAzureAdOptions()))
-        .put((req, res) => { authization.configurations.changeAzureADAuthenticationOptions(); successCallback(res) })
+        .put((req, res) => { authization.configurations.changeAzureADAuthenticationOptions(req.body.office365_oauth2_opts); successCallback(res) })
 
     configRouter.route('/saml/office365')
         .get((req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getSamlOptions()))
-        .put((req, res) => { authization.configurations.changeSamlAuthenticationOptions(); successCallback(res) })
+        .put((req, res) => { authization.configurations.changeSamlAuthenticationOptions(req.body.office365_saml_opts); successCallback(res) })
 
     configRouter.get('/rbac-opts', (req, res) => apiUtils.promiseDataToResponse(res, authization.configurations.getRbacOptions()))
 

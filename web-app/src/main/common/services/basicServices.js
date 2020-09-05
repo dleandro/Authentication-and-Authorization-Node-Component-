@@ -140,9 +140,9 @@ export function configService() {
     return {
         changeDatabaseOptions: async (database_opts) => makeRequest(configs.DATABASE_CONFIG_PATH, { database_opts: database_opts }, 'POST'),
         changeDatabaseType: async (dbType) => makeRequest(configs.DATABASE_CONFIG_PATH, { type: dbType }, 'PUT'),
-        changeGoogleAuthenticationOptions: async (google_opts) => makeRequest(configs.GOOGLE_CONFIG_PATH, { google_opts: google_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
-        changeAzureADAuthenticationOptions: async (azure_opts) => makeRequest(configs.AZUREAD_CONFIG_PATH, { azure_opts: azure_opts }, 'PUT'),
-        changeSamlAuthenticationOptions: async (saml_opts) => makeRequest(configs.SAML_CONFIG_PATH, { saml_opts: saml_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+        change_google_oauth2_AuthenticationOptions: async (google_oauth2_opts) => makeRequest(configs.GOOGLE_CONFIG_PATH, { google_oauth2_opts: google_oauth2_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
+        change_office365_oauth2_AuthenticationOptions: async (office365_oauth2_opts) => makeRequest(configs.AZUREAD_CONFIG_PATH, { office365_oauth2_opts: office365_oauth2_opts }, 'PUT'),
+        change_office365_saml_AuthenticationOptions: async (office365_saml_opts) => makeRequest(configs.SAML_CONFIG_PATH, { office365_saml_opts: office365_saml_opts }, 'PUT'), //recebe os mesmos parametros que estao no config file NOTA: esses mesmos parametros devem vir tb no getAuthTypesInfo do authService
         getGoogleOptions: async () => getRequest(configs.GOOGLE_CONFIG_PATH),
         getAzureOptions: async () => getRequest(configs.AZUREAD_CONFIG_PATH),
         getSamlOptions: async () => getRequest(configs.SAML_CONFIG_PATH),

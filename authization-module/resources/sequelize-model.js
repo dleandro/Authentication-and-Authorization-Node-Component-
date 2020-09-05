@@ -250,8 +250,8 @@ User.afterBulkUpdate(updateUserHistory);
 
 
 const cron = require('node-cron');
-cron.schedule('*/2 * * * *', async () => {
-    console.log('running a task every 1 minute');
+cron.schedule('*/5 * * * *', async () => {
+    console.log('running a task every 5 minute');
     await UserRoles.update({ active: false }, { where: {end_date:{[Op.lt] : new Date()},active:true }});
     await UserList.update({ active: false }, { where: {end_date:{[Op.lt] : new Date()},active:true }});
   });

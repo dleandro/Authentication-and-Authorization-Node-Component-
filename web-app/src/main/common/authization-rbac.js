@@ -19,6 +19,7 @@ module.exports = class AuthizationRbac {
     }
 
     can(action, resource) {
+        console.log('inside can')
         let arr=[]
          this.roles.forEach(role => arr.push(this.rbac.can(role, action, resource)));
          return Promise.all(arr).then(

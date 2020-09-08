@@ -4,6 +4,7 @@ import CardColumns from 'react-bootstrap/CardColumns';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import UserContext from '../UserContext'
+import ResourceCard from "../common/html-elements-utils/ResourceCard";
 
 
 export default function BackOffice() {
@@ -46,15 +47,15 @@ export default function BackOffice() {
         */
 
 
-    const functionalityToCard = func => /*checkHasPermission(func['resource']) ?*/
-        <Card key={`${func.title}Card`} className='ml-2 mr-2'>
+    const functionalityToCard = func => <ResourceCard resource={func.resource} functionality={func} />;/*
+    <Card key={`${func.title}Card`} className='ml-2 mr-2'>
             <Card.Body>
                 <Card.Title>{func.title}</Card.Title>
                 <Card.Text>{func.desc}</Card.Text>
                 <br />
                 <Button variant="primary" onClick={() => history.push(func.link)} >Take me there</Button>
             </Card.Body>
-        </Card>/*:undefined*/
+        </Card>*/
 
 
     return (

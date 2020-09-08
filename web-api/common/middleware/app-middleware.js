@@ -6,6 +6,7 @@ const
 
 // This module is used to setup middleware on the app passed as a parameter
 module.exports = async function(app) {
+    console.log(process.env.DEPLOYED_WEB_APP_HOME_PATH)
     const corsOptions = {
         origin: [process.env.DEPLOYED_WEB_APP_HOME_PATH, process.env.LOCAL_WEB_APP_HOME_PATH],
         optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204,

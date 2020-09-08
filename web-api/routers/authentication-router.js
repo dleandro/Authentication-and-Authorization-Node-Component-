@@ -7,7 +7,7 @@ module.exports = function (apiUtils, authization) {
     const successCallback = async (req, res) => {
 
         if (req.isAuthenticated()) {
-
+            
             process.env.WEB_API_ENV === 'production' ? res.redirect(`${process.env.DEPLOYED_WEB_APP_HOME_PATH}/backoffice`) : res.redirect(`${process.env.LOCAL_WEB_APP_HOME_PATH}/backoffice`)
         }
         else {

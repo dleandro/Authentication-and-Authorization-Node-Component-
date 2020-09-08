@@ -233,6 +233,7 @@ export function userHistoryService() {
     return {
         get: async id => getRequest(history.USER_HITORY_PATH(id)).then(results => results.map(result => {
             delete result.user_id;
+            result.date=`${new Date(result.date)}`
             return result;
         })),
     }

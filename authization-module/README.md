@@ -12,6 +12,7 @@ Authization builds you a User management model based on the RBAC method that all
  - Blacklist management;  
  - Storage of user’s history;  
  - Management of user sessions.
+ 
 [Check out our Documentation for more information on available methods!](https://dleandro.github.io/authentication-authorization-project-integration/)
 ## Using our module
 * Step 1: Clone the repo to your desired folder;
@@ -95,4 +96,3 @@ User History consultation:
 const userHistory = mod.userHistory
 userHistory.getAll()
 ```
-[Read our Documentation!](https://github.com/dleandro/Authentication-and-Authorization-Node-Component-/blob/master/authization-module/reports%26docs/dals-documentation/docs/index.html)

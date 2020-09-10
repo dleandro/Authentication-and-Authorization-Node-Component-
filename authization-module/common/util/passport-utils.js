@@ -37,10 +37,10 @@ module.exports = {
     },
     findUserByIdpOrCreate: async (idpId, idpName, username, password) => {
         // needs endpoint
-        const user = await users.getByIdp(idpId);
-        return user ? {id: user.id, idp: idpId, username: user.username} : users.create(username, password)
-            .then(userId=>idps.create(idpId, idpName, userId.id)
-                .then(()=>({id: userId.id, idp_id: idpId, username})));
+        const user = await users.getByIdp(idpId,idpName);
+        return user ? {id: user.id, idp: idpId, username: user.username} : users.findOrCreate(username, password)
+            .then(([user,created])=>idps.create(idpId, idpName, user.id)
+                .then(()=>({id: user.id, idp_id: idpId, username})));
     },
 
     /**

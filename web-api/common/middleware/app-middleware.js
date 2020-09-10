@@ -20,9 +20,9 @@ module.exports = async function(app) {
 
     try {
         // using authization module to setup authentication and authorization middleware
-        //const authization = await require('@authization/authization')
-        const authization = await require('../../../authization-module/authization')
-            .setup({ app, db: middlewareConfig.cloud_db/*,rbac_opts: middlewareConfig.rbac_opts*/});
+        const authization = await require('@authization/authization')
+        //const authization = await require('../../../authization-module/authization')
+            .setup({ app, db: middlewareConfig.cloud_db/*,rbac_opts: middlewareConfig.rbac_opts*/,https:true});
 
         app.use('/api', require('../../web-api')(authization));
 

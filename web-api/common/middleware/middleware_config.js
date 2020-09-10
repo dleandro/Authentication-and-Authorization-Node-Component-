@@ -99,6 +99,7 @@ const rbac_opts = {
         ],
         "Colaborator":[
             { "resource": "profile", "action": "POST" },
+            { "resource": "profile", "action": "PUT" },
             { "resource": "profile", "action": "GET" },
             { "resource": "profile", "action": "DELETE" },
             { "resource": "configs", "action": "GET" },

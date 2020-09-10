@@ -18,7 +18,7 @@ export default function AuthenticationProtocol() {
 
   const [error, setError] = useState({ errorMessage: undefined, shouldShow: false });
   const [put,setPut]=useState(undefined);
-  const [post,setPost]=useState(undefined);
+  const [patch,setPatch]=useState(undefined);
 
   const checkHasPermission = async (method,resource) => ctx.rbac && ctx.rbac.can(method, resource);
 
@@ -32,7 +32,7 @@ export default function AuthenticationProtocol() {
   useEffect(()=>{
     const asyncOpts=async ()=>{
       setPut(await checkHasPermission('PUT','configs'))
-      setPost(await checkHasPermission('POST','auth-types'))
+      setPatch(await checkHasPermission('PATCH','auth-types'))
     }
     asyncOpts()
   },[])
@@ -59,7 +59,7 @@ export default function AuthenticationProtocol() {
                   {state.map((authType, idx) =>
                       <React.Fragment>
                         <Form inline>
-                          <Form.Check disabled={!post} id={`Protocol: ${authType.protocol} IDP: ${authType.idp} switch`} checked={authType.active} onChange={() => switchValue(idx)} label={`${authType.idp} with ${authType.protocol} `} type={'switch'} />
+                          <Form.Check disabled={!patch} id={`Protocol: ${authType.protocol} IDP: ${authType.idp} switch`} checked={authType.active} onChange={() => switchValue(idx)} label={`${authType.idp} with ${authType.protocol} `} type={'switch'} />
                           &nbsp;&nbsp;
                           {
                             put && <SubmitValuesModal submitListener={val => {
@@ -74,7 +74,7 @@ export default function AuthenticationProtocol() {
                         </Form><br /></React.Fragment>)}
 
                   {
-                    put && <div className="col-sm">
+                    patch && <div className="col-sm">
                       <button className="btn btn-outline-primary my-2 my-sm-0 " id="SaveButton" onClick={saveAuthTypesAllowed}> Save</button>
                       {showAlert?<Alert key={'successAlert'} variant={'success'} onClose={()=>setAlert(false)} dismissible>
                         Auth Types saved successfully!

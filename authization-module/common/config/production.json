@@ -1,12 +1,12 @@
 {
   "google_oauth2": {
-    "google_client_id": "523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com",
-    "google_client_secret": "vs0R8tvgMv2w2rhuHtRPT9nK",
+    "client_id": "523982739771-2hkfdqls3uapvlf0c111i6qhnidfgt44.apps.googleusercontent.com",
+    "client_secret": "vs0R8tvgMv2w2rhuHtRPT9nK",
     "callbackUrl": "https://webapi-dot-auth-authorization.ew.r.appspot.com/api/authentications/google/callback"
   },
   "office365_oauth2": {
-    "azure_client_id": "39d62b3c-b736-4e13-b71e-37926569e5dc",
-    "azure_client_secret": "8i4IoQXtI-UbSc5wz4LtrO:=M:UrkTH=",
+    "client_id": "39d62b3c-b736-4e13-b71e-37926569e5dc",
+    "client_secret": "8i4IoQXtI-UbSc5wz4LtrO:=M:UrkTH=",
     "tenant": "bb367ab9-9da9-455e-b938-fd65cd29f5ae",
     "callbackUrl": "https://webapi-dot-auth-authorization.ew.r.appspot.com/api/authentications/azureAD/callback"
   },

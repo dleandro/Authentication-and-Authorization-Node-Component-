@@ -1,13 +1,14 @@
 
 const
     passport = require('passport'),
-    passportUtils = require('../../util/passport-utils');
+    passportUtils = require('../../util/passport-utils'),
+    config=require('../../config/config')
 
 // Setup available authentication strategies
-passport.use('saml', require('./strategies/saml-strat')());
-passport.use('openid', require('./strategies/openId-strat')());
-passport.use('azure_ad_oauth2', require('./strategies/azure-strat')());
-passport.use('google', require('./strategies/google-strat')());
+config.office365_saml && passport.use('office365_saml', require('./strategies/saml-strat')())
+//passport.use('openid', require('./strategies/openId-strat')());
+config.office365_oauth2 && passport.use('office365_oauth2', require('./strategies/azure-strat')());
+config.google_oauth2 && passport.use('google_oauth2', require('./strategies/google-strat')());
 passport.use('local', require('./strategies/local-strat')());
 
 /**

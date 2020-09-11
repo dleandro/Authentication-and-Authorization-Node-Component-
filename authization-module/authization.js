@@ -87,9 +87,13 @@ const getFunctionalities = () => {
 
 module.exports = {
 
-    setup: async ({ app, db, rbac_opts,https }) => {
+    setup: async ({ app, db, rbac_opts,https,strategies }) => {
 
         if (app && db) {
+
+           strategies && Object.keys(strategies).map(
+                stratName=>config[stratName]=strategies[stratName]
+            )
 
             const expressSession = require('express-session');
 

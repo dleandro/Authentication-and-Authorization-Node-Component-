@@ -1,6 +1,22 @@
 {
+  "google_oauth2": {
+    "client_id": null,
+    "client_secret": null,
+    "callbackUrl": null
+  },
+  "office365_oauth2": {
+    "client_id": null,
+    "client_secret": null,
+    "tenant": null,
+    "callbackUrl": null
+  },
+  "office365_saml": {
+    "entryPoint": null,
+    "issuer": null,
+    "certificate": null,
+    "callbackUrl": null
+  },
   "rbac": {},
-  "webAppUri": "http://localhost:3000",
   "isModuleSetUp": false,
   "cookieSecret": "justasecretstring"
 }

@@ -44,6 +44,7 @@
     "sequelize": "^5.21.9"
   },
   "devDependencies": {
+    "express": "^4.17.1",
     "jest": "^26.0.1",
     "jest-sonar-reporter": "^2.0.0",
     "jsdoc": "^3.6.5"

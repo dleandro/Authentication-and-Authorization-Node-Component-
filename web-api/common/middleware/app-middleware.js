@@ -5,8 +5,7 @@ const
     cors = require('cors');
 
 // This module is used to setup middleware on the app passed as a parameter
-module.exports = async function(app) {
-    console.log(process.env.DEPLOYED_WEB_APP_HOME_PATH)
+module.exports = async function (app) {
     const corsOptions = {
         origin: [process.env.DEPLOYED_WEB_APP_HOME_PATH, process.env.LOCAL_WEB_APP_HOME_PATH],
         optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204,
@@ -22,7 +21,7 @@ module.exports = async function(app) {
         // using authization module to setup authentication and authorization middleware
         //const authization = await require('@authization/authization')
         const authization = await require('../../../authization-module/authization')
-            .setup({ app, db: middlewareConfig.cloud_db/*,rbac_opts: middlewareConfig.rbac_opts,strategies:middlewareConfig.strategies*/});
+            .setup({ app, db: middlewareConfig.cloud_db, rbac_opts: middlewareConfig.rbac_opts, https: true, strategies: middlewareConfig.strategies });
 
         app.use('/api', require('../../web-api')(authization));
 

@@ -1,22 +1,24 @@
 {
   "name": "Authentication-and-Authorization-Node-Component-",
   "version": "1.0.0",
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "engines": {
     "node": "12.x.x",
     "npm": "6.14.2"
   },
   "scripts": {
+    "apiInstall": "cd web-api && npm i",
+    "appInstall": "cd web-app && npm i",
     "api": "cd web-api && npm run start",
     "app": "cd web-app && npm run start",
     "test": "mocha",
-    "start": "start npm run api && start npm run app"
+    "startWebAPI": "cd web-api && npm run start",
+    "startWebAPP": "cd web-app && npm run start",
+    "start": "start npm run api && start npm run app",
+    "install": "npm run apiInstall && npm run appInstall"
   },
   "keywords": [],
   "author": "",
   "license": "ISC"
-
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "./server/index.js",
   "dependencies": {
-    "@authization/authization": "1.0.52",
+    "@authization/authization": "1.0.53",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

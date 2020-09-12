@@ -52,7 +52,7 @@ module.exports = function (apiUtils, authization) {
     )
 
     authenticationRouter.get('/authenticated-user-roles', (req, res) =>
-        apiUtils.promiseDataToResponse(res, userRoles.getByUser(req.user.id))
+        apiUtils.promiseDataToResponse(res, userRoles.getUserActiveRoles(req.user.id))
     )
 
 

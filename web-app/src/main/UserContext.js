@@ -86,7 +86,7 @@ function UserProvider(props) {
 
                 if (authenticatedUser.username) {
                     // get authenticated User's Roles
-                    const roles = (await authenticationService().getUserRoles(authenticatedUser.id)).map(role => role.role);
+                    const roles = (await authenticationService().getUserRoles(authenticatedUser.id)).map(role => role['Role.role']);  
 
                     // get rbac_opts to initialize the RBAC
                     const rbac_opts = await configService().getRbacOptions();

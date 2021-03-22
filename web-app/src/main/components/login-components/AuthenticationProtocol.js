@@ -53,7 +53,7 @@ export default function AuthenticationProtocol() {
         {ctx.error ? <p>{ctx.error.status} {ctx.error.err}</p> :
             <CardColumns style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px' }}>
 
-              <Card style={{ width: '24rem' }} key={'AuthProtocolCard'} border="info" className='ml-2 mr-2'>
+              <Card style={{ width: '24rem' }} key={'AuthProtocolCard'} border="info" className='ml-2 mr-2 neumorphicTableContainer'>
                 <Card.Body>
                   <Card.Title>{'Supported Authentication Types'}</Card.Title>
                   {state.map((authType, idx) =>

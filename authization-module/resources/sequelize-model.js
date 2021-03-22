@@ -6,7 +6,7 @@ const { Sequelize,Op} = require('sequelize'),
 
 //For testing purposes we need to generate a new Sequelize here if config doesnt already own one
 const {database, dbms, host, password, user} = config.database_opts;
-let dbInfo ={host, dialect: dbms, query: {raw: true}};
+let dbInfo ={host, dialect: dbms, query: {raw: true},pool: {max: 5, min: 0, acquire: 80000, idle: 4000}};
 if (process.env.INSTANCE_CONNECTION_NAME) {
     dbInfo = {...dbInfo,host: process.env.INSTANCE_CONNECTION_NAME,dialectOptions: {socketPath: process.env.INSTANCE_CONNECTION_NAME}};
 }
@@ -127,7 +127,7 @@ const UserHistory = defineTable('User_History', { date: { type: DATE, allowNull:
  * - user_id: DefaultString,
  * - list: DefaultString)
  * @type {Model}
- * 
+ *
  */
 const List = defineTable('List', { list: { type: STRING, validate: { notEmpty: true }, allowNull: false, unique: true } }, false);
 

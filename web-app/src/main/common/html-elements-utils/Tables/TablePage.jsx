@@ -60,11 +60,11 @@ const TablePage = ({ service, resource }) => {
             setPut(await checkHasPermission('PUT'))
             setDel(await checkHasPermission('DELETE'))
 
-            
+
         }
         asyncOpts()
     },[])
-    
+
     useEffect(() => { if (error) console.error('An error ocurred: ', error); }, [error]);
     useEffect(() => console.log(values), [values])
     const postData = arr => service.post(arr)
@@ -73,9 +73,9 @@ const TablePage = ({ service, resource }) => {
         setError({ errorMessage: err.message, shouldShow: true })
         console.error(err)
     });
-    
+
     const addButton= ()=>post && service.postFields ?
-     <th><SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th> : undefined 
+     <th><SubmitValuesModal openButtonIcon={'fa fa-plus'} bootstrapColor={'success'} submitListener={postData} labels={service.postFields} /></th> : undefined
 
     const editButton =   rowObject =>  put && service.editFields ? <td>
         <SubmitValuesModal openButtonIcon={'fa fa-edit'} bootstrapColor={'warning'} buttonTooltipText={'Edit!'} labels={service.editFields}

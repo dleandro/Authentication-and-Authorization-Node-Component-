@@ -28,6 +28,25 @@
     color: #61dafb;
 }
 
+h1 {
+    color: #426696;
+    font-weight: 600;
+    font-size: 3rem;
+}
+h2,
+p {
+    color: #658ec6;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+h3 {
+    color: #426696;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
@@ -37,7 +56,16 @@
     }
 }
 
+.windows-button {
+    background: url('/windowsLogo.svg');
+    background-repeat: no-repeat;
 
+}
+.google-button {
+    background: url('/google-g-2015.svg');
+    background-repeat: no-repeat;
+
+}
 .user-img {
     margin-top: -70px;
 }
@@ -52,24 +80,74 @@
     margin-top: 150px;
     padding: 0;
 }
+.neumorphismCard {
+    border-radius: 30px;
+    transition: transform .8s;
+    background: linear-gradient(
+            -45deg,
+            rgba(0, 0, 0, 0.2),
+            rgba(255, 255, 255, 0.3)
+    );
+    -webkit-animation: pulsate 2s ease-out;
+    box-shadow: 12px 12px 24px 0 rgba(0, 0, 0, 0.2),
+    -12px -12px 24px 0 rgba(255, 255, 255, 0.5);
+}
 
 .modal-content {
-    background-color: #D3D3D3;
+    background-color: #dcdcdc;
+    box-shadow: 3px 3px 5px 6px rgba(66, 61, 61, 0.78);
 }
+@keyframes shake {
+    0% { transform: rotate(0.5deg); }
+    50% { transform: rotate(-0.5deg); }
+    100% { transform: rotate(0.5deg); }
+}
+.neumorphismCard:hover {
+    transform: scale(1.1);
+    animation: shake 75ms 2;
+    animation-timing-function: linear;
+}
+
+.neumorphismCard input,.neumorphismCard button{
+    border-radius: 15px;
+    transition: transform .8s;
+}
+
+.neumorphismCard input:hover,button:hover{
+    transform: scale(1.1);
+}
+
+
+
+
+.neumorphicTableContainer {
+    overflow: hidden;
+    border: none;
+    box-shadow: 12px 12px 24px 0 rgba(0, 0, 0, 0.2),
+    -12px -12px 24px 0 rgba(255, 255, 255, 0.5);
+    background: linear-gradient(
+            to right bottom,
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.15)
+    );
+    backdrop-filter: blur(20rem);
+
+
+    /* background-image: linear-gradient(120deg, #ffffff 0%, #a0c4fc 100%);*/
+
+}
+
 
 .user-name {
     margin: 10px 0;
-}
-
-.user-name h1 {
-    font-size: 30px;
-    color: #ccd6d7;
 }
 
 .form-input button {
     width: 100%;
     margin-bottom: 20px;
 }
+
+
 
 .btn-success {
     background-color: #2ecc71;
@@ -218,3 +296,5 @@
 @keyframes rotate {
     100% {transform: rotate(360deg);}
 }
+
+

@@ -10,7 +10,7 @@ export default function GenericInfoCard({fetchValueById,label}){
 
     return  (
         <div className="col-4 pt-5 align-content-center mx-auto align-items-center ceform-input" id={id}>
-            <Card border="white" bg={'dark'} key={'userspecificinfocard'} text={'light'} className="mb-2">
+            <Card border="white" key={'userspecificinfocard'} text={'light'} className="mb-2 neumorphicTableContainer">
                 <Card.Header>{`${label} Info`}</Card.Header>
                 <Card.Body>
                     <Card.Title>{`Details of ${label} num: ${value.id}`}</Card.Title>

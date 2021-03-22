@@ -39,7 +39,7 @@ export default function ResourceCard({functionality,resource}) {
         addRequiredPermission('GET');
     },[]);
     return (
-        <Card key={`${functionality.title}Card`} className='ml-2 mr-2'>
+        <Card key={`${functionality.title}Card`} className='ml-xl-2 mr-xl-2 neumorphicTableContainer'>
             <Card.Body>
                 <Card.Title>{functionality.title}</Card.Title>
                 <Card.Text>{functionality.desc}</Card.Text>

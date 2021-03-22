@@ -4,7 +4,7 @@ import {Card, Form} from 'react-bootstrap';
 import GenericTooltipButton from '../generics/GenericTooltipButton';
 import TableFilter from './TableFilter';
 
-export default function FilterablePageTable({ labels, rowsValues, valueToLineConverter }) {
+export default ({labels, rowsValues, valueToLineConverter}) => {
 
     const chunkSize = 11;
     const [currentPage, setPage] = useState(1);
@@ -29,12 +29,12 @@ export default function FilterablePageTable({ labels, rowsValues, valueToLineCon
 
     return (
         <div className={`d-flex justify-content-center pt-10 align-content-center mx-auto align-items-center`} id={'tabpage'}>
-            <Card bg={'dark'} className="mb-2 " text={'light'} >
+            <Card className="mb-2 neumorphicTableContainer mt-5" text={'light'} >
                 <Card.Header className="view view-cascade gradient-card-header blue-gradient d-flex justify-content-between align-items-center py-2 mx-4 mb-3">
                     <TableFilter initialData={rowsValues} dataDisplayerCB={newArr=>setValues(chunksGenerator(newArr,chunkSize))} />
                 </Card.Header>
                 <Card.Body >
-                    <Table striped bordered hover variant="dark">
+                    <Table bordered hover>
                         <thead>{labels}</thead>
                         <tbody>{linesToDisplay}</tbody>
                     </Table>
